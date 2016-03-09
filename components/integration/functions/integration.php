@@ -12,7 +12,7 @@ if(!function_exists('ckwc_instance')) {
 
 if(!function_exists('ckwc_get_subscription_options')) {
 	function ckwc_get_subscription_options() {
-		$options = get_transient('ckwc_options_' . ckwc_instance()->api_key);
+		$options = get_transient('ckwc_subscription_options');
 
 		if(!is_array($options)) {
 			$courses = ckwc_convertkit_api_get_courses();
@@ -38,7 +38,7 @@ if(!function_exists('ckwc_get_subscription_options')) {
 					),
 				);
 
-				set_transient('ckwc_options_' . ckwc_instance()->api_key, $options, 5 * MINUTE_IN_SECONDS);
+				set_transient('ckwc_subscription_options', $options, 5 * MINUTE_IN_SECONDS);
 			}
 		}
 
