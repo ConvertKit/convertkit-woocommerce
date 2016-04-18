@@ -152,6 +152,14 @@ class CKWC_Integration extends WC_Integration {
 				'default'     => '',
 				'description' => __('Customers will be added to the selected item'),
 			),
+
+			'debug' => array(
+				'title'       => __('Debug'),
+				'type'        => 'checkbox',
+				'label'       => __('Write data to a log file'),
+				'description' => 'You can view the log file by going to WooCommerce > Settings > Logs then selecting convertkit.',
+				'default'     => 'no',
+			),
 		);
 
 
@@ -292,7 +300,7 @@ class CKWC_Integration extends WC_Integration {
 		$api_key_correct = !empty($this->api_key);
 		$status_correct  = $status_new === $this->event;
 		$opt_in_correct  = 'yes' === get_post_meta($order_id, 'ckwc_opt_in', 'no');
-
+error_log( "IN ORDER STATUS: " . $order_id . ", " . $status_old . ", " . $status_new );
 		if($api_key_correct && $status_correct && $opt_in_correct) {
 			$order = wc_get_order($order_id);
 			$items = $order->get_items();
@@ -314,13 +322,36 @@ class CKWC_Integration extends WC_Integration {
 				$subscription_function = "ckwc_convertkit_api_add_subscriber_to_{$subscription_type}";
 
 				if(function_exists($subscription_function)) {
-					call_user_func($subscription_function, $subscription_id, $email, $name);
+					$response = call_user_func($subscription_function, $subscription_id, $email, $name);
+
+					$debug = $this->get_option( 'debug' );
+					if ( 'yes' == $debug ) {
+						$this->debug_log( "API call: " . $subscription_type . "\n" . "Response: \n" .
+							print_r( $response, true) );
+					}
+
 				}
 			}
 		}
 	}
 
 	#endregion Process Subscription
+
+
+	/**
+	 * Write API request results to a debug log
+	 * @param $message
+	 */
+	public function debug_log( $message ) {
+
+		$debug = $this->get_option( 'debug' );
+		if ( class_exists( 'WC_Logger' ) && ( 'yes' == $debug ) ){
+			$logger = new WC_Logger();
+			$logger->add( 'convertkit', $message );
+		}
+	}
+
+
 }
 
 require_once('functions/integration.php');
