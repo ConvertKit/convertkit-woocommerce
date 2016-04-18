@@ -43,6 +43,7 @@ class CKWC_Integration extends WC_Integration {
 
 		if('yes' === $this->enabled) {
 			add_action('woocommerce_checkout_update_order_meta',  array($this, 'save_opt_in_checkbox'));
+			add_action('woocommerce_process_shop_order_meta', array($this, 'save_opt_in_checkbox'));
 
 			add_action('woocommerce_checkout_update_order_meta',  array($this, 'order_status'), 99999, 1);
 			add_action('woocommerce_order_status_changed',        array($this, 'order_status'), 99999, 3);
