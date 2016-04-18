@@ -300,7 +300,6 @@ class CKWC_Integration extends WC_Integration {
 		$api_key_correct = !empty($this->api_key);
 		$status_correct  = $status_new === $this->event;
 		$opt_in_correct  = 'yes' === get_post_meta($order_id, 'ckwc_opt_in', 'no');
-error_log( "IN ORDER STATUS: " . $order_id . ", " . $status_old . ", " . $status_new );
 		if($api_key_correct && $status_correct && $opt_in_correct) {
 			$order = wc_get_order($order_id);
 			$items = $order->get_items();
