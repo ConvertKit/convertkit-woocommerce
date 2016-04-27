@@ -3,7 +3,7 @@
 /*
 Plugin Name: WooCommerce ConvertKit
 Description: Integrates WooCommerce with ConvertKit allowing customers to be automatically sent to your ConvertKit account.
-Version: 1.0.1
+Version: 1.0.2
 Author: Nick Ohrn of Plugin-Developer.com
 Author URI: http://plugin-developer.com/
 */
