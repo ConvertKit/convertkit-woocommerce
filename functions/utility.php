@@ -7,7 +7,7 @@ if(!function_exists('ckwc_debug')) {
 	 * If logging is enabled using the `CKWC_DEBUG` constant, then dump the values passed into this
 	 * function into the error log.
 	 *
-	 * @param mxed $variable,... unlimited optional number of additional variables to debug
+	 * @param mixed $variable,... unlimited optional number of additional variables to debug
 	 * @return void
 	 */
 	function ckwc_debug($variable) {
