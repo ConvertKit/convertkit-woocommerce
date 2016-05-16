@@ -50,3 +50,5 @@ none
 * Initial release
 
 == Upgrade notice ==
+
+none
