@@ -1,12 +1,15 @@
 <?php
 
-/*
-Plugin Name: WooCommerce ConvertKit
-Description: Integrates WooCommerce with ConvertKit allowing customers to be automatically sent to your ConvertKit account.
-Version: 1.0.2
-Author: Nick Ohrn of Plugin-Developer.com
-Author URI: http://plugin-developer.com/
-*/
+/**
+ * Plugin Name: ConvertKit for WooCommerce
+ * Plugin URI:  http://www.convertkit.com
+ * Description: Integrates WooCommerce with ConvertKit allowing customers to be automatically sent to your ConvertKit account.
+ * Version: 1.0.2
+ * Author: ConvertKit
+ * Author URI: http://www.convertkit.com
+ */
+
+
 
 if(!defined('ABSPATH')) { exit; }
 
