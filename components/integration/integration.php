@@ -29,6 +29,9 @@ class CKWC_Integration extends WC_Integration {
 		$this->opt_in_location = $this->get_option('opt_in_location');
 
 		if(is_admin()) {
+			add_filter( 'plugin_action_links_' . CKWC_PLUGIN_BASENAME, array( $this, 'plugin_links') );
+
+
 			add_action("woocommerce_update_options_integration_{$this->id}", array($this, 'process_admin_options'));
 
 			add_filter("woocommerce_settings_api_sanitized_fields_{$this->id}", array($this, 'sanitize_settings'));
@@ -349,6 +352,21 @@ class CKWC_Integration extends WC_Integration {
 			$logger = new WC_Logger();
 			$logger->add( 'convertkit', $message );
 		}
+	}
+
+	/**
+	 * Plugin Links.
+	 *
+	 * @param $links
+	 * @return array
+	 */
+	function plugin_links( $links ) {
+
+		$plugin_links = array(
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . __( 'Settings', 'wc-store-locator' ) . '</a>',
+		);
+
+		return array_merge( $plugin_links, $links );
 	}
 
 
