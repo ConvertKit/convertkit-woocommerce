@@ -3,8 +3,8 @@ Contributors: nickohrn, davidlamarwheeler, nathanbarry, growdev
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 3.6
-Tested up to: 4.5.2
-Stable tag: 1.0.2
+Tested up to: 4.5.3
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,11 @@ Yes, for it to work you must first have an account on ConvertKit.com
 none
 
 == Changelog ==
+
+### 1.0.3
+
+* Added Settings plugin link.
+* Added a setting to allow admin to decide if First Name, Last Name, or both are sent to CK's 'name' field.
 
 ### 1.0.2
 
