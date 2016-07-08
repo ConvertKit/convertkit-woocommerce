@@ -1,5 +1,5 @@
 === ConvertKit for WooCommerce ===
-Contributors: nickohrn, davidlamarwheeler, nathanbarry, growdev
+Contributors: nathanbarry, davidlamarwheeler, growdev, nickohrn
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 3.6
@@ -18,12 +18,18 @@ blogs, by automatically appending a lead capture form to any post or page.
 
 == Installation ==
 
-1. Upload `woocommerce-convertkit` to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Visit the settings page by clicking on the link under the plugin's name
-4. Enter your ConvertKit API key, which you can find [here](https://app.convertkit.com/account/edit), and save the settings
-5. Select your default form and save the settings
-6. If you wish, choose particular forms for each post or page by visiting the edit screen and choosing the correct form
+1. Upload `woocommerce-convertkit` to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Visit the settings page by clicking on the link under the plugin's name.
+4. Enable or disable the plugin's functionality using the checkbox at the top of the page.
+5. Use the Subscribe Event drop down to choose on which event customers will be subscribed.
+6. Select the text to be displayed on the Checkout page using the Opt-In Checkbox Label field.
+7. Set the Opt-In Checkbox Defaut Stats as either Checked or Unchecked.
+8. Set the location of the Opt-In Checkbox as either under the Billing fields, or Order details.
+9. Enter your ConvertKit API key, which you can find [here](https://app.convertkit.com/account/edit), and save the settings
+10. Select the form customers will be subscribed to.
+11. Select the format of the name that will be sent to ConvertKit's 'name' field.
+12. Enable or disable a debug log.
 
 == Frequently asked questions ==
 
@@ -33,7 +39,8 @@ Yes, for it to work you must first have an account on ConvertKit.com
 
 == Screenshots ==
 
-none
+1. Settings page
+2. Checkout page with added checkbox
 
 == Changelog ==
 

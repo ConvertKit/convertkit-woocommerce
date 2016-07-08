@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  http://www.convertkit.com
@@ -8,7 +7,6 @@
  * Author: ConvertKit
  * Author URI: http://www.convertkit.com
  */
-
 
 
 if(!defined('ABSPATH')) { exit; }
