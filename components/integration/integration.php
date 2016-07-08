@@ -27,8 +27,12 @@ class CKWC_Integration extends WC_Integration {
 		$this->opt_in_label    = $this->get_option('opt_in_label');
 		$this->opt_in_status   = $this->get_option('opt_in_status');
 		$this->opt_in_location = $this->get_option('opt_in_location');
+		$this->name_format     = $this->get_option('name_format');
 
 		if(is_admin()) {
+			add_filter( 'plugin_action_links_' . CKWC_PLUGIN_BASENAME, array( $this, 'plugin_links') );
+
+
 			add_action("woocommerce_update_options_integration_{$this->id}", array($this, 'process_admin_options'));
 
 			add_filter("woocommerce_settings_api_sanitized_fields_{$this->id}", array($this, 'sanitize_settings'));
@@ -152,6 +156,19 @@ class CKWC_Integration extends WC_Integration {
 				'type'        => 'subscription',
 				'default'     => '',
 				'description' => __('Customers will be added to the selected item'),
+			),
+
+			'name_format' => array(
+				'title'       => __('Name Format'),
+				'type'        => 'select',
+				'default'     => 'first',
+				'description' => __('How should the customer name be sent to ConvertKit?'),
+				'desc_tip'    => false,
+				'options'     => array(
+					'first'   => __('Billing First Name'),
+					'last'    => __('Billing Last Name'),
+					'both'    => __('Billing First Name + Billing Last Name'),
+				),
 			),
 
 			'debug' => array(
@@ -304,8 +321,20 @@ class CKWC_Integration extends WC_Integration {
 		if($api_key_correct && $status_correct && $opt_in_correct) {
 			$order = wc_get_order($order_id);
 			$items = $order->get_items();
-			$name  = sprintf("%s %s", $order->billing_first_name, $order->billing_last_name);
 			$email = $order->billing_email;
+
+			switch ( $this->name_format ){
+				case 'first':
+					$name  = $order->billing_first_name;
+					break;
+				case 'last':
+					$name  = $order->billing_last_name;
+					break;
+				default:
+					$name  = sprintf("%s %s", $order->billing_first_name, $order->billing_last_name);
+					break;
+
+			}
 
 			$subscriptions = array($this->subscription);
 
@@ -349,6 +378,21 @@ class CKWC_Integration extends WC_Integration {
 			$logger = new WC_Logger();
 			$logger->add( 'convertkit', $message );
 		}
+	}
+
+	/**
+	 * Plugin Links.
+	 *
+	 * @param $links
+	 * @return array
+	 */
+	function plugin_links( $links ) {
+
+		$plugin_links = array(
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . __( 'Settings', 'wc-store-locator' ) . '</a>',
+		);
+
+		return array_merge( $plugin_links, $links );
 	}
 
 
