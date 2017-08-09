@@ -3,8 +3,8 @@ Contributors: nathanbarry, davidlamarwheeler, growdev, nickohrn
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 3.6
-Tested up to: 4.5.3
-Stable tag: 1.0.3
+Tested up to: 4.8.1
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ blogs, by automatically appending a lead capture form to any post or page.
 4. Enable or disable the plugin's functionality using the checkbox at the top of the page.
 5. Use the Subscribe Event drop down to choose on which event customers will be subscribed.
 6. Select the text to be displayed on the Checkout page using the Opt-In Checkbox Label field.
-7. Set the Opt-In Checkbox Defaut Stats as either Checked or Unchecked.
+7. Set the Opt-In Checkbox Default Stats as either Checked or Unchecked.
 8. Set the location of the Opt-In Checkbox as either under the Billing fields, or Order details.
 9. Enter your ConvertKit API key, which you can find [here](https://app.convertkit.com/account/edit), and save the settings
 10. Select the form customers will be subscribed to.
@@ -43,6 +43,11 @@ Yes, for it to work you must first have an account on ConvertKit.com
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.0.4  2017-08-09
+
+* Verified compatibility with WooCommerce 3.1
+* Code cleanup.
 
 ### 1.0.3
 
