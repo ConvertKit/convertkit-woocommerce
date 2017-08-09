@@ -28,7 +28,7 @@ if ( ! defined( 'CKWC_PLUGIN_FILEPATH' ) ) {
 }
 
 if ( ! defined( 'CKWC_VERSION' ) ) {
-	define( 'CKWC_VERSION', '1.0.1' );
+	define( 'CKWC_VERSION', '1.0.4' );
 }
 
 if ( ! defined( 'CKWC_MIN_WC_VERSION' ) ) {
