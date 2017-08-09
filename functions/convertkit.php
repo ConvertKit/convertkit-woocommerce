@@ -2,6 +2,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+/**
+ * @param string $path
+ * @param array $query_args
+ * @param null $request_body
+ * @param array $request_args
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_request( $path, $query_args = array(), $request_body = null, $request_args = array() ) {
 	$path        = ltrim( $path, '/' );
 	$request_url = "https://api.convertkit.com/v3/{$path}";
@@ -38,6 +46,11 @@ function ckwc_convertkit_api_request( $path, $query_args = array(), $request_bod
 	}
 }
 
+/**
+ * @param string|null $api_key
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_get_courses( $api_key = null ) {
 	$query_args = is_null( $api_key ) ? array() : array(
 		'api_key' => $api_key,
@@ -47,6 +60,11 @@ function ckwc_convertkit_api_get_courses( $api_key = null ) {
 	return is_wp_error( $response ) ? $response : (isset( $response['courses'] ) ? array_combine( wp_list_pluck( $response['courses'], 'id' ), $response['courses'] ) : array());
 }
 
+/**
+ * @param string|null $api_key
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_get_forms( $api_key = null ) {
 	$query_args = is_null( $api_key ) ? array() : array(
 		'api_key' => $api_key,
@@ -56,6 +74,11 @@ function ckwc_convertkit_api_get_forms( $api_key = null ) {
 	return is_wp_error( $response ) ? $response : (isset( $response['forms'] ) ? array_combine( wp_list_pluck( $response['forms'], 'id' ), $response['forms'] ) : array());
 }
 
+/**
+ * @param string|null $api_key
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_get_tags( $api_key = null ) {
 	$query_args = is_null( $api_key ) ? array() : array(
 		'api_key' => $api_key,
@@ -65,6 +88,14 @@ function ckwc_convertkit_api_get_tags( $api_key = null ) {
 	return is_wp_error( $response ) ? $response : (isset( $response['tags'] ) ? array_combine( wp_list_pluck( $response['tags'], 'id' ), $response['tags'] ) : array());
 }
 
+/**
+ * @param string $course
+ * @param string $email
+ * @param string $name
+ * @param string|null $api_key
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_add_subscriber_to_course( $course, $email, $name, $api_key = null ) {
 	$query_args = is_null( $api_key ) ? array() : array(
 		'api_key' => $api_key,
@@ -78,6 +109,14 @@ function ckwc_convertkit_api_add_subscriber_to_course( $course, $email, $name, $
 	));
 }
 
+/**
+ * @param string $form
+ * @param string $email
+ * @param string $name
+ * @param string|null $api_key
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_add_subscriber_to_form( $form, $email, $name, $api_key = null ) {
 	$query_args = is_null( $api_key ) ? array() : array(
 		'api_key' => $api_key,
@@ -91,6 +130,14 @@ function ckwc_convertkit_api_add_subscriber_to_form( $form, $email, $name, $api_
 	));
 }
 
+/**
+ * @param string $tag
+ * @param string $email
+ * @param string $name
+ * @param string|null $api_key
+ *
+ * @return array|mixed|object|WP_Error
+ */
 function ckwc_convertkit_api_add_subscriber_to_tag( $tag, $email, $name, $api_key = null ) {
 	$query_args = is_null( $api_key ) ? array() : array(
 		'api_key' => $api_key,
