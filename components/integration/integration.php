@@ -175,7 +175,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __('Debug'),
 				'type'        => 'checkbox',
 				'label'       => __('Write data to a log file'),
-				'description' => 'You can view the log file by going to WooCommerce > Settings > Logs then selecting convertkit.',
+				'description' => 'You can view the log file by going to WooCommerce > Status, click the Logs tab, then selecting convertkit.',
 				'default'     => 'no',
 			),
 		);
