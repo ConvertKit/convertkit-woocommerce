@@ -58,7 +58,7 @@ class CKWC_Integration extends WC_Integration {
 	#region Product Integration
 
 	public function add_meta_boxes($post) {
-		add_meta_box('ckwc', __('Convert Kit Integration'), array($this, 'display_meta_box'), null, $context = 'side', $priority = 'default');
+		add_meta_box('ckwc', __('ConvertKit Integration'), array($this, 'display_meta_box'), null, $context = 'side', $priority = 'default');
 	}
 
 	public function display_meta_box($post) {
