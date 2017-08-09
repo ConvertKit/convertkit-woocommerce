@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class CKWC_Integration extends WC_Integration {
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->id                 = 'ckwc';
 		$this->method_title       = __( 'ConvertKit' );
@@ -57,10 +60,16 @@ class CKWC_Integration extends WC_Integration {
 
 	}
 
+	/**
+	 * @param $post
+	 */
 	public function add_meta_boxes( $post ) {
 		add_meta_box( 'ckwc', __( 'Convert Kit Integration' ), array( $this, 'display_meta_box' ), null, $context = 'side', $priority = 'default' );
 	}
 
+	/**
+	 * @param $post
+	 */
 	public function display_meta_box( $post ) {
 		$subscription = get_post_meta( $post->ID, 'ckwc_subscription', true );
 		$options      = empty( $this->api_key ) ? false : ckwc_get_subscription_options();
@@ -68,6 +77,9 @@ class CKWC_Integration extends WC_Integration {
 		include( 'views/meta-box.php' );
 	}
 
+	/**
+	 * @param $post_id
+	 */
 	public function save_product( $post_id ) {
 		$data = stripslashes_deep( $_POST );
 
@@ -76,6 +88,9 @@ class CKWC_Integration extends WC_Integration {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
 			'enabled' => array(
@@ -183,6 +198,12 @@ class CKWC_Integration extends WC_Integration {
 		wc_enqueue_js( $code );
 	}
 
+	/**
+	 * @param $key
+	 * @param $data
+	 *
+	 * @return string
+	 */
 	public function generate_subscription_html( $key, $data ) {
 		$field    = $this->get_field_key( $key );
 		$defaults = array(
@@ -240,12 +261,22 @@ class CKWC_Integration extends WC_Integration {
 		return ob_get_clean();
 	}
 
+	/**
+	 * @param $settings
+	 *
+	 * @return mixed
+	 */
 	public function sanitize_settings( $settings ) {
 		$settings['api_key'] = trim( $settings['api_key'] );
 
 		return $settings;
 	}
 
+	/**
+	 * @param $key
+	 *
+	 * @return mixed
+	 */
 	public function validate_api_key_field( $key ) {
 		$field = $this->get_field_key( $key );
 		$value = $_POST[ $field ];
@@ -263,6 +294,9 @@ class CKWC_Integration extends WC_Integration {
 		return $value;
 	}
 
+	/**
+	 *
+	 */
 	public function display_errors() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $value ) {
@@ -271,6 +305,11 @@ class CKWC_Integration extends WC_Integration {
 		}
 	}
 
+	/**
+	 * @param $fields
+	 *
+	 * @return mixed
+	 */
 	public function add_opt_in_checkbox( $fields ) {
 		$section = 'billing' === $this->opt_in_location ? 'billing' : 'order';
 
@@ -283,12 +322,20 @@ class CKWC_Integration extends WC_Integration {
 		return $fields;
 	}
 
+	/**
+	 * @param $order_id
+	 */
 	public function save_opt_in_checkbox( $order_id ) {
 		$opt_in = ('no' === $this->display_opt_in || isset( $_POST['ckwc_opt_in'] )) ? 'yes' : 'no';
 
 		update_post_meta( $order_id, 'ckwc_opt_in', $opt_in );
 	}
 
+	/**
+	 * @param $order_id
+	 * @param string $status_old
+	 * @param string $status_new
+	 */
 	public function order_status( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 		$api_key_correct = ! empty( $this->api_key );
 		$status_correct  = $status_new === $this->event;
