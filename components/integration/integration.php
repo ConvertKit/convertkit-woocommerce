@@ -186,8 +186,8 @@ class CKWC_Integration extends WC_Integration {
 			'debug' => array(
 				'title'       => __( 'Debug' ),
 				'type'        => 'checkbox',
-				'label'       => __( 'Write data to a log file' ),
-				'description' => 'You can view the log file by going to WooCommerce > Settings > Logs then selecting convertkit.',
+				'label'       => __('Write data to a log file'),
+				'description' => 'You can view the log file by going to WooCommerce > Status, click the Logs tab, then selecting convertkit.',
 				'default'     => 'no',
 			),
 		);
@@ -348,17 +348,26 @@ class CKWC_Integration extends WC_Integration {
 		if ( $api_key_correct && $status_correct && $opt_in_correct ) {
 			$order = wc_get_order( $order_id );
 			$items = $order->get_items();
-			$email = $order->billing_email;
+			if ( version_compare( WC()->version, '3.0.0', '>=' ) ) {
+				$email = $order->get_billing_email();
+				$first_name  = $order->get_billing_first_name();
+				$last_name  = $order->get_billing_last_name();
+
+			} else {
+				$email = $order->billing_email;
+				$first_name  = $order->billing_first_name;
+				$last_name  = $order->billing_last_name;
+			}
 
 			switch ( $this->name_format ) {
 				case 'first':
-					$name  = $order->billing_first_name;
+					$name  = $first_name;
 					break;
 				case 'last':
-					$name  = $order->billing_last_name;
+					$name  = $last_name;
 					break;
 				default:
-					$name  = sprintf( '%s %s', $order->billing_first_name, $order->billing_last_name );
+					$name  = sprintf("%s %s", $first_name, $last_name);
 					break;
 
 			}
