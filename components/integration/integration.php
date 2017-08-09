@@ -64,7 +64,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param $post
 	 */
 	public function add_meta_boxes( $post ) {
-		add_meta_box( 'ckwc', __( 'Convert Kit Integration' ), array( $this, 'display_meta_box' ), null, $context = 'side', $priority = 'default' );
+		add_meta_box( 'ckwc', __( 'Convert Kit Integration' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param $post_id
 	 */
 	public function save_product( $post_id ) {
-		$data = stripslashes_deep( $_POST );
+		$data = stripslashes_deep( $_POST ); // WPCS: input var okay. CSRF ok.
 
 		if ( isset( $data['ckwc_nonce'] ) && wp_verify_nonce( $data['ckwc_nonce'], 'ckwc' ) && isset( $data['ckwc_subscription'] ) ) {
 			update_post_meta( $post_id, 'ckwc_subscription', $data['ckwc_subscription'] );
@@ -158,6 +158,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'API Key' ),
 				'type'        => 'text',
 				'default'     => '',
+				// translators: this is a url to the ConvertKit site.
 				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Key</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
 				'desc_tip'    => false,
 			),
@@ -241,9 +242,13 @@ class CKWC_Integration extends WC_Integration {
 					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
 					<select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
 						<option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...' ); ?></option>
-						<?php foreach ( $options as $option_group ) { if ( empty( $option_group['options'] ) ) { continue; } ?>
+						<?php foreach ( $options as $option_group ) {
+							if ( empty( $option_group['options'] ) ) {
+								continue;
+							} ?>
 						<optgroup label="<?php echo esc_attr( $option_group['name'] ); ?>">
-							<?php foreach ( $option_group['options'] as $id => $name ) { $value = "{$option_group['key']}:{$id}"; ?>
+							<?php foreach ( $option_group['options'] as $id => $name ) {
+								$value = "{$option_group['key']}:{$id}"; ?>
 							<option <?php selected( $value, $this->get_option( $key ) ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $name ); ?></option>
 							<?php } ?>
 						</optgroup>
@@ -279,7 +284,7 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function validate_api_key_field( $key ) {
 		$field = $this->get_field_key( $key );
-		$value = $_POST[ $field ];
+		$value = $_POST[ $field ]; // WPCS: CSRF ok.
 
 		if ( empty( $value ) ) {
 			$this->errors[ $key ] = __( 'Please provide your ConvertKit API Key.' );
@@ -326,7 +331,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param $order_id
 	 */
 	public function save_opt_in_checkbox( $order_id ) {
-		$opt_in = ('no' === $this->display_opt_in || isset( $_POST['ckwc_opt_in'] )) ? 'yes' : 'no';
+		$opt_in = ('no' === $this->display_opt_in || isset( $_POST['ckwc_opt_in'] )) ? 'yes' : 'no'; // WPCS: CSRF ok.
 
 		update_post_meta( $order_id, 'ckwc_opt_in', $opt_in );
 	}
@@ -376,9 +381,8 @@ class CKWC_Integration extends WC_Integration {
 					$response = call_user_func( $subscription_function, $subscription_id, $email, $name );
 
 					$debug = $this->get_option( 'debug' );
-					if ( 'yes' == $debug ) {
-						$this->debug_log( 'API call: ' . $subscription_type . "\n" . "Response: \n" .
-						print_r( $response, true ) );
+					if ( 'yes' === $debug ) {
+						$this->debug_log( 'API call: ' . $subscription_type . "\nResponse: \n" . print_r( $response, true ) );
 					}
 				}
 			}
@@ -392,7 +396,7 @@ class CKWC_Integration extends WC_Integration {
 	public function debug_log( $message ) {
 
 		$debug = $this->get_option( 'debug' );
-		if ( class_exists( 'WC_Logger' ) && ( 'yes' == $debug ) ) {
+		if ( class_exists( 'WC_Logger' ) && ( 'yes' === $debug ) ) {
 			$logger = new WC_Logger();
 			$logger->add( 'convertkit', $message );
 		}
