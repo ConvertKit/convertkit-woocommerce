@@ -18,6 +18,7 @@ function ckwc_convertkit_api_request( $path, $query_args = array(), $request_bod
 		'body'    => $request_body,
 		'headers' => array(
 			'Accept' => 'application/json',
+			'Content-Type' => 'application/json',
 		),
 		'method'  => 'GET',
 		'timeout' => 5,
