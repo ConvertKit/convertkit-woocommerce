@@ -359,6 +359,10 @@ class CKWC_Integration extends WC_Integration {
 				$last_name  = $order->billing_last_name;
 			}
 
+			$email = apply_filters( 'convertkit_for_woocommerce_email', $email, $order);
+			$first_name = apply_filters( 'convertkit_for_woocommerce_first_name', $first_name, $order);
+			$last_name = apply_filters( 'convertkit_for_woocommerce_last_name', $last_name, $order);
+
 			switch ( $this->name_format ) {
 				case 'first':
 					$name  = $first_name;
