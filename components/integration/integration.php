@@ -22,11 +22,13 @@ class CKWC_Integration extends WC_Integration {
 
 		// API interaction
 		$this->api_key      = $this->get_option( 'api_key' );
+		$this->api_secret      = $this->get_option( 'api_secret' );
 		$this->subscription = $this->get_option( 'subscription' );
 
 		// Enabled and when it should take place
-		$this->enabled      = $this->get_option( 'enabled' );
-		$this->event        = $this->get_option( 'event' );
+		$this->enabled         = $this->get_option( 'enabled' );
+		$this->event           = $this->get_option( 'event' );
+		$this->send_purchases  = $this->get_option( 'send_purchases' );
 
 		// Opt-in field
 		$this->display_opt_in  = $this->get_option( 'display_opt_in' );
@@ -56,6 +58,10 @@ class CKWC_Integration extends WC_Integration {
 
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'order_status' ), 99999, 1 );
 			add_action( 'woocommerce_order_status_changed',        array( $this, 'order_status' ), 99999, 3 );
+
+			if ( 'yes' === $this->send_purchases ){
+				add_action( 'woocommerce_payment_complete',        array( $this, 'send_payment' ), 99999, 3 );
+			}
 		}
 
 	}
@@ -163,6 +169,15 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 			),
 
+			'api_secret' => array(
+				'title'       => __( 'API Secret' ),
+				'type'        => 'text',
+				'default'     => '',
+				// translators: this is a url to the ConvertKit site.
+				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Secret</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+				'desc_tip'    => false,
+			),
+
 			'subscription' => array(
 				'title'       => __( 'Subscription' ),
 				'type'        => 'subscription',
@@ -181,6 +196,15 @@ class CKWC_Integration extends WC_Integration {
 					'last'    => __( 'Billing Last Name' ),
 					'both'    => __( 'Billing First Name + Billing Last Name' ),
 				),
+			),
+
+			'send_purchases' => array(
+				'title'       => __( 'Purchases' ),
+				'label'       => __( 'Send purchase data to ConvertKit.' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'description' => __( '' ),
+				'desc_tip'    => false,
 			),
 
 			'debug' => array(
@@ -400,6 +424,61 @@ class CKWC_Integration extends WC_Integration {
 				}
 			}
 		}// End if().
+	}
+
+	/**
+	 * Send order data to ConvertKit
+	 * @param $order_id
+	 */
+	public function send_payment( $order_id ){
+		$api_key_correct = ! empty( $this->api_key );
+		$order = wc_get_order( $order_id );
+		if ( $api_key_correct && ! is_wp_error( $order ) && $order ) {
+
+			$products = array();
+
+			foreach( $order->get_items( ) as $item ) {
+				$products[] = array(
+						'name' => $item->get_name(),
+						'sku' => $item->get_product()->get_sku(),
+						'unit_price' => $item->get_product()->get_price(),
+						'quantity' => $item->get_quantity(),
+					);
+			}
+
+			$purchase_options = array(
+				'api_secret' => $this->api_secret,
+				'purchase' => array(
+					'transaction_id'   => $order->get_order_number(),
+					'email_address'    => $order->get_billing_email(),
+					'currency'         => $order->get_currency(),
+					'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
+					'subtotal'         => (double) $order->get_subtotal(),
+					'tax'              => (double) $order->get_total_tax( 'edit' ),
+					'shipping'         => (double) $order->get_shipping_total( 'edit' ),
+					'discount'         => (double) $order->get_discount_total( 'edit' ),
+					'total'            => (double) $order->get_total( 'edit' ),
+					'status'           => 'paid',
+					'products'         => $products,
+				)
+			);
+
+			$query_args = is_null( $this->api_key ) ? array() : array(
+				'api_key' => $this->api_key,
+			);
+			$body = json_encode( $purchase_options );
+			$args = array( 'method' => 'POST' );
+			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
+
+			if ( is_wp_error( $response ) ){
+				$this->debug_log( 'send payment response WP Error: '
+				                  . $response->get_error_code() . ' '
+				                  . $response->get_error_message() );
+			} else {
+				$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
+			}
+
+		}
 	}
 
 	/**
