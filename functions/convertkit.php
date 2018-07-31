@@ -11,14 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
  * @return array|mixed|object|WP_Error
  */
 function ckwc_convertkit_api_request( $path, $query_args = array(), $request_body = null, $request_args = array() ) {
-	$path        = ltrim( $path, '/' );
-	$request_url = "https://api.convertkit.com/v3/{$path}";
-
+	$path         = ltrim( $path, '/' );
+	$request_url  = "https://api.convertkit.com/v3/{$path}";
+	$request_body = wp_json_encode( $request_body );
+	
 	$request_args = array_merge(array(
 		'body'    => $request_body,
 		'headers' => array(
 			'Accept' => 'application/json',
-			'Content-Type' => 'application/json',
+			'Content-Type' => 'application/json; charset=utf-8',
 		),
 		'method'  => 'GET',
 		'timeout' => 5,
