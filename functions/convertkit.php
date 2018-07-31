@@ -13,7 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 function ckwc_convertkit_api_request( $path, $query_args = array(), $request_body = null, $request_args = array() ) {
 	$path         = ltrim( $path, '/' );
 	$request_url  = "https://api.convertkit.com/v3/{$path}";
-	$request_body = wp_json_encode( $request_body );
+	if ( ! is_null( $request_body ) ) {
+		$request_body = wp_json_encode( $request_body );
+	}
 
 	$request_args = array_merge(array(
 		'body'    => $request_body,

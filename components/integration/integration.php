@@ -54,7 +54,6 @@ class CKWC_Integration extends WC_Integration {
 
 		if ( 'yes' === $this->enabled ) {
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'save_opt_in_checkbox' ) );
-			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_opt_in_checkbox' ) );
 
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'order_status' ), 99999, 1 );
 			add_action( 'woocommerce_order_status_changed',        array( $this, 'order_status' ), 99999, 3 );
@@ -471,7 +470,7 @@ class CKWC_Integration extends WC_Integration {
 			$query_args = is_null( $this->api_key ) ? array() : array(
 				'api_key' => $this->api_key,
 			);
-			$body = json_encode( $purchase_options );
+			$body = $purchase_options;
 			$args = array( 'method' => 'POST' );
 			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
 
