@@ -54,7 +54,6 @@ class CKWC_Integration extends WC_Integration {
 
 		if ( 'yes' === $this->enabled ) {
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'save_opt_in_checkbox' ) );
-			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_opt_in_checkbox' ) );
 
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'order_status' ), 99999, 1 );
 			add_action( 'woocommerce_order_status_changed',        array( $this, 'order_status' ), 99999, 3 );
@@ -366,9 +365,11 @@ class CKWC_Integration extends WC_Integration {
 	 * @param string $status_new
 	 */
 	public function order_status( $order_id, $status_old = 'new', $status_new = 'pending' ) {
+
 		$api_key_correct = ! empty( $this->api_key );
 		$status_correct  = $status_new === $this->event;
 		$opt_in_correct  = 'yes' === get_post_meta( $order_id, 'ckwc_opt_in', 'no' );
+
 		if ( $api_key_correct && $status_correct && $opt_in_correct ) {
 			$order = wc_get_order( $order_id );
 			$items = $order->get_items();
@@ -437,12 +438,14 @@ class CKWC_Integration extends WC_Integration {
 
 			$products = array();
 
-			foreach( $order->get_items( ) as $item ) {
+			foreach( $order->get_items( ) as $item_key => $item ) {
 				$products[] = array(
-						'name' => $item->get_name(),
-						'sku' => $item->get_product()->get_sku(),
+				        'pid'        => $item->get_id(),
+						'lid'        => $item_key,
+						'name'       => $item->get_name(),
+						'sku'        => $item->get_product()->get_sku(),
 						'unit_price' => $item->get_product()->get_price(),
-						'quantity' => $item->get_quantity(),
+						'quantity'   => $item->get_quantity(),
 					);
 			}
 
@@ -451,6 +454,7 @@ class CKWC_Integration extends WC_Integration {
 				'purchase' => array(
 					'transaction_id'   => $order->get_order_number(),
 					'email_address'    => $order->get_billing_email(),
+					'first_name'       => $order->get_billing_first_name(),
 					'currency'         => $order->get_currency(),
 					'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
 					'subtotal'         => (double) $order->get_subtotal(),
@@ -466,15 +470,15 @@ class CKWC_Integration extends WC_Integration {
 			$query_args = is_null( $this->api_key ) ? array() : array(
 				'api_key' => $this->api_key,
 			);
-			$body = json_encode( $purchase_options );
+			$body = $purchase_options;
 			$args = array( 'method' => 'POST' );
 			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
 
 			if ( is_wp_error( $response ) ){
-				$this->debug_log( 'send payment response WP Error: '
-				                  . $response->get_error_code() . ' '
-				                  . $response->get_error_message() );
+				$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
+				$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
 			} else {
+			    $order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
 				$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
 			}
 
