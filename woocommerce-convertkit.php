@@ -40,7 +40,7 @@ if ( ! defined( 'CKWC_SLUG' ) ) {
 }
 
 if ( ! defined( 'CKWC_TITLE' ) ) {
-	define( 'CKWC_TITLE', 'Gravity Forms ConvertKit Add-On' );
+	define( 'CKWC_TITLE', 'ConvertKit for WooCommerce' );
 }
 
 if ( ! defined( 'CKWC_SHORT_TITLE' ) ) {
