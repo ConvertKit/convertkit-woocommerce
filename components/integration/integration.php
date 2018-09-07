@@ -472,6 +472,9 @@ class CKWC_Integration extends WC_Integration {
 			);
 			$body = $purchase_options;
 			$args = array( 'method' => 'POST' );
+
+			$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
+
 			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
 
 			if ( is_wp_error( $response ) ){
