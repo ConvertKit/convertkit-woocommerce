@@ -440,7 +440,7 @@ class CKWC_Integration extends WC_Integration {
 
 			foreach( $order->get_items( ) as $item_key => $item ) {
 				$products[] = array(
-				        'pid'        => $item->get_id(),
+				        'pid'        => $item->get_product()->get_id(),
 						'lid'        => $item_key,
 						'name'       => $item->get_name(),
 						'sku'        => $item->get_product()->get_sku(),
