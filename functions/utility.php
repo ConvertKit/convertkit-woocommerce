@@ -15,7 +15,7 @@ if ( ! function_exists( 'ckwc_debug' ) ) {
 			$variables = func_get_args();
 			$backtrace = debug_backtrace();
 
-			$tracefile = str_replace( CKGF_PLUGIN_DIRPATH, '', $backtrace[0]['file'] );
+			$tracefile = str_replace( CKWC_PLUGIN_DIRPATH, '', $backtrace[0]['file'] );
 			$traceline = $backtrace[0]['line'];
 
 			foreach ( $variables as $variable ) {
@@ -49,10 +49,9 @@ if ( ! function_exists( 'ckwc_redirect' ) ) {
 
 if ( ! function_exists( 'ckwc_requirements_met' ) ) {
 	/**
-	 * Returns a value indicating whether the "ConvertKit: Gravity Forms" plugin's requirements are met. This means that the
-	 * plugins that "ConvertKit: Gravity Forms" uses data or code from are present and of the appropriate minimum version.
+	 * Returns a value indicating whether the plugin's requirements are met.
 	 *
-	 * @return bool `true` if all "ConvertKit: Gravity Forms" requirements are met and `false` otherwise
+	 * @return bool `true` if all requirements are met and `false` otherwise
 	 */
 	function ckwc_requirements_met() {
 		return class_exists( 'WC_Integration' );
