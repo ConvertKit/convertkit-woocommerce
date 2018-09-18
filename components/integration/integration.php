@@ -440,7 +440,7 @@ class CKWC_Integration extends WC_Integration {
 
 			foreach( $order->get_items( ) as $item_key => $item ) {
 				$products[] = array(
-				        'pid'        => $item->get_id(),
+				        'pid'        => $item->get_product()->get_id(),
 						'lid'        => $item_key,
 						'name'       => $item->get_name(),
 						'sku'        => $item->get_product()->get_sku(),
@@ -472,6 +472,9 @@ class CKWC_Integration extends WC_Integration {
 			);
 			$body = $purchase_options;
 			$args = array( 'method' => 'POST' );
+
+			$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
+
 			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
 
 			if ( is_wp_error( $response ) ){
