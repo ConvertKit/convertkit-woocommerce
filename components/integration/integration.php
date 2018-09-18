@@ -24,11 +24,18 @@ class CKWC_Integration extends WC_Integration {
 		$this->api_key      = $this->get_option( 'api_key' );
 		$this->api_secret      = $this->get_option( 'api_secret' );
 		$this->subscription = $this->get_option( 'subscription' );
+		if( class_exists( 'WC_Subscriptions' ) ) {
+                	$statuses = wcs_get_subscription_statuses();
+                        foreach( $statuses as $status => $status_label ) {
+				$this->{"subscription_wc_subscriptions_$status"} = $this->get_option( "subscription_wc_subscriptions_$status"  );
+			}
+		}
 
 		// Enabled and when it should take place
 		$this->enabled         = $this->get_option( 'enabled' );
 		$this->event           = $this->get_option( 'event' );
 		$this->send_purchases  = $this->get_option( 'send_purchases' );
+                $this->enabled_wc_subscriptions      = $this->get_option( 'enabled_wc_subscriptions' );
 
 		// Opt-in field
 		$this->display_opt_in  = $this->get_option( 'display_opt_in' );
@@ -48,19 +55,25 @@ class CKWC_Integration extends WC_Integration {
 			add_action( 'save_post_product', array( $this, 'save_product' ) );
 		}
 
-		if ( 'yes' === $this->enabled && 'yes' === $this->display_opt_in ) {
+		if ( ('yes' === $this->enabled || 'yes' === $this->enabled_wc_subscriptions) && 'yes' === $this->display_opt_in ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_opt_in_checkbox' ) );
 		}
 
-		if ( 'yes' === $this->enabled ) {
+		if ( 'yes' === $this->enabled || 'yes' === $this->enabled_wc_subscriptions ) {
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'save_opt_in_checkbox' ) );
+		}
 
+		if ( 'yes' === $this->enabled ) {
 			add_action( 'woocommerce_checkout_update_order_meta',  array( $this, 'order_status' ), 99999, 1 );
 			add_action( 'woocommerce_order_status_changed',        array( $this, 'order_status' ), 99999, 3 );
 
 			if ( 'yes' === $this->send_purchases ){
 				add_action( 'woocommerce_payment_complete',        array( $this, 'send_payment' ), 99999, 3 );
 			}
+		}
+
+		if ( 'yes' === $this->enabled_wc_subscriptions ) {
+			add_action( 'woocommerce_subscription_status_updated', array( $this, 'subscription_status' ), 99999, 3 );
 		}
 
 	}
@@ -118,101 +131,135 @@ class CKWC_Integration extends WC_Integration {
 				),
 			),
 
-			'display_opt_in' => array(
-				'title'       => __( 'Display Opt-In Checkbox' ),
-				'label'       => __( 'Display an Opt-In checkbox on checkout' ),
-				'type'        => 'checkbox',
-				'default'     => 'no',
-				'description' => __( 'If enabled, customers will only be subscribed if the "Opt-In" checkbox presented on checkout is checked.' ),
-				'desc_tip'    => false,
-			),
-
-			'opt_in_label' => array(
-				'title'       => __( 'Opt-In Checkbox Label' ),
-				'type'        => 'text',
-				'default'     => __( 'I want to subscribe to the newsletter' ),
-				'description' => __( 'Optional (only used if the above field is checked): Customize the label next to the opt-in checkbox.' ),
-				'desc_tip'    => false,
-			),
-
-			'opt_in_status' => array(
-				'title'       => __( 'Opt-In Checkbox<br />Default Status' ),
-				'type'        => 'select',
-				'default'     => 'checked',
-				'description' => __( 'The default state of the opt-in checkbox' ),
-				'desc_tip'    => false,
-				'options'     => array(
-					'checked'   => __( 'Checked' ),
-					'unchecked' => __( 'Unchecked' ),
-				),
-			),
-
-			'opt_in_location' => array(
-				'title'       => __( 'Opt-In Checkbox<br />Display Location' ),
-				'type'        => 'select',
-				'default'     => 'billing',
-				'description' => __( 'Where to display the opt-in checkbox on the checkout page (under Billing Info or Order Info).' ),
-				'desc_tip'    => false,
-				'options'     => array(
-					'billing' => __( 'Billing' ),
-					'order'   => __( 'Order' ),
-				),
-			),
-
-			'api_key' => array(
-				'title'       => __( 'API Key' ),
-				'type'        => 'text',
-				'default'     => '',
-				// translators: this is a url to the ConvertKit site.
-				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Key</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
-				'desc_tip'    => false,
-			),
-
-			'api_secret' => array(
-				'title'       => __( 'API Secret' ),
-				'type'        => 'text',
-				'default'     => '',
-				// translators: this is a url to the ConvertKit site.
-				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Secret</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
-				'desc_tip'    => false,
-			),
-
 			'subscription' => array(
 				'title'       => __( 'Subscription' ),
 				'type'        => 'subscription',
 				'default'     => '',
 				'description' => __( 'Customers will be added to the selected item' ),
 			),
+		);
 
-			'name_format' => array(
-				'title'       => __( 'Name Format' ),
-				'type'        => 'select',
-				'default'     => 'first',
-				'description' => __( 'How should the customer name be sent to ConvertKit?' ),
-				'desc_tip'    => false,
-				'options'     => array(
-					'first'   => __( 'Billing First Name' ),
-					'last'    => __( 'Billing Last Name' ),
-					'both'    => __( 'Billing First Name + Billing Last Name' ),
+		if( class_exists( 'WC_Subscriptions' ) ) {
+
+			$statuses = wcs_get_subscription_statuses();
+
+			$this->form_fields = array_merge( $this->form_fields, 
+				array(
+					"enabled_wc_subscriptions" => array(
+						'title'		=> __( 'Enable/Disable for WooCommerce Subscriptions' ),
+						'type'		=> 'checkbox',
+						'label'		=> __( 'Enable ConvertKit integration for WooCommerce Subscriptions' ),
+						'default'	=> 'no',
+					), 
+				)
+			);
+
+			foreach( $statuses as $status => $status_label ) {
+				$this->form_fields = array_merge( $this->form_fields, 
+					array(
+						"subscription_wc_subscriptions_$status" => array(
+                               				'title'       => __( 'Subscription for ' . $status_label ),
+                               				'type'        => 'subscription',
+                               				'default'     => '',
+		                        	        'description' => __( 'Customers will be added to the selected item when the subscription becomes ' . $status_label ),
+						),
+					)
+				);
+			}
+
+		}
+
+		$this->form_fields = array_merge( $this->form_fields,
+			array(
+				'display_opt_in' => array(
+					'title'       => __( 'Display Opt-In Checkbox' ),
+					'label'       => __( 'Display an Opt-In checkbox on checkout' ),
+					'type'        => 'checkbox',
+					'default'     => 'no',
+					'description' => __( 'If enabled, customers will only be subscribed if the "Opt-In" checkbox presented on checkout is checked.' ),
+					'desc_tip'    => false,
 				),
-			),
 
-			'send_purchases' => array(
-				'title'       => __( 'Purchases' ),
-				'label'       => __( 'Send purchase data to ConvertKit.' ),
-				'type'        => 'checkbox',
-				'default'     => 'no',
-				'description' => __( '' ),
-				'desc_tip'    => false,
-			),
+				'opt_in_label' => array(
+					'title'       => __( 'Opt-In Checkbox Label' ),
+					'type'        => 'text',
+					'default'     => __( 'I want to subscribe to the newsletter' ),
+					'description' => __( 'Optional (only used if the above field is checked): Customize the label next to the opt-in checkbox.' ),
+					'desc_tip'    => false,
+				),
 
-			'debug' => array(
-				'title'       => __( 'Debug' ),
-				'type'        => 'checkbox',
-				'label'       => __('Write data to a log file'),
-				'description' => 'You can view the log file by going to WooCommerce > Status, click the Logs tab, then selecting convertkit.',
-				'default'     => 'no',
-			),
+				'opt_in_status' => array(
+					'title'       => __( 'Opt-In Checkbox<br />Default Status' ),
+					'type'        => 'select',
+					'default'     => 'checked',
+					'description' => __( 'The default state of the opt-in checkbox' ),
+					'desc_tip'    => false,
+					'options'     => array(
+						'checked'   => __( 'Checked' ),
+						'unchecked' => __( 'Unchecked' ),
+					),
+				),
+
+				'opt_in_location' => array(
+					'title'       => __( 'Opt-In Checkbox<br />Display Location' ),
+					'type'        => 'select',
+					'default'     => 'billing',
+					'description' => __( 'Where to display the opt-in checkbox on the checkout page (under Billing Info or Order Info).' ),
+					'desc_tip'    => false,
+					'options'     => array(
+						'billing' => __( 'Billing' ),
+						'order'   => __( 'Order' ),
+					),
+				),
+
+				'api_key' => array(
+					'title'       => __( 'API Key' ),
+					'type'        => 'text',
+					'default'     => '',
+					// translators: this is a url to the ConvertKit site.
+					'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Key</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+					'desc_tip'    => false,
+				),
+
+				'api_secret' => array(
+					'title'       => __( 'API Secret' ),
+					'type'        => 'text',
+					'default'     => '',
+					// translators: this is a url to the ConvertKit site.
+					'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Secret</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+					'desc_tip'    => false,
+				),
+
+				'name_format' => array(
+					'title'       => __( 'Name Format' ),
+					'type'        => 'select',
+					'default'     => 'first',
+					'description' => __( 'How should the customer name be sent to ConvertKit?' ),
+					'desc_tip'    => false,
+					'options'     => array(
+						'first'   => __( 'Billing First Name' ),
+						'last'    => __( 'Billing Last Name' ),
+						'both'    => __( 'Billing First Name + Billing Last Name' ),
+					),
+				),
+
+				'send_purchases' => array(
+					'title'       => __( 'Purchases' ),
+					'label'       => __( 'Send purchase data to ConvertKit.' ),
+					'type'        => 'checkbox',
+					'default'     => 'no',
+					'description' => __( '' ),
+					'desc_tip'    => false,
+				),
+
+				'debug' => array(
+					'title'       => __( 'Debug' ),
+					'type'        => 'checkbox',
+					'label'       => __('Write data to a log file'),
+					'description' => 'You can view the log file by going to WooCommerce > Status, click the Logs tab, then selecting convertkit.',
+					'default'     => 'no',
+				),
+			)
 		);
 
 		ob_start();
@@ -486,6 +533,75 @@ class CKWC_Integration extends WC_Integration {
 			}
 
 		}
+	}
+
+	/**
+	 * @param $subscription
+	 * @param string $status_new
+	 * @param string $status_old
+	 */
+	public function subscription_status( $wc_subscription, $status_new, $status_old ) {
+		$api_key_correct = ! empty( $this->api_key );
+		$status_correct  = isset( $this->{"subscription_wc_subscriptions_wc-$status_new"} );
+		$opt_in_correct  = 'yes' === get_post_meta( $wc_subscription->get_parent()->get_id(), 'ckwc_opt_in', 'no' );
+		if ( $api_key_correct && $status_correct && $opt_in_correct ) {
+			if ( version_compare( WC()->version, '3.0.0', '>=' ) ) {
+				$email = $wc_subscription->get_billing_email();
+				$first_name  = $wc_subscription->get_billing_first_name();
+				$last_name  = $wc_subscription->get_billing_last_name();
+
+			} else {
+				$email = $wc_subscription->billing_email;
+				$first_name  = $wc_subscription->billing_first_name;
+				$last_name  = $wc_subscription->billing_last_name;
+			}
+
+			switch ( $this->name_format ) {
+				case 'first':
+					$name  = $first_name;
+					break;
+				case 'last':
+					$name  = $last_name;
+					break;
+				default:
+					$name  = sprintf("%s %s", $first_name, $last_name);
+					break;
+
+			}
+			$subscriptions = array( $this->{"subscription_wc_subscriptions_wc-$status_new"} );
+
+			$subscriptions = array_filter( array_unique( $subscriptions ) );
+			foreach ( $subscriptions as $subscription ) {
+				$subscription_parts    = explode( ':', $subscription );
+				$subscription_type     = $subscription_parts[0];
+				$subscription_id       = $subscription_parts[1];
+				$subscription_function = "ckwc_convertkit_api_add_subscriber_to_{$subscription_type}";
+
+				if ( function_exists( $subscription_function ) ) {
+					$response = call_user_func( $subscription_function, $subscription_id, $email, $name );
+
+					$debug = $this->get_option( 'debug' );
+					if ( 'yes' === $debug ) {
+						$this->debug_log( 'API call: ' . $subscription_type . "\nResponse: \n" . print_r( $response, true ) );
+					}
+				}
+			}
+	
+			$subscription = $this->{"subscription_wc_subscriptions_wc-$status_old"};
+			$subscription_parts = explode( ':', $subscription );
+			$subscription_type     = $subscription_parts[0];
+			$subscription_id       = $subscription_parts[1];
+			$subscription_function = "ckwc_convertkit_api_remove_subscriber_from_{$subscription_type}";
+			
+			if ( function_exists( $subscription_function ) ) {
+				$response = call_user_func( $subscription_function, $subscription_id, $email, $name );
+
+				$debug = $this->get_option( 'debug' );
+				if ( 'yes' === $debug ) {
+					$this->debug_log( 'API call: ' . $subscription_type . "\nResponse: \n" . print_r( $response, true ) );
+				}
+			}
+		}// End if().
 	}
 
 	/**
