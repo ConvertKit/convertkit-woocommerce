@@ -6,6 +6,7 @@
  * Version: 1.0.6
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
+ * Text Domain: convertkit-woocommerce
  */
 
 
