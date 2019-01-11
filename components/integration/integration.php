@@ -418,6 +418,20 @@ class CKWC_Integration extends WC_Integration {
 				if ( function_exists( $subscription_function ) ) {
 					$response = call_user_func( $subscription_function, $subscription_id, $email, $name );
 
+					if ( ! is_wp_error( $response ) && ! empty( $this->api_key ) && 'tag' === $subscription_type ) {
+                        $options = ckwc_get_subscription_options();
+                        $tags    = array();
+                        foreach ( $options as $option ) {
+                            if ( 'tag' !== $option['key'] ) { continue; }
+                            $tags = $option['options'];
+                        }
+                        if ( $tags ) {
+	                        if ( isset( $tags[ $subscription_id ] ) ) {
+	                            wc_create_order_note( $order_id, sprintf( __( 'Customer tagged with: %s', 'woocommerce-convertkit' ), $tags[ $subscription_id ] ) );
+	                        }
+                        }
+                    }
+
 					$debug = $this->get_option( 'debug' );
 					if ( 'yes' === $debug ) {
 						$this->debug_log( 'API call: ' . $subscription_type . "\nResponse: \n" . print_r( $response, true ) );
