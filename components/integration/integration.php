@@ -3,7 +3,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 class CKWC_Integration extends WC_Integration {
 
 	/**
@@ -37,6 +36,9 @@ class CKWC_Integration extends WC_Integration {
 		$this->opt_in_location = $this->get_option( 'opt_in_location' );
 		$this->name_format     = $this->get_option( 'name_format' );
 
+		add_action( 'wp_ajax_ckwc_find_unsynced_orders', array( $this, 'find_unsynced_orders' ) );
+		add_action( 'wp_ajax_ckwc_sync_orders', array( $this, 'sync_orders' ) );
+
 		if ( is_admin() ) {
 			add_filter( 'plugin_action_links_' . CKWC_PLUGIN_BASENAME, array( $this, 'plugin_links' ) );
 
@@ -46,6 +48,8 @@ class CKWC_Integration extends WC_Integration {
 
 			add_action( 'add_meta_boxes_product', array( $this, 'add_meta_boxes' ) );
 			add_action( 'save_post_product', array( $this, 'save_product' ) );
+
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 		}
 
 		if ( 'yes' === $this->enabled && 'yes' === $this->display_opt_in ) {
@@ -63,6 +67,135 @@ class CKWC_Integration extends WC_Integration {
 			}
 		}
 
+	}
+
+	/**
+	 * Sync Orders
+	 */
+	public function sync_orders() {
+		$step  = $_GET['step'] ? absint( $_GET['step'] ) : 1;
+		$total = $_GET['total'] ? absint( $_GET['total'] ) : 0;
+
+		include 'class-ckwc-sync-orders-batch.php';
+
+		if ( 0 === $total ) {
+			$total = count( get_option( 'ckwc_unsynched_orders', array() ) );
+        }
+
+		$batch = new CKWC_Sync_Orders_Batch( $step, $total, 10 );
+		$batch->method = array( $this, 'send_payment' );
+		$batch->process();
+		$progress  = $batch->get_progress();
+		$done      = false;
+		$next_step = $step + 1;
+		$unsynced  = $batch->get_unsynced_orders();
+		update_option( 'ckwc_unsynched_orders', $unsynced, false );
+
+		if ( 100 === $progress ) {
+			$done = true;
+		}
+
+		wp_send_json_success( array(
+			'step'     => $next_step,
+			'total'    => $total,
+			'done'     => $done,
+			'progress' => $progress,
+		));
+		wp_die();
+    }
+
+	/**
+	 * Find Unsynced Orders
+	 */
+	public function find_unsynced_orders() {
+        $step  = $_GET['step'] ? absint( $_GET['step'] ) : 1;
+        $total = $_GET['total'] ? absint( $_GET['total'] ) : 0;
+
+        include 'class-ckwc-unsynced-batch.php';
+
+        $batch = new CKWC_Unsynced_Batch( $step, $total );
+        $batch->process();
+        $progress  = $batch->get_progress();
+        $done      = false;
+        $next_step = $step + 1;
+        $unsynced  = $batch->get_unsynced_orders();
+        update_option( 'ckwc_unsynched_orders', $unsynced, false );
+
+        if ( 100 === $progress ) {
+            $done = true;
+        }
+
+        wp_send_json_success( array(
+                'step'     => $next_step,
+                'total'    => $total,
+                'done'     => $done,
+                'unsynced' => count( $unsynced ),
+        ));
+        wp_die();
+    }
+
+	/**
+	 * @param $hook
+	 */
+	public function admin_enqueue( $hook ) {
+
+	    if ( 'woocommerce_page_wc-settings' !== $hook ) {
+	        return;
+	    }
+
+	    if ( ! isset( $_GET['tab'] ) || 'integration' !== $_GET['tab'] ) {
+	        return;
+        }
+
+        wp_enqueue_style( 'ckwc-css', plugin_dir_url( CKWC_PLUGIN_FILEPATH ) . '/components/integration/resources/integration.css' );
+	    wp_enqueue_script( 'ckwc-js', plugin_dir_url( CKWC_PLUGIN_FILEPATH ) . '/components/integration/resources/integration.js', array( 'jquery' ), '1.0.6', true );
+    }
+
+	/**
+     * Return the count of total orders.
+     *
+	 * @return int
+	 */
+    private function get_order_count() {
+	    // No WHERE clause for a faster retrieveal.
+	    $system_status    = new WC_REST_System_Status_Controller();
+	    $post_type_counts = $system_status->get_post_type_counts();
+	    $post_type_counts = array_values( array_filter( $post_type_counts, array( $this, 'only_order_type' ) ) );
+	    return $post_type_counts ? $post_type_counts[0]->count : 0;
+    }
+
+	/**
+     * Return an array element if it's an order type.
+     *
+     * @see CKWC_Integration::get_order_count
+     *
+	 * @param $object
+	 *
+	 * @return bool
+	 */
+    public function only_order_type( $object ) {
+	    if ( 'shop_order' !== $object->type ) { return false; }
+	    return true;
+    }
+
+	/**
+	 * Output the gateway settings screen.
+	 */
+	public function admin_options() {
+	    if ( ! isset( $_GET['screen'] ) || 'ckwc_sync_purchases' !== $_GET['screen'] ) {
+		    parent::admin_options();
+        } else {
+		    $GLOBALS['hide_save_button'] = true;
+		    $order_count = $this->get_order_count();
+		    $unsynced    = get_option( 'ckwc_unsynched_orders', null );
+		    echo '<h2>' . esc_html( $this->get_method_title() ) . ' - ' . __( 'Sync Purchases' ) . '</h2>';
+		    echo '<div><input type="hidden" name="section" value="' . esc_attr( $this->id ) . '" /></div>';
+		    ?>
+            <a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc' ) ?>" class="button button-secondary"><?php esc_html_e( 'Back to Settings' ); ?></a>
+            <?php
+            include_once 'views/orders-data.php';
+
+        }
 	}
 
 	/**
@@ -206,6 +339,15 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 			),
 
+			'sync_purchases' => array(
+				'title'       => __( 'Sync Purchases' ),
+				'label'       => __( 'Sync Old Purchases.' ),
+				'type'        => 'ckwc_sync_purchases',
+				'default'     => 'no',
+				'description' => __( '' ),
+				'desc_tip'    => false,
+			),
+
 			'debug' => array(
 				'title'       => __( 'Debug' ),
 				'type'        => 'checkbox',
@@ -215,11 +357,6 @@ class CKWC_Integration extends WC_Integration {
 			),
 		);
 
-		ob_start();
-		include( 'resources/integration.js' );
-		$code = ob_get_clean();
-
-		wc_enqueue_js( $code );
 	}
 
 	/**
@@ -254,41 +391,61 @@ class CKWC_Integration extends WC_Integration {
 		ob_start();
 
 		?>
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
 				<?php echo $this->get_tooltip_html( $data ); ?>
-			</th>
-			<td class="forminp">
+            </th>
+            <td class="forminp">
 				<?php if ( $options ) { ?>
-				<fieldset>
-					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-					<select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
-						<option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...' ); ?></option>
-						<?php foreach ( $options as $option_group ) {
-							if ( empty( $option_group['options'] ) ) {
-								continue;
-							} ?>
-						<optgroup label="<?php echo esc_attr( $option_group['name'] ); ?>">
-							<?php foreach ( $option_group['options'] as $id => $name ) {
-								$value = "{$option_group['key']}:{$id}"; ?>
-							<option <?php selected( $value, $this->get_option( $key ) ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $name ); ?></option>
+                    <fieldset>
+                        <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                        <select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
+                            <option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...' ); ?></option>
+							<?php foreach ( $options as $option_group ) {
+								if ( empty( $option_group['options'] ) ) {
+									continue;
+								} ?>
+                                <optgroup label="<?php echo esc_attr( $option_group['name'] ); ?>">
+									<?php foreach ( $option_group['options'] as $id => $name ) {
+										$value = "{$option_group['key']}:{$id}"; ?>
+                                        <option <?php selected( $value, $this->get_option( $key ) ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $name ); ?></option>
+									<?php } ?>
+                                </optgroup>
 							<?php } ?>
-						</optgroup>
-						<?php } ?>
-					</select>
-					<?php echo $this->get_description_html( $data ); ?>
-				</fieldset>
+                        </select>
+						<?php echo $this->get_description_html( $data ); ?>
+                    </fieldset>
 				<?php } else { ?>
-				<p class="description"><?php _e( 'Please provide a valid ConvertKit API Key.' ); ?></p>
+                    <p class="description"><?php _e( 'Please provide a valid ConvertKit API Key.' ); ?></p>
 				<?php } ?>
-			</td>
-		</tr>
+            </td>
+        </tr>
 		<?php
 
 		return ob_get_clean();
 	}
 
+	/**
+	 * @param $key
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	public function generate_ckwc_sync_purchases_html( $key, $data ) {
+
+		ob_start();
+
+		?>
+        <tr valign="top">
+            <th scope="row" class="titledesc" colspan="2">
+                <a href="<?php echo admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc&screen=ckwc_sync_purchases' ) ?>" class="button button-secondary"><?php esc_html_e( 'Sync Purchases' ); ?></a>
+            </th>
+        </tr>
+		<?php
+
+		return ob_get_clean();
+	}
 	/**
 	 * @param $settings
 	 *
@@ -440,13 +597,13 @@ class CKWC_Integration extends WC_Integration {
 
 			foreach( $order->get_items( ) as $item_key => $item ) {
 				$products[] = array(
-				        'pid'        => $item->get_product()->get_id(),
-						'lid'        => $item_key,
-						'name'       => $item->get_name(),
-						'sku'        => $item->get_product()->get_sku(),
-						'unit_price' => $item->get_product()->get_price(),
-						'quantity'   => $item->get_quantity(),
-					);
+					'pid'        => $item->get_product()->get_id(),
+					'lid'        => $item_key,
+					'name'       => $item->get_name(),
+					'sku'        => $item->get_product()->get_sku(),
+					'unit_price' => $item->get_product()->get_price(),
+					'quantity'   => $item->get_quantity(),
+				);
 			}
 
 			$purchase_options = array(
@@ -480,12 +637,22 @@ class CKWC_Integration extends WC_Integration {
 			if ( is_wp_error( $response ) ){
 				$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
 				$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
+				$unsynced = get_option( 'ckwc_unsynched_orders', array() );
+				$unsynced[] = $order_id;
+				update_option( 'ckwc_unsynched_orders', array_unique( $unsynced ), false );
 			} else {
-			    $order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
+				$order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
 				$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
+				// Save the CK Purchase ID to Order.
+				if ( isset( $response['id'] ) ) {
+					$order->update_meta_data( '_ck_purchase_id', absint( $response['id'] ) );
+					$order->save();
+					return true;
+				}
 			}
 
 		}
+		return false;
 	}
 
 	/**
@@ -523,7 +690,6 @@ require_once( 'functions/integration.php' );
 
 function ckwc_woocommerce_integrations( $integrations ) {
 	$integrations[] = 'CKWC_Integration';
-
 	return $integrations;
 }
 add_filter( 'woocommerce_integrations', 'ckwc_woocommerce_integrations' );

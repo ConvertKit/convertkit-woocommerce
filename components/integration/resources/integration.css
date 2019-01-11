@@ -1,0 +1,49 @@
+.ckwc-order-data {
+    display: flex;
+    margin-top: 1em;
+}
+
+.ckwc-order-data .order-data {
+    border-radius: 3px;
+    background: white;
+    width: 300px;
+    text-align: center;
+    margin-right: 2em;
+    border: 1px dashed rgba( 0, 0, 0, 0.1 );
+    position: relative;
+}
+
+.ckwc-order-data .order-data svg {
+    color: #955a89;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 50%;
+    height: 50%;
+    opacity: 0.15;
+}
+
+.ckwc-order-data .order-data strong,
+.ckwc-order-data .order-data p {
+    padding: 20px;
+    display: block;
+    margin: 0;
+}
+
+.ckwc-order-data .order-data strong {
+    color: #955a89;
+    font-size: 2em;
+}
+
+.ckwc-order-data .order-data p {
+    font-weight: 500;
+    padding-top: 0;
+}
+
+.ckwc-spinner {
+    margin-top:0;
+    float:none;
+}
