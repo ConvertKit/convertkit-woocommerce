@@ -4,6 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class CKWC_Integration
+ */
 class CKWC_Integration extends WC_Integration {
 
 	/**
@@ -22,13 +25,13 @@ class CKWC_Integration extends WC_Integration {
 
 		// API interaction
 		$this->api_key      = $this->get_option( 'api_key' );
-		$this->api_secret      = $this->get_option( 'api_secret' );
+		$this->api_secret   = $this->get_option( 'api_secret' );
 		$this->subscription = $this->get_option( 'subscription' );
 
 		// Enabled and when it should take place
-		$this->enabled         = $this->get_option( 'enabled' );
-		$this->event           = $this->get_option( 'event' );
-		$this->send_purchases  = $this->get_option( 'send_purchases' );
+		$this->enabled        = $this->get_option( 'enabled' );
+		$this->event          = $this->get_option( 'event' );
+		$this->send_purchases = $this->get_option( 'send_purchases' );
 
 		// Opt-in field
 		$this->display_opt_in  = $this->get_option( 'display_opt_in' );
@@ -521,6 +524,11 @@ class CKWC_Integration extends WC_Integration {
 
 require_once( 'functions/integration.php' );
 
+/**
+ * @param array $integrations
+ *
+ * @return array
+ */
 function ckwc_woocommerce_integrations( $integrations ) {
 	$integrations[] = 'CKWC_Integration';
 
