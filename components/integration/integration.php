@@ -4,7 +4,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class CKWC_Integration
+ */
 class CKWC_Integration extends WC_Integration {
+
+	/**
+     * @var string
+     */
+	public $api_key;
+
+	/**
+     * @var string
+     */
+	private $api_secret;
+
+	/**
+     * @var string
+     */
+	private $subscription;
+
+	/**
+     * @var string
+     */
+	public $enabled;
+
+	/**
+     * @var string
+     */
+	private $event;
+
+	/**
+     * @var string
+     */
+	private $send_purchases;
+
+	/**
+     * @var string
+     */
+	private $display_opt_in;
+
+	/**
+     * @var string
+     */
+	private $opt_in_label;
+
+	/**
+     * @var string
+     */
+	private $opt_in_status;
+
+	/**
+     * @var string
+     */
+	private $opt_in_location;
+
+	/**
+     * @var string
+     */
+	private $name_format;
 
 	/**
 	 * Constructor
@@ -59,7 +117,7 @@ class CKWC_Integration extends WC_Integration {
 			add_action( 'woocommerce_order_status_changed',        array( $this, 'order_status' ), 99999, 3 );
 
 			if ( 'yes' === $this->send_purchases ){
-				add_action( 'woocommerce_payment_complete',        array( $this, 'send_payment' ), 99999, 3 );
+				add_action( 'woocommerce_payment_complete',        array( $this, 'send_payment' ), 99999, 1 );
 			}
 		}
 
@@ -360,7 +418,7 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * @param $order_id
+	 * @param int $order_id
 	 * @param string $status_old
 	 * @param string $status_new
 	 */
@@ -422,7 +480,9 @@ class CKWC_Integration extends WC_Integration {
                         $options = ckwc_get_subscription_options();
                         $tags    = array();
                         foreach ( $options as $option ) {
-                            if ( 'tag' !== $option['key'] ) { continue; }
+	                        if ( 'tag' !== $option['key'] ) {
+		                        continue;
+	                        }
                             $tags = $option['options'];
                         }
                         if ( $tags ) {
@@ -443,7 +503,8 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Send order data to ConvertKit
-	 * @param $order_id
+     *
+	 * @param int $order_id
 	 */
 	public function send_payment( $order_id ){
 		$api_key_correct = ! empty( $this->api_key );
@@ -535,6 +596,11 @@ class CKWC_Integration extends WC_Integration {
 
 require_once( 'functions/integration.php' );
 
+/**
+ * @param array $integrations
+ *
+ * @return array
+ */
 function ckwc_woocommerce_integrations( $integrations ) {
 	$integrations[] = 'CKWC_Integration';
 
