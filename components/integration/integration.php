@@ -487,7 +487,7 @@ class CKWC_Integration extends WC_Integration {
                         }
                         if ( $tags ) {
 	                        if ( isset( $tags[ $subscription_id ] ) ) {
-	                            wc_create_order_note( $order_id, sprintf( __( 'Customer tagged with: %s', 'woocommerce-convertkit' ), $tags[ $subscription_id ] ) );
+	                            wc_create_order_note( $order_id, sprintf( __( '[ConvertKit] Customer tagged with: %s', 'woocommerce-convertkit' ), $tags[ $subscription_id ] ) );
 	                        }
                         }
                     }
