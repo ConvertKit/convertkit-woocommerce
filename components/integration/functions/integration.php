@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! function_exists( 'ckwc_instance' ) ) {
+	/**
+	 * @return bool|CKWC_Integration
+	 */
 	function ckwc_instance() {
 		$integrations = WC()->integrations->get_integrations();
 
@@ -13,6 +16,9 @@ if ( ! function_exists( 'ckwc_instance' ) ) {
 }
 
 if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
+	/**
+	 * @return array|mixed
+	 */
 	function ckwc_get_subscription_options() {
 		$options = get_transient( 'ckwc_subscription_options' );
 
@@ -26,17 +32,26 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 					array(
 						'key'     => 'course',
 						'name'    => __( 'Courses' ),
-						'options' => array_combine( wp_list_pluck( $courses, 'id' ), wp_list_pluck( $courses, 'name' ) ),
+						'options' => array_combine(
+							wp_list_pluck( $courses, 'id' ),
+							wp_list_pluck( $courses, 'name' )
+						),
 					),
 					array(
 						'key'     => 'form',
 						'name'    => __( 'Forms' ),
-						'options' => array_combine( wp_list_pluck( $forms, 'id' ), wp_list_pluck( $forms, 'name' ) ),
+						'options' => array_combine(
+							wp_list_pluck( $forms, 'id' ),
+							wp_list_pluck( $forms, 'name' )
+						),
 					),
 					array(
 						'key'     => 'tag',
 						'name'    => __( 'Tags' ),
-						'options' => array_combine( wp_list_pluck( $tags, 'id' ), wp_list_pluck( $tags, 'name' ) ),
+						'options' => array_combine(
+							wp_list_pluck( $tags, 'id' ),
+							wp_list_pluck( $tags, 'name' )
+						),
 					),
 				);
 
