@@ -116,6 +116,7 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 				'options'     => array(
 					'pending'    => __( 'Order Created' ),
+					'on-hold'    => __( 'Order On-Hold' ),
 					'processing' => __( 'Order Processing' ),
 					'completed'  => __( 'Order Completed' ),
 				),
