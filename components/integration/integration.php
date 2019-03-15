@@ -429,15 +429,15 @@ class CKWC_Integration extends WC_Integration {
 		$opt_in_correct  = 'yes' === get_post_meta( $order_id, 'ckwc_opt_in', 'no' );
 
 		if ( $api_key_correct && $status_correct && $opt_in_correct ) {
-			$order      = wc_get_order( $order_id );
-			$items      = $order->get_items();
-			$email      = $this->email( $order );
-			$name       = $this->name_format( $this->first_name( $order ), $this->last_name( $order ) );
+			$order = wc_get_order( $order_id );
+			$items = $order->get_items();
+			$email = $this->email( $order );
+			$name  = $this->name_format( $this->first_name( $order ), $this->last_name( $order ) );
 
 			/**
 			 * $subscriptions is an array of type:id pairs, e.g. tag:123456
-             *
-             * First we fill it with the global one in the WooCommerce Integration settings
+			 *
+			 * First we fill it with the global one in the WooCommerce Integration settings
 			 */
 			$subscriptions = array( $this->subscription );
 
@@ -458,10 +458,10 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-     * For each subscription (sequence, tag, form) attached to a product,
-     * perform the relevant actions (subscribe & add order note)
-     *
-	 * @param array  $subscriptions
+	 * For each subscription (sequence, tag, form) attached to a product,
+	 * perform the relevant actions (subscribe & add order note)
+	 *
+	 * @param array $subscriptions
 	 * @param string $email
 	 * @param string $name
 	 * @param string $order_id
@@ -481,7 +481,7 @@ class CKWC_Integration extends WC_Integration {
 	 * For each subscription (sequence, tag, form) attached to a product,
 	 * perform the relevant actions (subscribe & add order note)
 	 *
-	 * @param array  $subscription
+	 * @param array $subscription
 	 * @param string $email
 	 * @param string $name
 	 * @param string $order_id
@@ -492,38 +492,45 @@ class CKWC_Integration extends WC_Integration {
 
 			if ( ! is_wp_error( $response ) ) {
 				$options = ckwc_get_subscription_options();
-				$items    = array();
+				$items   = array();
 				foreach ( $options as $option ) {
 					if ( $subscription['type'] !== $option['key'] ) {
 						continue;
 					}
 
 					/**
-                     * This ends up holding an array of the subscription items (tags, courses, or forms) our WP install knows about,
-                     * which match the current subscription type, in `id => name` pairs
-                     */
+					 * This ends up holding an array of the subscription items (tags, courses, or forms) our WP install knows about,
+					 * which match the current subscription type, in `id => name` pairs
+					 */
 					$items = $option['options'];
 				}
 				if ( $items ) {
 					// we then check if the item ID we sent is in this array, and if so add an order note
 					if ( isset( $items[ $subscription['id'] ] ) ) {
-					    switch ( $subscription['type'] ) {
-                            case 'tag':
-						    case 'form':
-	                            wc_create_order_note( $order_id, sprintf( __( '[ConvertKit] Customer subscribed to the %s: %s', 'woocommerce-convertkit' ), $subscription['type'], $items[ $subscription['id'] ] ) );
-	                            break;
+						switch ( $subscription['type'] ) {
+							case 'tag':
+							case 'form':
+								wc_create_order_note( $order_id,
+								                      sprintf( __( '[ConvertKit] Customer subscribed to the %s: %s',
+								                                   'woocommerce-convertkit' ), $subscription['type'],
+								                               $items[ $subscription['id'] ] ) );
+								break;
 
-                            // Sequences are called "courses" for legacy reasons, so they get a special case
-						    case 'course':
-							    wc_create_order_note( $order_id, sprintf( __( '[ConvertKit] Customer subscribed to the %s: %s', 'woocommerce-convertkit' ), 'sequence', $items[ $subscription['id'] ] ) );
-							    break;
-                        }
+							// Sequences are called "courses" for legacy reasons, so they get a special case
+							case 'course':
+								wc_create_order_note( $order_id,
+								                      sprintf( __( '[ConvertKit] Customer subscribed to the %s: %s',
+								                                   'woocommerce-convertkit' ), 'sequence',
+								                               $items[ $subscription['id'] ] ) );
+								break;
+						}
 					}
 				}
 			}
 
 			if ( 'yes' === $this->get_option( 'debug' ) ) {
-				$this->debug_log( 'API call: ' . $subscription['type'] . "\nResponse: \n" . print_r( $response, true ) );
+				$this->debug_log( 'API call: ' . $subscription['type'] . "\nResponse: \n" . print_r( $response,
+				                                                                                     true ) );
 			}
 		}
 	}
@@ -535,7 +542,8 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function email( $order ) {
 		$email = version_compare( WC()->version, '3.0.0', '>=' ) ? $order->get_billing_email() : $order->billing_email;
-		return apply_filters( 'convertkit_for_woocommerce_email', $email, $order);
+
+		return apply_filters( 'convertkit_for_woocommerce_email', $email, $order );
 	}
 
 	/**
@@ -544,8 +552,10 @@ class CKWC_Integration extends WC_Integration {
 	 * @return string
 	 */
 	public function first_name( $order ) {
-		$first_name = version_compare( WC()->version, '3.0.0', '>=' ) ? $order->get_billing_first_name() : $order->billing_first_name;
-		return apply_filters( 'convertkit_for_woocommerce_first_name', $first_name, $order);
+		$first_name = version_compare( WC()->version, '3.0.0',
+		                               '>=' ) ? $order->get_billing_first_name() : $order->billing_first_name;
+
+		return apply_filters( 'convertkit_for_woocommerce_first_name', $first_name, $order );
 	}
 
 	/**
@@ -554,8 +564,10 @@ class CKWC_Integration extends WC_Integration {
 	 * @return string
 	 */
 	public function last_name( $order ) {
-		$last_name = version_compare( WC()->version, '3.0.0', '>=' ) ? $order->get_billing_last_name() : $order->billing_last_name;
-		return apply_filters( 'convertkit_for_woocommerce_last_name', $last_name, $order);
+		$last_name = version_compare( WC()->version, '3.0.0',
+		                              '>=' ) ? $order->get_billing_last_name() : $order->billing_last_name;
+
+		return apply_filters( 'convertkit_for_woocommerce_last_name', $last_name, $order );
 	}
 
 	/**
@@ -573,7 +585,7 @@ class CKWC_Integration extends WC_Integration {
 				return $last_name;
 				break;
 			default:
-				return sprintf("%s %s", $first_name, $last_name);
+				return sprintf( "%s %s", $first_name, $last_name );
 				break;
 
 		}
@@ -581,7 +593,7 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Send order data to ConvertKit
-     *
+	 *
 	 * @param int $order_id
 	 */
 	public function send_payment( $order_id ){
