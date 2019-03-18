@@ -53,7 +53,6 @@ Yes, for it to work you must first have an account on ConvertKit.com
 ### 1.1.0  2019-03-15
 
 * Add WooCommerce order note when a customer is subscribed to ConvertKit
-* Allow On-Hold order status as the trigger for subscribing a customer to ConvertKit
 
 ### 1.0.6  2018-09-10
 
