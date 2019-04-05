@@ -127,7 +127,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param $post
 	 */
 	public function add_meta_boxes( $post ) {
-		add_meta_box( 'ckwc', __( 'Convert Kit Integration', 'woocommerce-convertkit' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
+		add_meta_box( 'ckwc', __( 'ConvertKit Integration', 'woocommerce-convertkit' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
 	}
 
 	/**
