@@ -69,8 +69,8 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function __construct() {
 		$this->id                 = 'ckwc';
-		$this->method_title       = __( 'ConvertKit' );
-		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.' );
+		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
+		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
 
 		// Initialize form fields
 		$this->init_form_fields();
@@ -127,7 +127,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param $post
 	 */
 	public function add_meta_boxes( $post ) {
-		add_meta_box( 'ckwc', __( 'Convert Kit Integration' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
+		add_meta_box( 'ckwc', __( 'Convert Kit Integration', 'woocommerce-convertkit' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
 	}
 
 	/**
@@ -157,118 +157,118 @@ class CKWC_Integration extends WC_Integration {
 	public function init_form_fields() {
 		$this->form_fields = array(
 			'enabled' => array(
-				'title'       => __( 'Enable/Disable' ),
+				'title'       => __( 'Enable/Disable', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
-				'label'       => __( 'Enable ConvertKit integration' ),
+				'label'       => __( 'Enable ConvertKit integration', 'woocommerce-convertkit' ),
 				'default'     => 'no',
 			),
 
 			'event' => array(
-				'title'       => __( 'Subscribe Event' ),
+				'title'       => __( 'Subscribe Event', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'pending',
-				'description' => __( 'When should customers be subscribed?' ),
+				'description' => __( 'When should customers be subscribed?', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
-					'pending'    => __( 'Order Created' ),
-					'processing' => __( 'Order Processing' ),
-					'completed'  => __( 'Order Completed' ),
+					'pending'    => __( 'Order Created', 'woocommerce-convertkit' ),
+					'processing' => __( 'Order Processing', 'woocommerce-convertkit' ),
+					'completed'  => __( 'Order Completed', 'woocommerce-convertkit' ),
 				),
 			),
 
 			'display_opt_in' => array(
-				'title'       => __( 'Display Opt-In Checkbox' ),
-				'label'       => __( 'Display an Opt-In checkbox on checkout' ),
+				'title'       => __( 'Display Opt-In Checkbox', 'woocommerce-convertkit' ),
+				'label'       => __( 'Display an Opt-In checkbox on checkout', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
-				'description' => __( 'If enabled, customers will only be subscribed if the "Opt-In" checkbox presented on checkout is checked.' ),
+				'description' => __( 'If enabled, customers will only be subscribed if the "Opt-In" checkbox presented on checkout is checked.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 			),
 
 			'opt_in_label' => array(
-				'title'       => __( 'Opt-In Checkbox Label' ),
+				'title'       => __( 'Opt-In Checkbox Label', 'woocommerce-convertkit' ),
 				'type'        => 'text',
-				'default'     => __( 'I want to subscribe to the newsletter' ),
-				'description' => __( 'Optional (only used if the above field is checked): Customize the label next to the opt-in checkbox.' ),
+				'default'     => __( 'I want to subscribe to the newsletter', 'woocommerce-convertkit' ),
+				'description' => __( 'Optional (only used if the above field is checked): Customize the label next to the opt-in checkbox.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 			),
 
 			'opt_in_status' => array(
-				'title'       => __( 'Opt-In Checkbox<br />Default Status' ),
+				'title'       => __( 'Opt-In Checkbox<br />Default Status', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'checked',
-				'description' => __( 'The default state of the opt-in checkbox' ),
+				'description' => __( 'The default state of the opt-in checkbox', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
-					'checked'   => __( 'Checked' ),
-					'unchecked' => __( 'Unchecked' ),
+					'checked'   => __( 'Checked', 'woocommerce-convertkit' ),
+					'unchecked' => __( 'Unchecked', 'woocommerce-convertkit' ),
 				),
 			),
 
 			'opt_in_location' => array(
-				'title'       => __( 'Opt-In Checkbox<br />Display Location' ),
+				'title'       => __( 'Opt-In Checkbox<br />Display Location', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'billing',
-				'description' => __( 'Where to display the opt-in checkbox on the checkout page (under Billing Info or Order Info).' ),
+				'description' => __( 'Where to display the opt-in checkbox on the checkout page (under Billing Info or Order Info).', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
-					'billing' => __( 'Billing' ),
-					'order'   => __( 'Order' ),
+					'billing' => __( 'Billing', 'woocommerce-convertkit' ),
+					'order'   => __( 'Order', 'woocommerce-convertkit' ),
 				),
 			),
 
 			'api_key' => array(
-				'title'       => __( 'API Key' ),
+				'title'       => __( 'API Key', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
 				// translators: this is a url to the ConvertKit site.
-				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Key</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Key</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.', 'woocommerce-convertkit' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
 				'desc_tip'    => false,
 			),
 
 			'api_secret' => array(
-				'title'       => __( 'API Secret' ),
+				'title'       => __( 'API Secret', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
 				// translators: this is a url to the ConvertKit site.
-				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Secret</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Secret</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>', 'woocommerce-convertkit.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
 				'desc_tip'    => false,
 			),
 
 			'subscription' => array(
-				'title'       => __( 'Subscription' ),
+				'title'       => __( 'Subscription', 'woocommerce-convertkit' ),
 				'type'        => 'subscription',
 				'default'     => '',
-				'description' => __( 'Customers will be added to the selected item' ),
+				'description' => __( 'Customers will be added to the selected item', 'woocommerce-convertkit' ),
 			),
 
 			'name_format' => array(
-				'title'       => __( 'Name Format' ),
+				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'first',
-				'description' => __( 'How should the customer name be sent to ConvertKit?' ),
+				'description' => __( 'How should the customer name be sent to ConvertKit?', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
-					'first'   => __( 'Billing First Name' ),
-					'last'    => __( 'Billing Last Name' ),
-					'both'    => __( 'Billing First Name + Billing Last Name' ),
+					'first'   => __( 'Billing First Name', 'woocommerce-convertkit' ),
+					'last'    => __( 'Billing Last Name', 'woocommerce-convertkit' ),
+					'both'    => __( 'Billing First Name + Billing Last Name', 'woocommerce-convertkit' ),
 				),
 			),
 
 			'send_purchases' => array(
-				'title'       => __( 'Purchases' ),
-				'label'       => __( 'Send purchase data to ConvertKit.' ),
+				'title'       => __( 'Purchases', 'woocommerce-convertkit' ),
+				'label'       => __( 'Send purchase data to ConvertKit.', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
-				'description' => __( '' ),
+				'description' => __( '', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 			),
 
 			'debug' => array(
-				'title'       => __( 'Debug' ),
+				'title'       => __( 'Debug', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
-				'label'       => __('Write data to a log file'),
-				'description' => 'You can view the log file by going to WooCommerce > Status, click the Logs tab, then selecting convertkit.',
+				'label'       => __('Write data to a log file', 'woocommerce-convertkit'),
+				'description' => __( 'You can view the log file by going to WooCommerce > Status, click the Logs tab, then selecting convertkit.', 'woocommerce-convertkit' ),
 				'default'     => 'no',
 			),
 		);
@@ -322,7 +322,7 @@ class CKWC_Integration extends WC_Integration {
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
 					<select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
-						<option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...' ); ?></option>
+						<option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...', 'woocommerce-convertkit' ); ?></option>
 						<?php foreach ( $options as $option_group ) {
 							if ( empty( $option_group['options'] ) ) {
 								continue;
@@ -338,7 +338,7 @@ class CKWC_Integration extends WC_Integration {
 					<?php echo $this->get_description_html( $data ); ?>
 				</fieldset>
 				<?php } else { ?>
-				<p class="description"><?php _e( 'Please provide a valid ConvertKit API Key.' ); ?></p>
+				<p class="description"><?php _e( 'Please provide a valid ConvertKit API Key.', 'woocommerce-convertkit' ); ?></p>
 				<?php } ?>
 			</td>
 		</tr>
@@ -368,12 +368,12 @@ class CKWC_Integration extends WC_Integration {
 		$value = $_POST[ $field ]; // WPCS: CSRF ok.
 
 		if ( empty( $value ) ) {
-			$this->errors[ $key ] = __( 'Please provide your ConvertKit API Key.' );
+			$this->errors[ $key ] = __( 'Please provide your ConvertKit API Key.', 'woocommerce-convertkit' );
 		} else {
 			$forms = ckwc_convertkit_api_get_forms( $value );
 
 			if ( is_wp_error( $forms ) ) {
-				$this->errors[ $key ] = __( 'Your ConvertKit API Key appears to be invalid. Please double check the value.' );
+				$this->errors[ $key ] = __( 'Your ConvertKit API Key appears to be invalid. Please double check the value.', 'woocommerce-convertkit' );
 			}
 		}
 
@@ -675,7 +675,7 @@ class CKWC_Integration extends WC_Integration {
 	function plugin_links( $links ) {
 
 		$plugin_links = array(
-			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . __( 'Settings', 'wc-store-locator' ) . '</a>',
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
 		);
 
 		return array_merge( $plugin_links, $links );

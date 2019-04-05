@@ -31,7 +31,7 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 				$options = array(
 					array(
 						'key'     => 'course',
-						'name'    => __( 'Courses' ),
+						'name'    => __( 'Courses', 'woocommerce-convertkit' ),
 						'options' => array_combine(
 							wp_list_pluck( $courses, 'id' ),
 							wp_list_pluck( $courses, 'name' )
@@ -39,7 +39,7 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 					),
 					array(
 						'key'     => 'form',
-						'name'    => __( 'Forms' ),
+						'name'    => __( 'Forms', 'woocommerce-convertkit' ),
 						'options' => array_combine(
 							wp_list_pluck( $forms, 'id' ),
 							wp_list_pluck( $forms, 'name' )
@@ -47,7 +47,7 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 					),
 					array(
 						'key'     => 'tag',
-						'name'    => __( 'Tags' ),
+						'name'    => __( 'Tags', 'woocommerce-convertkit' ),
 						'options' => array_combine(
 							wp_list_pluck( $tags, 'id' ),
 							wp_list_pluck( $tags, 'name' )

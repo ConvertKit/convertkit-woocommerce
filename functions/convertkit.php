@@ -41,7 +41,7 @@ function ckwc_convertkit_api_request( $path, $query_args = array(), $request_bod
 		$response_data = json_decode( $response_body, true );
 
 		if ( is_null( $response_data ) ) {
-			return new WP_Error( 'parse_failed', __( 'Could not parse response from ConvertKit' ) );
+			return new WP_Error( 'parse_failed', __( 'Could not parse response from ConvertKit', 'woocommerce-convertkit' ) );
 		} elseif ( isset( $response_data['error'] ) && isset( $response_data['message'] ) ) {
 			return new WP_Error( $response_data['error'], $response_data['message'] );
 		} else {
