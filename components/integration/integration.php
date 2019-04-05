@@ -675,7 +675,7 @@ class CKWC_Integration extends WC_Integration {
 	function plugin_links( $links ) {
 
 		$plugin_links = array(
-			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
+			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc' ) . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
 		);
 
 		return array_merge( $plugin_links, $links );
