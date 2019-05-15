@@ -27,6 +27,19 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 			$forms   = ckwc_convertkit_api_get_forms();
 			$tags    = ckwc_convertkit_api_get_tags();
 
+			/**
+			 * Alphabetize
+			 */
+			usort( $courses, function( $a, $b ) {
+				return strcmp( $a['name'], $b['name'] );
+			});
+			usort( $forms, function( $a, $b ) {
+				return strcmp( $a['name'], $b['name'] );
+			});
+			usort( $tags, function( $a, $b ) {
+				return strcmp( $a['name'], $b['name'] );
+			});
+
 			if ( ! is_wp_error( $courses ) && ! is_wp_error( $forms ) && ! is_wp_error( $tags ) ) {
 				$options = array(
 					array(
