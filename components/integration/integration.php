@@ -104,6 +104,9 @@ class CKWC_Integration extends WC_Integration {
 
 			add_action( 'add_meta_boxes_product', array( $this, 'add_meta_boxes' ) );
 			add_action( 'save_post_product', array( $this, 'save_product' ) );
+
+
+			add_action( 'wp_ajax_ckwc_refresh_subscription_options', array( $this, 'refresh_subscription_options' ) );
 		}
 
 		if ( 'yes' === $this->enabled && 'yes' === $this->display_opt_in ) {
@@ -242,6 +245,13 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'Customers will be added to the selected item', 'woocommerce-convertkit' ),
 			),
 
+			'refresh_forms' => array(
+				'title'       => __( 'Refresh forms', 'woocommerce-convertkit' ),
+				'type'        => 'refresh',
+				'default'     => '',
+				'description' => __( 'Refresh forms', 'woocommerce-convertkit' ),
+			),
+
 			'name_format' => array(
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
 				'type'        => 'select',
@@ -345,6 +355,50 @@ class CKWC_Integration extends WC_Integration {
 		<?php
 
 		return ob_get_clean();
+	}
+
+	/**
+     * Generates the HTML for the "Refresh subscription options" button on the settings page
+     *
+	 * @param $key
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	public function generate_refresh_html( $key, $data ) {
+		$field    = $this->get_field_key( $key );
+		$defaults = array(
+			'title'             => '',
+			'disabled'          => false,
+			'class'             => '',
+			'css'               => '',
+			'placeholder'       => '',
+			'type'              => 'text',
+			'desc_tip'          => false,
+			'description'       => '',
+			'custom_attributes' => array(),
+			'options'           => array(),
+		);
+
+		$data = wp_parse_args( $data, $defaults );
+
+		$has_api = isset( $this->api_key ) ? esc_attr( $this->api_key ) : false;
+
+		$html = '<input ' . ( $has_api ? '' : 'style="display:none;"' ) . ' type="submit" name="refresh" id="refresh_ckwc_subscription_options" class="button" value="' . __( 'Refresh subscription options', 'convertkit' ) . '"><span id="refreshCKSpinner" class="spinner"></span>';
+
+	    ob_start();
+	    ?>
+        <tr valign="top">
+        <th scope="row" class="titledesc">
+            <label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+	        <?php echo $this->get_tooltip_html( $data ); ?>
+        </th>
+        <td class="forminp">
+            <?php echo $html; ?>
+        </td>
+        <?php
+
+        return ob_get_clean();
 	}
 
 	/**
@@ -651,6 +705,45 @@ class CKWC_Integration extends WC_Integration {
 			}
 
 		}
+	}
+
+	public function refresh_subscription_options() {
+
+		$key   = 'subscription';
+		$field = $this->get_field_key( $key );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You don\'t have enough permissions.', 'convertkit' ) );
+			wp_die();
+		}
+
+		delete_transient( 'ckwc_subscription_options' );
+
+		$options = ckwc_force_get_subscription_options();
+
+		ob_start();
+
+		?>
+        <select class="select" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="">
+            <option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...', 'woocommerce-convertkit' ); ?></option>
+			<?php foreach ( $options as $option_group ) {
+				if ( empty( $option_group['options'] ) ) {
+					continue;
+				} ?>
+                <optgroup label="<?php echo esc_attr( $option_group['name'] ); ?>">
+					<?php foreach ( $option_group['options'] as $id => $name ) {
+						$value = "{$option_group['key']}:{$id}"; ?>
+                        <option <?php selected( $value, $this->get_option( $key ) ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $name ); ?></option>
+					<?php } ?>
+                </optgroup>
+			<?php } ?>
+        </select>
+		<?php
+
+		$html = ob_get_clean();
+
+		wp_send_json_success( $html );
+		wp_die();
 	}
 
 	/**
