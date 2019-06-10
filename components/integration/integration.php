@@ -683,6 +683,7 @@ class CKWC_Integration extends WC_Integration {
 					'total'            => (double) $order->get_total( 'edit' ),
 					'status'           => 'paid',
 					'products'         => $products,
+					'integration'      => 'WooCommerce'
 				)
 			);
 
