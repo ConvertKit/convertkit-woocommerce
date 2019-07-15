@@ -3,8 +3,8 @@ Contributors: nathanbarry, growdev, travisnorthcutt
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 3.6
-Tested up to: 5.1.1
-Stable tag: 1.1.0
+Tested up to: 5.2.2
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,15 @@ Yes, for it to work you must first have an account on ConvertKit.com
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.2.0  2019-07-15
+
+* Improve plugin's translation readiness
+* Make plugin settings link work with other WooCommerce addons
+* Correct product metabox title
+* Display tags/forms/sequences alphabetically
+* Add ability to force-refresh subscription options
+* Add integration name to purchase API requests
 
 ### 1.1.0  2019-03-15
 
