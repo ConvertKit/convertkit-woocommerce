@@ -121,6 +121,7 @@ class CKWC_Integration extends WC_Integration {
 
 			if ( 'yes' === $this->send_purchases ){
 				add_action( 'woocommerce_payment_complete',        array( $this, 'send_payment' ), 99999, 1 );
+				add_action( 'woocommerce_order_status_changed',    array( $this, 'handle_cod_or_check_order_completion' ), 99999, 4 );
 			}
 		}
 
@@ -507,6 +508,72 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			$subscriptions = array_filter( array_unique( $subscriptions ) );
 			$this->process_convertkit_subscriptions( $subscriptions, $email, $name, $order_id );
+
+		}
+	}
+
+	/**
+	 * @param int $order_id
+	 * @param string $status_old
+	 * @param string $status_new
+	 * @param WC_Order $order
+	 */
+	public function handle_cod_or_check_order_completion( $order_id, $status_old, $status_new, $order ) {
+		$api_key_correct = ! empty( $this->api_key );
+		$correct_status = $status_new === 'completed';
+		$payment_methods = array( 'cod', 'cheque', 'check' );
+
+		if ( $api_key_correct && $correct_status && in_array( $order->get_payment_method( null ), $payment_methods ) ) {
+
+			$products = array();
+
+			foreach( $order->get_items( ) as $item_key => $item ) {
+				$products[] = array(
+					'pid'        => $item->get_product()->get_id(),
+					'lid'        => $item_key,
+					'name'       => $item->get_name(),
+					'sku'        => $item->get_product()->get_sku(),
+					'unit_price' => $item->get_product()->get_price(),
+					'quantity'   => $item->get_quantity(),
+				);
+			}
+
+			$purchase_options = array(
+				'api_secret' => $this->api_secret,
+				'purchase' => array(
+					'transaction_id'   => $order->get_order_number(),
+					'email_address'    => $order->get_billing_email(),
+					'first_name'       => $order->get_billing_first_name(),
+					'currency'         => $order->get_currency(),
+					'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
+					'subtotal'         => (double) $order->get_subtotal(),
+					'tax'              => (double) $order->get_total_tax( 'edit' ),
+					'shipping'         => (double) $order->get_shipping_total( 'edit' ),
+					'discount'         => (double) $order->get_discount_total( 'edit' ),
+					'total'            => (double) $order->get_total( 'edit' ),
+					'status'           => 'paid',
+					'products'         => $products,
+					'integration'      => 'WooCommerce'
+				)
+			);
+
+			$query_args = is_null( $this->api_key ) ? array() : array(
+				'api_key' => $this->api_key,
+			);
+			$body = $purchase_options;
+			$args = array( 'method' => 'POST' );
+
+			$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
+
+			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
+
+			if ( is_wp_error( $response ) ){
+				$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
+				$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
+			} else {
+				$order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
+				$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
+			}
 
 		}
 	}
