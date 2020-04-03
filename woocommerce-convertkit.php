@@ -3,9 +3,12 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
+ *
+ * WC requires at least: 3.0
+ * WC tested up to: 4.0
  */
 
 

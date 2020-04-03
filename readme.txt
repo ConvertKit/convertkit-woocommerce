@@ -3,8 +3,8 @@ Contributors: nathanbarry, growdev, travisnorthcutt
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 3.6
-Tested up to: 5.3.2
-Stable tag: 1.3.0
+Tested up to: 5.4.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ Yes, for it to work you must first have an account on ConvertKit.com
 2. Checkout page with added checkbox
 
 == Changelog ==
+### 1.4.0  2020-04-03
+* Add support for sending manual orders to ConvertKit
+
 ### 1.3.0  2019-12-20
 * Add support for sending cash on delivery and check payment purchase info to ConvertKit
 

@@ -40,6 +40,11 @@ class CKWC_Integration extends WC_Integration {
 	private $send_purchases;
 
 	/**
+	 * @var string
+	 */
+	private $send_manual_purchases;
+
+	/**
      * @var string
      */
 	private $display_opt_in;
@@ -84,9 +89,10 @@ class CKWC_Integration extends WC_Integration {
 		$this->subscription = $this->get_option( 'subscription' );
 
 		// Enabled and when it should take place
-		$this->enabled        = $this->get_option( 'enabled' );
-		$this->event          = $this->get_option( 'event' );
-		$this->send_purchases = $this->get_option( 'send_purchases' );
+		$this->enabled               = $this->get_option( 'enabled' );
+		$this->event                 = $this->get_option( 'event' );
+		$this->send_purchases        = $this->get_option( 'send_purchases' );
+		$this->send_manual_purchases = $this->get_option( 'send_manual_purchases' );
 
 		// Opt-in field
 		$this->display_opt_in  = $this->get_option( 'display_opt_in' );
@@ -272,6 +278,14 @@ class CKWC_Integration extends WC_Integration {
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __( '', 'woocommerce-convertkit' ),
+				'desc_tip'    => false,
+			),
+
+			'send_manual_purchases' => array(
+				'label'       => __( 'Send purchase data from manual orders to ConvertKit.', 'woocommerce-convertkit' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'description' => __( 'Purchase data from orders created manually in the admin area will be sent to ConvertKit.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 			),
 
@@ -508,7 +522,6 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			$subscriptions = array_filter( array_unique( $subscriptions ) );
 			$this->process_convertkit_subscriptions( $subscriptions, $email, $name, $order_id );
-
 		}
 	}
 
@@ -522,6 +535,10 @@ class CKWC_Integration extends WC_Integration {
 		$api_key_correct = ! empty( $this->api_key );
 		$correct_status = $status_new === 'completed';
 		$payment_methods = array( 'cod', 'cheque', 'check' );
+
+		if ( 'yes' === $this->send_manual_purchases ){
+		    $payment_methods[] = '';
+		}
 
 		if ( $api_key_correct && $correct_status && in_array( $order->get_payment_method( null ), $payment_methods ) ) {
 
@@ -608,6 +625,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param string $order_id
 	 */
 	public function process_item_subscription( $subscription, $email, $name, $order_id ) {
+	    // TODO add else{} block here to debug_log if function does not exist
 		if ( function_exists( $subscription['function'] ) ) {
 			$response = call_user_func( $subscription['function'], $subscription['id'], $email, $name );
 
@@ -623,6 +641,7 @@ class CKWC_Integration extends WC_Integration {
 					 * This ends up holding an array of the subscription items (tags, courses, or forms) our WP install knows about,
 					 * which match the current subscription type, in `id => name` pairs
 					 */
+					// TODO should this be like `$items[] =`, so we don't stomp on the array each time through the loop?
 					$items = $option['options'];
 				}
 				if ( $items ) {
