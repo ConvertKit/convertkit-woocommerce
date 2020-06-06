@@ -545,6 +545,9 @@ class CKWC_Integration extends WC_Integration {
 			$products = array();
 
 			foreach( $order->get_items( ) as $item_key => $item ) {
+				if ( ! $item->get_product() ) {
+					continue;
+				}
 				$products[] = array(
 					'pid'        => $item->get_product()->get_id(),
 					'lid'        => $item_key,
@@ -744,6 +747,9 @@ class CKWC_Integration extends WC_Integration {
 			$products = array();
 
 			foreach( $order->get_items( ) as $item_key => $item ) {
+				if ( ! $item->get_product() ) {
+					continue;
+				}
 				$products[] = array(
 				        'pid'        => $item->get_product()->get_id(),
 						'lid'        => $item_key,
