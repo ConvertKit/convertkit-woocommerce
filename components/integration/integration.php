@@ -493,15 +493,6 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function order_status( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
-		write_log(
-			[
-				'order_id' => $order_id,
-				'status_old' => $status_old,
-				'status_new' => $status_new,
-			],
-			sprintf( '#%1$s - order_status', $order_id )
-		);
-
 		$api_key_correct = ! empty( $this->api_key );
 		$status_correct  = $status_new === $this->event;
 		$opt_in_correct  = 'yes' === get_post_meta( $order_id, 'ckwc_opt_in', 'no' );
@@ -542,26 +533,12 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function handle_cod_or_check_order_completion( $order_id, $status_old, $status_new, $order ) {
 
-		write_log(
-			[
-				'order_id'   => $order_id,
-				'status_old' => $status_old,
-				'status_new' => $status_new,
-				'order'      => $order,
-			],
-			sprintf( '#%1$s - handle_cod_or_check_order_completion', $order_id )
-		);
-
 		$api_key_correct = ! empty( $this->api_key );
 		$correct_status = $status_new === $this->event;;
 		$payment_methods = array( 'cod', 'cheque', 'check' );
 
 		if ( 'yes' === $this->send_manual_purchases ){
 		    $payment_methods[] = '';
-		}
-
-		if ( $correct_status ) {
-			write_log( sprintf( '#%1$s - $correct_status', $order_id ) );
 		}
 
 		if ( $api_key_correct && $correct_status && in_array( $order->get_payment_method( null ), $payment_methods ) ) {
@@ -769,17 +746,6 @@ class CKWC_Integration extends WC_Integration {
 	 * @param WC_Order $order
 	 */
 	public function send_payment( $order_id, $status_old, $status_new, $order ) {
-
-		write_log(
-			[
-				'order_id'   => $order_id,
-				'status_old' => $status_old,
-				'status_new' => $status_new,
-				'order'      => $order,
-			],
-			sprintf( '#%1$s - send_payment', $order_id )
-		);
-
 		$api_key_correct = ! empty( $this->api_key );
 		$status_correct  = $status_new === $this->event;
 
