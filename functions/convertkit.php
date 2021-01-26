@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 function ckwc_convertkit_api_request( $path, $query_args = array(), $request_body = null, $request_args = array() ) {
 	$path         = ltrim( $path, '/' );
 	$request_url  = "https://api.convertkit.com/v3/{$path}";
+
 	if ( ! is_null( $request_body ) ) {
 		$request_body = wp_json_encode( $request_body );
 	}
@@ -32,7 +33,8 @@ function ckwc_convertkit_api_request( $path, $query_args = array(), $request_bod
 	}
 
 	$request_url = add_query_arg( $query_args, $request_url );
-	$response    = wp_remote_request( $request_url, $request_args );
+
+	$response = wp_remote_request( $request_url, $request_args );
 
 	if ( is_wp_error( $response ) ) {
 		return $response;
