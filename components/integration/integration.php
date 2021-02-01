@@ -534,7 +534,7 @@ class CKWC_Integration extends WC_Integration {
 	public function handle_cod_or_check_order_completion( $order_id, $status_old, $status_new, $order ) {
 
 		$api_key_correct = ! empty( $this->api_key );
-		$correct_status = $status_new === $this->event;;
+		$correct_status  = $status_new === $this->event;
 		$payment_methods = array( 'cod', 'cheque', 'check' );
 
 		if ( 'yes' === $this->send_manual_purchases ){
