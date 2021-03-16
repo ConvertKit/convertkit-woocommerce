@@ -2,7 +2,10 @@
 <ruleset name="ConvertKit for WooCommerce Plugin Coding Standards">
 	<description>ConvertKit for WooCommerce Plugin Coding Standards</description>
 
-	<rule ref="WordPress-Core" />
+	<rule ref="WordPress-Core">
+		<!-- Disable requiring class- prefix in class file filenames. -->
+		<exclude name="WordPress.Files.FileName" />
+	</rule>
 
 	<rule ref="WordPress-Docs">
 		<!-- Disable file comment requirement; classes are commented, so file comments would be mostly redundant. -->
