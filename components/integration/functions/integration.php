@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'ckwc_instance' ) ) {
 	/**
+	 * Gets the CKWC_Integration instance.
+	 *
 	 * @return bool|CKWC_Integration
 	 */
 	function ckwc_instance() {
@@ -17,6 +19,8 @@ if ( ! function_exists( 'ckwc_instance' ) ) {
 
 if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 	/**
+	 * Gets ConvertKit subscription options.
+	 *
 	 * @return array|mixed
 	 */
 	function ckwc_get_subscription_options() {
@@ -30,15 +34,26 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 			/**
 			 * Alphabetize
 			 */
-			usort( $courses, function( $a, $b ) {
-				return strcmp( $a['name'], $b['name'] );
-			});
-			usort( $forms, function( $a, $b ) {
-				return strcmp( $a['name'], $b['name'] );
-			});
-			usort( $tags, function( $a, $b ) {
-				return strcmp( $a['name'], $b['name'] );
-			});
+			usort(
+				$courses,
+				function( $a, $b ) {
+					return strcmp( $a['name'], $b['name'] );
+				}
+			);
+
+			usort(
+				$forms,
+				function( $a, $b ) {
+					return strcmp( $a['name'], $b['name'] );
+				}
+			);
+
+			usort(
+				$tags,
+				function( $a, $b ) {
+					return strcmp( $a['name'], $b['name'] );
+				}
+			);
 
 			if ( ! is_wp_error( $courses ) && ! is_wp_error( $forms ) && ! is_wp_error( $tags ) ) {
 				$options = array(
@@ -76,59 +91,79 @@ if ( ! function_exists( 'ckwc_get_subscription_options' ) ) {
 	}
 }
 
+/**
+ * Bypasses cache (transient) to get fresh subscription options.
+ *
+ * @return array|mixed
+ */
 function ckwc_force_get_subscription_options() {
-		$courses = ckwc_convertkit_api_get_courses();
-		$forms   = ckwc_convertkit_api_get_forms();
-		$tags    = ckwc_convertkit_api_get_tags();
+	$courses = ckwc_convertkit_api_get_courses();
+	$forms   = ckwc_convertkit_api_get_forms();
+	$tags    = ckwc_convertkit_api_get_tags();
 
-		/**
-		 * Alphabetize
-		 */
-		usort( $courses, function( $a, $b ) {
+	/**
+	 * Alphabetize
+	 */
+	usort(
+		$courses,
+		function( $a, $b ) {
 			return strcmp( $a['name'], $b['name'] );
-		});
-		usort( $forms, function( $a, $b ) {
-			return strcmp( $a['name'], $b['name'] );
-		});
-		usort( $tags, function( $a, $b ) {
-			return strcmp( $a['name'], $b['name'] );
-		});
-
-		if ( ! is_wp_error( $courses ) && ! is_wp_error( $forms ) && ! is_wp_error( $tags ) ) {
-			$options = array(
-				array(
-					'key'     => 'course',
-					'name'    => __( 'Courses', 'woocommerce-convertkit' ),
-					'options' => array_combine(
-						wp_list_pluck( $courses, 'id' ),
-						wp_list_pluck( $courses, 'name' )
-					),
-				),
-				array(
-					'key'     => 'form',
-					'name'    => __( 'Forms', 'woocommerce-convertkit' ),
-					'options' => array_combine(
-						wp_list_pluck( $forms, 'id' ),
-						wp_list_pluck( $forms, 'name' )
-					),
-				),
-				array(
-					'key'     => 'tag',
-					'name'    => __( 'Tags', 'woocommerce-convertkit' ),
-					'options' => array_combine(
-						wp_list_pluck( $tags, 'id' ),
-						wp_list_pluck( $tags, 'name' )
-					),
-				),
-			);
-
-			ckwc_update_stored_subscription_options( $options );
 		}
+	);
+
+	usort(
+		$forms,
+		function( $a, $b ) {
+			return strcmp( $a['name'], $b['name'] );
+		}
+	);
+
+	usort(
+		$tags,
+		function( $a, $b ) {
+			return strcmp( $a['name'], $b['name'] );
+		}
+	);
+
+	if ( ! is_wp_error( $courses ) && ! is_wp_error( $forms ) && ! is_wp_error( $tags ) ) {
+		$options = array(
+			array(
+				'key'     => 'course',
+				'name'    => __( 'Courses', 'woocommerce-convertkit' ),
+				'options' => array_combine(
+					wp_list_pluck( $courses, 'id' ),
+					wp_list_pluck( $courses, 'name' )
+				),
+			),
+			array(
+				'key'     => 'form',
+				'name'    => __( 'Forms', 'woocommerce-convertkit' ),
+				'options' => array_combine(
+					wp_list_pluck( $forms, 'id' ),
+					wp_list_pluck( $forms, 'name' )
+				),
+			),
+			array(
+				'key'     => 'tag',
+				'name'    => __( 'Tags', 'woocommerce-convertkit' ),
+				'options' => array_combine(
+					wp_list_pluck( $tags, 'id' ),
+					wp_list_pluck( $tags, 'name' )
+				),
+			),
+		);
+
+		ckwc_update_stored_subscription_options( $options );
+	}
 
 	return $options;
 }
 
+/**
+ * Updates cached subscription value in transients.
+ *
+ * @param array|null $options Optional array of subscriptions to save.
+ */
 function ckwc_update_stored_subscription_options( $options = null ) {
 	set_transient( 'ckwc_subscription_options', $options, 5 * MINUTE_IN_SECONDS );
-
 }
