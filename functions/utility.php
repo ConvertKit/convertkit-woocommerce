@@ -1,13 +1,15 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! function_exists( 'ckwc_debug' ) ) {
 	/**
 	 * If logging is enabled using the `CKWC_DEBUG` constant, then dump the values passed into this
 	 * function into the error log.
 	 *
-	 * @param mixed $variable,... unlimited optional number of additional variables to debug
+	 * @param mixed $variable Additional variables to debug.
 	 * @return void
 	 */
 	function ckwc_debug( $variable ) {
@@ -37,8 +39,8 @@ if ( ! function_exists( 'ckwc_redirect' ) ) {
 	 * Wrapper function for `wp_redirect` so a developer doesn't have to remember
 	 * to call `exit` after `wp_redirect`.
 	 *
-	 * @param string $url The url to redirect the requestor to
-	 * @param int $code The HTTP status code to send when redirecting
+	 * @param string $url The url to redirect the requestor to.
+	 * @param int    $code The HTTP status code to send when redirecting.
 	 * @return void
 	 */
 	function ckwc_redirect( $url, $code = 302 ) {

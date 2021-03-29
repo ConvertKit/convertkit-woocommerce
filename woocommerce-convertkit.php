@@ -12,7 +12,9 @@
  */
 
 
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! defined( 'CKWC_CACHE_PERIOD' ) ) {
 	define( 'CKWC_CACHE_PERIOD', 6 * HOUR_IN_SECONDS );
@@ -51,13 +53,17 @@ if ( ! defined( 'CKWC_SHORT_TITLE' ) ) {
 }
 
 // Require the plugin's function definitions
-// These files provide generic functions that don't really belong as part of a component
+// These files provide generic functions that don't really belong as part of a component.
 require_once( path_join( CKWC_PLUGIN_DIRPATH, 'functions/convertkit.php' ) );
 require_once( path_join( CKWC_PLUGIN_DIRPATH, 'functions/utility.php' ) );
 
+/**
+ * Ensures WooCommerce is present before initializing the integration.
+ */
 function ckwc_plugins_loaded() {
 	if ( ckwc_requirements_met() ) {
 		require_once( path_join( CKWC_PLUGIN_DIRPATH, 'components/integration/integration.php' ) );
 	}
 }
+
 add_action( 'plugins_loaded', 'ckwc_plugins_loaded' );
