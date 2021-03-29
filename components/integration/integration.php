@@ -520,6 +520,22 @@ class CKWC_Integration extends WC_Integration {
 		update_post_meta( $order_id, 'ckwc_opt_in', $opt_in );
 	}
 
+	public function customer_has_opted_in( $order_id ) {
+
+		// If we are not giving the customer the choice to opt in or out, default to them being opted in.
+		if ( ! $this->display_opt_in ) {
+			return true;
+		}
+
+		$opted_in = get_post_meta( $order_id, 'ckwc_opt_in', true );
+
+		if ( empty( $opted_in ) || 'yes' !== $opted_in ) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Order status change callback for maybe processing adding subscriber to ConvertKit.
 	 *
@@ -531,7 +547,7 @@ class CKWC_Integration extends WC_Integration {
 
 		$api_key_correct = ! empty( $this->api_key );
 		$status_correct  = $status_new === $this->event;
-		$opt_in_correct  = 'yes' === get_post_meta( $order_id, 'ckwc_opt_in', 'no' );
+		$opt_in_correct  = $this->customer_has_opted_in( $order_id );
 
 		if ( $api_key_correct && $status_correct && $opt_in_correct ) {
 			$order = wc_get_order( $order_id );
@@ -574,12 +590,13 @@ class CKWC_Integration extends WC_Integration {
 		$api_key_correct = ! empty( $this->api_key );
 		$correct_status  = 'completed' === $status_new;
 		$payment_methods = array( 'cod', 'cheque', 'check' );
+		$opt_in_correct  = $this->customer_has_opted_in( $order_id );
 
 		if ( 'yes' === $this->send_manual_purchases ) {
 			$payment_methods[] = '';
 		}
 
-		if ( $api_key_correct && $correct_status && in_array( $order->get_payment_method( null ), $payment_methods, true ) ) {
+		if ( $api_key_correct && $correct_status && $opt_in_correct && in_array( $order->get_payment_method( null ), $payment_methods, true ) ) {
 
 			$products = array();
 
@@ -669,7 +686,7 @@ class CKWC_Integration extends WC_Integration {
 	public function process_item_subscription( $subscription, $email, $name, $order_id ) {
 
 		// TODO add else{} block here to debug_log if function does not exist.
-		if ( function_exists( $subscription['function'] ) ) {
+		if ( $this->customer_has_opted_in( $order_id ) && function_exists( $subscription['function'] ) ) {
 			$response = call_user_func( $subscription['function'], $subscription['id'], $email, $name );
 
 			if ( ! is_wp_error( $response ) ) {
@@ -789,7 +806,7 @@ class CKWC_Integration extends WC_Integration {
 		$api_key_correct = ! empty( $this->api_key );
 		$order           = wc_get_order( $order_id );
 
-		if ( $api_key_correct && ! is_wp_error( $order ) && $order ) {
+		if ( $api_key_correct && ! is_wp_error( $order ) && $order && $this->customer_has_opted_in( $order_id ) ) {
 
 			$products = array();
 
