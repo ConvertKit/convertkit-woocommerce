@@ -1,1 +1,8 @@
+.env
+.env.testing
 .DS_Store
+log.txt
+tests/_output
+vendor
+codeception.yml
+*.zip
