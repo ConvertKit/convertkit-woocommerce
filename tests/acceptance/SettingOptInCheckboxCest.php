@@ -239,7 +239,7 @@ class SettingOptInCheckboxCest
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
 		// Set the Opt-In Checkbox Display Location = Billing
-		$I->checkOption('#woocommerce_ckwc_opt_in_location', 'Billing');
+		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Billing');
 
 		// Save
 		$I->click('Save changes');
@@ -280,7 +280,7 @@ class SettingOptInCheckboxCest
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
 		// Set the Opt-In Checkbox Display Location = Order
-		$I->checkOption('#woocommerce_ckwc_opt_in_location', 'Order');
+		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Order');
 
 		// Save
 		$I->click('Save changes');

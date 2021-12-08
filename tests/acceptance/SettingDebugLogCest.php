@@ -31,7 +31,7 @@ class SettingDebugLogCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
-		// Check "Send purchase data to ConvertKit" checkbox.
+		// Check "Debug" checkbox.
 		$I->checkOption('#woocommerce_ckwc_debug');
 
 		// Save
@@ -44,6 +44,7 @@ class SettingDebugLogCest
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_debug');
 
 		// @TODO Test debug log exists
+		
 
 	}
 

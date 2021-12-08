@@ -54,7 +54,7 @@ class SubscribeOnOrderCompletedEventCest
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
 		// Change the Order status = Completed, to trigger the Order Completed event.
-		$I->wooCommerceChangeOrderStatus($result['order_id'], 'wc-completed');
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
 
 		// Confirm that the email address was now added to ConvertKit.
 		$I->apiCheckSubscriberExists($I, $result['email_address']);
@@ -89,6 +89,15 @@ class SubscribeOnOrderCompletedEventCest
 
 		// Confirm that the email address was not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
@@ -114,8 +123,127 @@ class SubscribeOnOrderCompletedEventCest
 			false // Don't send purchase data to ConvertKit
 		);
 
+		// Confirm that the email address was not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
 		// Confirm that the email address was added to ConvertKit.
 		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Test that the Customer is not subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - No Form is selected in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenCheckedWithNoFormAndSimpleProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			'Select a subscription option...', // Don't select a Form to subscribe the email address to
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was still not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Test that the Customer is NOT subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - No Form is selected in the integration Settings, and
+	 * - The opt in checkbox is unchecked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is created.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenUncheckedWithNoFormAndSimpleProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			false, // Don't check Opt-In checkbox on Checkout
+			'Select a subscription option...', // Don't select a Form to subscribe the email address to
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was still not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is disabled in the integration Settings, and
+	 * - No Form is selected in the integration Settings, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is created.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInDisabledWithNoFormAndSimpleProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			false, // Don't display Opt-In checkbox on Checkout
+			false, // Don't check Opt-In checkbox on Checkout
+			'Select a subscription option...', // Don't select a Form to subscribe the email address to
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was still not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
@@ -125,8 +253,8 @@ class SubscribeOnOrderCompletedEventCest
 	 * Test that the Customer is subscribed to ConvertKit when:
 	 * - The opt in checkbox is enabled in the integration Settings, and
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
-	 * - The Customer purchases a 'Simple' WooCommerce Product, and
-	 * - The Customer is subscribed at the point the WooCommerce Order is created.
+	 * - The Customer purchases a 'virtual' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
 	 * @since 	1.9.6
 	 * 
@@ -145,7 +273,13 @@ class SubscribeOnOrderCompletedEventCest
 			false // Don't send purchase data to ConvertKit
 		);
 
-		// Confirm that the email address was added to ConvertKit.
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was now added to ConvertKit.
 		$I->apiCheckSubscriberExists($I, $result['email_address']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -156,7 +290,7 @@ class SubscribeOnOrderCompletedEventCest
 	 * Test that the Customer is NOT subscribed to ConvertKit when:
 	 * - The opt in checkbox is enabled in the integration Settings, and
 	 * - The opt in checkbox is unchecked on the WooCommerce checkout, and
-	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
 	 * @since 	1.9.6
@@ -178,12 +312,21 @@ class SubscribeOnOrderCompletedEventCest
 
 		// Confirm that the email address was not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
 	 * Test that the Customer is subscribed to ConvertKit when:
 	 * - The opt in checkbox is disabled in the integration Settings, and
-	 * - The Customer purchases a 'Virtual' WooCommerce Product, and
+	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
 	 * @since 	1.9.6
@@ -203,10 +346,130 @@ class SubscribeOnOrderCompletedEventCest
 			false // Don't send purchase data to ConvertKit
 		);
 
+		// Confirm that the email address was not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
 		// Confirm that the email address was added to ConvertKit.
 		$I->apiCheckSubscriberExists($I, $result['email_address']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
 	}
+
+	/**
+	 * Test that the Customer is not subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - No Form is selected in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'virtual' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenCheckedWithNoFormAndVirtualProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'virtual', // Virtual Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			'Select a subscription option...', // Don't select a Form to subscribe the email address to
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was still not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Test that the Customer is NOT subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - No Form is selected in the integration Settings, and
+	 * - The opt in checkbox is unchecked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'virtual' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is created.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenUncheckedWithNoFormAndVirtualProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'virtual', // Virtual Product
+			true, // Display Opt-In checkbox on Checkout
+			false, // Don't check Opt-In checkbox on Checkout
+			'Select a subscription option...', // Don't select a Form to subscribe the email address to
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was still not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is disabled in the integration Settings, and
+	 * - No Form is selected in the integration Settings, and
+	 * - The Customer purchases a 'virtual' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is created.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInDisabledWithNoFormAndVirtualProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'virtual', // Virtual Product
+			false, // Don't display Opt-In checkbox on Checkout
+			false, // Don't check Opt-In checkbox on Checkout
+			'Select a subscription option...', // Don't select a Form to subscribe the email address to
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was still not added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+	
 }
