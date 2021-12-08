@@ -163,6 +163,131 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to:
+	 * - configure the Plugin's opt in, subscribe event and purchase options,
+	 * - create a WooCommerce Product (simple or virtual)
+	 * - log out as the WordPress Administrator
+	 * - add the WooCommerce Product to the cart
+	 * - complete checkout
+	 * 
+	 * This is quite a monolithic function, however this flow is used across 20+ tests,
+	 * so it's better to have the code here than in every single test.
+	 * 
+	 * @since 	1.9.6
+	 */
+	public function wooCommerceCreateProductAndCheckoutWithConfig(
+		$I,
+		$productType = 'simple',
+		$displayOptIn = false,
+		$checkOptIn = false,
+		$formOrTag = false,
+		$subscriptionEvent = false,
+		$sendPurchaseData = false
+	)
+	{
+		// Define Opt In setting.
+		if ($displayOptIn) {
+			$I->checkOption('#woocommerce_ckwc_display_opt_in');	
+		} else {
+			$I->uncheckOption('#woocommerce_ckwc_display_opt_in');
+		}
+
+		// Define Subscription Event setting.
+		if ($subscriptionEvent) {
+			$I->selectOption('#woocommerce_ckwc_event', $subscriptionEvent);	
+		}
+
+		// Define Send Purchase Data setting.
+		if ($sendPurchaseData) {
+			$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		} else {
+			$I->uncheckOption('#woocommerce_ckwc_send_purchases');
+		}
+		
+		// Save.
+		$I->click('Save changes');
+
+		// Define Form to subscribe the Customer to, now that the API credentials are saved and the Forms are listed.
+		if ($formOrTag) {
+			$I->selectOption('#woocommerce_ckwc_subscription', $formOrTag);
+			$I->click('Save changes');
+		}
+
+		// Create Product
+		switch ($productType) {
+			case 'virtual':
+				$productName = 'Virtual Product';
+				$productID = $I->wooCommerceCreateVirtualProduct($I);
+
+			case 'simple':
+			default:
+				$productName = 'Simple Product';
+				$productID = $I->wooCommerceCreateSimpleProduct($I);
+				break;
+		}
+
+		// Define Email Address for this Test.
+		$emailAddress = 'wordpress-' . $productID . '@convertkit.com';
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($emailAddress);
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+
+		// Add Product to Cart and load Checkout.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress);
+
+		// Handle Opt-In Checkbox
+		if ($displayOptIn) {
+			if ($checkOptIn) {
+				$I->checkOption('#ckwc_opt_in');
+			} else {
+				$I->uncheckOption('#ckwc_opt_in');	
+			}
+		} else {
+			$I->dontSeeElement('#ckwc_opt_in');
+		}
+		
+		// Click Place order button.
+		$I->click('Place order');
+
+		// Wait until JS completes and redirects.
+		$I->waitForElement('.woocommerce-order-received', 10);
+		
+		// Confirm 'Order Received' is displayed
+		$I->seeInSource('Order received');
+		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
+
+		// Return data
+		return [
+			'email_address' => $emailAddress,
+			'product_id' => $productID,
+			'order_id' => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+		];
+	}
+
+	/**
+	 * Changes the order status for the given Order ID to the given Order Status.
+	 * 
+	 * @since 	1.9.6
+	 * 
+	 * @param 	AcceptanceTester 	$I
+	 * @param 	int 				$orderID 		WooCommerce Order ID
+	 * @param 	string 				$orderStatus 	Order Status
+	 */
+	public function wooCommerceChangeOrderStatus($I, $orderID, $orderStatus)
+	{
+		// We perform the order status change by editing the Order as a WordPress Administrator would,
+		// so that WooCommerce triggers its actions and filters that our integration hooks into.
+		$I->loginAsAdmin();
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+		$I->submitForm('form#post', [
+			'order_status' => $orderStatus,
+		]);
+	}
+
+	/**
 	 * Creates a 'Simple product' in WooCommerce that can be used for tests.
 	 * 
 	 * @since 	1.0.0
@@ -192,6 +317,42 @@ class Acceptance extends \Codeception\Module
 				'_tax_class' => '',
 				'_tax_status' => 'taxable',
 				'_virtual' => 'no',
+				'_wc_average_rating' => 0,
+				'_wc_review_count' => 0,
+			],
+		]);
+	}
+
+	/**
+	 * Creates a 'Simple product' in WooCommerce that is set to be 'Virtual', that can be used for tests.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @return 	int 	Product ID
+	 */
+	public function wooCommerceCreateVirtualProduct($I)
+	{
+		return $I->havePostInDatabase([
+			'post_type'		=> 'product',
+			'post_status'	=> 'publish',
+			'post_name' 	=> 'virtual-product',
+			'post_title'	=> 'Virtual Product',
+			'post_content'	=> 'Virtual Product Content',
+			'meta_input' => [
+				'_backorders' => 'no',
+				'_download_expiry' => -1,
+				'_download_limit' => -1,
+				'_downloadable' => 'no',
+				'_manage_stock' => 'no',
+				'_price' => 10,
+				'_product_version' => '5.9.0',
+				'_regular_price' => 10,
+				'_sold_individually' => 'no',
+				'_stock' => null,
+				'_stock_status' => 'instock',
+				'_tax_class' => '',
+				'_tax_status' => 'taxable',
+				'_virtual' => 'yes',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
 			],
@@ -241,7 +402,7 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Check the given email address exists as a subscriber.
+	 * Check the given email address exists as a subscriber on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	string 			$emailAddress 	Email Address
@@ -259,7 +420,7 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Check the given email address does not exists as a subscriber.
+	 * Check the given email address does not exists as a subscriber on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	string 			$emailAddress 	Email Address
@@ -273,6 +434,39 @@ class Acceptance extends \Codeception\Module
 
 		// Check no subscribers are returned by this request.
 		$I->assertEquals(0, $results['total_subscribers']);
+	}
+
+	/**
+	 * Check the given order ID exists as a purchase on ConvertKit.
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	int 			$orderID 		Order ID
+	 * @param 	string 			$emailAddress 	Email Address
+	 */ 
+	public function apiCheckPurchaseExists($I, $orderID, $emailAddress)
+	{
+		// Run request.
+		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+
+		// Check data returned for this Order ID.
+		$I->assertArrayHasKey('id', $results);
+		$I->assertEquals($orderID, $results['id']);
+		$I->assertEquals($emailAddress, $results['email_address']);
+	}
+
+	/**
+	 * Check the given order ID does not exist as a purchase on ConvertKit.
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	int 			$orderID 		Order ID
+	 */ 
+	public function apiCheckPurchaseDoesNotExist($I, $orderID)
+	{
+		// Run request.
+		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+
+		// Check no data returned for this Order ID.
+		$I->assertCount(0, $results);
 	}
 
 	/**
