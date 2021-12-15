@@ -1,2 +1,8 @@
+.env
+.env.testing
 .DS_Store
-node_modules
+log.txt
+tests/_output
+vendor
+codeception.yml
+*.zip
