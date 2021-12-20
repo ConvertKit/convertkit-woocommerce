@@ -215,19 +215,24 @@ class Acceptance extends \Codeception\Module
 
 		// Create Product
 		switch ($productType) {
+			case 'zero':
+				$productName = 'Zero Value Product';
+				$productID = $I->wooCommerceCreateZeroValueProduct($I);
+				break;
+
 			case 'virtual':
 				$productName = 'Virtual Product';
 				$productID = $I->wooCommerceCreateVirtualProduct($I);
+				break;
 
 			case 'simple':
-			default:
 				$productName = 'Simple Product';
 				$productID = $I->wooCommerceCreateSimpleProduct($I);
 				break;
 		}
 
 		// Define Email Address for this Test.
-		$emailAddress = 'wordpress-' . $productID . '@convertkit.com';
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($emailAddress);
@@ -360,6 +365,42 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Creates a zero value 'Simple product' in WooCommerce that can be used for tests.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @return 	int 	Product ID
+	 */
+	public function wooCommerceCreateZeroValueProduct($I)
+	{
+		return $I->havePostInDatabase([
+			'post_type'		=> 'product',
+			'post_status'	=> 'publish',
+			'post_name' 	=> 'zero-value-product',
+			'post_title'	=> 'Zero Value Product',
+			'post_content'	=> 'Zero Value Product Content',
+			'meta_input' => [
+				'_backorders' => 'no',
+				'_download_expiry' => -1,
+				'_download_limit' => -1,
+				'_downloadable' => 'no',
+				'_manage_stock' => 'no',
+				'_price' => 0,
+				'_product_version' => '5.9.0',
+				'_regular_price' => 0,
+				'_sold_individually' => 'no',
+				'_stock' => null,
+				'_stock_status' => 'instock',
+				'_tax_class' => '',
+				'_tax_status' => 'taxable',
+				'_virtual' => 'no',
+				'_wc_average_rating' => 0,
+				'_wc_review_count' => 0,
+			],
+		]);
+	}
+
+	/**
 	 * Adds the given Product ID to the Cart, loading the Checkout screen
 	 * and prefilling the standard WooCommerce Billing Fields.
 	 * 
@@ -442,16 +483,18 @@ class Acceptance extends \Codeception\Module
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	int 			$orderID 		Order ID
 	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	int 			$productID 		Product ID
 	 */ 
-	public function apiCheckPurchaseExists($I, $orderID, $emailAddress)
+	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
 		// Run request.
-		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiRequest('purchases', 'GET'), $orderID);
 
 		// Check data returned for this Order ID.
-		$I->assertArrayHasKey('id', $results);
-		$I->assertEquals($orderID, $results['id']);
-		$I->assertEquals($emailAddress, $results['email_address']);
+		$I->assertIsArray($purchase);
+		$I->assertEquals($orderID, $purchase['transaction_id']);
+		$I->assertEquals($emailAddress, $purchase['email_address']);
+		$I->assertEquals($productID, $purchase['products'][0]['pid']);
 	}
 
 	/**
@@ -459,14 +502,48 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	int 			$orderID 		Order ID
+	 * @param 	string 			$emailAddress 	Email Address
 	 */ 
-	public function apiCheckPurchaseDoesNotExist($I, $orderID)
+	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
 	{
 		// Run request.
-		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiRequest('purchases', 'GET'), $orderID);
 
-		// Check no data returned for this Order ID.
-		$I->assertCount(0, $results);
+		// Check data not returned for this Order ID.
+		// We check the email address, because each test will reset, meaning the Order ID will match that
+		// of a previous test, and therefore the API will return data from an existing test.
+		$I->assertIsArray($purchase);
+		$I->assertNotEquals($emailAddress, $purchase['email_address']);
+	}
+
+	/**
+	 * Returns a Purchase from the /purchases API endpoint based on the given Order ID (transaction_id).
+	 * 
+	 * We cannot use /purchases/{id} as {id} is the ConvertKit ID, not the WooCommerce Order ID (which
+	 * is stored in the transaction_id).
+	 * 
+	 * @param 	array 	$purchases 	Purchases Data
+	 * @param 	int 	$orderID 	Order ID
+	 * @return 	array
+	 */
+	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
+	{
+		// Iterate through purchases to find one where the transaction ID matches the order ID.
+		foreach ($purchases['purchases'] as $purchase) {
+			// Skip if order ID does not match
+			if ($purchase['transaction_id'] != $orderID) {
+				continue;
+			}
+
+			return $purchase;
+		}
+
+		// No purchase exists with the given order ID. Return a blank array.
+		return [
+			'id' => 0,
+			'order_id' => 0,
+			'email_address' => '',
+		];
 	}
 
 	/**
