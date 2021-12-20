@@ -97,6 +97,7 @@ class CKWC_Integration extends WC_Integration {
 	 * Constructor
 	 */
 	public function __construct() {
+
 		$this->id                 = 'ckwc';
 		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
 		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
@@ -116,7 +117,6 @@ class CKWC_Integration extends WC_Integration {
 		$this->enabled               = $this->get_option( 'enabled' );
 		$this->event                 = $this->get_option( 'event' );
 		$this->send_purchases        = $this->get_option( 'send_purchases' );
-		$this->send_manual_purchases = $this->get_option( 'send_manual_purchases' );
 
 		// Opt-in field.
 		$this->display_opt_in  = $this->get_option( 'display_opt_in' );
@@ -125,6 +125,7 @@ class CKWC_Integration extends WC_Integration {
 		$this->opt_in_location = $this->get_option( 'opt_in_location' );
 		$this->name_format     = $this->get_option( 'name_format' );
 
+		// Load admin settings and views.
 		if ( is_admin() ) {
 			add_filter( 'plugin_action_links_' . CKWC_PLUGIN_BASENAME, array( $this, 'plugin_links' ) );
 
@@ -138,19 +139,22 @@ class CKWC_Integration extends WC_Integration {
 			add_action( 'wp_ajax_ckwc_refresh_subscription_options', array( $this, 'refresh_subscription_options' ) );
 		}
 
-		if ( 'yes' === $this->enabled && 'yes' === $this->display_opt_in ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_opt_in_checkbox' ) );
-		}
-
 		if ( 'yes' === $this->enabled ) {
+			// Display Opt-In checkbox at Checkout.
+			if ( 'yes' === $this->display_opt_in ) {
+				add_filter( 'woocommerce_checkout_fields', array( $this, 'add_opt_in_checkbox' ) );
+			}
+
+			// Determine whether the customer should be opted in.
 			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ) );
 
+			// Maybe subscribe customer's email address to form or tag.
 			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'order_status' ), 99999, 1 );
 			add_action( 'woocommerce_order_status_changed', array( $this, 'order_status' ), 99999, 3 );
 
+			// Send purchase data.
 			if ( 'yes' === $this->send_purchases ) {
-				add_action( 'woocommerce_order_status_changed', array( $this, 'send_payment' ), 99999, 4 );
-				add_action( 'woocommerce_order_status_changed', array( $this, 'handle_cod_or_check_order_completion' ), 99999, 4 );
+				add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 1 );
 			}
 		}
 
@@ -292,17 +296,10 @@ class CKWC_Integration extends WC_Integration {
 			),
 			'send_purchases'        => array(
 				'title'       => __( 'Purchases', 'woocommerce-convertkit' ),
-				'label'       => __( 'Send purchase data to ConvertKit.', 'woocommerce-convertkit' ),
+				'label'       => __( 'Send purchase data to ConvertKit whenever an Order is created.', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => '',
-				'desc_tip'    => false,
-			),
-			'send_manual_purchases' => array(
-				'label'       => __( 'Send purchase data from manual orders to ConvertKit.', 'woocommerce-convertkit' ),
-				'type'        => 'checkbox',
-				'default'     => 'no',
-				'description' => __( 'Purchase data from orders created manually in the admin area will be sent to ConvertKit.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 			),
 			'debug'                 => array(
@@ -563,84 +560,6 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Callback for cash/check order completions.
-	 *
-	 * @param int      $order_id WooCommerce order ID.
-	 * @param string   $status_old Old WooCommerce order status.
-	 * @param string   $status_new New WooCommerce order status.
-	 * @param WC_Order $order WooCommerce order.
-	 */
-	public function handle_cod_or_check_order_completion( $order_id, $status_old, $status_new, $order ) {
-
-		$api_key_correct = ! empty( $this->api_key );
-		$correct_status  = $status_new === $this->event;
-		$payment_methods = array( 'cod', 'cheque', 'check' );
-
-		if ( 'yes' === $this->send_manual_purchases ) {
-			$payment_methods[] = '';
-		}
-
-		if ( $api_key_correct && $correct_status && in_array( $order->get_payment_method( null ), $payment_methods, true ) ) {
-
-			$products = array();
-
-			foreach ( $order->get_items() as $item_key => $item ) {
-
-				if ( ! $item->get_product() ) {
-					continue;
-				}
-
-				$products[] = array(
-					'pid'        => $item->get_product()->get_id(),
-					'lid'        => $item_key,
-					'name'       => $item->get_name(),
-					'sku'        => $item->get_product()->get_sku(),
-					'unit_price' => $item->get_product()->get_price(),
-					'quantity'   => $item->get_quantity(),
-				);
-			}
-
-			$purchase_options = array(
-				'api_secret' => $this->api_secret,
-				'purchase'   => array(
-					'transaction_id'   => $order->get_order_number(),
-					'email_address'    => $order->get_billing_email(),
-					'first_name'       => $order->get_billing_first_name(),
-					'currency'         => $order->get_currency(),
-					'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
-					'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
-					'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
-					'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
-					'discount'         => round( floatval( $order->get_discount_total( 'edit' ) ), 2 ),
-					'total'            => round( floatval( $order->get_total( 'edit' ) ), 2 ),
-					'status'           => 'paid',
-					'products'         => $products,
-					'integration'      => 'WooCommerce',
-				),
-			);
-
-			$query_args = is_null( $this->api_key ) ? array() : array(
-				'api_key' => $this->api_key,
-			);
-
-			$body = $purchase_options;
-			$args = array( 'method' => 'POST' );
-
-			$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
-
-			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
-
-			if ( is_wp_error( $response ) ) {
-				$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
-				$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
-			} else {
-				$order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
-				$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
-			}
-		}
-	}
-
-	/**
 	 * For each subscription (sequence, tag, form) attached to a product, perform the relevant actions (subscribe & add order note).
 	 *
 	 * @param array  $subscriptions ConvertKit subscriptions.
@@ -781,85 +700,104 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Send order data to ConvertKit.
+	 * Send purchase data to ConvertKit for the given WooCommerce Order ID.
 	 *
-	 * @param int $order_id WooCommerce order ID.
+	 * @since 	1.4.2
+	 * 
+	 * @param 	int 	$order_id 	WooCommerce Order ID.
 	 */
-	/**
-	 * @param int $order_id
-	 * @param string $status_old
-	 * @param string $status_new
-	 * @param WC_Order $order
-	 */
-	public function send_payment( $order_id, $status_old, $status_new, $order ) {
-		$api_key_correct = ! empty( $this->api_key );
-		$status_correct  = $status_new === $this->event;
+	public function send_purchase_data( $order_id ) {
 
-		// When the subscribe event is "Order Created", the "pending" status we are looking for will only last a bit. This line ensures we don't miss it.
-		if ( 'pending' === $this->event && 'pending' === $status_old ) {
-			$status_correct = true;
+		// Bail if no API Key and Secret exists
+		if ( empty( $this->api_key ) ) {
+			return;
+		}
+		if ( empty( $this->api_secret ) ) {
+			return;
 		}
 
+		// Get WooCommerce Order.
 		$order = wc_get_order( $order_id );
 
-		if ( $api_key_correct && $status_correct && ! is_wp_error( $order ) && $order ) {
-
-			$products = array();
-
-			foreach ( $order->get_items() as $item_key => $item ) {
-
-				if ( ! $item->get_product() ) {
-					continue;
-				}
-
-				$products[] = array(
-					'pid'        => $item->get_product()->get_id(),
-					'lid'        => $item_key,
-					'name'       => $item->get_name(),
-					'sku'        => $item->get_product()->get_sku(),
-					'unit_price' => $item->get_product()->get_price(),
-					'quantity'   => $item->get_quantity(),
-				);
-			}
-
-			$purchase_options = array(
-				'api_secret' => $this->api_secret,
-				'purchase'   => array(
-					'transaction_id'   => $order->get_order_number(),
-					'email_address'    => $order->get_billing_email(),
-					'first_name'       => $order->get_billing_first_name(),
-					'currency'         => $order->get_currency(),
-					'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
-					'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
-					'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
-					'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
-					'discount'         => round( floatval( $order->get_discount_total( 'edit' ) ), 2 ),
-					'total'            => round( floatval( $order->get_total( 'edit' ) ), 2 ),
-					'status'           => 'paid',
-					'products'         => $products,
-					'integration'      => 'WooCommerce',
-				),
-			);
-
-			$query_args = is_null( $this->api_key ) ? array() : array(
-				'api_key' => $this->api_key,
-			);
-
-			$body = $purchase_options;
-			$args = array( 'method' => 'POST' );
-
-			$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
-
-			$response = ckwc_convertkit_api_request( 'purchases', $query_args, $body, $args );
-
-			if ( is_wp_error( $response ) ) {
-				$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
-				$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
-			} else {
-				$order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
-				$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
-			}
+		// If no Order could be fetched, bail.
+		if ( ! $order ) {
+			return;
 		}
+
+		// If purchase data has already been sent to ConvertKit, bail
+		// This ensures that we don't unecessarily send data multiple times
+		// when the Order's status is transitioned.
+		if ( 'yes' === get_post_meta( $order_id, 'ckwc_purchase_data_sent', true ) ) {
+			return;
+		}
+
+		// Build array of Products for the API call.
+		$products = array();
+		foreach ( $order->get_items() as $item_key => $item ) {
+			// If this Order Item's Product could not be found, skip it.
+			if ( ! $item->get_product() ) {
+				continue;
+			}
+
+			// Add Product to array of Products.
+			$products[] = array(
+				'pid'        => $item->get_product()->get_id(),
+				'lid'        => $item_key,
+				'name'       => $item->get_name(),
+				'sku'        => $item->get_product()->get_sku(),
+				'unit_price' => $item->get_product()->get_price(),
+				'quantity'   => $item->get_quantity(),
+			);
+		}
+
+		// Build API parameters.
+		$purchase_options = array(
+			'api_secret' => $this->api_secret,
+			'purchase'   => array(
+				'transaction_id'   => $order->get_order_number(),
+				'email_address'    => $order->get_billing_email(),
+				'first_name'       => $order->get_billing_first_name(),
+				'currency'         => $order->get_currency(),
+				'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
+				'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
+				'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
+				'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
+				'discount'         => round( floatval( $order->get_discount_total( 'edit' ) ), 2 ),
+				'total'            => round( floatval( $order->get_total( 'edit' ) ), 2 ),
+				'status'           => 'paid',
+				'products'         => $products,
+				'integration'      => 'WooCommerce',
+			),
+		);
+
+		$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
+
+		// Send purchase data to ConvertKit.
+		$response = ckwc_convertkit_api_request(
+			'purchases',
+			array(
+				'api_key' => $this->api_key,
+			),
+			$purchase_options,
+			array(
+				'method' => 'POST'
+			)
+		);
+
+		// If an error occured sending the purchase data to ConvertKit, add the error to the log and WooCommerce Order note.
+		if ( is_wp_error( $response ) ) {
+			$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
+			$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
+			return;
+		}
+
+		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
+		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
+
+		// Log the result and add a WooCommerce Order note.
+		$order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
+		$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
+		
 	}
 
 	/**
