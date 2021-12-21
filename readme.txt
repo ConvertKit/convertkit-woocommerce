@@ -49,6 +49,10 @@ Yes, for it to work you must first have an account on ConvertKit.com
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.4.2 2022-xx-xx
+* Fix: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
+
 ### 1.4.1  2020-06-06
 * Protect against missing products on order items
 

@@ -32,6 +32,26 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to enter text into a jQuery Select2 Field, selecting the option that appears.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @param 	AcceptanceTester 	$I
+	 * @param 	string 				$container 	Field CSS Class / ID
+	 * @param 	string 				$value 		Field Value
+	 */
+	public function fillSelect2Field($I, $container, $value)
+	{
+		$fieldID = $I->grabAttributeFrom($container, 'id');
+		$fieldName = str_replace('-container', '', str_replace('select2-', '', $fieldID));
+	    $I->click('#'.$fieldID);
+	    $I->waitForElementVisible('.select2-search__field[aria-owns="select2-' . $fieldName . '-results"]');
+	    $I->fillField('.select2-search__field[aria-owns="select2-' . $fieldName . '-results"]', $value);
+	    $I->waitForElementVisible('ul#select2-' . $fieldName . '-results li.select2-results__option--highlighted');
+	    $I->pressKey('.select2-search__field[aria-owns="select2-' . $fieldName . '-results"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
+	}
+
+	/**
 	 * Helper method to close the Gutenberg "Welcome to the block editor" dialog, which
 	 * might show for each Page/Post test performed due to there being no persistence
 	 * remembering that the user dismissed the dialog.
@@ -215,19 +235,24 @@ class Acceptance extends \Codeception\Module
 
 		// Create Product
 		switch ($productType) {
+			case 'zero':
+				$productName = 'Zero Value Product';
+				$productID = $I->wooCommerceCreateZeroValueProduct($I);
+				break;
+
 			case 'virtual':
 				$productName = 'Virtual Product';
 				$productID = $I->wooCommerceCreateVirtualProduct($I);
+				break;
 
 			case 'simple':
-			default:
 				$productName = 'Simple Product';
 				$productID = $I->wooCommerceCreateSimpleProduct($I);
 				break;
 		}
 
 		// Define Email Address for this Test.
-		$emailAddress = 'wordpress-' . $productID . '@convertkit.com';
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($emailAddress);
@@ -360,6 +385,42 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Creates a zero value 'Simple product' in WooCommerce that can be used for tests.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @return 	int 	Product ID
+	 */
+	public function wooCommerceCreateZeroValueProduct($I)
+	{
+		return $I->havePostInDatabase([
+			'post_type'		=> 'product',
+			'post_status'	=> 'publish',
+			'post_name' 	=> 'zero-value-product',
+			'post_title'	=> 'Zero Value Product',
+			'post_content'	=> 'Zero Value Product Content',
+			'meta_input' => [
+				'_backorders' => 'no',
+				'_download_expiry' => -1,
+				'_download_limit' => -1,
+				'_downloadable' => 'no',
+				'_manage_stock' => 'no',
+				'_price' => 0,
+				'_product_version' => '5.9.0',
+				'_regular_price' => 0,
+				'_sold_individually' => 'no',
+				'_stock' => null,
+				'_stock_status' => 'instock',
+				'_tax_class' => '',
+				'_tax_status' => 'taxable',
+				'_virtual' => 'no',
+				'_wc_average_rating' => 0,
+				'_wc_review_count' => 0,
+			],
+		]);
+	}
+
+	/**
 	 * Adds the given Product ID to the Cart, loading the Checkout screen
 	 * and prefilling the standard WooCommerce Billing Fields.
 	 * 
@@ -399,6 +460,66 @@ class Acceptance extends \Codeception\Module
 		$I->fillField('#billing_postcode', '12345');
 		$I->fillField('#billing_phone', '123-123-1234');
 		$I->fillField('#billing_email', $emailAddress);
+	}
+
+	/**
+	 * Creates an Order as if the user were creating an Order through the WordPress Administration
+	 * interface.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @param 	AcceptanceTester 	$I
+	 * @param 	int 				$productID 		Product ID
+	 * @param 	string 				$productName 	Product Name
+	 * @param 	string 				$orderStatus 	Order Status
+	 * @param 	string 				$paymentMethod 	Payment Method
+	 * @return 	int 								Order ID
+	 */
+	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod)
+	{
+		// Login as Administrator.
+		$I->loginAsAdmin();
+
+		// Define Email Address for this Manual Order.
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
+
+		// Create User for this Manual Order.
+		$userID = $I->haveUserInDatabase('test', 'subscriber', [
+			'user_email' => $emailAddress,
+		]);
+
+		// Load New Order screen.
+		$I->amOnAdminPage('post-new.php?post_type=shop_order');
+
+		// Check that no WooCommerce, PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Define Order Status.
+	    $I->selectOption('#order_status', $orderStatus);
+
+	    // Define User and Payment Method.
+		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress);
+		$I->selectOption('#_payment_method', $paymentMethod);
+
+		// Add Product.
+		$I->click('button.add-line-item');
+		$I->click('button.add-order-item');
+		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName);
+		$I->click('#btn-ok');
+
+		// Create Order.
+		$I->executeJS('window.scrollTo(0,0);'); // Otherwise button hidden behind admin bar and test fails.
+		$I->click('button.save_order');
+
+		// Check that no WooCommerce, PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Return.
+		return [
+			'email_address' => $emailAddress,
+			'product_id' => $productID,
+			'order_id' => (int) filter_var($I->grabTextFrom('h2.woocommerce-order-data__heading'), FILTER_SANITIZE_NUMBER_INT),
+		];
 	}
 
 	/**
@@ -442,16 +563,18 @@ class Acceptance extends \Codeception\Module
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	int 			$orderID 		Order ID
 	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	int 			$productID 		Product ID
 	 */ 
-	public function apiCheckPurchaseExists($I, $orderID, $emailAddress)
+	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
 		// Run request.
-		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiRequest('purchases', 'GET'), $orderID);
 
 		// Check data returned for this Order ID.
-		$I->assertArrayHasKey('id', $results);
-		$I->assertEquals($orderID, $results['id']);
-		$I->assertEquals($emailAddress, $results['email_address']);
+		$I->assertIsArray($purchase);
+		$I->assertEquals($orderID, $purchase['transaction_id']);
+		$I->assertEquals($emailAddress, $purchase['email_address']);
+		$I->assertEquals($productID, $purchase['products'][0]['pid']);
 	}
 
 	/**
@@ -459,14 +582,48 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	int 			$orderID 		Order ID
+	 * @param 	string 			$emailAddress 	Email Address
 	 */ 
-	public function apiCheckPurchaseDoesNotExist($I, $orderID)
+	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
 	{
 		// Run request.
-		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiRequest('purchases', 'GET'), $orderID);
 
-		// Check no data returned for this Order ID.
-		$I->assertCount(0, $results);
+		// Check data not returned for this Order ID.
+		// We check the email address, because each test will reset, meaning the Order ID will match that
+		// of a previous test, and therefore the API will return data from an existing test.
+		$I->assertIsArray($purchase);
+		$I->assertNotEquals($emailAddress, $purchase['email_address']);
+	}
+
+	/**
+	 * Returns a Purchase from the /purchases API endpoint based on the given Order ID (transaction_id).
+	 * 
+	 * We cannot use /purchases/{id} as {id} is the ConvertKit ID, not the WooCommerce Order ID (which
+	 * is stored in the transaction_id).
+	 * 
+	 * @param 	array 	$purchases 	Purchases Data
+	 * @param 	int 	$orderID 	Order ID
+	 * @return 	array
+	 */
+	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
+	{
+		// Iterate through purchases to find one where the transaction ID matches the order ID.
+		foreach ($purchases['purchases'] as $purchase) {
+			// Skip if order ID does not match
+			if ($purchase['transaction_id'] != $orderID) {
+				continue;
+			}
+
+			return $purchase;
+		}
+
+		// No purchase exists with the given order ID. Return a blank array.
+		return [
+			'id' => 0,
+			'order_id' => 0,
+			'email_address' => '',
+		];
 	}
 
 	/**
