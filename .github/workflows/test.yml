@@ -194,4 +194,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: /home/runner/work/convertkit-wordpress/convertkit-wordpress/wordpress/wp-content/plugins/convertkit/tests/_output/
+          path: ${{ env.PLUGIN_DIR }}/tests/_output/
