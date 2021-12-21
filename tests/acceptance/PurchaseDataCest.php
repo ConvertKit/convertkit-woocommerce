@@ -192,13 +192,242 @@ class PurchaseDataCest
 	 * Test that a manual order (an order created in the WordPress Administration interface) is sent to ConvertKit when:
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Order contains a 'Simple' WooCommerce Product, and
+	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testSendPurchaseDataWithSimpleProductManualOrder(AcceptanceTester $I)
+	public function testSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
+	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable Sending Purchase Data.
+		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+
+		// Save.
+		$I->click('Save changes');
+
+		// Create Product for this test.
+		$productID = $I->wooCommerceCreateSimpleProduct($I);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			$productID, // Product ID
+			'Simple Product', // Product Name
+			'wc-processing', // Order Status
+			'' // Payment Method
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+	}
+
+	/**
+	 * Test that a manual order (an order created in the WordPress Administration interface) is not sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
+	 * - The Order contains a 'Simple' WooCommerce Product, and
+	 * - The Order's payment method is blank (N/A), and
+	 * - The Order is created via the WordPress Administration interface.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testDontSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
+	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Disable Sending Purchase Data.
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+
+		// Save.
+		$I->click('Save changes');
+
+		// Create Product for this test.
+		$productID = $I->wooCommerceCreateSimpleProduct($I);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			$productID, // Product ID
+			'Simple Product', // Product Name
+			'wc-processing', // Order Status
+			'' // Payment Method
+		);
+
+		// Confirm that the purchase was not added to ConvertKit.
+		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+	}
+
+	/**
+	 * Test that a manual order (an order created in the WordPress Administration interface) is sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The Order contains a 'Virtual' WooCommerce Product, and
+	 * - The Order's payment method is blank (N/A), and
+	 * - The Order is created via the WordPress Administration interface.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
+	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable Sending Purchase Data.
+		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+
+		// Save.
+		$I->click('Save changes');
+
+		// Create Product for this test.
+		$productID = $I->wooCommerceCreateVirtualProduct($I);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			$productID, // Product ID
+			'Virtual Product', // Product Name
+			'wc-processing', // Order Status
+			'' // Payment Method
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+	}
+
+	/**
+	 * Test that a manual order (an order created in the WordPress Administration interface) is not sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
+	 * - The Order contains a 'Virtual' WooCommerce Product, and
+	 * - The Order's payment method is blank (N/A), and
+	 * - The Order is created via the WordPress Administration interface.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testDontSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
+	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Disable Sending Purchase Data.
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+
+		// Save.
+		$I->click('Save changes');
+
+		// Create Product for this test.
+		$productID = $I->wooCommerceCreateVirtualProduct($I);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			$productID, // Product ID
+			'Virtual Product', // Product Name
+			'wc-processing', // Order Status
+			'' // Payment Method
+		);
+
+		// Confirm that the purchase was not added to ConvertKit.
+		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+	}
+
+	/**
+	 * Test that a manual order (an order created in the WordPress Administration interface) is sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The Order contains a 'Zero Value' WooCommerce Product, and
+	 * - The Order's payment method is blank (N/A), and
+	 * - The Order is created via the WordPress Administration interface.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
+	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable Sending Purchase Data.
+		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+
+		// Save.
+		$I->click('Save changes');
+
+		// Create Product for this test.
+		$productID = $I->wooCommerceCreateZeroValueProduct($I);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			$productID, // Product ID
+			'Zero Value Product', // Product Name
+			'wc-processing', // Order Status
+			'' // Payment Method
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+	}
+
+	/**
+	 * Test that a manual order (an order created in the WordPress Administration interface) is not sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
+	 * - The Order contains a 'Zero Value' WooCommerce Product, and
+	 * - The Order's payment method is blank (N/A), and
+	 * - The Order is created via the WordPress Administration interface.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testDontSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
+	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Disable Sending Purchase Data.
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+
+		// Save.
+		$I->click('Save changes');
+
+		// Create Product for this test.
+		$productID = $I->wooCommerceCreateZeroValueProduct($I);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			$productID, // Product ID
+			'Zero Value Product', // Product Name
+			'wc-processing', // Order Status
+			'' // Payment Method
+		);
+
+		// Confirm that the purchase was not added to ConvertKit.
+		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+	}
+
+	/**
+	 * Test that a manual order (an order created in the WordPress Administration interface) is sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The Order contains a 'Simple' WooCommerce Product, and
+	 * - The Order's payment method is Cash on Delivery (COD), and
+	 * - The Order is created via the WordPress Administration interface.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -229,13 +458,14 @@ class PurchaseDataCest
 	 * Test that a manual order (an order created in the WordPress Administration interface) is not sent to ConvertKit when:
 	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
 	 * - The Order contains a 'Simple' WooCommerce Product, and
+	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testDontSendPurchaseDataWithSimpleProductManualOrder(AcceptanceTester $I)
+	public function testDontSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -266,13 +496,14 @@ class PurchaseDataCest
 	 * Test that a manual order (an order created in the WordPress Administration interface) is sent to ConvertKit when:
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Order contains a 'Virtual' WooCommerce Product, and
+	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testSendPurchaseDataWithVirtualProductManualOrder(AcceptanceTester $I)
+	public function testSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -303,13 +534,14 @@ class PurchaseDataCest
 	 * Test that a manual order (an order created in the WordPress Administration interface) is not sent to ConvertKit when:
 	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
 	 * - The Order contains a 'Virtual' WooCommerce Product, and
+	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testDontSendPurchaseDataWithVirtualProductManualOrder(AcceptanceTester $I)
+	public function testDontSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -340,13 +572,14 @@ class PurchaseDataCest
 	 * Test that a manual order (an order created in the WordPress Administration interface) is sent to ConvertKit when:
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Order contains a 'Zero Value' WooCommerce Product, and
+	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testSendPurchaseDataWithZeroValueProductManualOrder(AcceptanceTester $I)
+	public function testSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -377,13 +610,14 @@ class PurchaseDataCest
 	 * Test that a manual order (an order created in the WordPress Administration interface) is not sent to ConvertKit when:
 	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
 	 * - The Order contains a 'Zero Value' WooCommerce Product, and
+	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testDontSendPurchaseDataWithZeroValueProductManualOrder(AcceptanceTester $I)
+	public function testDontSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
