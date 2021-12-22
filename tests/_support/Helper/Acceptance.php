@@ -608,6 +608,15 @@ class Acceptance extends \Codeception\Module
 	 */
 	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
 	{
+		// Bail if no purchases exist.
+		if (!isset($purchases['purchases'])) {
+			return [
+				'id' => 0,
+				'order_id' => 0,
+				'email_address' => '',
+			];
+		}
+
 		// Iterate through purchases to find one where the transaction ID matches the order ID.
 		foreach ($purchases['purchases'] as $purchase) {
 			// Skip if order ID does not match
