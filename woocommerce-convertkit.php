@@ -8,56 +8,62 @@
  * Author URI: https://www.convertkit.com
  *
  * WC requires at least: 3.0
- * WC tested up to: 4.2
+ * WC tested up to: 6.0
  */
 
-
-if ( ! defined( 'ABSPATH' ) ) { exit; }
-
-if ( ! defined( 'CKWC_CACHE_PERIOD' ) ) {
-	define( 'CKWC_CACHE_PERIOD', 6 * HOUR_IN_SECONDS );
+// Bail if Plugin is already loaded.
+if ( class_exists( 'WP_CKWC' ) ) {
+	return;
 }
 
-if ( ! defined( 'CKWC_PLUGIN_BASENAME' ) ) {
-	define( 'CKWC_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+// Define ConverKit Plugin paths and version number.
+define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
+define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'CKWC_PLUGIN_PATH', __DIR__ );
+define( 'CKWC_VERSION', '1.4.1' );
+
+// Load files that are always used.
+require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-order.php';
+
+// Load files that are only used in the WordPress Administration interface.
+if ( is_admin() ) {
+	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
+	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 }
 
-if ( ! defined( 'CKWC_PLUGIN_DIRPATH' ) ) {
-	define( 'CKWC_PLUGIN_DIRPATH', trailingslashit( dirname( __FILE__ ) ) );
+/**
+ * Main function to return Plugin instance.
+ *
+ * @since   1.4.2
+ */
+function WP_CKWC() { // phpcs:ignore
+
+	return WP_CKWC::get_instance();
+
 }
 
-if ( ! defined( 'CKWC_PLUGIN_FILEPATH' ) ) {
-	define( 'CKWC_PLUGIN_FILEPATH', __FILE__ );
-}
+/**
+ * Main function to return the WooCommerce Integration class.
+ *
+ * @since   1.0.0
+ */
+function WP_CKWC_Integration() { // phpcs:ignore
 
-if ( ! defined( 'CKWC_VERSION' ) ) {
-	define( 'CKWC_VERSION', '1.4.1' );
-}
-
-if ( ! defined( 'CKWC_MIN_WC_VERSION' ) ) {
-	define( 'CKWC_MIN_WC_VERSION', '3.0.0' );
-}
-
-if ( ! defined( 'CKWC_SLUG' ) ) {
-	define( 'CKWC_SLUG', 'ckwc' );
-}
-
-if ( ! defined( 'CKWC_TITLE' ) ) {
-	define( 'CKWC_TITLE', 'ConvertKit for WooCommerce' );
-}
-
-if ( ! defined( 'CKWC_SHORT_TITLE' ) ) {
-	define( 'CKWC_SHORT_TITLE', 'ConvertKit' );
-}
-
-// Require the plugin's function definitions
-// These files provide generic functions that don't really belong as part of a component
-require_once( path_join( CKWC_PLUGIN_DIRPATH, 'functions/convertkit.php' ) );
-require_once( path_join( CKWC_PLUGIN_DIRPATH, 'functions/utility.php' ) );
-
-function ckwc_plugins_loaded() {
-	if ( ckwc_requirements_met() ) {
-		require_once( path_join( CKWC_PLUGIN_DIRPATH, 'components/integration/integration.php' ) );
+	// Bail if WooCommerce isn't active.
+	if ( ! function_exists( 'WC' ) ) {
+		return false;
 	}
+
+	// Get registered WooCommerce integrations.
+	$integrations = WC()->integrations->get_integrations();
+
+	// Return our integration, if it's registered.
+	return isset( $integrations['ckwc'] ) ? $integrations['ckwc'] : false;
+
 }
-add_action( 'plugins_loaded', 'ckwc_plugins_loaded' );
+
+// Finally, initialize the Plugin.
+WP_CKWC();

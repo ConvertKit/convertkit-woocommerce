@@ -1,0 +1,72 @@
+var ckwcSettings = {
+	'enabled': false,
+	'display_opt_in': false,
+};
+
+/**
+ * Displays or hides settings in the UI, depending on which settings are enabled
+ * or disabled.
+ * 
+ * @since 	1.4.2
+ */
+jQuery( document ).ready( function( $ ) {
+
+	// Update settings.
+	ckwcSettings = {
+		'enabled': $( 'input[name="woocommerce_ckwc_enabled"]' ).prop( 'checked' ),
+		'display_opt_in': $( 'input[name="woocommerce_ckwc_display_opt_in"]' ).prop( 'checked' ),
+	};
+
+	// Refresh UI.
+	ckwcRefreshUI();
+
+	// Update settings and refresh UI when a setting is changed.
+	$( 'input[type=checkbox]' ).on( 'change', function() {
+
+		ckwcSettings[ $( this ).attr( 'id' ).replace( 'woocommerce_ckwc_', '') ] = $( this ).prop( 'checked' );
+
+		ckwcRefreshUI();
+
+	} );
+
+} );
+
+/**
+ * Shows all table rows on the integration settings screen, and then hides
+ * table rows related to a setting, if that setting is disabled.
+ * 
+ * @since 	1.4.2
+ */
+function ckwcRefreshUI() {
+
+	( function( $ ) {
+
+		// Show all rows.
+		$( 'table.form-table tr' ).each( function() {
+			$( this ).show();
+		} );
+
+		// Iterate through settings
+		for ( let setting in ckwcSettings ) {
+			if ( ! ckwcSettings[ setting ] ) {
+				$( 'table.form-table tr' ).each( function() {
+					// Skip if this table row is for the setting we've just checked/unchecked.
+					if ( $( '[id^="woocommerce_ckwc_' + setting + '"]', $( this ) ).length > 0 ) {
+						return;
+					}
+
+					// Hide this row if the input or select element within the row has the CSS class of the setting name.
+					if ( $( 'input, select', $( this ) ).hasClass( setting ) ) {
+						$( this ).hide();
+					}
+				} );
+
+				// Don't do anything else.
+				break;
+			}
+		}
+
+	} )( jQuery );
+
+}
+
