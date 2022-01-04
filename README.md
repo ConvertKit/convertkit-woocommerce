@@ -14,12 +14,12 @@ If you are having issues setting up this plugin on your WordPress site, or have 
 ## Developers
 
 For ConvertKit Developers, there are guides in the main ConvertKit Plugin repository covering:
-- [Setup](https://github.com/ConvertKit/convertkit-wordpress/SETUP.md) - setting up your local environment for development and testing
-- [Development](https://github.com/ConvertKit/convertkit-wordpress/DEVELOPMENT.md) - best practices for development
-- [Testing](https://github.com/ConvertKit/convertkit-wordpress/TESTING.md) - how to write and run tests
+- [Setup](https://github.com/ConvertKit/convertkit-wordpress/blob/master/SETUP.md) - setting up your local environment for development and testing
+- [Development](https://github.com/ConvertKit/convertkit-wordpress/blob/master/DEVELOPMENT.md) - best practices for development
+- [Testing](https://github.com/ConvertKit/convertkit-wordpress/blob/master/TESTING.md) - how to write and run tests
 - [Actions and Filters](ACTIONS-FILTERS.md) - Actions and Filters available to WordPress Developers looking to extend ConvertKit's functionality
 
 For ConvertKit, there is a separate guide to deploying new versions to wordpress.org:
-- [Deployment](https://github.com/ConvertKit/convertkit-wordpress/DEPLOYMENT.md) - how to deploy a new Plugin version to [WordPress.org](https://wordpress.org/plugins/convertkit-for-woocommerce/)
+- [Deployment](https://github.com/ConvertKit/convertkit-wordpress/blob/master/DEPLOYMENT.md) - how to deploy a new Plugin version to [WordPress.org](https://wordpress.org/plugins/convertkit-for-woocommerce/)
 
 These guides can be applied to this Plugin; there may be some minor differences in terms of .env.testing configuration.
