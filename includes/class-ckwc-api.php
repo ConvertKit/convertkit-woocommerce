@@ -52,14 +52,14 @@ class CKWC_API {
 	/**
 	 * Holds the log class for writing to the log file
 	 *
-	 * @var     ConvertKit_Log
+	 * @var     WC_Logger
 	 */
 	private $log;
 
 	/**
 	 * Sets up the API with the required credentials.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $api_key        ConvertKit API Key.
 	 * @param   string $api_secret     ConvertKit API Secret.
@@ -71,14 +71,14 @@ class CKWC_API {
 		$this->api_key    = $api_key;
 		$this->api_secret = $api_secret;
 		$this->debug      = $debug;
-		$this->log        = new ConvertKit_Log();
+		$this->log        = new WC_Logger();
 
 	}
 
 	/**
 	 * Gets account information from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -98,7 +98,7 @@ class CKWC_API {
 	/**
 	 * Gets all subscription forms from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -119,7 +119,7 @@ class CKWC_API {
 	/**
 	 * Gets all forms from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -143,7 +143,7 @@ class CKWC_API {
 	/**
 	 * Subscribes an email address to a form.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $form_id    Form ID.
 	 * @param   string $email      Email Address.
@@ -154,7 +154,7 @@ class CKWC_API {
 
 		// Backward compat. if $email is an array comprising of email and name keys.
 		if ( is_array( $email ) ) {
-			_deprecated_function( __FUNCTION__, '1.9.6', 'form_subscribe( $form_id, $email, $first_name )' );
+			_deprecated_function( __FUNCTION__, '1.4.2', 'form_subscribe( $form_id, $email, $first_name )' );
 			$first_name = $email['name'];
 			$email      = $email['email'];
 		}
@@ -177,7 +177,7 @@ class CKWC_API {
 		/**
 		 * Runs actions immediately after the email address was successfully subscribed to the form.
 		 *
-		 * @since   1.9.6
+		 * @since   1.4.2
 		 *
 		 * @param   array   $response   API Response
 		 * @param   string  $form_id    Form ID
@@ -193,7 +193,7 @@ class CKWC_API {
 	/**
 	 * Gets all landing pages from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -217,7 +217,7 @@ class CKWC_API {
 	/**
 	 * Fetches all sequences from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -262,7 +262,7 @@ class CKWC_API {
 	/**
 	 * Subscribes an email address to a sequence.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $sequence_id Sequence ID.
 	 * @param   string $email      	Email Address.
@@ -287,7 +287,7 @@ class CKWC_API {
 		/**
 		 * Runs actions immediately after the email address was successfully subscribed to the sequence.
 		 *
-		 * @since   1.9.6
+		 * @since   1.4.2
 		 *
 		 * @param   array   $response   	API Response
 		 * @param   string  $sequence_id 	Sequence ID
@@ -302,7 +302,7 @@ class CKWC_API {
 	/**
 	 * Fetches all tags from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -347,7 +347,7 @@ class CKWC_API {
 	/**
 	 * Subscribes an email address to a tag.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $tag_id     Tag ID.
 	 * @param   string $email      Email Address.
@@ -372,7 +372,7 @@ class CKWC_API {
 		/**
 		 * Runs actions immediately after the email address was successfully subscribed to the tag.
 		 *
-		 * @since   1.9.6
+		 * @since   1.4.2
 		 *
 		 * @param   array   $response   API Response
 		 * @param   string  $tag_id     Tag ID
@@ -387,7 +387,7 @@ class CKWC_API {
 	/**
 	 * Gets a subscriber by their email address.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $email  Email Address.
 	 * @return  mixed           WP_Error | array
@@ -434,7 +434,7 @@ class CKWC_API {
 	/**
 	 * Gets a subscriber by their ConvertKit subscriber ID.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   int $subscriber_id  Subscriber ID.
 	 * @return  mixed                   WP_Error | array
@@ -480,7 +480,7 @@ class CKWC_API {
 	/**
 	 * Gets a list of tags for the given ConvertKit subscriber ID.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   int $subscriber_id  Subscriber ID.
 	 * @return  mixed                   WP_Error | array
@@ -526,7 +526,7 @@ class CKWC_API {
 	/**
 	 * Returns the subscriber's ID by their email address.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $email_address  Email Address.
 	 * @return  mixed                   WP_Error | int
@@ -549,7 +549,7 @@ class CKWC_API {
 	/**
 	 * Unsubscribes an email address.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $email      Email Address.
 	 * @return  mixed               WP_Error | array
@@ -573,7 +573,7 @@ class CKWC_API {
 		/**
 		 * Runs actions immediately after the email address was successfully unsubscribed.
 		 *
-		 * @since   1.9.6
+		 * @since   1.4.2
 		 *
 		 * @param   array   $response   API Response
 		 * @param   string  $email      Email Address
@@ -646,7 +646,7 @@ class CKWC_API {
 	public function update_resources( $api_key, $api_secret ) { // phpcs:ignore
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'refresh() in ConvertKit_Resource_Forms, ConvertKit_Resource_Landing_Pages and ConvertKit_Resource_Tags classes.' );
+		_deprecated_function( __FUNCTION__, '1.4.2', 'refresh() in ConvertKit_Resource_Forms, ConvertKit_Resource_Landing_Pages and ConvertKit_Resource_Tags classes.' );
 
 		// Initialize resource classes.
 		$forms         = new ConvertKit_Resource_Forms();
@@ -663,7 +663,7 @@ class CKWC_API {
 	/**
 	 * Backward compat. function for getting a ConvertKit subscriber by their ID.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   int $id     Subscriber ID.
 	 * @return  mixed           WP_Error | array
@@ -671,7 +671,7 @@ class CKWC_API {
 	public function get_subscriber( $id ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'get_subscriber_by_id()' );
+		_deprecated_function( __FUNCTION__, '1.4.2', 'get_subscriber_by_id()' );
 
 		// Pass request to new function.
 		return $this->get_subscriber_by_id( $id );
@@ -681,7 +681,7 @@ class CKWC_API {
 	/**
 	 * Backward compat. function for subscribing a ConvertKit subscriber to the given Tag.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   int   $tag    Tag ID.
 	 * @param   array $args   Arguments.
@@ -690,7 +690,7 @@ class CKWC_API {
 	public function add_tag( $tag, $args ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'tag_subscribe( $tag_id, $email_address )' );
+		_deprecated_function( __FUNCTION__, '1.4.2', 'tag_subscribe( $tag_id, $email_address )' );
 
 		// Pass request to new function.
 		return $this->tag_subscribe( $tag, $args['email'] );
@@ -700,7 +700,7 @@ class CKWC_API {
 	/**
 	 * Backward compat. function for fetching Legacy Form or Landing Page markup for the given URL.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $url    URL.
 	 * @return  mixed           WP_Error | string
@@ -708,7 +708,7 @@ class CKWC_API {
 	public function get_resource( $url ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'get_form_html( $form_id ) or get_landing_page_html( $url )' );
+		_deprecated_function( __FUNCTION__, '1.4.2', 'get_form_html( $form_id ) or get_landing_page_html( $url )' );
 
 		// Pass request to new function.
 		return $this->get_landing_page_html( $url );
@@ -718,7 +718,7 @@ class CKWC_API {
 	/**
 	 * Backward compat. function for fetching Legacy Form or Landing Page markup for the given URL.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   array $args   Arguments (single email key).
 	 * @return  mixed           WP_Error | array
@@ -726,7 +726,7 @@ class CKWC_API {
 	public function form_unsubscribe( $args ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'unsubscribe( $email_address )' );
+		_deprecated_function( __FUNCTION__, '1.4.2', 'unsubscribe( $email_address )' );
 
 		// Pass request to new function.
 		return $this->unsubscribe( $args['email'] );
@@ -787,7 +787,7 @@ class CKWC_API {
 	 * Converts any relative URls to absolute, fully qualified HTTP(s) URLs for the given
 	 * DOM Elements.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   array  $elements   Elements.
 	 * @param   string $attribute  HTML Attribute.
@@ -822,7 +822,7 @@ class CKWC_API {
 	/**
 	 * Gets all forms and landing pages from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  mixed   WP_Error | array
 	 */
@@ -879,7 +879,7 @@ class CKWC_API {
 	/**
 	 * Performs a GET request.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $endpoint       API Endpoint.
 	 * @param   array  $params         Params.
@@ -894,7 +894,7 @@ class CKWC_API {
 	/**
 	 * Performs a POST request.
 	 *
-	 * @since  1.9.6
+	 * @since  1.4.2
 	 *
 	 * @param   string $endpoint       API Endpoint.
 	 * @param   array  $params         Params.
@@ -909,7 +909,7 @@ class CKWC_API {
 	/**
 	 * Main function which handles sending requests to the API using WordPress functions.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $endpoint       API Endpoint (required).
 	 * @param   string $method         HTTP Method (optional).
@@ -972,7 +972,7 @@ class CKWC_API {
 	 * Returns the maximum amount of time to wait for
 	 * a response to the request before exiting.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return  int     Timeout, in seconds.
 	 */
@@ -996,7 +996,7 @@ class CKWC_API {
 	/**
 	 * Gets a customized version of the WordPress default user agent; includes WP Version, PHP version, and ConvertKit plugin version.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @return string User Agent
 	 */
@@ -1006,10 +1006,10 @@ class CKWC_API {
 		require ABSPATH . WPINC . '/version.php';
 
 		return sprintf(
-			'WordPress/%1$s;PHP/%2$s;ConvertKit/%3$s;%4$s',
+			'WordPress/%1$s;PHP/%2$s;ConvertKitWooCommerce/%3$s;%4$s',
 			$wp_version,
 			phpversion(),
-			CONVERTKIT_PLUGIN_VERSION,
+			CKWC_PLUGIN_VERSION,
 			home_url( '/' )
 		);
 
@@ -1018,7 +1018,7 @@ class CKWC_API {
 	/**
 	 * Returns the full API URL for the given endpoint.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $endpoint   Endpoint.
 	 * @return  string              API URL
@@ -1033,7 +1033,7 @@ class CKWC_API {
 	 * Adds either the API Key or API Secret to the URL, depending on whether
 	 * the API Key or API Secret is in the array of parameters.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $url        URL.
 	 * @param   array  $params     Parameters for request.
@@ -1066,7 +1066,7 @@ class CKWC_API {
 	/**
 	 * Adds the given entry to the log file, if debugging is enabled.
 	 *
-	 * @since   1.9.6
+	 * @since   1.4.2
 	 *
 	 * @param   string $entry  Log Entry.
 	 */
@@ -1078,7 +1078,7 @@ class CKWC_API {
 		}
 
 		// Pass the request to the log class.
-		$this->log->add( $entry );
+		$this->log->add( 'convertkit', $entry );
 
 	}
 

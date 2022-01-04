@@ -20,7 +20,7 @@ if ( class_exists( 'WP_CKWC' ) ) {
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_VERSION', '1.4.1' );
+define( 'CKWC_PLUGIN_VERSION', '1.4.1' );
 
 // Load files that are always used.
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';

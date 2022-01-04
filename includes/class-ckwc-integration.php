@@ -185,7 +185,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => sprintf(
 					/* translators: %1$s: URL to Log File, %2$s: View Log File text */
 					'<a href="%1$s" target="_blank">%2$s</a>',
-					admin_url( 'admin.php?page=wc-status&tab=logs&log_file=test-log-log' ),
+					admin_url( 'admin.php?page=wc-status&tab=logs' ),
 					__( 'View Log File', 'woocommerce-convertkit' )
 				),
 				'default'     => 'no',
@@ -232,7 +232,11 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Forms, Tags, Sequences, current subscription setting and other
 		// settings to render the subscription dropdown field.
-		$api = new ConvertKit_API( $this->get_option( 'api_key' ) );
+		$api = new CKWC_API( 
+			$this->get_option( 'api_key' ),
+			$this->get_option( 'api_secret' ),
+			$this->get_option_bool( 'debug' )
+		);
 		$subscription = array(
 			'id' 		=> 'ckwc_subscription',
 			'class' 	=> 'select ' . $data['class'],
@@ -301,7 +305,11 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Get Forms to test that the API Key is valid.
-		$api = new ConvertKit_API( $api_key );
+		$api = new CKWC_API( 
+			$api_key,
+			$this->get_option( 'api_secret' ),
+			$this->get_option_bool( 'debug' )
+		);
 		$forms = $api->get_forms();
 
 		// Bail if an error occured.
