@@ -38,7 +38,7 @@ class CKWC_Admin_Plugin {
 	public function plugin_links( $links ) {
 
 		return array_merge( array(
-			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc' ) . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
+			'<a href="' . ckwc_get_settings_link() . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
 		), $links );
 
 	}

@@ -74,7 +74,11 @@ class CKWC_Admin_Product {
 		// Get Forms, Tags, Sequences, current subscription setting and other
 		// settings to render the subscription dropdown field.
 		// @TODO Cache this data for performance.
-		$api = new CKWC_API( $this->integration->get_option( 'api_key' ) );
+		$api = new CKWC_API( 
+			$this->integration->get_option( 'api_key' ),
+			$this->integration->get_option( 'api_secret' ),
+			$this->integration->get_option_bool( 'debug' )
+		);
 		$subscription = array(
 			'id' 		=> 'ckwc_subscription',
 			'class' 	=> 'widefat',

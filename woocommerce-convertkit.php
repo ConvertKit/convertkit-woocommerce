@@ -23,6 +23,7 @@ define( 'CKWC_PLUGIN_PATH', __DIR__ );
 define( 'CKWC_PLUGIN_VERSION', '1.4.1' );
 
 // Load files that are always used.
+require_once CKWC_PLUGIN_PATH . '/includes/functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';

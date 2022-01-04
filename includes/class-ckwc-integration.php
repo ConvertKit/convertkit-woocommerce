@@ -51,8 +51,14 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'API Key', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
-				// translators: this is a url to the ConvertKit site.
-				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Key</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>.', 'woocommerce-convertkit' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+				'description' => 
+					sprintf(
+						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
+						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'convertkit' ),
+						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Key.', 'woocommerce-convertkit' ) . '</a>',
+						'<br />',
+						'<a href="' . esc_url( ckwc_get_signup_url() ) . '" target="_blank">' . esc_html__( 'Sign up here.', 'woocommerce-convertkit' ) . '</a>',
+					),
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
@@ -62,8 +68,14 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'API Secret', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
-				// translators: this is a url to the ConvertKit site.
-				'description' => sprintf( __( 'If you already have an account, <a href="%1$s" target="_blank">click here to retrieve your API Secret</a>.<br />If you don\'t have a ConvertKit account, you can <a href="%2$s" target="_blank">sign up for one here</a>', 'woocommerce-convertkit.' ), esc_attr( esc_html( 'https://app.convertkit.com/account/edit' ) ), esc_attr( esc_url( 'http://convertkit.com/pricing/' ) ) ),
+				'description' => 
+					sprintf(
+						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
+						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'convertkit' ),
+						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Secret.', 'woocommerce-convertkit' ) . '</a>',
+						'<br />',
+						'<a href="' . esc_url( ckwc_get_signup_url() ) . '" target="_blank">' . esc_html__( 'Sign up here.', 'woocommerce-convertkit' ) . '</a>',
+					),
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
