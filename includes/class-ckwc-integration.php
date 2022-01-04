@@ -129,8 +129,8 @@ class CKWC_Integration extends WC_Integration {
 				'label'       => __( 'Display an Opt-In checkbox on checkout', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
-				'description' => __( 'If enabled, customers will <strong>only</strong> be subscribed if they check the "Opt-In" checkbox at checkout.<br />
-									  If disabled, customers will <strong>always</strong> be subscribed at checkout.', 'woocommerce-convertkit' ),
+				'description' => __( 'If enabled, customers will <strong>only</strong> be subscribed to the chosen Forms, Tags and Sequences if they check the "Opt-In" checkbox at checkout.<br />
+									  If disabled, customers will <strong>always</strong> be subscribed to the chosen Forms, Tags and Sequences at checkout.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
@@ -181,8 +181,8 @@ class CKWC_Integration extends WC_Integration {
 				'label'       => __( 'Send purchase data to ConvertKit.', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
-				'description' => __( 'If enabled, the customer\'s order data <strong>will additionally</strong> be sent to ConvertKit <strong>if the customer opts in</strong>.<br />
-									  If disabled, the customer\'s order data <strong>will not</strong> be sent to ConvertKit.', 'woocommerce-convertkit' ),
+				'description' => __( 'If enabled, the customer\'s order data will be sent to ConvertKit. Their email address will always be subscribed to ConvertKit, <strong>regardless of the Customer\'s opt in status.</strong><br />
+									  If disabled, no order data will be sent to ConvertKit.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
