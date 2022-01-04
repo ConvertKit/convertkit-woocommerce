@@ -2,14 +2,14 @@
 /**
  * ConvertKit API class.
  *
- * @package ConvertKit
+ * @package CWKC
  * @author ConvertKit
  */
 
 /**
  * ConvertKit API class
  *
- * @package ConvertKit
+ * @package CWKC
  * @author ConvertKit
  */
 class CKWC_API {
@@ -211,6 +211,91 @@ class CKWC_API {
 		}
 
 		return $forms['landing_pages'];
+
+	}
+
+	/**
+	 * Fetches all sequences from the API.
+	 *
+	 * @since   1.9.6
+	 *
+	 * @return  mixed   WP_Error | array
+	 */
+	public function get_sequences() {
+
+		$this->log( 'API: get_sequences()' );
+
+		$sequences = array();
+
+		// Send request.
+		$response = $this->get(
+			'sequences',
+			array(
+				'api_key' => $this->api_key,
+			)
+		);
+
+		// If an error occured, return WP_Error.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: get_sequences(): Error: ' . $response->get_error_message() );
+			return $response;
+		}
+
+		// If no sequences exist, return WP_Error.
+		if ( ! isset( $response['courses'] ) ) {
+			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.', 'convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence.', 'convertkit' ) );
+		}
+		if ( ! count( $response['courses'] ) ) {
+			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.', 'convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence.', 'convertkit' ) );
+		}
+
+		foreach ( $response['courses'] as $sequence ) {
+			$sequences[] = $sequence;
+		}
+
+		return $sequences;
+
+	}
+
+	/**
+	 * Subscribes an email address to a sequence.
+	 *
+	 * @since   1.9.6
+	 *
+	 * @param   string $sequence_id Sequence ID.
+	 * @param   string $email      	Email Address.
+	 * @return  mixed               WP_Error | array
+	 */
+	public function sequence_subscribe( $sequence_id, $email ) {
+
+		$this->log( 'API: sequence_subscribe(): [ sequence_id: ' . $sequence_id . ', email: ' . $email . ']' );
+
+		$response = $this->post(
+			'sequences/' . $sequence_id . '/subscribe',
+			array(
+				'api_key' => $this->api_key,
+				'email'   => $email,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: sequence_subscribe(): Error: ' . $response->get_error_message() );
+		}
+
+		/**
+		 * Runs actions immediately after the email address was successfully subscribed to the sequence.
+		 *
+		 * @since   1.9.6
+		 *
+		 * @param   array   $response   	API Response
+		 * @param   string  $sequence_id 	Sequence ID
+		 * @param   string  $email      	Email Address
+		 */
+		do_action( 'convertkit_api_sequence_subscribe_success', $response, $sequence_id, $email );
+
+		return $response;
 
 	}
 

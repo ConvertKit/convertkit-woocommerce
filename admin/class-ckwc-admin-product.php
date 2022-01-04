@@ -35,11 +35,6 @@ class CKWC_Admin_Product {
 		// Fetch integration.
 		$this->integration = WP_CKWC_Integration();
 
-		// If the integration isn't enabled, don't load any other actions or filters.
-		if ( ! $this->integration->is_enabled() ) {
-			return;
-		}
-
 		add_action( 'add_meta_boxes_product', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_product', array( $this, 'save_product' ) );
 		
@@ -69,10 +64,25 @@ class CKWC_Admin_Product {
 	 */
 	public function display_meta_box( $post ) {
 
-		$subscription = get_post_meta( $post->ID, 'ckwc_subscription', true );
-		$options      = ckwc_get_subscription_options();
+		// If the integration isn't enabled, show a message instead.
+		if ( ! $this->integration->is_enabled() ) {
+			$post_type = get_post_type_object( $post->post_type );
+			require_once CKWC_PLUGIN_PATH . '/views/backend/product/disabled.php';
+			return;
+		}
 
-		require_once CKWC_PLUGIN_PATH . '/resources/backend/product/meta-box.php';
+		// Get Forms, Tags and Sequences.
+		// @TODO Cache this data for performance.
+		$api = new ConvertKit_API( $this->integration->get_option( 'api_key' ) );
+		$forms = $api->get_forms();
+		$tags = $api->get_tags();
+		$sequences = $api->get_sequences();
+
+		// Get Form / Tag / Sequence this Product might previously have been set to use.
+		$subscription = get_post_meta( $post->ID, 'ckwc_subscription', true );
+
+		// Load meta box view.
+		require_once CKWC_PLUGIN_PATH . '/views/backend/product/meta-box.php';
 
 	}
 
@@ -85,6 +95,11 @@ class CKWC_Admin_Product {
 	 * @param  	int 	$post_id 	Product ID
 	 */
 	public function save_product( $post_id ) {
+
+		// If the integration isn't enabled, bail.
+		if ( ! $this->integration->is_enabled() ) {
+			return;
+		}
 
 		$data = stripslashes_deep( $_POST ); // WPCS: input var okay. CSRF ok.
 
