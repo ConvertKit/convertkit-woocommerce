@@ -225,13 +225,6 @@ class CKWC_Order {
 			return;
 		}
 		
-		// If customer isn't opting in, bail
-		// We can't send purchase data if the customer hasn't opted in, because the ConvertKit API
-		// will always subscribe the email address given in the purchase data.
-		if ( ! $this->should_opt_in_customer( $order_id ) ) {
-			return;
-		}
-
 		// Build array of Products for the API call.
 		$products = array();
 		foreach ( $order->get_items() as $item_key => $item ) {
