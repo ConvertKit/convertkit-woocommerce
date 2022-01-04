@@ -26,6 +26,15 @@ class CKWC_Order {
 	private $integration;
 
 	/**
+	 * Holds the ConvertKit API.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @var 	CKWC_API
+	 */
+	private $api;
+
+	/**
 	 * Constructor
 	 * 
 	 * @since 	1.0.0
@@ -52,7 +61,7 @@ class CKWC_Order {
 	}
 
 	/**
-	 * Subscribe the customer's email address to a ConvertKit Form or Tag, if the Order's event
+	 * Subscribe the customer's email address to a ConvertKit Form, Tag or Sequence, if the Order's event
 	 * matches the Subscribe Event in this Plugin's Settings.
 	 * 
 	 * @since 	1.0.0
@@ -69,7 +78,7 @@ class CKWC_Order {
 		}
 
 		// Bail if the Order does not require that we subscribe the Customer.
-		if ( ! $this->requires_opt_in() ) {
+		if ( ! $this->should_opt_in_customer( $order_id ) ) {
 			return;
 		}
 
@@ -91,95 +100,104 @@ class CKWC_Order {
 		// Remove any duplicate Forms and Tags.
 		$subscriptions = array_filter( array_unique( $subscriptions ) );
 
-		// Subscribe.
-		$this->process_convertkit_subscriptions( 
-			$subscriptions,
-			$this->email( $order ),
-			$this->first_name( $order ),
-			$order_id
+		// Setup the API.
+		$this->api = new CKWC_API( 
+			$this->integration->get_option( 'api_key' ),
+			$this->integration->get_option( 'api_secret' ),
+			$this->integration->get_option_bool( 'debug' )
 		);
-		
-	}
 
-	/**
-	 * For each subscription (sequence, tag, form) attached to a product,
-	 * perform the relevant actions (subscribe & add order note)
-	 *
-	 * @param array $subscriptions
-	 * @param string $email
-	 * @param string $name
-	 * @param string $order_id
-	 */
-	private function process_convertkit_subscriptions( $subscriptions, $email, $name, $order_id ) {
-
+		// Iterate through each subscription (Form, Tag, Sequence), subscribing the Customer to each.
 		foreach ( $subscriptions as $subscription_raw ) {
 			list( $subscription['type'], $subscription['id'] ) = explode( ':', $subscription_raw );
-
-			$subscription['function'] = "ckwc_convertkit_api_add_subscriber_to_{$subscription['type']}";
-
-			$this->process_item_subscription( $subscription, $email, $name, $order_id );
+			$this->subscribe_customer(
+				$subscription['type'],
+				$subscription['id'],
+				$this->email( $order ),
+				$this->first_name( $order ),
+				$order_id
+			);
 		}
 
 	}
 
 	/**
-	 * For each subscription (sequence, tag, form) attached to a product,
-	 * perform the relevant actions (subscribe & add order note)
+	 * Subscribe the given email address to the Form, Tag or Sequence, adding an Order Note
+	 * for each to the Order.
+	 * 
+	 * @since 	1.4.2
 	 *
-	 * @param array $subscription
-	 * @param string $email
-	 * @param string $name
-	 * @param string $order_id
+	 * @param 	string 	$resource_type 	Resource Type (form|tag|course).
+	 * @param 	int 	$resource_id 	Resource ID (Form ID, Tag ID, Sequence ID).
+	 * @param 	string 	$email 			Email Address.
+	 * @param 	string 	$name 			Customer Name.
+	 * @param 	int 	$order_id 		WooCommerce Order ID.
+	 * @return 	mixed 					WP_Error | array
 	 */
-	private  function process_item_subscription( $subscription, $email, $name, $order_id ) {
-	    // TODO add else{} block here to debug_log if function does not exist
-		if ( function_exists( $subscription['function'] ) ) {
-			$response = call_user_func( $subscription['function'], $subscription['id'], $email, $name );
+	public function subscribe_customer( $resource_type, $resource_id, $email, $name, $order_id ) {
 
-			if ( ! is_wp_error( $response ) ) {
-				$options = ckwc_get_subscription_options();
-				$items   = array();
-				foreach ( $options as $option ) {
-					if ( $subscription['type'] !== $option['key'] ) {
-						continue;
-					}
+		// Call API to subscribe the email address to the given Form, Tag or Sequence.
+		switch ( $resource_type ) {
+			case 'form':
+				$result = $this->api->form_subscribe( $resource_id, $email, $name );
+				break;
 
-					/**
-					 * This ends up holding an array of the subscription items (tags, courses, or forms) our WP install knows about,
-					 * which match the current subscription type, in `id => name` pairs
-					 */
-					// TODO should this be like `$items[] =`, so we don't stomp on the array each time through the loop?
-					$items = $option['options'];
-				}
-				if ( $items ) {
-					// we then check if the item ID we sent is in this array, and if so add an order note
-					if ( isset( $items[ $subscription['id'] ] ) ) {
-						switch ( $subscription['type'] ) {
-							case 'tag':
-							case 'form':
-								wc_create_order_note( $order_id,
-								                      sprintf( __( '[ConvertKit] Customer subscribed to the %s: %s',
-								                                   'woocommerce-convertkit' ), $subscription['type'],
-								                               $items[ $subscription['id'] ] ) );
-								break;
+			case 'tag':
+				$result = $this->api->tag_subscribe( $resource_id, $email );
+				break;
 
-							// Sequences are called "courses" for legacy reasons, so they get a special case
-							case 'course':
-								wc_create_order_note( $order_id,
-								                      sprintf( __( '[ConvertKit] Customer subscribed to the %s: %s',
-								                                   'woocommerce-convertkit' ), 'sequence',
-								                               $items[ $subscription['id'] ] ) );
-								break;
-						}
-					}
-				}
-			}
-
-			if ( 'yes' === $this->get_option( 'debug' ) ) {
-				$this->debug_log( 'API call: ' . $subscription['type'] . "\nResponse: \n" . print_r( $response,
-				                                                                                     true ) );
-			}
+			case 'sequence':
+			case 'course':
+				$result = $this->api->sequence_subscribe( $resource_id, $email );
+				break;
 		}
+
+		// If an error occured, bail.
+		if ( is_wp_error( $result ) ) {
+			wc_create_order_note( 
+				$order_id,
+				$result->get_error_message()
+			);
+			return;
+		}
+
+		// Create an Order Note so that the Order shows the Customer was subscribed to a Form, Tag or Sequence.
+		switch ( $resource_type ) {
+			case 'form':
+				wc_create_order_note( 
+					$order_id,
+                  	sprintf( 
+                  		__( '[ConvertKit] Customer subscribed to the Form: %s', 'woocommerce-convertkit' ),
+                  		$resource_id
+                  	)
+				);
+				break;
+
+			case 'tag':
+				wc_create_order_note( 
+					$order_id,
+                  	sprintf( 
+                  		__( '[ConvertKit] Customer subscribed to the Tag: %s', 'woocommerce-convertkit' ),
+                  		$resource_id
+                  	)
+				);
+				break;
+
+			case 'sequence':
+			case 'course':
+				wc_create_order_note( 
+					$order_id,
+                  	sprintf( 
+                  		__( '[ConvertKit] Customer subscribed to the Sequence: %s', 'woocommerce-convertkit' ),
+                  		$resource_id
+                  	)
+				);
+				break;
+		}
+
+		// Return result.
+		return $result;
+
 	}
 
 	/**
@@ -188,6 +206,7 @@ class CKWC_Order {
 	 * @since 	1.4.2
 	 * 
 	 * @param 	int 	$order_id 	WooCommerce Order ID.
+	 * @return 	mixed 				WP_Error | array
 	 */
 	public function send_purchase_data( $order_id ) {
 
@@ -202,14 +221,14 @@ class CKWC_Order {
 		// If purchase data has already been sent to ConvertKit, bail
 		// This ensures that we don't unecessarily send data multiple times
 		// when the Order's status is transitioned.
-		if ( ! $this->purchase_data_sent( $order_id ) ) {
+		if ( $this->purchase_data_sent( $order_id ) ) {
 			return;
 		}
 		
 		// If customer isn't opting in, bail
 		// We can't send purchase data if the customer hasn't opted in, because the ConvertKit API
 		// will always subscribe the email address given in the purchase data.
-		if ( ! $this->requires_opt_in( $order_id ) ) {
+		if ( ! $this->should_opt_in_customer( $order_id ) ) {
 			return;
 		}
 
@@ -233,68 +252,55 @@ class CKWC_Order {
 		}
 
 		// Build API parameters.
-		$purchase_options = array(
-			'api_secret' => $this->api_secret,
-			'purchase'   => array(
-				'transaction_id'   => $order->get_order_number(),
-				'email_address'    => $order->get_billing_email(),
-				'first_name'       => $order->get_billing_first_name(),
-				'currency'         => $order->get_currency(),
-				'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
-				'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
-				'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
-				'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
-				'discount'         => round( floatval( $order->get_discount_total( 'edit' ) ), 2 ),
-				'total'            => round( floatval( $order->get_total( 'edit' ) ), 2 ),
-				'status'           => 'paid',
-				'products'         => $products,
-				'integration'      => 'WooCommerce',
-			),
+		$purchase = array(
+			'transaction_id'   => $order->get_order_number(),
+			'email_address'    => $order->get_billing_email(),
+			'first_name'       => $order->get_billing_first_name(),
+			'currency'         => $order->get_currency(),
+			'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
+			'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
+			'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
+			'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
+			'discount'         => round( floatval( $order->get_discount_total( 'edit' ) ), 2 ),
+			'total'            => round( floatval( $order->get_total( 'edit' ) ), 2 ),
+			'status'           => 'paid',
+			'products'         => $products,
+			'integration'      => 'WooCommerce',
 		);
 
-		$this->debug_log( 'send payment request: ' . print_r( $purchase_options, true ) );
+		// Setup the API.
+		$this->api = new CKWC_API( 
+			$this->integration->get_option( 'api_key' ),
+			$this->integration->get_option( 'api_secret' ),
+			$this->integration->get_option_bool( 'debug' )
+		);
 
 		// Send purchase data to ConvertKit.
-		$response = ckwc_convertkit_api_request(
-			'purchases',
-			array(
-				'api_key' => $this->api_key,
-			),
-			$purchase_options,
-			array(
-				'method' => 'POST'
-			)
-		);
+		$response = $this->api->purchase_create( $purchase );
 
-		// If an error occured sending the purchase data to ConvertKit, add the error to the log and WooCommerce Order note.
+		// If an error occured sending the purchase data to ConvertKit, add a WooCommerce Order note and bail.
 		if ( is_wp_error( $response ) ) {
-			$order->add_order_note( 'Send payment to ConvertKit error: ' . $response->get_error_code() . ' ' . $response->get_error_message(), 0, 'ConvertKit plugin' );
-			$this->debug_log( 'Send payment response WP Error: ' . $response->get_error_code() . ' ' . $response->get_error_message() );
-			return;
+			$order->add_order_note( 
+				sprintf(
+					__( '[ConvertKit] Send Purchase Data Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					$response->get_error_code(),
+					$response->get_error_message()
+				)
+			);
+
+			return $response;
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
 		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
 
-		// Log the result and add a WooCommerce Order note.
-		$order->add_order_note( 'Payment data sent to ConvertKit', 0, false );
-		$this->debug_log( 'send payment response: ' . print_r( $response, true ) );
+		// Add a note to the WooCommerce Order that the purchase data sent successfully.
+		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
+
+		// Return.
+		return $response;
 		
 	}
-
-	/**
-	 * Write API request results to a debug log
-	 * @param $message
-	 */
-	public function debug_log( $message ) {
-
-		$debug = $this->get_option( 'debug' );
-		if ( class_exists( 'WC_Logger' ) && ( 'yes' === $debug ) ) {
-			$logger = new WC_Logger();
-			$logger->add( 'convertkit', $message );
-		}
-	}
-
 
 	/**
 	 * Determines if the given Order has had its purchase data sent to ConvertKit.
@@ -323,7 +329,7 @@ class CKWC_Order {
 	 * @param 	int 	$order_id 	Order ID.
 	 * @return 	bool 				Customer can be opted in
 	 */
-	private function requires_opt_in( $order_id ) {
+	private function should_opt_in_customer( $order_id ) {
 
 		// Get Post Meta value.
 		$opt_in = get_post_meta( $order_id, 'ckwc_opt_in', true );

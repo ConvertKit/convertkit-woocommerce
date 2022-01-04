@@ -636,6 +636,41 @@ class CKWC_API {
 	}
 
 	/**
+	 * Create a Purchase.
+	 * 
+	 * @since 	1.4.2
+	 */
+	public function purchase_create( $purchase ) {
+
+		$this->log( 'API: purchase_create(): [ purchase: ' . print_r( $purchase, true ) . ']' );
+
+		$response = $this->post(
+			'purchases',
+			array(
+				'api_secret' => $this->api_secret,
+				'purchase' => $purchase,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: purchase_create(): Error: ' . $response->get_error_message() );
+		}
+
+		/**
+		 * Runs actions immediately after the purchase data address was successfully created.
+		 *
+		 * @since   1.4.2
+		 *
+		 * @param   array   $response   API Response
+		 * @param   array  	$purchase   Purchase Data
+		 */
+		do_action( 'convertkit_api_purchase_create_success', $response, $purchase);
+
+		return $response;
+
+	}
+
+	/**
 	 * Backward compat. function for updating Forms, Landing Pages and Tags in WordPress options table.
 	 *
 	 * @since   1.0.0
