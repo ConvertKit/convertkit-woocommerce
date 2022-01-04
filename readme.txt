@@ -51,10 +51,18 @@ Yes, for it to work you must first have an account on ConvertKit.com
 == Changelog ==
 
 ### 1.4.2 2022-xx-xx
-* Fix: Improved checkout performance by not requesting ConvertKit Forms, Tags and Sequences from the API when not needed
-* Fix: Renamed Courses to Sequences on Subscription dropdown option
-* Fix: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
-* Fix: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
+* Added: Testing and compatibility for WooCommerce 6.0
+* Added: PHP 8.x compatibility
+* Added: Developers: Action and filter hooks.  See https://github.com/ConvertKit/convertkit-woocommerce/blob/1.4.2/ACTIONS-FILTERS.md
+* Fix: Settings: Improved setting descriptions
+* Fix: Settings: Only show conditional settings if other settings enabled/disabled
+* Fix: Settings: API Key and Secret: Don't need to save settings twice for API Key and Secret to work
+* Fix: Settings: Subscription: Renamed Courses to Sequences on Subscription dropdown option
+* Fix: Settings: Purchase Data: If enabled, ensure that manually created orders send purchase data to ConvertKit 
+* Fix: Settings: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
+* Fix: Settings: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
+* Fix: WooCommerce Products: Renamed Courses to Sequences on Subscription dropdown option
+* Fix: WooCommerce Checkout: Improved performance by not requesting ConvertKit Forms, Tags and Sequences from the API when not needed
 
 ### 1.4.1  2020-06-06
 * Protect against missing products on order items
