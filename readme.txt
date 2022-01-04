@@ -51,6 +51,7 @@ Yes, for it to work you must first have an account on ConvertKit.com
 == Changelog ==
 
 ### 1.4.2 2022-xx-xx
+* Fix: Renamed Courses to Sequences on Subscription dropdown option, to reflect ConvertKit
 * Fix: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
 * Fix: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
 

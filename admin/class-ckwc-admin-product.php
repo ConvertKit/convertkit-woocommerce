@@ -71,15 +71,19 @@ class CKWC_Admin_Product {
 			return;
 		}
 
-		// Get Forms, Tags and Sequences.
+		// Get Forms, Tags, Sequences, current subscription setting and other
+		// settings to render the subscription dropdown field.
 		// @TODO Cache this data for performance.
 		$api = new ConvertKit_API( $this->integration->get_option( 'api_key' ) );
-		$forms = $api->get_forms();
-		$tags = $api->get_tags();
-		$sequences = $api->get_sequences();
-
-		// Get Form / Tag / Sequence this Product might previously have been set to use.
-		$subscription = get_post_meta( $post->ID, 'ckwc_subscription', true );
+		$subscription = array(
+			'id' 		=> 'ckwc_subscription',
+			'class' 	=> 'widefat',
+			'name'		=> 'ckwc_subscription',
+			'value' 	=> get_post_meta( $post->ID, 'ckwc_subscription', true ),
+			'forms'		=> $api->get_forms(),
+			'tags' 		=> $api->get_tags(),
+			'sequences' => $api->get_sequences(),
+		);
 
 		// Load meta box view.
 		require_once CKWC_PLUGIN_PATH . '/views/backend/product/meta-box.php';

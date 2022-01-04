@@ -87,10 +87,10 @@ class CKWC_Integration extends WC_Integration {
 				'class'		  => 'enabled subscribe',
 			),
 			'subscription' => array(
-				'title'       => __( 'Form / Tag', 'woocommerce-convertkit' ),
+				'title'       => __( 'Subscription', 'woocommerce-convertkit' ),
 				'type'        => 'subscription',
 				'default'     => '',
-				'description' => __( 'The ConvertKit Form or Tag to subscribe Customers to.', 'woocommerce-convertkit' ),
+				'description' => __( 'The ConvertKit Form, Tag or Sequence to subscribe Customers to.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'		  => 'enabled subscribe',
@@ -230,10 +230,18 @@ class CKWC_Integration extends WC_Integration {
 
 		$data = wp_parse_args( $data, $defaults );
 
-		// Get Forms and Tags.
+		// Get Forms, Tags, Sequences, current subscription setting and other
+		// settings to render the subscription dropdown field.
 		$api = new ConvertKit_API( $this->get_option( 'api_key' ) );
-		$forms = $api->get_forms();
-		$tags = $api->get_tags();
+		$subscription = array(
+			'id' 		=> 'ckwc_subscription',
+			'class' 	=> 'select ' . $data['class'],
+			'name'		=> $field,
+			'value' 	=> $this->get_option( $key ),
+			'forms'		=> $api->get_forms(),
+			'tags' 		=> $api->get_tags(),
+			'sequences' => $api->get_sequences(),
+		);
 
 		ob_start();
 		?>
@@ -245,28 +253,11 @@ class CKWC_Integration extends WC_Integration {
 			<td class="forminp">
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-					<select class="select <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?>>
-						<option <?php selected( '', $this->get_option( $key ) ); ?> value=""><?php _e( 'Select a subscription option...', 'woocommerce-convertkit' ); ?></option>
-						<optgroup label="Forms">
-							<?php 
-							foreach ( $forms as $form ) {
-								?>
-								<option value="form:<?php echo esc_attr( $form['id'] ); ?>"<?php selected( 'form:' . esc_attr( $form['id'] ), $this->get_option( $key ) ); ?>><?php echo $form['name']; ?></option>
-								<?php
-							}
-							?>
-						</optgroup>
-						<optgroup label="Tags">
-							<?php 
-							foreach ( $tags as $tag ) {
-								?>
-								<option value="tag:<?php echo esc_attr( $tag['id'] ); ?>"<?php selected( 'tag:' . esc_attr( $tag['id'] ), $this->get_option( $key ) ); ?>><?php echo $tag['name']; ?></option>
-								<?php
-							}
-							?>
-						</optgroup>
-					</select>
-					<?php echo $this->get_description_html( $data ); ?>
+					<?php
+					// Load subscription dropdown field.
+					require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
+					echo $this->get_description_html( $data );
+					?>
 				</fieldset>
 			</td>
 		</tr>
