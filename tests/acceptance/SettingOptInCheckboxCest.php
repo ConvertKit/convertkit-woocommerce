@@ -3,27 +3,27 @@
  * Tests various setting combinations for the "Display Opt-In Checkbox" and associated
  * options.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SettingOptInCheckboxCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 	}
 
 	/**
 	 * Test that the checkbox doesn't display when the Opt-In Checkbox is disabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -58,7 +58,7 @@ class SettingOptInCheckboxCest
 	 * Test that the checkbox does display when the Opt-In Checkbox is enabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -97,7 +97,7 @@ class SettingOptInCheckboxCest
 	 * Test that the Opt-In Checkbox Label honors the value defined at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -142,7 +142,7 @@ class SettingOptInCheckboxCest
 	 * Test that the Opt-In Checkbox is checked by default when this behaviour is enabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -184,7 +184,7 @@ class SettingOptInCheckboxCest
 	 * Test that the Opt-In Checkbox is not checked by default when this behaviour is disabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -226,7 +226,7 @@ class SettingOptInCheckboxCest
 	 * Test that the Opt-In Checkbox is displayed in the Billing section of the Checkout when defined at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -265,7 +265,7 @@ class SettingOptInCheckboxCest
 	 * Test that the Opt-In Checkbox is displayed in the Order section of the Checkout when defined at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */

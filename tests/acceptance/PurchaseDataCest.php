@@ -17,7 +17,7 @@ class PurchaseDataCest
 	public function _before(AcceptanceTester $I)
 	{
 		// Activate Plugin.
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);

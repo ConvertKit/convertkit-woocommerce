@@ -2,27 +2,28 @@
 /**
  * Tests for the Enable/Disable option on the WooCommerce Integration.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SettingEnabledDisabledCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 	}
 
 	/**
 	 * Test that the integration doesn't perform any expected actions when disabled at
-	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * WooCommerce > Settings > Integration > ConvertKit, and that WooCommerce Checkout
+	 * works as expected.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */

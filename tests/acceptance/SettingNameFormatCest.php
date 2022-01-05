@@ -2,27 +2,27 @@
 /**
  * Tests various setting combinations for the "Name Format" option.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SettingNameFormatCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 	}
 
 	/**
 	 * Test that the Billing First Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -49,7 +49,7 @@ class SettingNameFormatCest
 	 * Test that the Billing Last Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -75,7 +75,7 @@ class SettingNameFormatCest
 	 * Test that the Billing First Name + Billing Last Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */

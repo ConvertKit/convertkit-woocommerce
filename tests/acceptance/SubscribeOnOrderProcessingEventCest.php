@@ -3,21 +3,21 @@
  * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form
  * or Tag on the Order Processing event when an order is placed through WooCommerce.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SubscribeOnOrderProcessingEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
 		// Activate Plugin.
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
@@ -33,7 +33,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -64,7 +64,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -94,7 +94,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -126,7 +126,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -158,7 +158,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -189,7 +189,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -220,7 +220,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -251,7 +251,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -281,7 +281,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -313,7 +313,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -345,7 +345,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -376,7 +376,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -399,5 +399,103 @@ class SubscribeOnOrderProcessingEventCest
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
 	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The 'Simple' WooCommerce Product also defines a Form (separate to the Plugin settings), and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProductWithProductForm(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
+			false, // Don't send purchase data to ConvertKit
+			$_ENV['CONVERTKIT_API_FORM_NAME'] // Product level Form to subscribe email address to
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
 	
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The 'Simple' WooCommerce Product also defines a Tag (separate to the Plugin settings), and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProductWithProductTag(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
+			false, // Don't send purchase data to ConvertKit
+			$_ENV['CONVERTKIT_API_TAG_NAME'] // Product level Tag to subscribe email address to
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The 'Simple' WooCommerce Product also defines a Sequence (separate to the Plugin settings), and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProductWithProductSequence(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
+			false, // Don't send purchase data to ConvertKit
+			$_ENV['CONVERTKIT_API_SEQUENCE_NAME'] // Product level Sequence to subscribe email address to
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
 }

@@ -64,9 +64,9 @@ class CKWC_Checkout {
 		$fields[ $this->integration->get_option( 'opt_in_location' ) ]['ckwc_opt_in'] = array(
 			'type'    => 'checkbox',
 			'label'   => $this->integration->get_option( 'opt_in_label' ),
-			'default' => ( $this->integration->get_option( 'opt_in_status' ) == 'checked' ? 'checked' : '' ),
+			'default' => 'checked' === $this->integration->get_option( 'opt_in_status' ),
 		);
-
+		
 		return $fields;
 
 	}

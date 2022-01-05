@@ -243,12 +243,12 @@ class CKWC_API {
 
 		// If no sequences exist, return WP_Error.
 		if ( ! isset( $response['courses'] ) ) {
-			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.', 'convertkit' );
-			return new WP_Error( 'convertkit_api_error', __( 'No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence.', 'convertkit' ) );
+			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.', 'woocommerce-convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence.', 'woocommerce-convertkit' ) );
 		}
 		if ( ! count( $response['courses'] ) ) {
-			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.', 'convertkit' );
-			return new WP_Error( 'convertkit_api_error', __( 'No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence.', 'convertkit' ) );
+			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.', 'woocommerce-convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence.', 'woocommerce-convertkit' ) );
 		}
 
 		foreach ( $response['courses'] as $sequence ) {
@@ -328,12 +328,12 @@ class CKWC_API {
 
 		// If no tags exist, return WP_Error.
 		if ( ! isset( $response['tags'] ) ) {
-			$this->log( 'API: get_tags(): Error: No tags exist in ConvertKit.', 'convertkit' );
-			return new WP_Error( 'convertkit_api_error', __( 'No tags exist in ConvertKit. Visit your ConvertKit account and create your first tag.', 'convertkit' ) );
+			$this->log( 'API: get_tags(): Error: No tags exist in ConvertKit.', 'woocommerce-convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No tags exist in ConvertKit. Visit your ConvertKit account and create your first tag.', 'woocommerce-convertkit' ) );
 		}
 		if ( ! count( $response['tags'] ) ) {
-			$this->log( 'API: get_tags(): Error: No tags exist in ConvertKit.', 'convertkit' );
-			return new WP_Error( 'convertkit_api_error', __( 'No tags exist in ConvertKit. Visit your ConvertKit account and create your first tag.', 'convertkit' ) );
+			$this->log( 'API: get_tags(): Error: No tags exist in ConvertKit.', 'woocommerce-convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No tags exist in ConvertKit. Visit your ConvertKit account and create your first tag.', 'woocommerce-convertkit' ) );
 		}
 
 		foreach ( $response['tags'] as $tag ) {
@@ -417,7 +417,7 @@ class CKWC_API {
 				'convertkit_api_error',
 				sprintf(
 					/* translators: Email Address */
-					__( 'No subscriber(s) exist in ConvertKit matching the email address %s.', 'convertkit' ),
+					__( 'No subscriber(s) exist in ConvertKit matching the email address %s.', 'woocommerce-convertkit' ),
 					$email
 				)
 			);
@@ -463,7 +463,7 @@ class CKWC_API {
 				'convertkit_api_error',
 				sprintf(
 					/* translators: Subscriber ID */
-					__( 'No subscriber exist in ConvertKit matching the subscriber ID %s.', 'convertkit' ),
+					__( 'No subscriber exist in ConvertKit matching the subscriber ID %s.', 'woocommerce-convertkit' ),
 					$subscriber_id
 				)
 			);
@@ -509,7 +509,7 @@ class CKWC_API {
 				'convertkit_api_error',
 				sprintf(
 					/* translators: Subscriber ID */
-					__( 'No tags exist in ConvertKit for the subscriber ID %s.', 'convertkit' ),
+					__( 'No tags exist in ConvertKit for the subscriber ID %s.', 'woocommerce-convertkit' ),
 					$subscriber_id
 				)
 			);
@@ -880,7 +880,7 @@ class CKWC_API {
 		if ( ! isset( $response['forms'] ) ) {
 			return new WP_Error(
 				'convertkit_api_error',
-				__( 'No forms exist in ConvertKit. Visit your ConvertKit account and create your first form.', 'convertkit' )
+				__( 'No forms exist in ConvertKit. Visit your ConvertKit account and create your first form.', 'woocommerce-convertkit' )
 			);
 		}
 

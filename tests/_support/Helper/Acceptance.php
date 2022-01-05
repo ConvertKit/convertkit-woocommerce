@@ -81,8 +81,37 @@ class Acceptance extends \Codeception\Module
 		// Go to the Plugins screen in the WordPress Administration interface.
 		$I->amOnPluginsPage();
 
+		// Activate the Plugin.
+		$I->activatePlugin('convertkit-woocommerce-addon');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('convertkit-woocommerce-addon');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+	}
+
+	/**
+	 * Helper method to activate the WooCommerce Plugin and the ConvertKit for WooCommerce Plugin.
+	 * 
+	 * @since 	1.0.0
+	 */
+	public function activateWooCommerceAndConvertKitPlugins($I)
+	{
+		// Login as the Administrator
+		$I->loginAsAdmin();
+
+		// Go to the Plugins screen in the WordPress Administration interface.
+		$I->amOnPluginsPage();
+
 		// Activate the WooCommerce Plugin.
 		$I->activatePlugin('woocommerce');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('woocommerce');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Activate the Plugin.
 		$I->activatePlugin('convertkit-woocommerce-addon');
@@ -96,7 +125,6 @@ class Acceptance extends \Codeception\Module
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
 		$I->amOnAdminPage('options-permalink.php');
-
 	}
 
 	/**
@@ -200,9 +228,10 @@ class Acceptance extends \Codeception\Module
 		$productType = 'simple',
 		$displayOptIn = false,
 		$checkOptIn = false,
-		$formOrTag = false,
+		$pluginFormTagSequence = false,
 		$subscriptionEvent = false,
-		$sendPurchaseData = false
+		$sendPurchaseData = false,
+		$productFormTagSequence = false
 	)
 	{
 		// Define Opt In setting.
@@ -227,9 +256,10 @@ class Acceptance extends \Codeception\Module
 		// Save.
 		$I->click('Save changes');
 
-		// Define Form to subscribe the Customer to, now that the API credentials are saved and the Forms are listed.
-		if ($formOrTag) {
-			$I->selectOption('#woocommerce_ckwc_subscription', $formOrTag);
+		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are saved
+		// and the Forms, Tags and Sequences are listed.
+		if ($pluginFormTagSequence) {
+			$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
 			$I->click('Save changes');
 		}
 
@@ -237,17 +267,17 @@ class Acceptance extends \Codeception\Module
 		switch ($productType) {
 			case 'zero':
 				$productName = 'Zero Value Product';
-				$productID = $I->wooCommerceCreateZeroValueProduct($I);
+				$productID = $I->wooCommerceCreateZeroValueProduct($I, $productFormTagSequence);
 				break;
 
 			case 'virtual':
 				$productName = 'Virtual Product';
-				$productID = $I->wooCommerceCreateVirtualProduct($I);
+				$productID = $I->wooCommerceCreateVirtualProduct($I, $productFormTagSequence);
 				break;
 
 			case 'simple':
 				$productName = 'Simple Product';
-				$productID = $I->wooCommerceCreateSimpleProduct($I);
+				$productID = $I->wooCommerceCreateSimpleProduct($I, $productFormTagSequence);
 				break;
 		}
 
@@ -319,7 +349,7 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @return 	int 	Product ID
 	 */
-	public function wooCommerceCreateSimpleProduct($I)
+	public function wooCommerceCreateSimpleProduct($I, $productFormTagSequence = false)
 	{
 		return $I->havePostInDatabase([
 			'post_type'		=> 'product',
@@ -344,6 +374,9 @@ class Acceptance extends \Codeception\Module
 				'_virtual' => 'no',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 			],
 		]);
 	}
@@ -355,7 +388,7 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @return 	int 	Product ID
 	 */
-	public function wooCommerceCreateVirtualProduct($I)
+	public function wooCommerceCreateVirtualProduct($I, $productFormTagSequence = false)
 	{
 		return $I->havePostInDatabase([
 			'post_type'		=> 'product',
@@ -380,6 +413,9 @@ class Acceptance extends \Codeception\Module
 				'_virtual' => 'yes',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 			],
 		]);
 	}
@@ -391,7 +427,7 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @return 	int 	Product ID
 	 */
-	public function wooCommerceCreateZeroValueProduct($I)
+	public function wooCommerceCreateZeroValueProduct($I, $productFormTagSequence = false)
 	{
 		return $I->havePostInDatabase([
 			'post_type'		=> 'product',
@@ -416,6 +452,9 @@ class Acceptance extends \Codeception\Module
 				'_virtual' => 'no',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 			],
 		]);
 	}

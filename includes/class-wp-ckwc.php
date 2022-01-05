@@ -182,7 +182,7 @@ class WP_CKWC {
 				'convertkit_for_woocommerce_get_class',
 				sprintf(
 					/* translators: %1$s: PHP class name */
-					__( 'ConvertKit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>', 'convertkit' ),
+					__( 'ConvertKit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>', 'woocommerce-convertkit' ),
 					$name
 				)
 			);
@@ -192,7 +192,7 @@ class WP_CKWC {
 			if ( is_admin() ) {
 				wp_die(
 					esc_attr( $error ),
-					esc_html__( 'ConvertKit for WooCommerce Error', 'convertkit' ),
+					esc_html__( 'ConvertKit for WooCommerce Error', 'woocommerce-convertkit' ),
 					array(
 						'back_link' => true,
 					)

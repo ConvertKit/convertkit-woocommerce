@@ -54,7 +54,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => 
 					sprintf(
 						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
-						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'convertkit' ),
+						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
 						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Key.', 'woocommerce-convertkit' ) . '</a>',
 						'<br />',
 						'<a href="' . esc_url( ckwc_get_signup_url() ) . '" target="_blank">' . esc_html__( 'Sign up here.', 'woocommerce-convertkit' ) . '</a>',
@@ -71,7 +71,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => 
 					sprintf(
 						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
-						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'convertkit' ),
+						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
 						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Secret.', 'woocommerce-convertkit' ) . '</a>',
 						'<br />',
 						'<a href="' . esc_url( ckwc_get_signup_url() ) . '" target="_blank">' . esc_html__( 'Sign up here.', 'woocommerce-convertkit' ) . '</a>',
@@ -250,7 +250,7 @@ class CKWC_Integration extends WC_Integration {
 			$this->get_option_bool( 'debug' )
 		);
 		$subscription = array(
-			'id' 		=> 'ckwc_subscription',
+			'id' 		=> 'woocommerce_ckwc_subscription',
 			'class' 	=> 'select ' . $data['class'],
 			'name'		=> $field,
 			'value' 	=> $this->get_option( $key ),
@@ -310,9 +310,14 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function validate_api_key_field( $key, $api_key ) {
 
+		// If the integration isn't enabled, don't validate the API Key.
+		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) {
+			return $api_key;
+		}
+
 		// Bail if the API Key has not been specified.
 		if ( empty( $api_key ) ) {
-			$this->errors[ $key ] = __( 'Please provide your ConvertKit API Key.', 'woocommerce-convertkit' );
+			WC_Admin_Settings::add_error( esc_html__( 'Please provide your ConvertKit API Key.', 'woocommerce-convertkit' ) );
 			return $api_key;
 		}
 
@@ -326,7 +331,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Bail if an error occured.
 		if ( is_wp_error( $forms ) ) {
-			$this->errors[ $key ] = __( 'Your ConvertKit API Key appears to be invalid. Please double check the value.', 'woocommerce-convertkit' );
+			WC_Admin_Settings::add_error( esc_html__( 'Your ConvertKit API Key appears to be invalid. Please double check the value.', 'woocommerce-convertkit' ) );
 		}
 
 		// Return API Key.
