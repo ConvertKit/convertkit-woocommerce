@@ -7,9 +7,9 @@
  */
 
 /**
- * Registers a metabox on WooCommerce Products
- * and saves its settings when the Product is saved in the WordPress Administration
- * interface.
+ * Determines whether to display an opt in checkout on the WooCommerce Checkout,
+ * based on the integration's settings, and stores whether the WooCommerce Order
+ * created through the Checkout should opt the customer into ConvertKit.
  *
  * @package CKWC
  * @author ConvertKit
@@ -18,17 +18,17 @@ class CKWC_Checkout {
 
 	/**
 	 * Holds the WooCommerce Integration instance for this Plugin.
-	 * 
-	 * @since 	1.4.2
 	 *
-	 * @var 	WC_Integration
+	 * @since   1.4.2
+	 *
+	 * @var     WC_Integration
 	 */
 	private $integration;
 
 	/**
 	 * Constructor
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
 	 */
 	public function __construct() {
 
@@ -47,17 +47,17 @@ class CKWC_Checkout {
 
 		// Store whether the customer should be opted in, in the Order's metadata.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
-		
+
 	}
 
 	/**
 	 * Adds the opt-in checkbox to the checkout's billing or order section, based
 	 * on the Plugin's settings.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	array 	$fields 	Checkout Fields.
-	 * @return 	array 				Checkout Fields
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   array $fields     Checkout Fields.
+	 * @return  array               Checkout Fields
 	 */
 	public function add_opt_in_checkbox( $fields ) {
 
@@ -66,20 +66,20 @@ class CKWC_Checkout {
 			'label'   => $this->integration->get_option( 'opt_in_label' ),
 			'default' => 'checked' === $this->integration->get_option( 'opt_in_status' ),
 		);
-		
+
 		return $fields;
 
 	}
 
 	/**
 	 * Saves whether the customer should be subscribed to ConvertKit for this order.
-	 * 
+	 *
 	 * This function is not called if the 'Subscribe Customers' option is disabled
 	 * in the Plugin settings.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	int 	$order_id 	WooCommerce Order ID.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   int $order_id   WooCommerce Order ID.
 	 */
 	public function save_opt_in_checkbox( $order_id ) {
 
@@ -92,7 +92,7 @@ class CKWC_Checkout {
 		} else {
 			// Opt in checkbox is displayed at checkout.
 			// Opt in if it is checked.
-			if ( isset( $_POST['ckwc_opt_in'] ) ) {
+			if ( isset( $_POST['ckwc_opt_in'] ) ) { /* phpcs:ignore */
 				$opt_in = 'yes';
 			}
 		}

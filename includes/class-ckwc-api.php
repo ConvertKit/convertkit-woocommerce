@@ -265,7 +265,7 @@ class CKWC_API {
 	 * @since   1.4.2
 	 *
 	 * @param   string $sequence_id Sequence ID.
-	 * @param   string $email      	Email Address.
+	 * @param   string $email       Email Address.
 	 * @return  mixed               WP_Error | array
 	 */
 	public function sequence_subscribe( $sequence_id, $email ) {
@@ -289,9 +289,9 @@ class CKWC_API {
 		 *
 		 * @since   1.4.2
 		 *
-		 * @param   array   $response   	API Response
-		 * @param   string  $sequence_id 	Sequence ID
-		 * @param   string  $email      	Email Address
+		 * @param   array   $response       API Response
+		 * @param   string  $sequence_id    Sequence ID
+		 * @param   string  $email          Email Address
 		 */
 		do_action( 'convertkit_api_sequence_subscribe_success', $response, $sequence_id, $email );
 
@@ -637,18 +637,21 @@ class CKWC_API {
 
 	/**
 	 * Create a Purchase.
-	 * 
-	 * @since 	1.4.2
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   array $purchase   Purchase Data.
+	 * @return  mixed               WP_Error | array
 	 */
 	public function purchase_create( $purchase ) {
 
-		$this->log( 'API: purchase_create(): [ purchase: ' . print_r( $purchase, true ) . ']' );
+		$this->log( 'API: purchase_create(): [ purchase: ' . print_r( $purchase, true ) . ']' ); // phpcs:ignore
 
 		$response = $this->post(
 			'purchases',
 			array(
 				'api_secret' => $this->api_secret,
-				'purchase' => $purchase,
+				'purchase'   => $purchase,
 			)
 		);
 
@@ -662,9 +665,9 @@ class CKWC_API {
 		 * @since   1.4.2
 		 *
 		 * @param   array   $response   API Response
-		 * @param   array  	$purchase   Purchase Data
+		 * @param   array   $purchase   Purchase Data
 		 */
-		do_action( 'convertkit_api_purchase_create_success', $response, $purchase);
+		do_action( 'convertkit_api_purchase_create_success', $response, $purchase );
 
 		return $response;
 

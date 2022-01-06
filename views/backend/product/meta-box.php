@@ -11,8 +11,8 @@ require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php'
 ?>
 
 <p class="description">
-	<?php _e( 'The ConvertKit Form, Tag or Sequence to subscribe Customers to who purchase this Product.', 'woocommerce-convertkit' ); ?>
+	<?php esc_html_e( 'The ConvertKit Form, Tag or Sequence to subscribe Customers to who purchase this Product.', 'woocommerce-convertkit' ); ?>
 </p>
 
-<?php 
+<?php
 wp_nonce_field( 'ckwc', 'ckwc_nonce' );

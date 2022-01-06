@@ -271,8 +271,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxDisplayLocationOrder(AcceptanceTester $I)
 	{
-		// @TODO Failing.
-
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 

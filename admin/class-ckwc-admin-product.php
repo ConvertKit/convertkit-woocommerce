@@ -7,9 +7,8 @@
  */
 
 /**
- * Registers a metabox on WooCommerce Products
- * and saves its settings when the Product is saved in the WordPress Administration
- * interface.
+ * Registers a metabox on WooCommerce Products and saves its settings when the
+ * Product is saved in the WordPress Administration interface.
  *
  * @package CKWC
  * @author ConvertKit
@@ -18,17 +17,17 @@ class CKWC_Admin_Product {
 
 	/**
 	 * Holds the WooCommerce Integration instance for this Plugin.
-	 * 
-	 * @since 	1.4.2
 	 *
-	 * @var 	WC_Integration
+	 * @since   1.4.2
+	 *
+	 * @var     WC_Integration
 	 */
 	private $integration;
 
 	/**
 	 * Constructor
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
 	 */
 	public function __construct() {
 
@@ -37,30 +36,28 @@ class CKWC_Admin_Product {
 
 		add_action( 'add_meta_boxes_product', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_product', array( $this, 'save_product' ) );
-		
+
 	}
 
 	/**
 	 * Adds a meta box on WooCommerce Products to choose a Form or Tag to subscribe the Customer to,
 	 * overriding the Plugin default's Form / Tag.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	WP_Post 	$post 	WooCommerce Product
+	 *
+	 * @since   1.0.0
 	 */
-	public function add_meta_boxes( $post ) {
+	public function add_meta_boxes() {
 
 		add_meta_box( 'ckwc', __( 'ConvertKit Integration', 'woocommerce-convertkit' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
-	
+
 	}
 
 	/**
 	 * Displays a meta box on WooCommerce Products to choose a Form or Tag to subscribe the Customer to,
 	 * overriding the Plugin default's Form / Tag.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	WP_Post 	$post 	WooCommerce Product
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   WP_Post $post   WooCommerce Product.
 	 */
 	public function display_meta_box( $post ) {
 
@@ -73,19 +70,18 @@ class CKWC_Admin_Product {
 
 		// Get Forms, Tags, Sequences, current subscription setting and other
 		// settings to render the subscription dropdown field.
-		// @TODO Cache this data for performance.
-		$api = new CKWC_API( 
+		$api          = new CKWC_API(
 			$this->integration->get_option( 'api_key' ),
 			$this->integration->get_option( 'api_secret' ),
 			$this->integration->get_option_bool( 'debug' )
 		);
 		$subscription = array(
-			'id' 		=> 'ckwc_subscription',
-			'class' 	=> 'widefat',
-			'name'		=> 'ckwc_subscription',
-			'value' 	=> get_post_meta( $post->ID, 'ckwc_subscription', true ),
-			'forms'		=> $api->get_forms(),
-			'tags' 		=> $api->get_tags(),
+			'id'        => 'ckwc_subscription',
+			'class'     => 'widefat',
+			'name'      => 'ckwc_subscription',
+			'value'     => get_post_meta( $post->ID, 'ckwc_subscription', true ),
+			'forms'     => $api->get_forms(),
+			'tags'      => $api->get_tags(),
 			'sequences' => $api->get_sequences(),
 		);
 
@@ -97,10 +93,10 @@ class CKWC_Admin_Product {
 	/**
 	 * Saves the WooCommerce Product's Form or Tag to subscribe the Customer to when a
 	 * Product is edited, overriding the Plugin default's Form / Tag.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param  	int 	$post_id 	Product ID
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   int $post_id    Product ID.
 	 */
 	public function save_product( $post_id ) {
 
@@ -109,7 +105,7 @@ class CKWC_Admin_Product {
 			return;
 		}
 
-		$data = stripslashes_deep( $_POST ); // WPCS: input var okay. CSRF ok.
+		$data = stripslashes_deep( $_POST ); // phpcs:ignore
 
 		// Bail if nonce is missing.
 		if ( ! isset( $data['ckwc_nonce'] ) ) {

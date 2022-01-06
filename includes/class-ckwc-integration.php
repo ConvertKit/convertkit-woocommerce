@@ -1,13 +1,24 @@
 <?php
 /**
- * Class CKWC_Integration
+ * ConvertKit WooCommerce Integration class.
+ *
+ * @package CKWC
+ * @author ConvertKit
+ */
+
+/**
+ * Registers ConvertKit as an integration with WooCommerce, accessible at
+ * WooCommerce > Settings > Integration > ConvertKit.
+ *
+ * @package CKWC
+ * @author ConvertKit
  */
 class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Constructor
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
 	 */
 	public function __construct() {
 
@@ -30,28 +41,28 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Defines the fields to display on this integration's screen at WooCommerce > Settings > Integration > ConvertKit.
-	 * 
+	 *
 	 * Also loads JS for conditionally showing UI settings, based on the value of other settings.
-	 * 
-	 * @since 	1.4.2
+	 *
+	 * @since   1.4.2
 	 */
 	public function init_form_fields() {
 
 		$this->form_fields = array(
 			// Enable/Disable entire integration.
-			'enabled' => array(
-				'title'       => __( 'Enable/Disable', 'woocommerce-convertkit' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Enable ConvertKit integration', 'woocommerce-convertkit' ),
-				'default'     => 'no',
+			'enabled'         => array(
+				'title'   => __( 'Enable/Disable', 'woocommerce-convertkit' ),
+				'type'    => 'checkbox',
+				'label'   => __( 'Enable ConvertKit integration', 'woocommerce-convertkit' ),
+				'default' => 'no',
 			),
 
 			// API Key and Secret.
-			'api_key' => array(
+			'api_key'         => array(
 				'title'       => __( 'API Key', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
-				'description' => 
+				'description' =>
 					sprintf(
 						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
 						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
@@ -62,13 +73,13 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled',
+				'class'       => 'enabled',
 			),
-			'api_secret' => array(
+			'api_secret'      => array(
 				'title'       => __( 'API Secret', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
-				'description' => 
+				'description' =>
 					sprintf(
 						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
 						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
@@ -79,11 +90,11 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled',
+				'class'       => 'enabled',
 			),
 
 			// Subscribe.
-			'event' => array(
+			'event'           => array(
 				'title'       => __( 'Subscribe Event', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'pending',
@@ -96,47 +107,50 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe',
+				'class'       => 'enabled subscribe',
 			),
-			'subscription' => array(
+			'subscription'    => array(
 				'title'       => __( 'Subscription', 'woocommerce-convertkit' ),
 				'type'        => 'subscription',
 				'default'     => '',
 				'description' => __( 'The ConvertKit Form, Tag or Sequence to subscribe Customers to.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe',
+				'class'       => 'enabled subscribe',
 			),
-			'name_format' => array(
+			'name_format'     => array(
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'first',
 				'description' => __( 'How should the customer name be sent to ConvertKit?', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
-					'first'   => __( 'Billing First Name', 'woocommerce-convertkit' ),
-					'last'    => __( 'Billing Last Name', 'woocommerce-convertkit' ),
-					'both'    => __( 'Billing First Name + Billing Last Name', 'woocommerce-convertkit' ),
+					'first' => __( 'Billing First Name', 'woocommerce-convertkit' ),
+					'last'  => __( 'Billing Last Name', 'woocommerce-convertkit' ),
+					'both'  => __( 'Billing First Name + Billing Last Name', 'woocommerce-convertkit' ),
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe',
+				'class'       => 'enabled subscribe',
 			),
 
 			// Subscribe: Display Opt In Checkbox Settings.
-			'display_opt_in' => array(
+			'display_opt_in'  => array(
 				'title'       => __( 'Opt-In Checkbox', 'woocommerce-convertkit' ),
 				'label'       => __( 'Display an Opt-In checkbox on checkout', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
-				'description' => __( 'If enabled, customers will <strong>only</strong> be subscribed to the chosen Forms, Tags and Sequences if they check the "Opt-In" checkbox at checkout.<br />
-									  If disabled, customers will <strong>always</strong> be subscribed to the chosen Forms, Tags and Sequences at checkout.', 'woocommerce-convertkit' ),
+				'description' => __(
+					'If enabled, customers will <strong>only</strong> be subscribed to the chosen Forms, Tags and Sequences if they check the "Opt-In" checkbox at checkout.<br />
+									  If disabled, customers will <strong>always</strong> be subscribed to the chosen Forms, Tags and Sequences at checkout.',
+					'woocommerce-convertkit'
+				),
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe',
+				'class'       => 'enabled subscribe',
 			),
-			'opt_in_label' => array(
+			'opt_in_label'    => array(
 				'title'       => __( 'Opt-In Checkbox: Label', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => __( 'I want to subscribe to the newsletter', 'woocommerce-convertkit' ),
@@ -144,9 +158,9 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe display_opt_in',
+				'class'       => 'enabled subscribe display_opt_in',
 			),
-			'opt_in_status' => array(
+			'opt_in_status'   => array(
 				'title'       => __( 'Opt-In Checkbox: Default Status', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'checked',
@@ -158,7 +172,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe display_opt_in',
+				'class'       => 'enabled subscribe display_opt_in',
 			),
 			'opt_in_location' => array(
 				'title'       => __( 'Opt-In Checkbox: Display Location', 'woocommerce-convertkit' ),
@@ -172,28 +186,31 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe display_opt_in',
+				'class'       => 'enabled subscribe display_opt_in',
 			),
 
-			// Purchase Data
-			'send_purchases' => array(
+			// Purchase Data.
+			'send_purchases'  => array(
 				'title'       => __( 'Purchase Data', 'woocommerce-convertkit' ),
 				'label'       => __( 'Send purchase data to ConvertKit.', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
-				'description' => __( 'If enabled, the customer\'s order data will be sent to ConvertKit. Their email address will always be subscribed to ConvertKit, <strong>regardless of the Customer\'s opt in status.</strong><br />
-									  If disabled, no order data will be sent to ConvertKit.', 'woocommerce-convertkit' ),
+				'description' => __(
+					'If enabled, the customer\'s order data will be sent to ConvertKit. Their email address will always be subscribed to ConvertKit, <strong>regardless of the Customer\'s opt in status.</strong><br />
+									  If disabled, no order data will be sent to ConvertKit.',
+					'woocommerce-convertkit'
+				),
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled subscribe',
+				'class'       => 'enabled subscribe',
 			),
-			
-			// Debugging
-			'debug' => array(
+
+			// Debugging.
+			'debug'           => array(
 				'title'       => __( 'Debug', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
-				'label'       => __( 'Write data to a log file', 'woocommerce-convertkit'),
+				'label'       => __( 'Write data to a log file', 'woocommerce-convertkit' ),
 				'description' => sprintf(
 					/* translators: %1$s: URL to Log File, %2$s: View Log File text */
 					'<a href="%1$s" target="_blank">%2$s</a>',
@@ -203,13 +220,13 @@ class CKWC_Integration extends WC_Integration {
 				'default'     => 'no',
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'		  => 'enabled',
+				'class'       => 'enabled',
 			),
 		);
 
 		// Load JS.
 		ob_start();
-		include( CKWC_PLUGIN_PATH . '/resources/backend/js/integration.js' );
+		include CKWC_PLUGIN_PATH . '/resources/backend/js/integration.js';
 		$code = ob_get_clean();
 
 		wc_enqueue_js( $code );
@@ -218,11 +235,11 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Output HTML for the Form / Tag setting.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	string 	$key 	Setting Field Key.
-	 * @param 	array 	$data 	Setting Field Configuration.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   string $key    Setting Field Key.
+	 * @param   array  $data   Setting Field Configuration.
 	 */
 	public function generate_subscription_html( $key, $data ) {
 
@@ -244,18 +261,18 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Forms, Tags, Sequences, current subscription setting and other
 		// settings to render the subscription dropdown field.
-		$api = new CKWC_API( 
+		$api          = new CKWC_API(
 			$this->get_option( 'api_key' ),
 			$this->get_option( 'api_secret' ),
 			$this->get_option_bool( 'debug' )
 		);
 		$subscription = array(
-			'id' 		=> 'woocommerce_ckwc_subscription',
-			'class' 	=> 'select ' . $data['class'],
-			'name'		=> $field,
-			'value' 	=> $this->get_option( $key ),
-			'forms'		=> $api->get_forms(),
-			'tags' 		=> $api->get_tags(),
+			'id'        => 'woocommerce_ckwc_subscription',
+			'class'     => 'select ' . $data['class'],
+			'name'      => $field,
+			'value'     => $this->get_option( $key ),
+			'forms'     => $api->get_forms(),
+			'tags'      => $api->get_tags(),
 			'sequences' => $api->get_sequences(),
 		);
 
@@ -264,7 +281,7 @@ class CKWC_Integration extends WC_Integration {
 		<tr valign="top">
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
-				<?php echo $this->get_tooltip_html( $data ); ?>
+				<?php echo esc_html( $this->get_tooltip_html( $data ) ); ?>
 			</th>
 			<td class="forminp">
 				<fieldset>
@@ -272,7 +289,7 @@ class CKWC_Integration extends WC_Integration {
 					<?php
 					// Load subscription dropdown field.
 					require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
-					echo $this->get_description_html( $data );
+					echo esc_html( $this->get_description_html( $data ) );
 					?>
 				</fieldset>
 			</td>
@@ -285,15 +302,15 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Sanitize settings before saving.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	array 	$settings 	Plugin Settings.
-	 * @return 	array 				Plugin Settings, sanitized
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   array $settings   Plugin Settings.
+	 * @return  array               Plugin Settings, sanitized
 	 */
 	public function sanitize_settings( $settings ) {
 
-		$settings['api_key'] = trim( $settings['api_key'] );
+		$settings['api_key']    = trim( $settings['api_key'] );
 		$settings['api_secret'] = trim( $settings['api_secret'] );
 		return $settings;
 
@@ -301,17 +318,17 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Validate that the API Key is valid when saving settings.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	string 	$key 		Setting Key.
-	 * @param 	string 	$api_key 	API Key.
-	 * @return 	string 				API Key
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   string $key        Setting Key.
+	 * @param   string $api_key    API Key.
+	 * @return  string              API Key
 	 */
-	public function validate_api_key_field( $key, $api_key ) {
+	public function validate_api_key_field( $key, $api_key ) { /* phpcs:ignore */
 
 		// If the integration isn't enabled, don't validate the API Key.
-		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) {
+		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) { /* phpcs:ignore */
 			return $api_key;
 		}
 
@@ -322,7 +339,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Get Forms to test that the API Key is valid.
-		$api = new CKWC_API( 
+		$api   = new CKWC_API(
 			$api_key,
 			$this->get_option( 'api_secret' ),
 			$this->get_option_bool( 'debug' )
@@ -343,10 +360,10 @@ class CKWC_Integration extends WC_Integration {
 	 * Whether the ConvertKit integration is enabled, meaning:
 	 * - the 'Enable/Disable' option is checked,
 	 * - an API Key and Secret are specified.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @return 	bool 	Integration Enabled.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @return  bool    Integration Enabled.
 	 */
 	public function is_enabled() {
 
@@ -357,11 +374,11 @@ class CKWC_Integration extends WC_Integration {
 	/**
 	 * Returns the given integration setting value, converting 'yes' to true
 	 * and any other value to false.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	string 	$name 	Setting Name
-	 * @return 	bool
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   string $name   Setting Name.
+	 * @return  bool
 	 */
 	public function get_option_bool( $name ) {
 
@@ -377,11 +394,11 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Returns whether the given setting value has a value, and isn't empty.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	string 	$name 	Setting Name
-	 * @return 	bool
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   string $name   Setting Name.
+	 * @return  bool
 	 */
 	public function option_exists( $name ) {
 

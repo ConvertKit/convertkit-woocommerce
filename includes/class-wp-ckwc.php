@@ -7,7 +7,8 @@
  */
 
 /**
- * Class ConvertKit for WooCommerce.
+ * Main ConvertKit for WooCommerce class, which registers the WooCommerce integration
+ * and initialises required classes depending on the environment (frontend site, admin etc).
  *
  * @package CKWC
  * @author ConvertKit
@@ -53,11 +54,11 @@ class WP_CKWC {
 
 	/**
 	 * Register this Plugin's CKWC_Integration class as a WooCommerce Integration.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	array 	$integrations 	WooCommerce Integrations
-	 * @return 	array 					WooCommerce Integrations
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   array $integrations   WooCommerce Integrations.
+	 * @return  array                   WooCommerce Integrations
 	 */
 	public function woocommerce_integrations_register( $integrations ) {
 
@@ -74,8 +75,8 @@ class WP_CKWC {
 	/**
 	 * Initialize admin, frontend and global Plugin classes when WooCommerce initializes,
 	 * after WooCommerce has loaded its integrations.
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
 	 */
 	public function woocommerce_init() {
 
@@ -122,7 +123,7 @@ class WP_CKWC {
 			return;
 		}
 
-		$this->classes['checkout']               = new CKWC_Checkout();
+		$this->classes['checkout'] = new CKWC_Checkout();
 
 		/**
 		 * Initialize integration classes for the frontend web site.
@@ -141,9 +142,8 @@ class WP_CKWC {
 	 */
 	private function initialize_global() {
 
-		//$this->classes['integration']			 = $this->get_integration();
-		$this->classes['order']                  = new CKWC_Order();
-		
+		$this->classes['order'] = new CKWC_Order();
+
 		/**
 		 * Initialize integration classes for the frontend web site.
 		 *

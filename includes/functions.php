@@ -19,8 +19,8 @@ function ckwc_get_settings_link( $query_args = array() ) {
 	$query_args = array_merge(
 		$query_args,
 		array(
-			'page' => 'wc-settings',
-			'tab' => 'integration',
+			'page'    => 'wc-settings',
+			'tab'     => 'integration',
 			'section' => 'ckwc',
 		)
 	);

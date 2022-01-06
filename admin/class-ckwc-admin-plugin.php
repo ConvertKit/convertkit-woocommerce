@@ -7,7 +7,7 @@
  */
 
 /**
- * Registers a link on the Plugin's entry in the Plugins screen, linking to the 
+ * Registers a link on the Plugin's entry in the Plugins screen, linking to the
  * integration settings interface.
  *
  * @package CKWC
@@ -17,8 +17,8 @@ class CKWC_Admin_Plugin {
 
 	/**
 	 * Constructor
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
 	 */
 	public function __construct() {
 
@@ -27,19 +27,22 @@ class CKWC_Admin_Plugin {
 	}
 
 	/**
-	 * Registers a link on the Plugin's entry in the Plugins screen, linking to the 
+	 * Registers a link on the Plugin's entry in the Plugins screen, linking to the
 	 * integration settings interface.
 	 *
-	 * @since 	1.0.0
-	 * 
-	 * @param 	array 	$links 	Plugin Links
-	 * @return 	array 			Plugin Links
+	 * @since   1.0.0
+	 *
+	 * @param   array $links  Plugin Links.
+	 * @return  array           Plugin Links
 	 */
 	public function plugin_links( $links ) {
 
-		return array_merge( array(
-			'<a href="' . ckwc_get_settings_link() . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
-		), $links );
+		return array_merge(
+			array(
+				'<a href="' . ckwc_get_settings_link() . '">' . __( 'Settings', 'woocommerce-convertkit' ) . '</a>',
+			),
+			$links
+		);
 
 	}
 

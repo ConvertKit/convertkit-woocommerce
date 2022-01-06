@@ -57,6 +57,7 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Fix: Settings: Only show conditional settings if other settings enabled/disabled
 * Fix: Settings: API Key and Secret: Don't need to save settings twice for API Key and Secret to work
 * Fix: Settings: Improved setting descriptions
+* Fix: Settings: Improved order and layout of settings for better understanding
 * Fix: Settings: Subscription: Renamed Courses to Sequences on Subscription dropdown option
 * Fix: Settings: Purchase Data: If enabled, ensure that manually created orders send purchase data to ConvertKit 
 * Fix: Settings: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used

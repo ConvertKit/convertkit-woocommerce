@@ -7,9 +7,10 @@
  */
 
 /**
- * Registers a metabox on WooCommerce Products
- * and saves its settings when the Product is saved in the WordPress Administration
- * interface.
+ * Subscribes a WooCommerce Order's Customer to ConvertKit Forms, Tags and/or Sequences,
+ * based on Product and Plugin settings.
+ *
+ * Sends Purchase Data to ConvertKit if enabled in the Plugin settings.
  *
  * @package CKWC
  * @author ConvertKit
@@ -18,26 +19,26 @@ class CKWC_Order {
 
 	/**
 	 * Holds the WooCommerce Integration instance for this Plugin.
-	 * 
-	 * @since 	1.4.2
 	 *
-	 * @var 	WC_Integration
+	 * @since   1.4.2
+	 *
+	 * @var     WC_Integration
 	 */
 	private $integration;
 
 	/**
 	 * Holds the ConvertKit API.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @var 	CKWC_API
+	 *
+	 * @since   1.4.2
+	 *
+	 * @var     CKWC_API
 	 */
 	private $api;
 
 	/**
 	 * Constructor
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
 	 */
 	public function __construct() {
 
@@ -57,23 +58,28 @@ class CKWC_Order {
 		if ( $this->integration->get_option_bool( 'send_purchases' ) ) {
 			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 1 );
 		}
-		
+
 	}
 
 	/**
 	 * Subscribe the customer's email address to a ConvertKit Form, Tag or Sequence, if the Order's event
 	 * matches the Subscribe Event in this Plugin's Settings.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	int 	$order_id 	WooCommerce Order ID
-	 * @param 	string 	$status_old Order's Old Status
-	 * @param 	string 	$status_new Order's New Status
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   int    $order_id   WooCommerce Order ID.
+	 * @param   string $status_old Order's Old Status.
+	 * @param   string $status_new Order's New Status.
 	 */
 	public function order_status( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
+		// Bail if the old and new status are the same i.e. the Order status did not change.
+		if ( $status_old === $status_new ) {
+			return;
+		}
+
 		// Bail if the Subscribe Event doesn't match the Order's new status.
-		if ( $this->integration->get_option( 'event' ) != $status_new ) {
+		if ( $this->integration->get_option( 'event' ) !== $status_new ) {
 			return;
 		}
 
@@ -101,7 +107,7 @@ class CKWC_Order {
 		$subscriptions = array_filter( array_unique( $subscriptions ) );
 
 		// Setup the API.
-		$this->api = new CKWC_API( 
+		$this->api = new CKWC_API(
 			$this->integration->get_option( 'api_key' ),
 			$this->integration->get_option( 'api_secret' ),
 			$this->integration->get_option_bool( 'debug' )
@@ -124,15 +130,15 @@ class CKWC_Order {
 	/**
 	 * Subscribe the given email address to the Form, Tag or Sequence, adding an Order Note
 	 * for each to the Order.
-	 * 
-	 * @since 	1.4.2
 	 *
-	 * @param 	string 	$resource_type 	Resource Type (form|tag|course).
-	 * @param 	int 	$resource_id 	Resource ID (Form ID, Tag ID, Sequence ID).
-	 * @param 	string 	$email 			Email Address.
-	 * @param 	string 	$name 			Customer Name.
-	 * @param 	int 	$order_id 		WooCommerce Order ID.
-	 * @return 	mixed 					WP_Error | array
+	 * @since   1.4.2
+	 *
+	 * @param   string $resource_type  Resource Type (form|tag|course).
+	 * @param   int    $resource_id    Resource ID (Form ID, Tag ID, Sequence ID).
+	 * @param   string $email          Email Address.
+	 * @param   string $name           Customer Name.
+	 * @param   int    $order_id       WooCommerce Order ID.
+	 * @return  mixed                   WP_Error | array
 	 */
 	public function subscribe_customer( $resource_type, $resource_id, $email, $name, $order_id ) {
 
@@ -154,7 +160,7 @@ class CKWC_Order {
 
 		// If an error occured, bail.
 		if ( is_wp_error( $result ) ) {
-			wc_create_order_note( 
+			wc_create_order_note(
 				$order_id,
 				$result->get_error_message()
 			);
@@ -164,33 +170,36 @@ class CKWC_Order {
 		// Create an Order Note so that the Order shows the Customer was subscribed to a Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
-				wc_create_order_note( 
+				wc_create_order_note(
 					$order_id,
-                  	sprintf( 
-                  		__( '[ConvertKit] Customer subscribed to the Form: %s', 'woocommerce-convertkit' ),
-                  		$resource_id
-                  	)
+					sprintf(
+						/* translators: Form Name */
+						__( '[ConvertKit] Customer subscribed to the Form: %s', 'woocommerce-convertkit' ),
+						$resource_id
+					)
 				);
 				break;
 
 			case 'tag':
-				wc_create_order_note( 
+				wc_create_order_note(
 					$order_id,
-                  	sprintf( 
-                  		__( '[ConvertKit] Customer subscribed to the Tag: %s', 'woocommerce-convertkit' ),
-                  		$resource_id
-                  	)
+					sprintf(
+						/* translators: Tag Name */
+						__( '[ConvertKit] Customer subscribed to the Tag: %s', 'woocommerce-convertkit' ),
+						$resource_id
+					)
 				);
 				break;
 
 			case 'sequence':
 			case 'course':
-				wc_create_order_note( 
+				wc_create_order_note(
 					$order_id,
-                  	sprintf( 
-                  		__( '[ConvertKit] Customer subscribed to the Sequence: %s', 'woocommerce-convertkit' ),
-                  		$resource_id
-                  	)
+					sprintf(
+						/* translators: Sequence Name */
+						__( '[ConvertKit] Customer subscribed to the Sequence: %s', 'woocommerce-convertkit' ),
+						$resource_id
+					)
 				);
 				break;
 		}
@@ -203,10 +212,10 @@ class CKWC_Order {
 	/**
 	 * Send purchase data to ConvertKit for the given WooCommerce Order ID.
 	 *
-	 * @since 	1.4.2
-	 * 
-	 * @param 	int 	$order_id 	WooCommerce Order ID.
-	 * @return 	mixed 				WP_Error | array
+	 * @since   1.4.2
+	 *
+	 * @param   int $order_id   WooCommerce Order ID.
+	 * @return  mixed               WP_Error | array
 	 */
 	public function send_purchase_data( $order_id ) {
 
@@ -224,7 +233,7 @@ class CKWC_Order {
 		if ( $this->purchase_data_sent( $order_id ) ) {
 			return;
 		}
-		
+
 		// Build array of Products for the API call.
 		$products = array();
 		foreach ( $order->get_items() as $item_key => $item ) {
@@ -262,7 +271,7 @@ class CKWC_Order {
 		);
 
 		// Setup the API.
-		$this->api = new CKWC_API( 
+		$this->api = new CKWC_API(
 			$this->integration->get_option( 'api_key' ),
 			$this->integration->get_option( 'api_secret' ),
 			$this->integration->get_option_bool( 'debug' )
@@ -273,8 +282,9 @@ class CKWC_Order {
 
 		// If an error occured sending the purchase data to ConvertKit, add a WooCommerce Order note and bail.
 		if ( is_wp_error( $response ) ) {
-			$order->add_order_note( 
+			$order->add_order_note(
 				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
 					__( '[ConvertKit] Send Purchase Data Error: %1$s %2$s', 'woocommerce-convertkit' ),
 					$response->get_error_code(),
 					$response->get_error_message()
@@ -292,16 +302,16 @@ class CKWC_Order {
 
 		// Return.
 		return $response;
-		
+
 	}
 
 	/**
 	 * Determines if the given Order has had its purchase data sent to ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	int 	$order_id 	Order ID.
-	 * @return 	bool 				Purchase Data successfully sent to ConvertKit
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   int $order_id   Order ID.
+	 * @return  bool                Purchase Data successfully sent to ConvertKit
 	 */
 	private function purchase_data_sent( $order_id ) {
 
@@ -316,11 +326,11 @@ class CKWC_Order {
 	/**
 	 * Determines if the given Order has the opt in meta value set to 'yes',
 	 * and that the 'Subscribe Customers' option is enabled in the Plugin settings.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	int 	$order_id 	Order ID.
-	 * @return 	bool 				Customer can be opted in
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   int $order_id   Order ID.
+	 * @return  bool                Customer can be opted in
 	 */
 	private function should_opt_in_customer( $order_id ) {
 
@@ -340,11 +350,11 @@ class CKWC_Order {
 	 * Returns the customer's email address for the given WooCommerce Order,
 	 * immediately before it is sent to ConvertKit when subscribing the Customer
 	 * to a Form or Tag.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	WC_Order|WC_Order_Refund 	$order 	Order
-	 * @return 	string 								Email Address 
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   WC_Order|WC_Order_Refund $order  Order.
+	 * @return  string                              Email Address
 	 */
 	private function email( $order ) {
 
@@ -355,11 +365,11 @@ class CKWC_Order {
 		 * Returns the customer's email address for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
 		 * to a Form or Tag.
-		 * 
-		 * @since 	1.0.0
-		 * 
-		 * @param 	string 						$email 	Email Address
-		 * @param 	WC_Order|WC_Order_Refund 	$order 	Order
+		 *
+		 * @since   1.0.0
+		 *
+		 * @param   string                      $email  Email Address
+		 * @param   WC_Order|WC_Order_Refund    $order  Order
 		 */
 		$email = apply_filters( 'convertkit_for_woocommerce_email', $email, $order );
 
@@ -372,11 +382,11 @@ class CKWC_Order {
 	 * Returns the customer's first name for the given WooCommerce Order,
 	 * immediately before it is sent to ConvertKit when subscribing the Customer
 	 * to a Form or Tag.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @param 	WC_Order|WC_Order_Refund 	$order 	Order
-	 * @return 	string 								Email Address 
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   WC_Order|WC_Order_Refund $order  Order.
+	 * @return  string                              Email Address
 	 */
 	private function first_name( $order ) {
 
@@ -387,11 +397,11 @@ class CKWC_Order {
 		 * Returns the customer's first name for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
 		 * to a Form or Tag.
-		 * 
-		 * @since 	1.0.0
-		 * 
-		 * @param 	string 						$first_name 	First Name
-		 * @param 	WC_Order|WC_Order_Refund 	$order 			Order
+		 *
+		 * @since   1.0.0
+		 *
+		 * @param   string                      $first_name     First Name
+		 * @param   WC_Order|WC_Order_Refund    $order          Order
 		 */
 		$first_name = apply_filters( 'convertkit_for_woocommerce_first_name', $first_name, $order );
 

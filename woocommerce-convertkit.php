@@ -1,5 +1,11 @@
 <?php
 /**
+ * ConvertKit for WooCommerce Plugin.
+ *
+ * @package CKWC
+ * @author ConvertKit
+ *
+ * @wordpress-plugin
  * Plugin Name: ConvertKit: WooCommerce Addon
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
