@@ -1,10 +1,10 @@
 === ConvertKit for WooCommerce ===
-Contributors: nathanbarry, growdev, travisnorthcutt
+Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
-Requires at least: 3.6
-Tested up to: 5.4.0
-Stable tag: 1.4.1
+Requires at least: 5.0
+Tested up to: 5.8.3
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,7 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Fix: Settings: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
 * Fix: WooCommerce Products: Renamed Courses to Sequences on Subscription dropdown option
 * Fix: WooCommerce Checkout: Improved performance by not requesting ConvertKit Forms, Tags and Sequences from the API when not needed
+* Fix: Performance: Cache Forms, Tags and Sequences from ConvertKit account for longer than 5 minutes, to prevent API timeouts and slow loading in the WordPress Administration
 
 ### 1.4.1  2020-06-06
 * Protect against missing products on order items
