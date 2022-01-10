@@ -15,12 +15,20 @@ class SettingNameFormatCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
 	 * Test that the Billing First Name option is saved when selected at
-	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * WooCommerce > Settings > Integration > ConvertKit, and honored
+	 * when submitted to ConvertKit.
 	 * 
 	 * @since 	1.4.2
 	 * 
@@ -28,9 +36,6 @@ class SettingNameFormatCest
 	 */
 	public function testNameFormatBillingFirstName(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Name Format = Billing First Name
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing First Name');
 
@@ -42,12 +47,33 @@ class SettingNameFormatCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_name_format', 'Billing First Name');
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Confirm that the subscriber's name = First
+		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'First');
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
 	}
 
 
 	/**
 	 * Test that the Billing Last Name option is saved when selected at
-	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * WooCommerce > Settings > Integration > ConvertKit, and honored
+	 * when submitted to ConvertKit.
 	 * 
 	 * @since 	1.4.2
 	 * 
@@ -55,9 +81,6 @@ class SettingNameFormatCest
 	 */
 	public function testNameFormatBillingLastName(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Name Format = Billing First Name
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing Last Name');
 
@@ -69,11 +92,32 @@ class SettingNameFormatCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_name_format', 'Billing Last Name');
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Confirm that the subscriber's name = Last
+		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'Last');
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
 	 * Test that the Billing First Name + Billing Last Name option is saved when selected at
-	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * WooCommerce > Settings > Integration > ConvertKit, and honored
+	 * when submitted to ConvertKit.
 	 * 
 	 * @since 	1.4.2
 	 * 
@@ -81,9 +125,6 @@ class SettingNameFormatCest
 	 */
 	public function testNameFormatBillingFirstNameAndLastName(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Name Format = Billing First Name
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing First Name + Billing Last Name');
 
@@ -95,5 +136,25 @@ class SettingNameFormatCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_name_format', 'Billing First Name + Billing Last Name');
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Confirm that the subscriber's name = First Last
+		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'First Last');
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
 	}
 }

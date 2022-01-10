@@ -96,7 +96,7 @@ class CKWC_Order {
 			return;
 		}
 
-		// Build an array of Forms and Tags to subscribe the Customer to, based on
+		// Build an array of Forms, Tags and Sequences to subscribe the Customer to, based on
 		// the global integration settings and any Product-specific settings.
 		$subscriptions = array( $this->integration->get_option( 'subscription' ) );
 		foreach ( $order->get_items() as $item ) {
@@ -120,7 +120,7 @@ class CKWC_Order {
 				$subscription['type'],
 				$subscription['id'],
 				$this->email( $order ),
-				$this->first_name( $order ),
+				$this->name( $order ),
 				$order_id
 			);
 		}
@@ -379,9 +379,67 @@ class CKWC_Order {
 	}
 
 	/**
+	 * Returns the customer's name for the given WooCommerce Order, based on the Plugin's
+	 * Name Format setting (First Name, Last Name or First + Last Name),
+	 * immediately before it is sent to ConvertKit when subscribing the Customer
+	 * to a Form, Tag or Sequence.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   WC_Order|WC_Order_Refund $order  Order.
+	 * @return  string                              Email Address
+	 */
+	private function name( $order ) {
+
+		switch ( $this->integration->get_option( 'name_format' ) ) {
+
+			/**
+			 * First Name
+			 */
+			case 'first':
+				return $this->first_name( $order );
+				break;
+
+			/**
+			 * Last Name
+			 */
+			case 'last':
+				return $this->last_name( $order );
+				break;
+
+			/**
+			 * First and Last Name
+			 */
+			default:
+				return sprintf( "%s %s", $this->first_name( $order ), $this->last_name( $order ) );
+				break;
+
+		}
+
+		// Get First Name.
+		$first_name = $order->get_billing_first_name();
+
+		/**
+		 * Returns the customer's first name for the given WooCommerce Order,
+		 * immediately before it is sent to ConvertKit when subscribing the Customer
+		 * to a Form, Tag or Sequence.
+		 *
+		 * @since   1.0.0
+		 *
+		 * @param   string                      $first_name     First Name
+		 * @param   WC_Order|WC_Order_Refund    $order          Order
+		 */
+		$first_name = apply_filters( 'convertkit_for_woocommerce_first_name', $first_name, $order );
+
+		// Return.
+		return $first_name;
+
+	}
+
+	/**
 	 * Returns the customer's first name for the given WooCommerce Order,
 	 * immediately before it is sent to ConvertKit when subscribing the Customer
-	 * to a Form or Tag.
+	 * to a Form, Tag or Sequence.
 	 *
 	 * @since   1.0.0
 	 *
@@ -396,7 +454,7 @@ class CKWC_Order {
 		/**
 		 * Returns the customer's first name for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
-		 * to a Form or Tag.
+		 * to a Form, Tag or Sequence.
 		 *
 		 * @since   1.0.0
 		 *
@@ -407,6 +465,38 @@ class CKWC_Order {
 
 		// Return.
 		return $first_name;
+
+	}
+
+	/**
+	 * Returns the customer's last name for the given WooCommerce Order,
+	 * immediately before it is sent to ConvertKit when subscribing the Customer
+	 * to a Form or Tag.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   WC_Order|WC_Order_Refund $order  Order.
+	 * @return  string                              Email Address
+	 */
+	private function last_name( $order ) {
+
+		// Get Last Name.
+		$last_name = $order->get_billing_last_name();
+
+		/**
+		 * Returns the customer's last name for the given WooCommerce Order,
+		 * immediately before it is sent to ConvertKit when subscribing the Customer
+		 * to a Form or Tag.
+		 *
+		 * @since   1.0.0
+		 *
+		 * @param   string                      $last_name     	Last Name
+		 * @param   WC_Order|WC_Order_Refund    $order          Order
+		 */
+		$last_name = apply_filters( 'convertkit_for_woocommerce_last_name', $last_name, $order );
+
+		// Return.
+		return $last_name;
 
 	}
 

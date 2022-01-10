@@ -597,6 +597,28 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Check the given email address and name exists as a subscriber on ConvertKit.
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	string 			$name 			Name
+	 */ 	
+	public function apiCheckSubscriberEmailAndNameExists($I, $emailAddress, $name)
+	{
+		// Run request.
+		$results = $this->apiRequest('subscribers', 'GET', [
+			'email_address' => $emailAddress,
+		]);
+
+		// Check at least one subscriber was returned and it matches the email address.
+		$I->assertGreaterThan(0, $results['total_subscribers']);
+		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
+
+		// Check that the first_name matches the given name.
+		$I->assertEquals($name, $results['subscribers'][0]['first_name']);
+	}
+
+	/**
 	 * Check the given order ID exists as a purchase on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
