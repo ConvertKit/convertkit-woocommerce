@@ -289,7 +289,7 @@ class CKWC_Integration extends WC_Integration {
 					<?php
 					// Load subscription dropdown field.
 					require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
-					echo esc_html( $this->get_description_html( $data ) );
+					echo $this->get_description_html( $data ); // phpcs:ignore
 					?>
 				</fieldset>
 			</td>
