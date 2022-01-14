@@ -50,8 +50,8 @@ Yes, for it to work you must first have an account on ConvertKit.com
 
 == Changelog ==
 
-### 1.4.2 2022-xx-xx
-* Added: Testing and compatibility for WooCommerce 6.0
+### 1.4.2 2022-01-xx
+* Added: Testing and compatibility for WooCommerce 6.1
 * Added: PHP 8.x compatibility
 * Added: Developers: Action and filter hooks.  See https://github.com/ConvertKit/convertkit-woocommerce/blob/1.4.2/ACTIONS-FILTERS.md
 * Added: Localization and .pot file for translators
@@ -63,8 +63,9 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Fix: Settings: Purchase Data: If enabled, ensure that manually created orders send purchase data to ConvertKit 
 * Fix: Settings: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
 * Fix: Settings: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
-* Fix: WooCommerce Products: Renamed Courses to Sequences on Subscription dropdown option
-* Fix: WooCommerce Checkout: Improved performance by not requesting ConvertKit Forms, Tags and Sequences from the API when not needed
+* Fix: WooCommerce: Order: Don't subscribe a Customer a second time if an existing Order's status changes back to the Plugin's Subscribe Event
+* Fix: WooCommerce: Products: Renamed Courses to Sequences on Subscription dropdown option
+* Fix: WooCommerce: Checkout: Improved performance by not requesting ConvertKit Forms, Tags and Sequences from the API when not needed
 * Fix: Performance: Cache Forms, Tags and Sequences from ConvertKit account for longer than 5 minutes, to prevent API timeouts and slow loading in the WordPress Administration
 
 ### 1.4.1  2020-06-06
