@@ -54,6 +54,7 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Added: Testing and compatibility for WooCommerce 6.0
 * Added: PHP 8.x compatibility
 * Added: Developers: Action and filter hooks.  See https://github.com/ConvertKit/convertkit-woocommerce/blob/1.4.2/ACTIONS-FILTERS.md
+* Added: Localization and .pot file for translators
 * Fix: Settings: Only show conditional settings if other settings enabled/disabled
 * Fix: Settings: API Key and Secret: Don't need to save settings twice for API Key and Secret to work
 * Fix: Settings: Improved setting descriptions
