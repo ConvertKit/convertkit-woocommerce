@@ -39,16 +39,17 @@ class Acceptance extends \Codeception\Module
 	 * @param 	AcceptanceTester 	$I
 	 * @param 	string 				$container 	Field CSS Class / ID
 	 * @param 	string 				$value 		Field Value
+	 * @param 	string 				$ariaAttributeName 	Aria Attribute Name (aria-controls|aria-owns)
 	 */
-	public function fillSelect2Field($I, $container, $value)
+	public function fillSelect2Field($I, $container, $value, $ariaAttributeName = 'aria-controls')
 	{
 		$fieldID = $I->grabAttributeFrom($container, 'id');
 		$fieldName = str_replace('-container', '', str_replace('select2-', '', $fieldID));
-	    $I->click('#'.$fieldID);
-	    $I->waitForElementVisible('.select2-search__field[aria-owns="select2-' . $fieldName . '-results"]');
-	    $I->fillField('.select2-search__field[aria-owns="select2-' . $fieldName . '-results"]', $value);
-	    $I->waitForElementVisible('ul#select2-' . $fieldName . '-results li.select2-results__option--highlighted');
-	    $I->pressKey('.select2-search__field[aria-owns="select2-' . $fieldName . '-results"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
+		$I->click('#'.$fieldID);
+		$I->waitForElementVisible('.select2-search__field[' . $ariaAttributeName . '="select2-' . $fieldName . '-results"]');
+		$I->fillField('.select2-search__field[' . $ariaAttributeName . '="select2-' . $fieldName . '-results"]', $value);
+		$I->waitForElementVisible('ul#select2-' . $fieldName . '-results li.select2-results__option--highlighted');
+		$I->pressKey('.select2-search__field[' . $ariaAttributeName . '="select2-' . $fieldName . '-results"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
 	}
 
 	/**
@@ -534,16 +535,16 @@ class Acceptance extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Define Order Status.
-	    $I->selectOption('#order_status', $orderStatus);
+		$I->selectOption('#order_status', $orderStatus);
 
-	    // Define User and Payment Method.
-		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress);
+		// Define User and Payment Method.
+		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress, 'aria-owns');
 		$I->selectOption('#_payment_method', $paymentMethod);
 
 		// Add Product.
 		$I->click('button.add-line-item');
 		$I->click('button.add-order-item');
-		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName);
+		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName, 'aria-owns');
 		$I->click('#btn-ok');
 
 		// Create Order.
