@@ -56,7 +56,7 @@ class CKWC_Order {
 
 		// Send Purchase Data.
 		if ( $this->integration->get_option_bool( 'send_purchases' ) ) {
-			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 1 );
+			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 3 );
 		}
 
 	}
@@ -83,7 +83,8 @@ class CKWC_Order {
 			return;
 		}
 
-		// Bail if the Order does not require that we subscribe the Customer.
+		// Bail if the Order does not require that we subscribe the Customer,
+		// or the Customer was already subscribed.
 		if ( ! $this->should_opt_in_customer( $order_id ) ) {
 			return;
 		}
@@ -167,6 +168,11 @@ class CKWC_Order {
 			return;
 		}
 
+		// Mark the Customer as being opted in, so future Order status transitions don't opt the Customer in a second time
+		// e.g. if the Plugin subscribes the Customer on the 'processing' status, and the Order is then transitioned
+		// from processing --> completed --> processing. 
+		$this->mark_customer_opted_in( $order_id );
+
 		// Create an Order Note so that the Order shows the Customer was subscribed to a Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
@@ -214,10 +220,12 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   int $order_id   WooCommerce Order ID.
+	 * @param   int    $order_id   WooCommerce Order ID.
+	 * @param   string $status_old Order's Old Status.
+	 * @param   string $status_new Order's New Status.
 	 * @return  mixed               WP_Error | array
 	 */
-	public function send_purchase_data( $order_id ) {
+	public function send_purchase_data( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
 		// Get WooCommerce Order.
 		$order = wc_get_order( $order_id );
@@ -227,10 +235,11 @@ class CKWC_Order {
 			return;
 		}
 
-		// If purchase data has already been sent to ConvertKit, bail
+		// If purchase data has already been sent to ConvertKit, and this isn't a refund,
+		// don't send any data to ConvertKit.
 		// This ensures that we don't unecessarily send data multiple times
 		// when the Order's status is transitioned.
-		if ( $this->purchase_data_sent( $order_id ) ) {
+		if ( $this->purchase_data_sent( $order_id ) && ! $this->transitioned_to_refund( $order_id, $status_old, $status_new ) ) {
 			return;
 		}
 
@@ -270,6 +279,13 @@ class CKWC_Order {
 			'integration'      => 'WooCommerce',
 		);
 
+		// If this is a refund, change some API parameters to include the refund data now.
+		if ( $this->transitioned_to_refund( $order_id, $status_old, $status_new ) ) {
+			$order_refunds = $order->get_refunds();
+			error_log( print_r( $order_refunds, true ) );
+			return;
+		}
+
 		// Setup the API.
 		$this->api = new CKWC_API(
 			$this->integration->get_option( 'api_key' ),
@@ -295,13 +311,48 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
+		$this->mark_purchase_data_sent( $order_id );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
 		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
 
 		// Return.
 		return $response;
+
+	}
+
+	/**
+	 * Determine if the Order transitioned from any non-refunded status to refunded.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   int    $order_id   WooCommerce Order ID.
+	 * @param   string $status_old Order's Old Status.
+	 * @param   string $status_new Order's New Status.
+	 * @return  mixed               WP_Error | array
+	 */
+	private function transitioned_to_refund( $order_id, $status_old = 'new', $status_new = 'pending' ) {
+
+		// Debug.
+		return true;
+
+		// If the stati match, no status transition took place.
+		if ( $status_old === $status_new ) {
+			return false;
+		}
+
+		// If the new status isn't refunded, the order didn't transition to refunded.
+		if ( $status_new != 'refunded' ) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	private function mark_purchase_data_sent( $order_id ) {
+
+		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
 
 	}
 
@@ -323,9 +374,15 @@ class CKWC_Order {
 
 	}
 
+	private function mark_customer_opted_in( $order_id ) {
+
+		update_post_meta( $order_id, 'ckwc_opted_in', 'yes' );
+		
+	}
+
 	/**
 	 * Determines if the given Order has the opt in meta value set to 'yes',
-	 * and that the 'Subscribe Customers' option is enabled in the Plugin settings.
+	 * and that the Customer has not yet been subscribed to ConvertKit.
 	 *
 	 * @since   1.4.2
 	 *
@@ -333,6 +390,11 @@ class CKWC_Order {
 	 * @return  bool                Customer can be opted in
 	 */
 	private function should_opt_in_customer( $order_id ) {
+
+		// If the Order already opted in the Customer, do not opt them in again.
+		if ( 'yes' === get_post_meta( $order_id, 'ckwc_opted_in', true ) ) {
+			return true;
+		}
 
 		// Get Post Meta value.
 		$opt_in = get_post_meta( $order_id, 'ckwc_opt_in', true );
