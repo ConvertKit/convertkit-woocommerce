@@ -67,6 +67,18 @@ class CKWC_Checkout {
 			'default' => 'checked' === $this->integration->get_option( 'opt_in_status' ),
 		);
 
+		/**
+		 * Adds the opt-in checkbox to the checkout's billing or order section, based
+		 * on the Plugin's settings.
+		 *
+		 * @since   1.0.0
+		 *
+		 * @param   array $fields     Checkout Fields.
+		 * @return  array               Checkout Fields
+		 */
+		$fields = apply_filters( 'convertkit_for_woocommerce_checkout_add_opt_in_checkbox', $fields );
+
+		// Return.
 		return $fields;
 
 	}

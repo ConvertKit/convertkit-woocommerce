@@ -58,9 +58,8 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Fix: Settings: Only show conditional settings if other settings enabled/disabled
 * Fix: Settings: API Key and Secret: Don't need to save settings twice for API Key and Secret to work
 * Fix: Settings: Improved setting descriptions
-* Fix: Settings: Improved order and layout of settings for better understanding
+* Fix: Settings: Improved order and layout of settings to be more logical
 * Fix: Settings: Subscription: Renamed Courses to Sequences on Subscription dropdown option
-* Fix: Settings: Purchase Data: If enabled, ensure that manually created orders send purchase data to ConvertKit 
 * Fix: Settings: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
 * Fix: Settings: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
 * Fix: WooCommerce: Order: Don't subscribe a Customer a second time if an existing Order's status changes back to the Plugin's Subscribe Event
@@ -78,7 +77,6 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Add support for sending cash on delivery and check payment purchase info to ConvertKit
 
 ### 1.2.0  2019-07-15
-
 * Improve plugin's translation readiness
 * Make plugin settings link work with other WooCommerce addons
 * Correct product metabox title
@@ -87,41 +85,32 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Add integration name to purchase API requests
 
 ### 1.1.0  2019-03-15
-
 * Add WooCommerce order note when a customer is subscribed to ConvertKit
 
 ### 1.0.6  2018-09-10
-
 * Fix for cart item_id being sent to ConvertKit's API instead of product_id. This was causing product purchases to be seen as unique instead of grouped.
 
 ### 1.0.5  2018-07-24
-
 * Added ability for WooCommerce purchase data to be sent to Seva's API
 * See: http://developers.convertkit.com/#purchases
 * Updated Installation and Configuration sections of this readme.
 
 ### 1.0.4  2017-08-09
-
 * Verified compatibility with WooCommerce 3.1
 * Code cleanup.
 
 ### 1.0.3
-
 * Added Settings plugin link.
 * Added a setting to allow admin to decide if First Name, Last Name, or both are sent to CK's 'name' field.
 
 ### 1.0.2
-
 * Added logger to help debug connectivity issues.
 
 ### 1.0.1
-
 * Don't use API when setting transient options
 
 ### 1.0.0
-
 * Initial release
 
 == Upgrade notice ==
 
-none

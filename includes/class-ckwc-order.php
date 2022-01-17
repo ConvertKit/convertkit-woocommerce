@@ -51,8 +51,8 @@ class CKWC_Order {
 		}
 
 		// Subscribe customer's email address to a form or tag.
-		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'order_status' ), 99999, 1 );
-		add_action( 'woocommerce_order_status_changed', array( $this, 'order_status' ), 99999, 3 );
+		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_subscribe_customer' ), 99999, 1 );
+		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_subscribe_customer' ), 99999, 3 );
 
 		// Send Purchase Data.
 		if ( $this->integration->get_option_bool( 'send_purchases' ) ) {
@@ -71,7 +71,7 @@ class CKWC_Order {
 	 * @param   string $status_old Order's Old Status.
 	 * @param   string $status_new Order's New Status.
 	 */
-	public function order_status( $order_id, $status_old = 'new', $status_new = 'pending' ) {
+	public function maybe_subscribe_customer( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
 		// Bail if the old and new status are the same i.e. the Order status did not change.
 		if ( $status_old === $status_new ) {
@@ -101,11 +101,44 @@ class CKWC_Order {
 		// the global integration settings and any Product-specific settings.
 		$subscriptions = array( $this->integration->get_option( 'subscription' ) );
 		foreach ( $order->get_items() as $item ) {
-			$subscriptions[] = get_post_meta( $item['product_id'], 'ckwc_subscription', true );
+			// Get the Form, Tag or Sequence for this Product.
+			$resource_id = get_post_meta( $item['product_id'], 'ckwc_subscription', true );
+
+			/**
+			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.
+			 * 
+			 * @since 	1.4.2
+			 * 
+			 * @param 	mixed 	$resource_id 	Form, Tag or Sequence ID | empty string.
+			 * @param   int    $order_id   		WooCommerce Order ID.
+			 * @param   string $status_old 		Order's Old Status.
+			 * @param   string $status_new 		Order's New Status.
+			 */
+			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new );
+
+			// If no resource is specified for this Product, don't add it to the array.
+			if ( empty( $resource_id ) ) {
+				continue;
+			}
+
+			// Add to array of resources to subscribe the Customer to.
+			$subscriptions[] = $resource_id;
 		}
 
-		// Remove any duplicate Forms and Tags.
+		// Remove any duplicate Forms, Tags and Sequences.
 		$subscriptions = array_filter( array_unique( $subscriptions ) );
+
+		/**
+		 * Define the Forms, Tags and/or Sequences to subscribe the Customer to for this Order.
+		 * 
+		 * @since 	1.4.2
+		 * 
+		 * @param 	array  $subscriptions 	Subscriptions (array of Forms, Tags and/or Sequence IDs).
+		 * @param   int    $order_id   		WooCommerce Order ID.
+		 * @param   string $status_old 		Order's Old Status.
+		 * @param   string $status_new 		Order's New Status.
+		 */
+		$subscriptions = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions', $subscriptions, $order_id, $status_old, $status_new );
 
 		// Setup the API.
 		$this->api = new CKWC_API(
@@ -235,11 +268,10 @@ class CKWC_Order {
 			return;
 		}
 
-		// If purchase data has already been sent to ConvertKit, and this isn't a refund,
-		// don't send any data to ConvertKit.
+		// If purchase data has already been sent to ConvertKit, don't send any data to ConvertKit.
 		// This ensures that we don't unecessarily send data multiple times
 		// when the Order's status is transitioned.
-		if ( $this->purchase_data_sent( $order_id ) && ! $this->transitioned_to_refund( $order_id, $status_old, $status_new ) ) {
+		if ( $this->purchase_data_sent( $order_id ) ) {
 			return;
 		}
 
@@ -279,12 +311,18 @@ class CKWC_Order {
 			'integration'      => 'WooCommerce',
 		);
 
-		// If this is a refund, change some API parameters to include the refund data now.
-		if ( $this->transitioned_to_refund( $order_id, $status_old, $status_new ) ) {
-			$order_refunds = $order->get_refunds();
-			error_log( print_r( $order_refunds, true ) );
-			return;
-		}
+		/**
+		 * Define the data to send to the ConvertKit API to create a Purchase in ConvertKit
+		 * https://developers.convertkit.com/#create-a-purchase
+		 * 
+		 * @since 	1.4.2
+		 * 
+		 * @param 	array  $purchase 		Purchase Data.
+		 * @param   int    $order_id   		WooCommerce Order ID.
+		 * @param   string $status_old 		Order's Old Status.
+		 * @param   string $status_new 		Order's New Status.
+		 */
+		$purchase = apply_filters( 'convertkit_for_woocommerce_order_send_purchase_data', $purchase, $order_id, $status_old, $status_new );
 
 		// Setup the API.
 		$this->api = new CKWC_API(
@@ -322,34 +360,12 @@ class CKWC_Order {
 	}
 
 	/**
-	 * Determine if the Order transitioned from any non-refunded status to refunded.
-	 *
-	 * @since   1.4.2
-	 *
-	 * @param   int    $order_id   WooCommerce Order ID.
-	 * @param   string $status_old Order's Old Status.
-	 * @param   string $status_new Order's New Status.
-	 * @return  mixed               WP_Error | array
+	 * Mark purchase data as being sent to ConvertKit for the given Order ID.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	int 	$order_id 	Order ID.
 	 */
-	private function transitioned_to_refund( $order_id, $status_old = 'new', $status_new = 'pending' ) {
-
-		// Debug.
-		return true;
-
-		// If the stati match, no status transition took place.
-		if ( $status_old === $status_new ) {
-			return false;
-		}
-
-		// If the new status isn't refunded, the order didn't transition to refunded.
-		if ( $status_new != 'refunded' ) {
-			return false;
-		}
-
-		return true;
-
-	}
-
 	private function mark_purchase_data_sent( $order_id ) {
 
 		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
