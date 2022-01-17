@@ -68,21 +68,20 @@ class CKWC_Admin_Product {
 			return;
 		}
 
-		// Get Forms, Tags, Sequences, current subscription setting and other
-		// settings to render the subscription dropdown field.
-		$api          = new CKWC_API(
-			$this->integration->get_option( 'api_key' ),
-			$this->integration->get_option( 'api_secret' ),
-			$this->integration->get_option_bool( 'debug' )
-		);
+		// Get Forms, Tags and Sequences.
+		$forms = new CKWC_Resource_Forms();
+		$sequences = new CKWC_Resource_Sequences();
+		$tags = new CKWC_Resource_Tags();
+
+		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
 			'id'        => 'ckwc_subscription',
 			'class'     => 'widefat',
 			'name'      => 'ckwc_subscription',
 			'value'     => get_post_meta( $post->ID, 'ckwc_subscription', true ),
-			'forms'     => $api->get_forms(),
-			'tags'      => $api->get_tags(),
-			'sequences' => $api->get_sequences(),
+			'forms'     => $forms,
+			'tags'      => $tags,
+			'sequences' => $sequences,
 		);
 
 		// Load meta box view.

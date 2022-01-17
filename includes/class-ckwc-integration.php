@@ -259,21 +259,23 @@ class CKWC_Integration extends WC_Integration {
 
 		$data = wp_parse_args( $data, $defaults );
 
-		// Get Forms, Tags, Sequences, current subscription setting and other
-		// settings to render the subscription dropdown field.
-		$api          = new CKWC_API(
-			$this->get_option( 'api_key' ),
-			$this->get_option( 'api_secret' ),
-			$this->get_option_bool( 'debug' )
-		);
+		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API.
+		$forms = new CKWC_Resource_Forms();
+		$forms->refresh();
+		$sequences = new CKWC_Resource_Sequences();
+		$sequences->refresh();
+		$tags = new CKWC_Resource_Tags();
+		$tags->refresh();
+
+		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
 			'id'        => 'woocommerce_ckwc_subscription',
 			'class'     => 'select ' . $data['class'],
 			'name'      => $field,
 			'value'     => $this->get_option( $key ),
-			'forms'     => $api->get_forms(),
-			'tags'      => $api->get_tags(),
-			'sequences' => $api->get_sequences(),
+			'forms'     => $forms,
+			'tags'      => $tags,
+			'sequences' => $sequences,
 		);
 
 		ob_start();

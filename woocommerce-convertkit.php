@@ -35,6 +35,10 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-order.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-forms.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-sequences.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-tags.php';
 
 // Load files that are only used in the WordPress Administration interface.
 if ( is_admin() ) {

@@ -209,22 +209,34 @@ class CKWC_Order {
 		// Create an Order Note so that the Order shows the Customer was subscribed to a Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
+				// Fetch Form from cached resources, so we can output the Form Name in the Order Note.
+				$forms = new CKWC_Resource_Forms();
+				$form = $forms->get_by_id( $resource_id );
+
+				// Create Order Note.
 				wc_create_order_note(
 					$order_id,
 					sprintf(
-						/* translators: Form Name */
-						__( '[ConvertKit] Customer subscribed to the Form: %s', 'woocommerce-convertkit' ),
+						/* translators: %1$s: Form Name, %2$s: Form ID */
+						__( '[ConvertKit] Customer subscribed to the Form: %1$s [%2$s]', 'woocommerce-convertkit' ),
+						( $form ? $form['name'] : '' ),
 						$resource_id
 					)
 				);
 				break;
 
 			case 'tag':
+				// Fetch Tag from cached resources, so we can output the Tag Name in the Order Note.
+				$tags = new CKWC_Resource_Tags();
+				$tag = $tags->get_by_id( $resource_id );
+
+				// Create Order Note.
 				wc_create_order_note(
 					$order_id,
 					sprintf(
-						/* translators: Tag Name */
-						__( '[ConvertKit] Customer subscribed to the Tag: %s', 'woocommerce-convertkit' ),
+						/* translators: %1$s: Tag Name, %2$s: Tag ID */
+						__( '[ConvertKit] Customer subscribed to the Tag: %1$s [%2$s]', 'woocommerce-convertkit' ),
+						( $tag ? $tag['name'] : '' ),
 						$resource_id
 					)
 				);
@@ -232,11 +244,17 @@ class CKWC_Order {
 
 			case 'sequence':
 			case 'course':
+				// Fetch Sequence from cached resources, so we can output the Sequence Name in the Order Note.
+				$sequences = new CKWC_Resource_Sequences();
+				$sequence = $sequences->get_by_id( $resource_id );
+
+				// Create Order Note.
 				wc_create_order_note(
 					$order_id,
 					sprintf(
-						/* translators: Sequence Name */
-						__( '[ConvertKit] Customer subscribed to the Sequence: %s', 'woocommerce-convertkit' ),
+						/* translators: %1$s: Sequence Name, %2$s: Sequence ID */
+						__( '[ConvertKit] Customer subscribed to the Sequence: %1$s [%2$s]', 'woocommerce-convertkit' ),
+						( $sequence ? $sequence['name'] : '' ),
 						$resource_id
 					)
 				);
