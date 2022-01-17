@@ -83,10 +83,10 @@ class Acceptance extends \Codeception\Module
 		$I->amOnPluginsPage();
 
 		// Activate the Plugin.
-		$I->activatePlugin('convertkit-woocommerce-addon');
+		$I->activatePlugin('convertkit-for-woocommerce');
 
 		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-woocommerce-addon');
+		$I->seePluginActivated('convertkit-for-woocommerce');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -115,10 +115,10 @@ class Acceptance extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Activate the Plugin.
-		$I->activatePlugin('convertkit-woocommerce-addon');
+		$I->activatePlugin('convertkit-for-woocommerce');
 
 		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-woocommerce-addon');
+		$I->seePluginActivated('convertkit-for-woocommerce');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -142,10 +142,10 @@ class Acceptance extends \Codeception\Module
 		$I->amOnPluginsPage();
 
 		// Deactivate the Plugin.
-		$I->deactivatePlugin('convertkit-woocommerce-addon');
+		$I->deactivatePlugin('convertkit-for-woocommerce');
 
 		// Check that the Plugin deactivated successfully.
-		$I->seePluginDeactivated('convertkit-woocommerce-addon');
+		$I->seePluginDeactivated('convertkit-for-woocommerce');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);

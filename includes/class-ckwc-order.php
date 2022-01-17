@@ -374,6 +374,15 @@ class CKWC_Order {
 
 	}
 
+	/**
+	 * Mark the Order as having opted in to ConvertKit, so that subsequent status
+	 * transitions can check whether the Customer was previously subscribed to
+	 * ConvertKit.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param   int $order_id   Order ID.
+	 */
 	private function mark_customer_opted_in( $order_id ) {
 
 		update_post_meta( $order_id, 'ckwc_opted_in', 'yes' );
@@ -393,7 +402,7 @@ class CKWC_Order {
 
 		// If the Order already opted in the Customer, do not opt them in again.
 		if ( 'yes' === get_post_meta( $order_id, 'ckwc_opted_in', true ) ) {
-			return true;
+			return false;
 		}
 
 		// Get Post Meta value.

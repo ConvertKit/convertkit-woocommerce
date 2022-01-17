@@ -498,4 +498,47 @@ class SubscribeOnOrderProcessingEventCest
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
 	}
+
+	/**
+	 * Test that the Customer is not resubscribed ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing, and
+	 * - The Customer unsubscribes from ConvertKit, and
+	 * - The Order's Status is changed to a non-Processing status, and
+	 * - The Order's Status is changed back to Processing.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testCustomerIsNotResubscribedWhenOrderStatusChanges(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			true, // Display Opt-In checkbox on Checkout
+			true, // Check Opt-In checkbox on Checkout
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
+			false // Don't send purchase data to ConvertKit
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+
+		// Change the Order's Status to any status other than 'Processing'.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'Pending payment');
+
+		// Change the Order's Status to 'Processing'.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'Processing');
+
+		// Confirm that the email address was not added to ConvertKit a second time.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+	}
 }
