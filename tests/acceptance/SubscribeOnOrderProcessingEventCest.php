@@ -1,7 +1,8 @@
 <?php
 /**
- * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form
- * or Tag on the Order Processing event when an order is placed through WooCommerce.
+ * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form,
+ * Tag or Sequence on the Order Processing event when an order is placed through WooCommerce,
+ * and that any Order data is correctly stored e.g. Order Notes.
  * 
  * @since 	1.4.2
  */
@@ -55,6 +56,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 	}
 
 	/**
@@ -86,6 +90,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+	
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
@@ -116,6 +123,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+		
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 	}
 
 	/**
@@ -148,6 +158,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
@@ -180,10 +193,13 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
-	 * Test that the Customer is subscribed to ConvertKit when:
+	 * Test that the Customer is not subscribed to ConvertKit when:
 	 * - The opt in checkbox is disabled in the integration Settings, and
 	 * - No Form is selected in the integration Settings, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
@@ -211,6 +227,10 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
+	
 	}
 
 	/**
@@ -242,6 +262,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 	}
 
 	/**
@@ -273,6 +296,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+			// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
@@ -303,6 +329,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 	}
 
 	/**
@@ -335,6 +364,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
@@ -367,6 +399,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
@@ -398,6 +433,9 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
 
 	/**
@@ -423,7 +461,7 @@ class SubscribeOnOrderProcessingEventCest
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
 			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
 			false, // Don't send purchase data to ConvertKit
-			$_ENV['CONVERTKIT_API_FORM_NAME'] // Product level Form to subscribe email address to
+			'form:'.$_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] // Product level Form to subscribe email address to
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -431,6 +469,12 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+	
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
 	}
 	
 	/**
@@ -456,7 +500,7 @@ class SubscribeOnOrderProcessingEventCest
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
 			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
 			false, // Don't send purchase data to ConvertKit
-			$_ENV['CONVERTKIT_API_TAG_NAME'] // Product level Tag to subscribe email address to
+			'tag:'.$_ENV['CONVERTKIT_API_TAG_ID'] // Product level Tag to subscribe email address to
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -464,6 +508,12 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+	
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Tag.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']');
 	}
 
 	/**
@@ -489,7 +539,7 @@ class SubscribeOnOrderProcessingEventCest
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
 			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
 			false, // Don't send purchase data to ConvertKit
-			$_ENV['CONVERTKIT_API_SEQUENCE_NAME'] // Product level Sequence to subscribe email address to
+			'course:'.$_ENV['CONVERTKIT_API_SEQUENCE_ID'] // Product level Sequence to subscribe email address to
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -497,6 +547,12 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+		
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+	
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']');
 	}
 
 	/**

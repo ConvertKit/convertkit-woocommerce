@@ -563,6 +563,48 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Check the given Order ID contains an Order Note with the given text.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	int 			 $orderID 		Order ID
+	 * @param 	string 			 $noteText		Order Note Text
+	 */ 	
+	public function wooCommerceOrderNoteExists($I, $orderID, $noteText)
+	{
+		// Login as Administrator.
+		$I->loginAsAdmin();
+
+		// Load Edit Order screen.
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Confirm note text exists.
+		$I->seeInSource($noteText);
+	}
+
+	/**
+	 * Check the given Order ID does not contain an Order Note with the given text.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	int 			 $orderID 		Order ID
+	 * @param 	string 			 $noteText		Order Note Text
+	 */ 	
+	public function wooCommerceOrderNoteDoesNotExist($I, $orderID, $noteText)
+	{
+		// Login as Administrator.
+		$I->loginAsAdmin();
+
+		// Load Edit Order screen.
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Confirm note text does not exist.
+		$I->dontSeeInSource($noteText);
+	}
+
+	/**
 	 * Check the given email address exists as a subscriber on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester

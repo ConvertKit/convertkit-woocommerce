@@ -51,6 +51,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -78,6 +81,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -105,6 +111,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -132,6 +141,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -159,6 +171,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -186,6 +201,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -224,6 +242,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -262,6 +283,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -300,6 +324,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -338,6 +365,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -376,6 +406,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -414,6 +447,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -452,6 +488,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -490,6 +529,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -528,6 +570,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -566,6 +611,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -604,6 +652,9 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
@@ -642,5 +693,8 @@ class PurchaseDataCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 }
