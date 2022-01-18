@@ -13,34 +13,48 @@
 		<?php esc_html_e( 'Select a subscription option...', 'woocommerce-convertkit' ); ?>
 	</option>
 
-	<optgroup label="<?php esc_attr_e( 'Sequences', 'woocommerce-convertkit' ); ?>">
-		<?php
-		foreach ( $subscription['sequences']->get() as $sequence ) {
-			// 'course:' is deliberate for backward compat. functionality when Sequences used to be called Courses.
-			?>
-			<option value="course:<?php echo esc_attr( $sequence['id'] ); ?>"<?php selected( 'course:' . esc_attr( $sequence['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $sequence['name'] ); ?></option>
-			<?php
-		}
+	<?php
+	if ( ! is_wp_error( $subscription['sequences']->get() ) ) {
 		?>
-	</optgroup>
+		<optgroup label="<?php esc_attr_e( 'Sequences', 'woocommerce-convertkit' ); ?>">
+			<?php
+			foreach ( $subscription['sequences']->get() as $sequence ) {
+				// 'course:' is deliberate for backward compat. functionality when Sequences used to be called Courses.
+				?>
+				<option value="course:<?php echo esc_attr( $sequence['id'] ); ?>"<?php selected( 'course:' . esc_attr( $sequence['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $sequence['name'] ); ?></option>
+				<?php
+			}
+			?>
+		</optgroup>
+		<?php
+	}
 
-	<optgroup label="<?php esc_attr_e( 'Forms', 'woocommerce-convertkit' ); ?>">
-		<?php
-		foreach ( $subscription['forms']->get() as $form ) {
-			?>
-			<option value="form:<?php echo esc_attr( $form['id'] ); ?>"<?php selected( 'form:' . esc_attr( $form['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $form['name'] ); ?></option>
-			<?php
-		}
+	if ( ! is_wp_error( $subscription['forms']->get() ) ) {
 		?>
-	</optgroup>
+		<optgroup label="<?php esc_attr_e( 'Forms', 'woocommerce-convertkit' ); ?>">
+			<?php
+			foreach ( $subscription['forms']->get() as $form ) {
+				?>
+				<option value="form:<?php echo esc_attr( $form['id'] ); ?>"<?php selected( 'form:' . esc_attr( $form['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $form['name'] ); ?></option>
+				<?php
+			}
+			?>
+		</optgroup>
+		<?php
+	}
 
-	<optgroup label="<?php esc_attr_e( 'Tags', 'woocommerce-convertkit' ); ?>">
-		<?php
-		foreach ( $subscription['tags']->get() as $tag ) { // phpcs:ignore
-			?>
-			<option value="tag:<?php echo esc_attr( $tag['id'] ); ?>"<?php selected( 'tag:' . esc_attr( $tag['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $tag['name'] ); ?></option>
-			<?php
-		}
+	if ( ! is_wp_error( $subscription['tags']->get() ) ) {
 		?>
-	</optgroup>
+		<optgroup label="<?php esc_attr_e( 'Tags', 'woocommerce-convertkit' ); ?>">
+			<?php
+			foreach ( $subscription['tags']->get() as $tag ) { // phpcs:ignore
+				?>
+				<option value="tag:<?php echo esc_attr( $tag['id'] ); ?>"<?php selected( 'tag:' . esc_attr( $tag['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $tag['name'] ); ?></option>
+				<?php
+			}
+			?>
+		</optgroup>
+		<?php
+	}
+	?>
 </select>
