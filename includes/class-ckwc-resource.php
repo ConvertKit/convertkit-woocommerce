@@ -50,17 +50,17 @@ class CKWC_Resource {
 
 	/**
 	 * Returns an individual resource by its ID.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	int 	$id 	Resource ID (Form, Tag, Sequence).
-	 * @return 	mixed 			bool | array
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   int $id     Resource ID (Form, Tag, Sequence).
+	 * @return  mixed           bool | array
 	 */
 	public function get_by_id( $id ) {
 
 		foreach ( $this->get() as $resource ) {
 			// If this resource's ID matches the ID we're looking for, return it.
-			if ( $resource['id'] == $id ) {
+			if ( $resource['id'] == $id ) { // phpcs:ignore
 				return $resource;
 			}
 		}

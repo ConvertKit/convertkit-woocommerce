@@ -106,13 +106,13 @@ class CKWC_Order {
 
 			/**
 			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.
-			 * 
-			 * @since 	1.4.2
-			 * 
-			 * @param 	mixed 	$resource_id 	Form, Tag or Sequence ID | empty string.
-			 * @param   int    $order_id   		WooCommerce Order ID.
-			 * @param   string $status_old 		Order's Old Status.
-			 * @param   string $status_new 		Order's New Status.
+			 *
+			 * @since   1.4.2
+			 *
+			 * @param   mixed   $resource_id    Form, Tag or Sequence ID | empty string.
+			 * @param   int    $order_id        WooCommerce Order ID.
+			 * @param   string $status_old      Order's Old Status.
+			 * @param   string $status_new      Order's New Status.
 			 */
 			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new );
 
@@ -130,13 +130,13 @@ class CKWC_Order {
 
 		/**
 		 * Define the Forms, Tags and/or Sequences to subscribe the Customer to for this Order.
-		 * 
-		 * @since 	1.4.2
-		 * 
-		 * @param 	array  $subscriptions 	Subscriptions (array of Forms, Tags and/or Sequence IDs).
-		 * @param   int    $order_id   		WooCommerce Order ID.
-		 * @param   string $status_old 		Order's Old Status.
-		 * @param   string $status_new 		Order's New Status.
+		 *
+		 * @since   1.4.2
+		 *
+		 * @param   array  $subscriptions   Subscriptions (array of Forms, Tags and/or Sequence IDs).
+		 * @param   int    $order_id        WooCommerce Order ID.
+		 * @param   string $status_old      Order's Old Status.
+		 * @param   string $status_new      Order's New Status.
 		 */
 		$subscriptions = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions', $subscriptions, $order_id, $status_old, $status_new );
 
@@ -203,7 +203,7 @@ class CKWC_Order {
 
 		// Mark the Customer as being opted in, so future Order status transitions don't opt the Customer in a second time
 		// e.g. if the Plugin subscribes the Customer on the 'processing' status, and the Order is then transitioned
-		// from processing --> completed --> processing. 
+		// from processing --> completed --> processing.
 		$this->mark_customer_opted_in( $order_id );
 
 		// Create an Order Note so that the Order shows the Customer was subscribed to a Form, Tag or Sequence.
@@ -211,7 +211,7 @@ class CKWC_Order {
 			case 'form':
 				// Fetch Form from cached resources, so we can output the Form Name in the Order Note.
 				$forms = new CKWC_Resource_Forms();
-				$form = $forms->get_by_id( $resource_id );
+				$form  = $forms->get_by_id( $resource_id );
 
 				// Create Order Note.
 				wc_create_order_note(
@@ -228,7 +228,7 @@ class CKWC_Order {
 			case 'tag':
 				// Fetch Tag from cached resources, so we can output the Tag Name in the Order Note.
 				$tags = new CKWC_Resource_Tags();
-				$tag = $tags->get_by_id( $resource_id );
+				$tag  = $tags->get_by_id( $resource_id );
 
 				// Create Order Note.
 				wc_create_order_note(
@@ -246,7 +246,7 @@ class CKWC_Order {
 			case 'course':
 				// Fetch Sequence from cached resources, so we can output the Sequence Name in the Order Note.
 				$sequences = new CKWC_Resource_Sequences();
-				$sequence = $sequences->get_by_id( $resource_id );
+				$sequence  = $sequences->get_by_id( $resource_id );
 
 				// Create Order Note.
 				wc_create_order_note(
@@ -332,13 +332,13 @@ class CKWC_Order {
 		/**
 		 * Define the data to send to the ConvertKit API to create a Purchase in ConvertKit
 		 * https://developers.convertkit.com/#create-a-purchase
-		 * 
-		 * @since 	1.4.2
-		 * 
-		 * @param 	array  $purchase 		Purchase Data.
-		 * @param   int    $order_id   		WooCommerce Order ID.
-		 * @param   string $status_old 		Order's Old Status.
-		 * @param   string $status_new 		Order's New Status.
+		 *
+		 * @since   1.4.2
+		 *
+		 * @param   array  $purchase        Purchase Data.
+		 * @param   int    $order_id        WooCommerce Order ID.
+		 * @param   string $status_old      Order's Old Status.
+		 * @param   string $status_new      Order's New Status.
 		 */
 		$purchase = apply_filters( 'convertkit_for_woocommerce_order_send_purchase_data', $purchase, $order_id, $status_old, $status_new );
 
@@ -379,10 +379,10 @@ class CKWC_Order {
 
 	/**
 	 * Mark purchase data as being sent to ConvertKit for the given Order ID.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	int 	$order_id 	Order ID.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   int $order_id   Order ID.
 	 */
 	private function mark_purchase_data_sent( $order_id ) {
 
@@ -412,15 +412,15 @@ class CKWC_Order {
 	 * Mark the Order as having opted in to ConvertKit, so that subsequent status
 	 * transitions can check whether the Customer was previously subscribed to
 	 * ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
+	 *
+	 * @since   1.4.2
+	 *
 	 * @param   int $order_id   Order ID.
 	 */
 	private function mark_customer_opted_in( $order_id ) {
 
 		update_post_meta( $order_id, 'ckwc_opted_in', 'yes' );
-		
+
 	}
 
 	/**
@@ -502,42 +502,39 @@ class CKWC_Order {
 			 * First Name
 			 */
 			case 'first':
-				return $this->first_name( $order );
+				$name = $this->first_name( $order );
 				break;
 
 			/**
 			 * Last Name
 			 */
 			case 'last':
-				return $this->last_name( $order );
+				$name = $this->last_name( $order );
 				break;
 
 			/**
 			 * First and Last Name
 			 */
 			default:
-				return sprintf( "%s %s", $this->first_name( $order ), $this->last_name( $order ) );
+				$name = sprintf( '%s %s', $this->first_name( $order ), $this->last_name( $order ) );
 				break;
 
 		}
 
-		// Get First Name.
-		$first_name = $order->get_billing_first_name();
-
 		/**
-		 * Returns the customer's first name for the given WooCommerce Order,
+		 * Returns the customer's name for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
 		 * to a Form, Tag or Sequence.
 		 *
 		 * @since   1.0.0
 		 *
-		 * @param   string                      $first_name     First Name
-		 * @param   WC_Order|WC_Order_Refund    $order          Order
+		 * @param   string                      $name   Name
+		 * @param   WC_Order|WC_Order_Refund    $order  Order
 		 */
-		$first_name = apply_filters( 'convertkit_for_woocommerce_first_name', $first_name, $order );
+		$name = apply_filters( 'convertkit_for_woocommerce_order_name', $name, $order );
 
 		// Return.
-		return $first_name;
+		return $name;
 
 	}
 
@@ -595,7 +592,7 @@ class CKWC_Order {
 		 *
 		 * @since   1.0.0
 		 *
-		 * @param   string                      $last_name     	Last Name
+		 * @param   string                      $last_name      Last Name
 		 * @param   WC_Order|WC_Order_Refund    $order          Order
 		 */
 		$last_name = apply_filters( 'convertkit_for_woocommerce_last_name', $last_name, $order );

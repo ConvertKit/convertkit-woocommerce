@@ -5,6 +5,7 @@
  * @package CKWC
  * @author ConvertKit
  */
+
 ?>
 
 <select class="<?php echo esc_attr( $subscription['class'] ); ?>" id="<?php echo esc_attr( $subscription['id'] ); ?>" name="<?php echo esc_attr( $subscription['name'] ); ?>">

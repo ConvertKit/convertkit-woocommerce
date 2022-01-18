@@ -69,9 +69,9 @@ class CKWC_Admin_Product {
 		}
 
 		// Get Forms, Tags and Sequences.
-		$forms = new CKWC_Resource_Forms();
+		$forms     = new CKWC_Resource_Forms();
 		$sequences = new CKWC_Resource_Sequences();
-		$tags = new CKWC_Resource_Tags();
+		$tags      = new CKWC_Resource_Tags();
 
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
