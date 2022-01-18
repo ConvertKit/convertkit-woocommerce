@@ -259,6 +259,13 @@ class CKWC_Integration extends WC_Integration {
 
 		$data = wp_parse_args( $data, $defaults );
 
+		// If the integration isn't enabled, don't output a selection field.
+		if ( ! $this->is_enabled() ) {
+			ob_start();
+			require_once CKWC_PLUGIN_PATH . '/views/backend/settings/subscription-disabled.php';
+			return ob_get_clean();
+		}
+
 		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API.
 		$forms = new CKWC_Resource_Forms();
 		$forms->refresh();
@@ -266,7 +273,7 @@ class CKWC_Integration extends WC_Integration {
 		$sequences->refresh();
 		$tags = new CKWC_Resource_Tags();
 		$tags->refresh();
-
+	
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
 			'id'        => 'woocommerce_ckwc_subscription',
@@ -279,25 +286,7 @@ class CKWC_Integration extends WC_Integration {
 		);
 
 		ob_start();
-		?>
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
-				<?php echo esc_html( $this->get_tooltip_html( $data ) ); ?>
-			</th>
-			<td class="forminp">
-				<fieldset>
-					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-					<?php
-					// Load subscription dropdown field.
-					require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
-					echo $this->get_description_html( $data ); // phpcs:ignore
-					?>
-				</fieldset>
-			</td>
-		</tr>
-		<?php
-
+		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/subscription.php';
 		return ob_get_clean();
 
 	}
@@ -331,17 +320,19 @@ class CKWC_Integration extends WC_Integration {
 
 		// If the integration isn't enabled, don't validate the API Key.
 		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) { /* phpcs:ignore */
+			$this->resources_delete();
 			return $api_key;
 		}
 
 		// Bail if the API Key has not been specified.
 		if ( empty( $api_key ) ) {
+			$this->resources_delete();
 			WC_Admin_Settings::add_error( esc_html__( 'Please provide your ConvertKit API Key.', 'woocommerce-convertkit' ) );
 			return $api_key;
 		}
 
 		// Get Forms to test that the API Key is valid.
-		$api   = new CKWC_API(
+		$api = new CKWC_API(
 			$api_key,
 			$this->get_option( 'api_secret' ),
 			$this->get_option_bool( 'debug' )
@@ -350,6 +341,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Bail if an error occured.
 		if ( is_wp_error( $forms ) ) {
+			$this->resources_delete();
 			WC_Admin_Settings::add_error( esc_html__( 'Your ConvertKit API Key appears to be invalid. Please double check the value.', 'woocommerce-convertkit' ) );
 		}
 
@@ -405,6 +397,24 @@ class CKWC_Integration extends WC_Integration {
 	public function option_exists( $name ) {
 
 		return ! empty( $this->get_option( $name ) );
+
+	}
+
+	/**
+	 * Deletes all cached Forms, Tags and Sequences from the options table.
+	 * 
+	 * @since 	1.4.2
+	 */
+	private function resources_delete() {
+
+		$forms = new CKWC_Resource_Forms();
+		$forms->delete();
+	
+		$tags = new CKWC_Resource_Tags();
+		$tags->delete();
+		
+		$sequences = new CKWC_Resource_Sequences();
+		$sequences->delete();
 
 	}
 

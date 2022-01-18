@@ -142,6 +142,17 @@ class CKWC_Resource {
 	}
 
 	/**
+	 * Deletes resources (forms, landing pages or tags) from the options table.
+	 *
+	 * @since   1.4.2
+	 */
+	public function delete() {
+
+		delete_option( $this->settings_name );
+
+	}
+
+	/**
 	 * Sorts the given array of resources by name.
 	 *
 	 * @since   1.4.2
