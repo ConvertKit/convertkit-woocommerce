@@ -33,6 +33,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Load Admin screens, save settings.
 		if ( is_admin() ) {
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
 		}
@@ -224,12 +225,30 @@ class CKWC_Integration extends WC_Integration {
 			),
 		);
 
-		// Load JS.
-		ob_start();
-		include CKWC_PLUGIN_PATH . '/resources/backend/js/integration.js';
-		$code = ob_get_clean();
+	}
 
-		wc_enqueue_js( $code );
+	/**
+	 * Enqueue Javascript for the Integration Settings screen.
+	 * 
+	 * @since 	1.4.2
+	 */
+	public function enqueue_scripts() {
+
+		// Bail if we cannot determine if we are viewing the Integration Settings screen.
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		// Get screen.
+		$screen = get_current_screen();
+
+		// Bail if we're not on the Integration Settings screen.
+		if ( $screen->id != 'woocommerce_page_wc-settings' ) {
+			return;
+		}
+
+		// Enqueue JS.
+		wp_enqueue_script( 'ckwc-integration', CKWC_PLUGIN_URL . 'resources/backend/js/integration.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
 
 	}
 

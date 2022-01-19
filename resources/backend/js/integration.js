@@ -20,6 +20,12 @@ var ckwcSettings = {
 jQuery( document ).ready(
 	function( $ ) {
 
+		// Bail if we're not viewing the Integration Settings,
+		// which can be determined by WooCommerce's hidden input field 'section'
+		if ( $( 'input[name="section"]' ).val() !== 'ckwc' ) {
+			return;
+		}
+
 		// Update settings.
 		ckwcSettings = {
 			'enabled': $( 'input[name="woocommerce_ckwc_enabled"]' ).prop( 'checked' ),
