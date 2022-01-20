@@ -521,7 +521,7 @@ class Acceptance extends \Codeception\Module
 		$I->loginAsAdmin();
 
 		// Define Email Address for this Manual Order.
-		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '-' . $productID . '@convertkit.com';
 
 		// Create User for this Manual Order.
 		$userID = $I->haveUserInDatabase('test', 'subscriber', [
