@@ -36,7 +36,7 @@ jobs:
     strategy:
       matrix:
         wp-versions: [ '5.8.3' ] #[ '5.6.7', '5.7.5', '5.8.3' ]
-        php-versions: [ '7.3', '7.4', '8.0' ] #[ '7.3', '7.4', '8.0', '8.1' ]
+        php-versions: [ '7.3' ] #[ '7.3', '7.4', '8.0', '8.1' ]
       max-parallel: 1 # Run one at a time, otherwise reading API data after tests results in false positives due to concurrency
 
     # Steps to install, configure and run tests
@@ -193,7 +193,7 @@ jobs:
       # Run Codeception Acceptance Tests.
       - name: Run Acceptance Tests
         working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run acceptance PurchaseDataCest:testSendPurchaseDataWithSimpleProductCheckout
+        run: php vendor/bin/codecept run acceptance PurchaseDataCest:testSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder
 
       # If the repository has other tests, such as unit tests, add the Codeception commands here to run them now.
 
