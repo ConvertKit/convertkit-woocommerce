@@ -16,6 +16,9 @@ class SettingEnabledDisabledCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
 	}
 
 	/**
@@ -35,8 +38,11 @@ class SettingEnabledDisabledCest
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
 		
-		// Click Place Order button.
-		$I->click('#place_order');
+		// Click Place order button.
+		$I->click('Place order');
+
+		// Wait until JS completes and redirects.
+		$I->waitForElement('.woocommerce-order-received', 10);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);

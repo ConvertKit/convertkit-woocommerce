@@ -21,7 +21,6 @@ class ProductCest
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
-
 	}
 
 	/**
