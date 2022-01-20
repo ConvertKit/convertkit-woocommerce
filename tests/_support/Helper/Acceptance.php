@@ -548,7 +548,6 @@ class Acceptance extends \Codeception\Module
 		$I->click('#btn-ok');
 
 		// Create Order.
-		$I->executeJS('window.scrollTo(0,0);'); // Otherwise button hidden behind admin bar and test fails.
 		$I->click('button.save_order');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.

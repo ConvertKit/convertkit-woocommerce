@@ -158,7 +158,6 @@ class ProductCest
 		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
 
 		// Save
-		$I->executeJS('window.scrollTo(0,0);'); // Otherwise button hidden behind admin bar and test fails.
 		$I->click('Publish');
 
 		// Check that no PHP warnings or notices were output.
@@ -197,7 +196,6 @@ class ProductCest
 		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
 
 		// Save
-		$I->executeJS('window.scrollTo(0,0);'); // Otherwise button hidden behind admin bar and test fails.
 		$I->click('Publish');
 
 		// Check that no PHP warnings or notices were output.
@@ -236,7 +234,6 @@ class ProductCest
 		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_SEQUENCE_NAME']);
 
 		// Save
-		$I->executeJS('window.scrollTo(0,0);'); // Otherwise button hidden behind admin bar and test fails.
 		$I->click('Publish');
 
 		// Check that no PHP warnings or notices were output.
