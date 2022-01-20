@@ -59,6 +59,10 @@ class SettingAPIKeyAndSecretCest
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
+		// Complete API Fields.
+		$I->fillField('woocommerce_ckwc_api_key', '');
+		$I->fillField('woocommerce_ckwc_api_secret', '');
+
 		// Click the Save Changes button.
 		$I->click('Save changes');
 

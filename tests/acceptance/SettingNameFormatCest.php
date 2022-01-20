@@ -69,7 +69,6 @@ class SettingNameFormatCest
 		$I->apiUnsubscribe($result['email_address']);
 	}
 
-
 	/**
 	 * Test that the Billing Last Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit, and honored
