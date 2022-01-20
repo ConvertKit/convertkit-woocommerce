@@ -175,6 +175,16 @@ jobs:
       - name: Set chown for Plugin Directory
         run: sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
 
+      # This ensures WooCommerce log files can be written to.
+      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
+      - name: Set chmod for WooCommerce Logs Directory
+        run: sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
+
+      # This ensures WooCommerce log files can be written to.
+      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
+      - name: Set chown for WooCommerce Logs Directory
+        run: sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
+
       # Build Codeception Tests.
       - name: Build Tests
         working-directory: ${{ env.PLUGIN_DIR }}
