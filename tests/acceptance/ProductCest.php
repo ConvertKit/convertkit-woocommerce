@@ -160,7 +160,7 @@ class ProductCest
 		$I->click('Publish');
 
 		// Wait until JS completes and redirects.
-		$I->waitForElement('.notice-success', 20);
+		$I->waitForElement('.notice-success', 30);
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -201,7 +201,7 @@ class ProductCest
 		$I->click('Publish');
 
 		// Wait until JS completes and redirects.
-		$I->waitForElement('.notice-success', 20);
+		$I->waitForElement('.notice-success', 30);
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -242,7 +242,7 @@ class ProductCest
 		$I->click('Publish');
 
 		// Wait until JS completes and redirects.
-		$I->waitForElement('.notice-success', 20);
+		$I->waitForElement('.notice-success', 30);
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
