@@ -185,6 +185,12 @@ jobs:
       - name: Set chown for WooCommerce Logs Directory
         run: sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
 
+      # We run these before the main tests, as typically CodeSniffer is fast. If there's a failure, we can tell
+      # the user sooner.
+      - name: Run WordPress Coding Standards Tests
+        working-directory: ${{ env.PLUGIN_DIR }}
+        run: php vendor/bin/phpcs ./ -v
+
       # Build Codeception Tests.
       - name: Build Tests
         working-directory: ${{ env.PLUGIN_DIR }}

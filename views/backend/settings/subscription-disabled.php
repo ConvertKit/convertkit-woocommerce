@@ -14,6 +14,6 @@
 		<?php echo esc_html( $this->get_tooltip_html( $data ) ); ?>
 	</th>
 	<td class="forminp">
-		<?php _e( 'To select the Form, Tag or Sequence to subscribe Customers to, specify a valid API Key and Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
+		<?php esc_html_e( 'To select the Form, Tag or Sequence to subscribe Customers to, specify a valid API Key and Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
 	</td>
 </tr>

@@ -21,7 +21,7 @@ jQuery( document ).ready(
 	function( $ ) {
 
 		// Bail if we're not viewing the Integration Settings,
-		// which can be determined by WooCommerce's hidden input field 'section'
+		// which can be determined by WooCommerce's hidden input field 'section'.
 		if ( $( 'input[name="section"]' ).val() !== 'ckwc' ) {
 			return;
 		}

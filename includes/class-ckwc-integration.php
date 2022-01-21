@@ -229,8 +229,8 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Enqueue Javascript for the Integration Settings screen.
-	 * 
-	 * @since 	1.4.2
+	 *
+	 * @since   1.4.2
 	 */
 	public function enqueue_scripts() {
 
@@ -243,7 +243,7 @@ class CKWC_Integration extends WC_Integration {
 		$screen = get_current_screen();
 
 		// Bail if we're not on the Integration Settings screen.
-		if ( $screen->id != 'woocommerce_page_wc-settings' ) {
+		if ( $screen->id !== 'woocommerce_page_wc-settings' ) {
 			return;
 		}
 
@@ -292,7 +292,7 @@ class CKWC_Integration extends WC_Integration {
 		$sequences->refresh();
 		$tags = new CKWC_Resource_Tags();
 		$tags->refresh();
-	
+
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
 			'id'        => 'woocommerce_ckwc_subscription',
@@ -351,7 +351,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Get Forms to test that the API Key is valid.
-		$api = new CKWC_API(
+		$api   = new CKWC_API(
 			$api_key,
 			$this->get_option( 'api_secret' ),
 			$this->get_option_bool( 'debug' )
@@ -421,17 +421,17 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Deletes all cached Forms, Tags and Sequences from the options table.
-	 * 
-	 * @since 	1.4.2
+	 *
+	 * @since   1.4.2
 	 */
 	private function resources_delete() {
 
 		$forms = new CKWC_Resource_Forms();
 		$forms->delete();
-	
+
 		$tags = new CKWC_Resource_Tags();
 		$tags->delete();
-		
+
 		$sequences = new CKWC_Resource_Sequences();
 		$sequences->delete();
 

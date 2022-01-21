@@ -7,6 +7,12 @@
 					</tr>
 				</thead>
 				<tbody><tr>
+						<td colspan="3">../includes/class-ckwc-checkout.php</td>
+					</tr><tr>
+						<td>&nbsp;</td>
+						<td><a href="#convertkit_for_woocommerce_checkout_add_opt_in_checkbox"><code>convertkit_for_woocommerce_checkout_add_opt_in_checkbox</code></a></td>
+						<td>Adds the opt-in checkbox to the checkout's billing or order section, based on the Plugin's settings.</td>
+					</tr><tr>
 						<td colspan="3">../includes/class-ckwc-api.php</td>
 					</tr><tr>
 						<td>&nbsp;</td>
@@ -16,8 +22,24 @@
 						<td colspan="3">../includes/class-ckwc-order.php</td>
 					</tr><tr>
 						<td>&nbsp;</td>
+						<td><a href="#convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id"><code>convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id</code></a></td>
+						<td>Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.</td>
+					</tr><tr>
+						<td>&nbsp;</td>
+						<td><a href="#convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions"><code>convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions</code></a></td>
+						<td>Define the Forms, Tags and/or Sequences to subscribe the Customer to for this Order.</td>
+					</tr><tr>
+						<td>&nbsp;</td>
+						<td><a href="#convertkit_for_woocommerce_order_send_purchase_data"><code>convertkit_for_woocommerce_order_send_purchase_data</code></a></td>
+						<td>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.convertkit.com/#create-a-purchase</td>
+					</tr><tr>
+						<td>&nbsp;</td>
 						<td><a href="#convertkit_for_woocommerce_email"><code>convertkit_for_woocommerce_email</code></a></td>
 						<td>Returns the customer's email address for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form or Tag.</td>
+					</tr><tr>
+						<td>&nbsp;</td>
+						<td><a href="#convertkit_for_woocommerce_order_name"><code>convertkit_for_woocommerce_order_name</code></a></td>
+						<td>Returns the customer's name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</td>
 					</tr><tr>
 						<td>&nbsp;</td>
 						<td><a href="#convertkit_for_woocommerce_first_name"><code>convertkit_for_woocommerce_first_name</code></a></td>
@@ -28,7 +50,34 @@
 						<td>Returns the customer's last name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form or Tag.</td>
 					</tr>
 					</tbody>
-				</table><h3 id="convertkit_api_get_timeout">
+				</table><h3 id="convertkit_for_woocommerce_checkout_add_opt_in_checkbox">
+						convertkit_for_woocommerce_checkout_add_opt_in_checkbox
+						<code>includes/class-ckwc-checkout.php::78</code>
+					</h3><h4>Overview</h4>
+						<p>Adds the opt-in checkbox to the checkout's billing or order section, based on the Plugin's settings.</p><h4>Parameters</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody><tr>
+							<td>Checkout</td>
+							<td>array $fields</td>
+							<td>Fields.</td>
+						</tr>
+						</tbody>
+					</table><h4>Usage</h4>
+<pre>
+add_filter( 'convertkit_for_woocommerce_checkout_add_opt_in_checkbox', function( $fields ) {
+	// ... your code here
+	// Return value
+	return $fields;
+}, 10, 1 );
+</pre>
+<h3 id="convertkit_api_get_timeout">
 						convertkit_api_get_timeout
 						<code>includes/class-ckwc-api.php::1027</code>
 					</h3><h4>Overview</h4>
@@ -55,9 +104,114 @@ add_filter( 'convertkit_api_get_timeout', function( $timeout ) {
 	return $timeout;
 }, 10, 1 );
 </pre>
+<h3 id="convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id">
+						convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id
+						<code>includes/class-ckwc-order.php::116</code>
+					</h3><h4>Overview</h4>
+						<p>Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.</p><h4>Parameters</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody><tr>
+							<td>$resource_id</td>
+							<td>mixed</td>
+							<td>Form, Tag or Sequence ID | empty string.</td>
+						</tr><tr>
+							<td>$order_id</td>
+							<td>int</td>
+							<td>WooCommerce Order ID.</td>
+						</tr><tr>
+							<td>Order's</td>
+							<td>string $status_new</td>
+							<td>New</td>
+						</tr>
+						</tbody>
+					</table><h4>Usage</h4>
+<pre>
+add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', function( $resource_id, $order_id, $status_old, $status_new ) {
+	// ... your code here
+	// Return value
+	return $resource_id;
+}, 10, 4 );
+</pre>
+<h3 id="convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions">
+						convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions
+						<code>includes/class-ckwc-order.php::140</code>
+					</h3><h4>Overview</h4>
+						<p>Define the Forms, Tags and/or Sequences to subscribe the Customer to for this Order.</p><h4>Parameters</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody><tr>
+							<td>$subscriptions</td>
+							<td>array</td>
+							<td>Subscriptions (array of Forms, Tags and/or Sequence IDs).</td>
+						</tr><tr>
+							<td>$order_id</td>
+							<td>int</td>
+							<td>WooCommerce Order ID.</td>
+						</tr><tr>
+							<td>Order's</td>
+							<td>string $status_new</td>
+							<td>New</td>
+						</tr>
+						</tbody>
+					</table><h4>Usage</h4>
+<pre>
+add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions', function( $subscriptions, $order_id, $status_old, $status_new ) {
+	// ... your code here
+	// Return value
+	return $subscriptions;
+}, 10, 4 );
+</pre>
+<h3 id="convertkit_for_woocommerce_order_send_purchase_data">
+						convertkit_for_woocommerce_order_send_purchase_data
+						<code>includes/class-ckwc-order.php::342</code>
+					</h3><h4>Overview</h4>
+						<p>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.convertkit.com/#create-a-purchase</p><h4>Parameters</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody><tr>
+							<td>$purchase</td>
+							<td>array</td>
+							<td>Purchase Data.</td>
+						</tr><tr>
+							<td>$order_id</td>
+							<td>int</td>
+							<td>WooCommerce Order ID.</td>
+						</tr><tr>
+							<td>Order's</td>
+							<td>string $status_new</td>
+							<td>New</td>
+						</tr>
+						</tbody>
+					</table><h4>Usage</h4>
+<pre>
+add_filter( 'convertkit_for_woocommerce_order_send_purchase_data', function( $purchase, $order_id, $status_old, $status_new ) {
+	// ... your code here
+	// Return value
+	return $purchase;
+}, 10, 4 );
+</pre>
 <h3 id="convertkit_for_woocommerce_email">
 						convertkit_for_woocommerce_email
-						<code>includes/class-ckwc-order.php::373</code>
+						<code>includes/class-ckwc-order.php::478</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's email address for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form or Tag.</p><h4>Parameters</h4>
 					<table>
@@ -86,9 +240,40 @@ add_filter( 'convertkit_for_woocommerce_email', function( $email, $order ) {
 	return $email;
 }, 10, 2 );
 </pre>
+<h3 id="convertkit_for_woocommerce_order_name">
+						convertkit_for_woocommerce_order_name
+						<code>includes/class-ckwc-order.php::533</code>
+					</h3><h4>Overview</h4>
+						<p>Returns the customer's name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody><tr>
+							<td>$name</td>
+							<td>string</td>
+							<td>Name</td>
+						</tr><tr>
+							<td>$order</td>
+							<td>WC_Order|WC_Order_Refund</td>
+							<td>Order</td>
+						</tr>
+						</tbody>
+					</table><h4>Usage</h4>
+<pre>
+add_filter( 'convertkit_for_woocommerce_order_name', function( $name, $order ) {
+	// ... your code here
+	// Return value
+	return $name;
+}, 10, 2 );
+</pre>
 <h3 id="convertkit_for_woocommerce_first_name">
 						convertkit_for_woocommerce_first_name
-						<code>includes/class-ckwc-order.php::463</code>
+						<code>includes/class-ckwc-order.php::565</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's first name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -119,7 +304,7 @@ add_filter( 'convertkit_for_woocommerce_first_name', function( $first_name, $ord
 </pre>
 <h3 id="convertkit_for_woocommerce_last_name">
 						convertkit_for_woocommerce_last_name
-						<code>includes/class-ckwc-order.php::495</code>
+						<code>includes/class-ckwc-order.php::597</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's last name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form or Tag.</p><h4>Parameters</h4>
 					<table>

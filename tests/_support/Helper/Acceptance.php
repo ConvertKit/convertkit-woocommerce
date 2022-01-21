@@ -759,7 +759,7 @@ class Acceptance extends \Codeception\Module
 		// Get first page of purchases.
 		$purchases = $this->apiRequest('purchases', 'GET');
 		$data = $purchases['purchases'];
- 		$totalPages = $purchases['total_pages'];
+		$totalPages = $purchases['total_pages'];
 
 		if ($totalPages == 1) {
 			return $data;
