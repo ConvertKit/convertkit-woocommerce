@@ -671,13 +671,24 @@ class Acceptance extends \Codeception\Module
 	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
 		// Run request.
-		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiRequest('purchases', 'GET'), $orderID);
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiGetPurchases(), $orderID);
 
 		// Check data returned for this Order ID.
 		$I->assertIsArray($purchase);
 		$I->assertEquals($orderID, $purchase['transaction_id']);
 		$I->assertEquals($emailAddress, $purchase['email_address']);
-		$I->assertEquals($productID, $purchase['products'][0]['pid']);
+
+		// Iterate through the array of products, to find a pid matching the Product ID.
+		$productExistsInPurchase = false;
+		foreach ($purchase['products'] as $product) {
+			if ($productID == $product['pid']) {
+				$productExistsInPurchase = true;
+				break;
+			}
+		}
+
+		// Check that the Product exists in the purchase data.
+		$I->assertTrue($productExistsInPurchase);
 	}
 
 	/**
@@ -690,7 +701,7 @@ class Acceptance extends \Codeception\Module
 	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
 	{
 		// Run request.
-		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiRequest('purchases', 'GET'), $orderID);
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiGetPurchases(), $orderID);
 
 		// Check data not returned for this Order ID.
 		// We check the email address, because each test will reset, meaning the Order ID will match that
@@ -712,16 +723,16 @@ class Acceptance extends \Codeception\Module
 	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
 	{
 		// Bail if no purchases exist.
-		if (!isset($purchases['purchases'])) {
+		if (!isset($purchases)) {
 			return [
 				'id' => 0,
 				'order_id' => 0,
-				'email_address' => '',
+				'email_address' => 'no',
 			];
 		}
 
 		// Iterate through purchases to find one where the transaction ID matches the order ID.
-		foreach ($purchases['purchases'] as $purchase) {
+		foreach ($purchases as $purchase) {
 			// Skip if order ID does not match
 			if ($purchase['transaction_id'] != $orderID) {
 				continue;
@@ -734,8 +745,36 @@ class Acceptance extends \Codeception\Module
 		return [
 			'id' => 0,
 			'order_id' => 0,
-			'email_address' => '',
+			'email_address' => 'no2',
 		];
+	}
+
+	/**
+	 * Returns all purchases from the API.
+	 * 
+	 * @return 	array
+	 */
+	public function apiGetPurchases()
+	{
+		// Get first page of purchases.
+		$purchases = $this->apiRequest('purchases', 'GET');
+		$data = $purchases['purchases'];
+ 		$totalPages = $purchases['total_pages'];
+
+		if ($totalPages == 1) {
+			return $data;
+		}
+
+		// Get additional pages of purchases.
+		for ($page = 2; $page <= $totalPages; $page++) {
+			$purchases = $this->apiRequest('purchases', 'GET', [
+				'page' => $page,
+			]);
+
+			$data = array_merge($data, $purchases['purchases']);
+		}
+
+		return $data;
 	}
 
 	/**
