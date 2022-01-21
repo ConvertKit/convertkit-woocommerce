@@ -126,34 +126,8 @@ class ProductCest
 
 		// Check that the dropdown field to select a Form, Tag or Sequence is displayed.
 		$I->seeElementInDOM('#ckwc_subscription');
-	}
 
-	/**
-	 * Test that selecting a Form at Product level works when creating a WooCommerce Product.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function testProductFormSetting(AcceptanceTester $I)
-	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
-		// Navigate to Products > Add New.
-		$I->amOnAdminPage('post-new.php?post_type=product');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Define a Title and Price.
-		$I->fillField('post_title', 'ConvertKit: Product Form Setting');
-		$I->fillField('_regular_price', '10');
-
-		// Check that the ConvertKit Form/Tag/Sequence option exists.
-		$I->seeElementInDOM('#ckwc_subscription');
-		
-		// Set Name Format = Billing First Name
+		// Set dropdown field to a Form.
 		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
 
 		// Save
@@ -167,87 +141,5 @@ class ProductCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
-	}
-
-	/**
-	 * Test that selecting a Tag at Product level works when creating a WooCommerce Product.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function testProductTagSetting(AcceptanceTester $I)
-	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
-		// Navigate to Products > Add New.
-		$I->amOnAdminPage('post-new.php?post_type=product');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Define a Title and Price.
-		$I->fillField('post_title', 'ConvertKit: Product Tag Setting');
-		$I->fillField('_regular_price', '10');
-
-		// Check that the ConvertKit Form/Tag/Sequence option exists.
-		$I->seeElementInDOM('#ckwc_subscription');
-		
-		// Set Name Format = Billing First Name
-		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
-
-		// Save
-		$I->click('Publish');
-
-		// Wait until JS completes and redirects.
-		$I->waitForElement('.notice-success', 30);
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Confirm the setting saved.
-		$I->seeOptionIsSelected('#ckwc_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
-	}
-
-	/**
-	 * Test that selecting a Sequence at Product level works when creating a WooCommerce Product.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function testProductSequenceSetting(AcceptanceTester $I)
-	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
-		// Navigate to Products > Add New.
-		$I->amOnAdminPage('post-new.php?post_type=product');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Define a Title and Price.
-		$I->fillField('post_title', 'ConvertKit: Product Sequence Setting');
-		$I->fillField('_regular_price', '10');
-
-		// Check that the ConvertKit Form/Tag/Sequence option exists.
-		$I->seeElementInDOM('#ckwc_subscription');
-		
-		// Set Name Format = Billing First Name
-		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_SEQUENCE_NAME']);
-
-		// Save
-		$I->click('Publish');
-
-		// Wait until JS completes and redirects.
-		$I->waitForElement('.notice-success', 30);
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Confirm the setting saved.
-		$I->seeOptionIsSelected('#ckwc_subscription', $_ENV['CONVERTKIT_API_SEQUENCE_NAME']);
 	}
 }
