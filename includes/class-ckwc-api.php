@@ -2,14 +2,14 @@
 /**
  * ConvertKit API class.
  *
- * @package CWKC
+ * @package CKWC
  * @author ConvertKit
  */
 
 /**
  * ConvertKit API class
  *
- * @package CWKC
+ * @package CKWC
  * @author ConvertKit
  */
 class CKWC_API {
