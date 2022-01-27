@@ -13,36 +13,31 @@ Integrates WooCommerce with ConvertKit allowing customers to be automatically se
 
 == Description ==
 
-[ConvertKit](https://convertkit.com) makes it easy to capture more leads and sell more products by easily
-embedding email capture forms anywhere. This plugin makes it a little bit easier for those of us using WordPress
-blogs, by automatically appending a lead capture form to any post or page.
+[ConvertKit](https://convertkit.com) makes it easy to capture more leads and sell more products by easily embedding email capture forms anywhere.
+
+This Plugin integrates WooCommerce with ConvertKit, allowing customers and purchase data to be automatically sent to your ConvertKit account.
+
+Full plugin documentation is located [here](https://help.convertkit.com/en/articles/2502554-woocommerce-integration).
 
 == Installation ==
 
-1. Download and unzip the plugin.
-2. Upload `convertkit-for-woocommerce` to the `/wp-content/plugins/` directory.
-3. Activate the plugin through the 'Plugins' menu in WordPress.
+1. Upload the `convertkit-for-woocommerce` folder to the `/wp-content/plugins/` directory
+2. Active the ConvertKit for WooCommerce plugin through the 'Plugins' menu in WordPress
 
 == Configuration ==
-1. Visit the plugin settings page by clicking on the Settings link under the plugin's name.
-2. Enable or disable the plugin's functionality using the checkbox at the top of the page.
-3. Use the Subscribe Event drop down to choose on which event customers will be subscribed.
-4. Use the Display Opt-In Checkbox to subscribe customers only when they check box on Checkout page.
-5. Select the text to be displayed on the Checkout page using the Opt-In Checkbox Label field.
-6. Set the Opt-In Checkbox Default Stats as either Checked or Unchecked.
-7. Set the location of the Opt-In Checkbox as either under the Billing fields, or Order details.
-8. Enter your ConvertKit API key, which you can find [here](https://app.convertkit.com/account/edit), and save the settings
-9. Enter your ConvertKit API Secret, which you can find [here](https://app.convertkit.com/account/edit).
-10. Select the form, course, or tag customers will be subscribed to.
-11. Select the format of the name that will be sent to ConvertKit's 'name' field.
-12. Check the Purchases checkbox to send order data to ConvertKit's API
-13. Enable or disable a debug log with the Debug checkbox.
+
+1. Configure the plugin by navigating to WooCommerce > Settings > in the WordPress Administration Menu, then click the Integration tab > ConvertKit
+2. Enable the integration
+3. Enter your [API Key](https://app.convertkit.com/account_settings/advanced_settings) and API Secret, clicking Save changes
+4. Choose the Subscription Form, Tag or Sequence to subscribe Customers to when they complete the WooCommerce Checkout
+5. Configure other settings as necessary, depending on your requirements
+6. (Optional) Configure which Sequence, Form or Tag to subscribe a Customer to when editing individual WooCommerce Products
 
 == Frequently asked questions ==
 
 = Does this plugin require a paid service? =
 
-Yes, for it to work you must first have an account on ConvertKit.com
+No. You must first have an account on ConvertKit.com, but you do not have to use a paid plan!
 
 == Screenshots ==
 

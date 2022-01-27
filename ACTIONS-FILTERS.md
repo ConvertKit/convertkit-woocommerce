@@ -409,9 +409,9 @@ add_filter( 'convertkit_for_woocommerce_last_name', function( $last_name, $order
 							<td>string</td>
 							<td>First</td>
 						</tr><tr>
-							<td></td>
-							<td>mixed 	$fields 	Custom Fields (false|array).</td>
-							<td>mixed 	$fields 	Custom Fields (false|array).</td>
+							<td>$fields</td>
+							<td>mixed</td>
+							<td>Custom Fields (false|array).</td>
 						</tr>
 						</tbody>
 					</table><h4>Usage</h4>
@@ -483,9 +483,9 @@ do_action( 'convertkit_api_sequence_subscribe_success', function( $response, $se
 							<td>string</td>
 							<td>Email Address</td>
 						</tr><tr>
-							<td></td>
-							<td>mixed 	$fields 	Custom Fields (false|array).</td>
-							<td>mixed 	$fields 	Custom Fields (false|array).</td>
+							<td>$fields</td>
+							<td>mixed</td>
+							<td>Custom Fields (false|array).</td>
 						</tr>
 						</tbody>
 					</table><h4>Usage</h4>
