@@ -3,27 +3,27 @@
  * Tests various setting combinations for the "Display Opt-In Checkbox" and associated
  * options.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SettingAPIKeyAndSecretCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 	}
 
 	/**
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen when the Save Changes
 	 * button is pressed and no settings are specified at WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -38,8 +38,39 @@ class SettingAPIKeyAndSecretCest
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
-		// Confirm that a message is displayed telling the user that the API Credentials are invalid.
-		$I->seeInSource('Please provide a valid ConvertKit API Key.');
+		// Confirm that a message is displayed confirming settings saved.
+		$I->seeInSource('Your settings have been saved.');
+	}
+
+	/**
+	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
+	 * and a warning is displayed that the user needs to enter API credentials, when
+	 * enabling the integration at WooCommerce > Settings > Integration > ConvertKit.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testSaveBlankSettingsWithIntegrationEnabled(AcceptanceTester $I)
+	{
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable the Integration.
+		$I->checkOption('#woocommerce_ckwc_enabled');
+
+		// Complete API Fields.
+		$I->fillField('woocommerce_ckwc_api_key', '');
+		$I->fillField('woocommerce_ckwc_api_secret', '');
+
+		// Click the Save Changes button.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm that a message is displayed telling the user to enter their API Key.
+		$I->seeInSource('Please provide your ConvertKit API Key.');
 	}
 
 	/**
@@ -47,7 +78,7 @@ class SettingAPIKeyAndSecretCest
 	 * and no warning is displayed that the supplied API credentials are invalid, when
 	 * saving valid API credentials at WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -57,7 +88,7 @@ class SettingAPIKeyAndSecretCest
 		$I->setupConvertKitPlugin($I);
 
 		// Confirm that no message is displayed telling the user that the API Credentials are invalid.
-		$I->dontSeeInSource('Please provide a valid ConvertKit API Key.');
+		$I->dontSeeInSource('Your ConvertKit API Key appears to be invalid. Please double check the value.');
 
 		// Confirm that the Subscription dropdown option is displayed.
 		$I->seeElement('#woocommerce_ckwc_subscription');
@@ -71,7 +102,7 @@ class SettingAPIKeyAndSecretCest
 	 * and a warning is displayed that the supplied API credentials are invalid, when
 	 * saving invalid API credentials at WooCommerce > Settings > Integration > ConvertKit.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -79,6 +110,9 @@ class SettingAPIKeyAndSecretCest
 	{
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable the Integration.
+		$I->checkOption('#woocommerce_ckwc_enabled');
 
 		// Complete API Fields.
 		$I->fillField('woocommerce_ckwc_api_key', 'fakeApiKey');
@@ -95,6 +129,6 @@ class SettingAPIKeyAndSecretCest
 		$I->seeInField('woocommerce_ckwc_api_secret', 'fakeApiSecret');
 
 		// Confirm that a message is displayed telling the user that the API Credentials are invalid.
-		$I->seeInSource('Please provide a valid ConvertKit API Key.');
+		$I->seeInSource('Your ConvertKit API Key appears to be invalid. Please double check the value.');
 	}
 }

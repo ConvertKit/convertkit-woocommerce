@@ -32,6 +32,27 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to enter text into a jQuery Select2 Field, selecting the option that appears.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @param 	AcceptanceTester 	$I
+	 * @param 	string 				$container 	Field CSS Class / ID
+	 * @param 	string 				$value 		Field Value
+	 * @param 	string 				$ariaAttributeName 	Aria Attribute Name (aria-controls|aria-owns)
+	 */
+	public function fillSelect2Field($I, $container, $value, $ariaAttributeName = 'aria-controls')
+	{
+		$fieldID = $I->grabAttributeFrom($container, 'id');
+		$fieldName = str_replace('-container', '', str_replace('select2-', '', $fieldID));
+		$I->click('#'.$fieldID);
+		$I->waitForElementVisible('.select2-search__field[' . $ariaAttributeName . '="select2-' . $fieldName . '-results"]');
+		$I->fillField('.select2-search__field[' . $ariaAttributeName . '="select2-' . $fieldName . '-results"]', $value);
+		$I->waitForElementVisible('ul#select2-' . $fieldName . '-results li.select2-results__option--highlighted');
+		$I->pressKey('.select2-search__field[' . $ariaAttributeName . '="select2-' . $fieldName . '-results"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
+	}
+
+	/**
 	 * Helper method to close the Gutenberg "Welcome to the block editor" dialog, which
 	 * might show for each Page/Post test performed due to there being no persistence
 	 * remembering that the user dismissed the dialog.
@@ -61,14 +82,43 @@ class Acceptance extends \Codeception\Module
 		// Go to the Plugins screen in the WordPress Administration interface.
 		$I->amOnPluginsPage();
 
+		// Activate the Plugin.
+		$I->activatePlugin('convertkit-for-woocommerce');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('convertkit-for-woocommerce');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+	}
+
+	/**
+	 * Helper method to activate the WooCommerce Plugin and the ConvertKit for WooCommerce Plugin.
+	 * 
+	 * @since 	1.0.0
+	 */
+	public function activateWooCommerceAndConvertKitPlugins($I)
+	{
+		// Login as the Administrator
+		$I->loginAsAdmin();
+
+		// Go to the Plugins screen in the WordPress Administration interface.
+		$I->amOnPluginsPage();
+
 		// Activate the WooCommerce Plugin.
 		$I->activatePlugin('woocommerce');
 
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('woocommerce');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
 		// Activate the Plugin.
-		$I->activatePlugin('convertkit-woocommerce-addon');
+		$I->activatePlugin('convertkit-for-woocommerce');
 
 		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-woocommerce-addon');
+		$I->seePluginActivated('convertkit-for-woocommerce');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -76,7 +126,6 @@ class Acceptance extends \Codeception\Module
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
 		$I->amOnAdminPage('options-permalink.php');
-
 	}
 
 	/**
@@ -93,10 +142,10 @@ class Acceptance extends \Codeception\Module
 		$I->amOnPluginsPage();
 
 		// Deactivate the Plugin.
-		$I->deactivatePlugin('convertkit-woocommerce-addon');
+		$I->deactivatePlugin('convertkit-for-woocommerce');
 
 		// Check that the Plugin deactivated successfully.
-		$I->seePluginDeactivated('convertkit-woocommerce-addon');
+		$I->seePluginDeactivated('convertkit-for-woocommerce');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -180,9 +229,10 @@ class Acceptance extends \Codeception\Module
 		$productType = 'simple',
 		$displayOptIn = false,
 		$checkOptIn = false,
-		$formOrTag = false,
+		$pluginFormTagSequence = false,
 		$subscriptionEvent = false,
-		$sendPurchaseData = false
+		$sendPurchaseData = false,
+		$productFormTagSequence = false
 	)
 	{
 		// Define Opt In setting.
@@ -207,27 +257,33 @@ class Acceptance extends \Codeception\Module
 		// Save.
 		$I->click('Save changes');
 
-		// Define Form to subscribe the Customer to, now that the API credentials are saved and the Forms are listed.
-		if ($formOrTag) {
-			$I->selectOption('#woocommerce_ckwc_subscription', $formOrTag);
+		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are saved
+		// and the Forms, Tags and Sequences are listed.
+		if ($pluginFormTagSequence) {
+			$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
 			$I->click('Save changes');
 		}
 
 		// Create Product
 		switch ($productType) {
+			case 'zero':
+				$productName = 'Zero Value Product';
+				$productID = $I->wooCommerceCreateZeroValueProduct($I, $productFormTagSequence);
+				break;
+
 			case 'virtual':
 				$productName = 'Virtual Product';
-				$productID = $I->wooCommerceCreateVirtualProduct($I);
+				$productID = $I->wooCommerceCreateVirtualProduct($I, $productFormTagSequence);
+				break;
 
 			case 'simple':
-			default:
 				$productName = 'Simple Product';
-				$productID = $I->wooCommerceCreateSimpleProduct($I);
+				$productID = $I->wooCommerceCreateSimpleProduct($I, $productFormTagSequence);
 				break;
 		}
 
 		// Define Email Address for this Test.
-		$emailAddress = 'wordpress-' . $productID . '@convertkit.com';
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($emailAddress);
@@ -255,8 +311,12 @@ class Acceptance extends \Codeception\Module
 		// Wait until JS completes and redirects.
 		$I->waitForElement('.woocommerce-order-received', 10);
 		
-		// Confirm 'Order Received' is displayed
-		$I->seeInSource('Order received');
+		// Confirm order received is displayed.
+		// WooCommerce changed the default wording between 5.x and 6.x, so perform
+		// a few checks to be certain.
+		$I->seeElementInDOM('body.woocommerce-order-received');
+		$I->seeInSource('Order');
+		$I->seeInSource('received');
 		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
 
 		// Return data
@@ -294,7 +354,7 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @return 	int 	Product ID
 	 */
-	public function wooCommerceCreateSimpleProduct($I)
+	public function wooCommerceCreateSimpleProduct($I, $productFormTagSequence = false)
 	{
 		return $I->havePostInDatabase([
 			'post_type'		=> 'product',
@@ -319,6 +379,9 @@ class Acceptance extends \Codeception\Module
 				'_virtual' => 'no',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 			],
 		]);
 	}
@@ -330,7 +393,7 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @return 	int 	Product ID
 	 */
-	public function wooCommerceCreateVirtualProduct($I)
+	public function wooCommerceCreateVirtualProduct($I, $productFormTagSequence = false)
 	{
 		return $I->havePostInDatabase([
 			'post_type'		=> 'product',
@@ -355,6 +418,48 @@ class Acceptance extends \Codeception\Module
 				'_virtual' => 'yes',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
+			],
+		]);
+	}
+
+	/**
+	 * Creates a zero value 'Simple product' in WooCommerce that can be used for tests.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @return 	int 	Product ID
+	 */
+	public function wooCommerceCreateZeroValueProduct($I, $productFormTagSequence = false)
+	{
+		return $I->havePostInDatabase([
+			'post_type'		=> 'product',
+			'post_status'	=> 'publish',
+			'post_name' 	=> 'zero-value-product',
+			'post_title'	=> 'Zero Value Product',
+			'post_content'	=> 'Zero Value Product Content',
+			'meta_input' => [
+				'_backorders' => 'no',
+				'_download_expiry' => -1,
+				'_download_limit' => -1,
+				'_downloadable' => 'no',
+				'_manage_stock' => 'no',
+				'_price' => 0,
+				'_product_version' => '5.9.0',
+				'_regular_price' => 0,
+				'_sold_individually' => 'no',
+				'_stock' => null,
+				'_stock_status' => 'instock',
+				'_tax_class' => '',
+				'_tax_status' => 'taxable',
+				'_virtual' => 'no',
+				'_wc_average_rating' => 0,
+				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 			],
 		]);
 	}
@@ -402,6 +507,107 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Creates an Order as if the user were creating an Order through the WordPress Administration
+	 * interface.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @param 	AcceptanceTester 	$I
+	 * @param 	int 				$productID 		Product ID
+	 * @param 	string 				$productName 	Product Name
+	 * @param 	string 				$orderStatus 	Order Status
+	 * @param 	string 				$paymentMethod 	Payment Method
+	 * @return 	int 								Order ID
+	 */
+	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod)
+	{
+		// Login as Administrator.
+		$I->loginAsAdmin();
+
+		// Define Email Address for this Manual Order.
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '-' . $productID . '@convertkit.com';
+
+		// Create User for this Manual Order.
+		$userID = $I->haveUserInDatabase('test', 'subscriber', [
+			'user_email' => $emailAddress,
+		]);
+
+		// Load New Order screen.
+		$I->amOnAdminPage('post-new.php?post_type=shop_order');
+
+		// Check that no WooCommerce, PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Define Order Status.
+		$I->selectOption('#order_status', $orderStatus);
+
+		// Define User and Payment Method.
+		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress, 'aria-owns');
+		$I->selectOption('#_payment_method', $paymentMethod);
+
+		// Add Product.
+		$I->click('button.add-line-item');
+		$I->click('button.add-order-item');
+		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName, 'aria-owns');
+		$I->click('#btn-ok');
+
+		// Create Order.
+		$I->click('button.save_order');
+
+		// Check that no WooCommerce, PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Return.
+		return [
+			'email_address' => $emailAddress,
+			'product_id' => $productID,
+			'order_id' => (int) filter_var($I->grabTextFrom('h2.woocommerce-order-data__heading'), FILTER_SANITIZE_NUMBER_INT),
+		];
+	}
+
+	/**
+	 * Check the given Order ID contains an Order Note with the given text.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	int 			 $orderID 		Order ID
+	 * @param 	string 			 $noteText		Order Note Text
+	 */ 	
+	public function wooCommerceOrderNoteExists($I, $orderID, $noteText)
+	{
+		// Login as Administrator.
+		$I->loginAsAdmin();
+
+		// Load Edit Order screen.
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Confirm note text exists.
+		$I->seeInSource($noteText);
+	}
+
+	/**
+	 * Check the given Order ID does not contain an Order Note with the given text.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	int 			 $orderID 		Order ID
+	 * @param 	string 			 $noteText		Order Note Text
+	 */ 	
+	public function wooCommerceOrderNoteDoesNotExist($I, $orderID, $noteText)
+	{
+		// Login as Administrator.
+		$I->loginAsAdmin();
+
+		// Load Edit Order screen.
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Confirm note text does not exist.
+		$I->dontSeeInSource($noteText);
+	}
+
+	/**
 	 * Check the given email address exists as a subscriber on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
@@ -437,21 +643,56 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Check the given email address and name exists as a subscriber on ConvertKit.
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	string 			$name 			Name
+	 */ 	
+	public function apiCheckSubscriberEmailAndNameExists($I, $emailAddress, $name)
+	{
+		// Run request.
+		$results = $this->apiRequest('subscribers', 'GET', [
+			'email_address' => $emailAddress,
+		]);
+
+		// Check at least one subscriber was returned and it matches the email address.
+		$I->assertGreaterThan(0, $results['total_subscribers']);
+		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
+
+		// Check that the first_name matches the given name.
+		$I->assertEquals($name, $results['subscribers'][0]['first_name']);
+	}
+
+	/**
 	 * Check the given order ID exists as a purchase on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	int 			$orderID 		Order ID
 	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	int 			$productID 		Product ID
 	 */ 
-	public function apiCheckPurchaseExists($I, $orderID, $emailAddress)
+	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
 		// Run request.
-		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiGetPurchases(), $orderID);
 
 		// Check data returned for this Order ID.
-		$I->assertArrayHasKey('id', $results);
-		$I->assertEquals($orderID, $results['id']);
-		$I->assertEquals($emailAddress, $results['email_address']);
+		$I->assertIsArray($purchase);
+		$I->assertEquals($orderID, $purchase['transaction_id']);
+		$I->assertEquals($emailAddress, $purchase['email_address']);
+
+		// Iterate through the array of products, to find a pid matching the Product ID.
+		$productExistsInPurchase = false;
+		foreach ($purchase['products'] as $product) {
+			if ($productID == $product['pid']) {
+				$productExistsInPurchase = true;
+				break;
+			}
+		}
+
+		// Check that the Product exists in the purchase data.
+		$I->assertTrue($productExistsInPurchase);
 	}
 
 	/**
@@ -459,14 +700,85 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	int 			$orderID 		Order ID
+	 * @param 	string 			$emailAddress 	Email Address
 	 */ 
-	public function apiCheckPurchaseDoesNotExist($I, $orderID)
+	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
 	{
 		// Run request.
-		$results = $this->apiRequest('purchases/' . $orderID, 'GET');
+		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiGetPurchases(), $orderID);
 
-		// Check no data returned for this Order ID.
-		$I->assertCount(0, $results);
+		// Check data not returned for this Order ID.
+		// We check the email address, because each test will reset, meaning the Order ID will match that
+		// of a previous test, and therefore the API will return data from an existing test.
+		$I->assertIsArray($purchase);
+		$I->assertNotEquals($emailAddress, $purchase['email_address']);
+	}
+
+	/**
+	 * Returns a Purchase from the /purchases API endpoint based on the given Order ID (transaction_id).
+	 * 
+	 * We cannot use /purchases/{id} as {id} is the ConvertKit ID, not the WooCommerce Order ID (which
+	 * is stored in the transaction_id).
+	 * 
+	 * @param 	array 	$purchases 	Purchases Data
+	 * @param 	int 	$orderID 	Order ID
+	 * @return 	array
+	 */
+	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
+	{
+		// Bail if no purchases exist.
+		if (!isset($purchases)) {
+			return [
+				'id' => 0,
+				'order_id' => 0,
+				'email_address' => 'no',
+			];
+		}
+
+		// Iterate through purchases to find one where the transaction ID matches the order ID.
+		foreach ($purchases as $purchase) {
+			// Skip if order ID does not match
+			if ($purchase['transaction_id'] != $orderID) {
+				continue;
+			}
+
+			return $purchase;
+		}
+
+		// No purchase exists with the given order ID. Return a blank array.
+		return [
+			'id' => 0,
+			'order_id' => 0,
+			'email_address' => 'no2',
+		];
+	}
+
+	/**
+	 * Returns all purchases from the API.
+	 * 
+	 * @return 	array
+	 */
+	public function apiGetPurchases()
+	{
+		// Get first page of purchases.
+		$purchases = $this->apiRequest('purchases', 'GET');
+		$data = $purchases['purchases'];
+		$totalPages = $purchases['total_pages'];
+
+		if ($totalPages == 1) {
+			return $data;
+		}
+
+		// Get additional pages of purchases.
+		for ($page = 2; $page <= $totalPages; $page++) {
+			$purchases = $this->apiRequest('purchases', 'GET', [
+				'page' => $page,
+			]);
+
+			$data = array_merge($data, $purchases['purchases']);
+		}
+
+		return $data;
 	}
 
 	/**

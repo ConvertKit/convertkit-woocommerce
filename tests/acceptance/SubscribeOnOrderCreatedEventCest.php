@@ -3,21 +3,21 @@
  * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form
  * or Tag on the Order Created event when an order is placed through WooCommerce.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SubscribeOnOrderCreatedEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
 		// Activate Plugin.
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
@@ -33,7 +33,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -64,7 +64,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -94,7 +94,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -126,7 +126,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -158,7 +158,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -189,7 +189,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -220,7 +220,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -251,7 +251,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -281,7 +281,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -313,7 +313,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -345,7 +345,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -376,7 +376,7 @@ class SubscribeOnOrderCreatedEventCest
 	 * - The Customer purchases a 'virtual' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */

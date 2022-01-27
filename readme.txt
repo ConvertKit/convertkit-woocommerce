@@ -1,10 +1,11 @@
 === ConvertKit for WooCommerce ===
-Contributors: nathanbarry, growdev, travisnorthcutt
+Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
-Requires at least: 3.6
-Tested up to: 5.4.0
-Stable tag: 1.4.1
+Requires at least: 5.0
+Tested up to: 5.9
+Requires PHP: 5.6.20
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +50,24 @@ Yes, for it to work you must first have an account on ConvertKit.com
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.4.2 2022-01-28
+* Added: Testing and compatibility for WooCommerce 6.1
+* Added: PHP 8.x compatibility
+* Added: Developers: Action and filter hooks.  See https://github.com/ConvertKit/convertkit-woocommerce/blob/1.4.2/ACTIONS-FILTERS.md
+* Added: Localization and .pot file for translators
+* Fix: Settings: Only show conditional settings if other settings enabled/disabled
+* Fix: Settings: API Key and Secret: Don't need to save settings twice for API Key and Secret to work
+* Fix: Settings: Improved setting descriptions
+* Fix: Settings: Improved order and layout of settings to be more logical
+* Fix: Settings: Subscription: Renamed Courses to Sequences on Subscription dropdown option
+* Fix: Settings: Purchase Data: If enabled, always send purchase data to ConvertKit, regardless of how the order is created or the payment method used
+* Fix: Settings: Purchase Data: Once purchase data is sent to ConvertKit, don't keep sending it when e.g. the order's status changes
+* Fix: WooCommerce: Order: Don't subscribe a Customer a second time if an existing Order's status changes back to the Plugin's Subscribe Event
+* Fix: WooCommerce: Products: Renamed Courses to Sequences on Subscription dropdown option
+* Fix: WooCommerce: Checkout: Improved performance by not requesting ConvertKit Forms, Tags and Sequences from the API when not needed
+* Fix: Performance: Cache Forms, Tags and Sequences from ConvertKit account for longer than 5 minutes, to prevent API timeouts and slow loading in the WordPress Administration
+
 ### 1.4.1  2020-06-06
 * Protect against missing products on order items
 
@@ -59,7 +78,6 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Add support for sending cash on delivery and check payment purchase info to ConvertKit
 
 ### 1.2.0  2019-07-15
-
 * Improve plugin's translation readiness
 * Make plugin settings link work with other WooCommerce addons
 * Correct product metabox title
@@ -68,41 +86,32 @@ Yes, for it to work you must first have an account on ConvertKit.com
 * Add integration name to purchase API requests
 
 ### 1.1.0  2019-03-15
-
 * Add WooCommerce order note when a customer is subscribed to ConvertKit
 
 ### 1.0.6  2018-09-10
-
 * Fix for cart item_id being sent to ConvertKit's API instead of product_id. This was causing product purchases to be seen as unique instead of grouped.
 
 ### 1.0.5  2018-07-24
-
 * Added ability for WooCommerce purchase data to be sent to Seva's API
 * See: http://developers.convertkit.com/#purchases
 * Updated Installation and Configuration sections of this readme.
 
 ### 1.0.4  2017-08-09
-
 * Verified compatibility with WooCommerce 3.1
 * Code cleanup.
 
 ### 1.0.3
-
 * Added Settings plugin link.
 * Added a setting to allow admin to decide if First Name, Last Name, or both are sent to CK's 'name' field.
 
 ### 1.0.2
-
 * Added logger to help debug connectivity issues.
 
 ### 1.0.1
-
 * Don't use API when setting transient options
 
 ### 1.0.0
-
 * Initial release
 
 == Upgrade notice ==
 
-none

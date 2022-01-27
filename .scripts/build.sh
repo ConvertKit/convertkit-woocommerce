@@ -2,7 +2,7 @@
 php create-actions-filters-docs.php
 
 # Generate .pot file
-php -n $(which wp) i18n make-pot ../ ../languages/convertkit.pot
+php -n $(which wp) i18n make-pot ../ ../languages/woocommerce-convertkit.pot
 
 # Build ZIP file
 rm ../convertkit-for-woocommerce.zip

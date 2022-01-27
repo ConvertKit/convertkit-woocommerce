@@ -2,27 +2,31 @@
 /**
  * Tests for the Enable/Disable option on the WooCommerce Integration.
  * 
- * @since 	1.9.6
+ * @since 	1.4.2
  */
 class SettingEnabledDisabledCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
 	}
 
 	/**
 	 * Test that the integration doesn't perform any expected actions when disabled at
-	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * WooCommerce > Settings > Integration > ConvertKit, and that WooCommerce Checkout
+	 * works as expected.
 	 * 
-	 * @since 	1.9.6
+	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -34,8 +38,11 @@ class SettingEnabledDisabledCest
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
 		
-		// Click Place Order button.
-		$I->click('#place_order');
+		// Click Place order button.
+		$I->click('Place order');
+
+		// Wait until JS completes and redirects.
+		$I->waitForElement('.woocommerce-order-received', 10);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);

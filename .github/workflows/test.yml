@@ -18,7 +18,7 @@ jobs:
     # The base folder will always be /home/runner/work/github-repo-name/github-repo-name
     env:
       ROOT_DIR: /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress
-      PLUGIN_DIR: /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress/wp-content/plugins/convertkit
+      PLUGIN_DIR: /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress/wp-content/plugins/convertkit-woocommerce
       DB_NAME: test
       DB_USER: root
       DB_PASS: root
@@ -26,6 +26,8 @@ jobs:
       INSTALL_PLUGINS: "disable-welcome-messages-and-tips woocommerce" # Don't include this repository's Plugin here.
       CONVERTKIT_API_KEY: ${{ secrets.CONVERTKIT_API_KEY }} # ConvertKit API Key, stored in the repository's Settings > Secrets
       CONVERTKIT_API_SECRET: ${{ secrets.CONVERTKIT_API_SECRET }} # ConvertKit API Secret, stored in the repository's Settings > Secrets
+      CONVERTKIT_API_KEY_NO_DATA: ${{ secrets.CONVERTKIT_API_KEY_NO_DATA }} # ConvertKit API Key for ConvertKit account with no data, stored in the repository's Settings > Secrets
+      CONVERTKIT_API_SECRET_NO_DATA: ${{ secrets.CONVERTKIT_API_SECRET_NO_DATA }} # ConvertKit API Secret for ConvertKit account with no data, stored in the repository's Settings > Secrets
 
     # Defines the WordPress and PHP Versions matrix to run tests on
     # WooCommerce 5.9.0 requires WordPress 5.6 or greater, so we do not test on earlier versions
@@ -33,8 +35,9 @@ jobs:
     # For PHP, make sure that an nginx configuration file exists for the required PHP version in this repository at tests/nginx/php-x.x.conf
     strategy:
       matrix:
-        wp-versions: [ '5.8.2' ] #[ '5.6.6', '5.7.4', '5.8.2' ]
+        wp-versions: [ '5.9' ] #[ '5.6.7', '5.7.5', '5.8.3', '5.9' ]
         php-versions: [ '7.3', '7.4', '8.0' ] #[ '7.3', '7.4', '8.0', '8.1' ]
+      max-parallel: 1 # Run one at a time, otherwise reading API data after tests results in false positives due to concurrency
 
     # Steps to install, configure and run tests
     steps:
@@ -57,6 +60,12 @@ jobs:
 
       - name: Extract WordPress
         run: tar xfz wordpress-${{ matrix.wp-versions }}.tar.gz
+
+      # Checkout (copy) this repository's Plugin to this VM.
+      - name: Checkout Plugin
+        uses: actions/checkout@v2
+        with:
+          path: ${{ env.PLUGIN_DIR }}
 
       - name: Check PHP Version
         run: php -v
@@ -143,6 +152,8 @@ jobs:
 
             CONVERTKIT_API_KEY=${{ env.CONVERTKIT_API_KEY }}
             CONVERTKIT_API_SECRET=${{ env.CONVERTKIT_API_SECRET }}
+            CONVERTKIT_API_KEY_NO_DATA=${{ env.CONVERTKIT_API_KEY_NO_DATA }}
+            CONVERTKIT_API_SECRET_NO_DATA=${{ env.CONVERTKIT_API_SECRET_NO_DATA }}
           write-mode: append
 
       # Installs wp-browser, Codeception, PHP CodeSniffer and anything else needed to run tests.
@@ -163,6 +174,16 @@ jobs:
       # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
       - name: Set chown for Plugin Directory
         run: sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
+
+      # This ensures WooCommerce log files can be written to.
+      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
+      - name: Set chmod for WooCommerce Logs Directory
+        run: sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
+
+      # This ensures WooCommerce log files can be written to.
+      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
+      - name: Set chown for WooCommerce Logs Directory
+        run: sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
 
       # We run these before the main tests, as typically CodeSniffer is fast. If there's a failure, we can tell
       # the user sooner.
@@ -190,11 +211,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: /home/runner/work/convertkit-wordpress/convertkit-wordpress/wordpress/wp-content/plugins/convertkit/tests/_output/
-
-      - name: Upload Plugin Log File to Artifact
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: log
-          path: /home/runner/work/convertkit-wordpress/convertkit-wordpress/wordpress/wp-content/plugins/convertkit/log.txt
+          path: ${{ env.PLUGIN_DIR }}/tests/_output/

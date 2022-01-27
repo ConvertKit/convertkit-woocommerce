@@ -1,0 +1,325 @@
+# Copyright (C) 2022 ConvertKit
+# This file is distributed under the same license as the ConvertKit for WooCommerce plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: ConvertKit for WooCommerce 1.4.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-01-27T16:49:04+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: woocommerce-convertkit\n"
+
+#. Plugin Name of the plugin
+msgid "ConvertKit for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.convertkit.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account."
+msgstr ""
+
+#. Author of the plugin
+#: includes/class-ckwc-integration.php:27
+msgid "ConvertKit"
+msgstr ""
+
+#: admin/class-ckwc-admin-plugin.php:42
+msgid "Settings"
+msgstr ""
+
+#: admin/class-ckwc-admin-product.php:50
+msgid "ConvertKit Integration"
+msgstr ""
+
+#: includes/class-ckwc-api.php:254
+#: includes/class-ckwc-api.php:258
+msgid "No sequences exist in ConvertKit. Visit your ConvertKit account and create your first sequence."
+msgstr ""
+
+#: includes/class-ckwc-api.php:346
+#: includes/class-ckwc-api.php:350
+msgid "No tags exist in ConvertKit. Visit your ConvertKit account and create your first tag."
+msgstr ""
+
+#. translators: Email Address
+#: includes/class-ckwc-api.php:441
+msgid "No subscriber(s) exist in ConvertKit matching the email address %s."
+msgstr ""
+
+#. translators: Subscriber ID
+#: includes/class-ckwc-api.php:487
+msgid "No subscriber exist in ConvertKit matching the subscriber ID %s."
+msgstr ""
+
+#. translators: Subscriber ID
+#: includes/class-ckwc-api.php:533
+msgid "No tags exist in ConvertKit for the subscriber ID %s."
+msgstr ""
+
+#: includes/class-ckwc-api.php:638
+#: includes/class-ckwc-api.php:642
+msgid "No custom fields exist in ConvertKit. Visit your ConvertKit account and create your first custom field."
+msgstr ""
+
+#. translators: API Error Message
+#: includes/class-ckwc-api.php:878
+msgid "ConvertKit: %s"
+msgstr ""
+
+#: includes/class-ckwc-api.php:1016
+msgid "No forms exist in ConvertKit. Visit your ConvertKit account and create your first form."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:28
+msgid "Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:55
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:57
+msgid "Enable ConvertKit integration"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:63
+msgid "API Key"
+msgstr ""
+
+#. translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup
+#: includes/class-ckwc-integration.php:69
+#: includes/class-ckwc-integration.php:86
+msgid "%1$s Required for proper plugin function. %2$s Don't have a ConvertKit account? %3$s"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:70
+msgid "Get your ConvertKit API Key."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:72
+#: includes/class-ckwc-integration.php:89
+msgid "Sign up here."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:80
+msgid "API Secret"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:87
+msgid "Get your ConvertKit API Secret."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:99
+msgid "Subscribe Event"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:102
+msgid "When should customers be subscribed?"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:105
+msgid "Order Created"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:106
+msgid "Order Processing"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:107
+msgid "Order Completed"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:114
+msgid "Subscription"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:117
+msgid "The ConvertKit Form, Tag or Sequence to subscribe Customers to."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:123
+msgid "Name Format"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:126
+msgid "How should the customer name be sent to ConvertKit?"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:129
+msgid "Billing First Name"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:130
+msgid "Billing Last Name"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:131
+msgid "Billing First Name + Billing Last Name"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:140
+msgid "Opt-In Checkbox"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:141
+msgid "Display an Opt-In checkbox on checkout"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:144
+msgid ""
+"If enabled, customers will <strong>only</strong> be subscribed to the chosen Forms, Tags and Sequences if they check the \"Opt-In\" checkbox at checkout.<br />\n"
+"\t\t\t\t\t\t\t\t\t  If disabled, customers will <strong>always</strong> be subscribed to the chosen Forms, Tags and Sequences at checkout."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:155
+msgid "Opt-In Checkbox: Label"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:157
+msgid "I want to subscribe to the newsletter"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:158
+msgid "Optional (only used if the above field is checked): Customize the label next to the opt-in checkbox."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:165
+msgid "Opt-In Checkbox: Default Status"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:168
+msgid "The default state of the opt-in checkbox."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:171
+msgid "Checked"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:172
+msgid "Unchecked"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:179
+msgid "Opt-In Checkbox: Display Location"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:182
+msgid "Where to display the opt-in checkbox on the checkout page (under Billing Info or Order Info)."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:185
+msgid "Billing"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:186
+msgid "Order"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:195
+msgid "Purchase Data"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:196
+msgid "Send purchase data to ConvertKit."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:199
+msgid ""
+"If enabled, the customer's order data will be sent to ConvertKit. Their email address will always be subscribed to ConvertKit, <strong>regardless of the Customer's opt in status.</strong><br />\n"
+"\t\t\t\t\t\t\t\t\t  If disabled, no order data will be sent to ConvertKit."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:212
+msgid "Debug"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:214
+msgid "Write data to a log file"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:219
+msgid "View Log File"
+msgstr ""
+
+#: includes/class-ckwc-integration.php:349
+msgid "Please provide your ConvertKit API Key."
+msgstr ""
+
+#: includes/class-ckwc-integration.php:364
+msgid "Your ConvertKit API Key appears to be invalid. Please double check the value."
+msgstr ""
+
+#. translators: %1$s: Form Name, %2$s: Form ID
+#: includes/class-ckwc-order.php:221
+msgid "[ConvertKit] Customer subscribed to the Form: %1$s [%2$s]"
+msgstr ""
+
+#. translators: %1$s: Tag Name, %2$s: Tag ID
+#: includes/class-ckwc-order.php:238
+msgid "[ConvertKit] Customer subscribed to the Tag: %1$s [%2$s]"
+msgstr ""
+
+#. translators: %1$s: Sequence Name, %2$s: Sequence ID
+#: includes/class-ckwc-order.php:256
+msgid "[ConvertKit] Customer subscribed to the Sequence: %1$s [%2$s]"
+msgstr ""
+
+#. translators: %1$s: Error Code, %2$s: Error Message
+#: includes/class-ckwc-order.php:360
+msgid "[ConvertKit] Send Purchase Data Error: %1$s %2$s"
+msgstr ""
+
+#: includes/class-ckwc-order.php:373
+msgid "[ConvertKit] Purchase Data sent successfully"
+msgstr ""
+
+#. translators: %1$s: PHP class name
+#: includes/class-wp-ckwc.php:185
+msgid "ConvertKit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>"
+msgstr ""
+
+#: includes/class-wp-ckwc.php:195
+msgid "ConvertKit for WooCommerce Error"
+msgstr ""
+
+#. translators: %1$s: Post Type Singular Name, %2$s: Link to Integration Settings
+#: views/backend/product/disabled.php:15
+msgid "To configure the ConvertKit Form, Tag or Sequence to subscribe Customers to who purchase this %1$s, %2$s and enter a valid API Key and Secret."
+msgstr ""
+
+#: views/backend/product/disabled.php:17
+msgid "enable the ConvertKit WooCommerce integration"
+msgstr ""
+
+#: views/backend/product/meta-box.php:14
+msgid "The ConvertKit Form, Tag or Sequence to subscribe Customers to who purchase this Product."
+msgstr ""
+
+#: views/backend/settings/subscription-disabled.php:17
+msgid "To select the Form, Tag or Sequence to subscribe Customers to, specify a valid API Key and Secret, and click Save changes."
+msgstr ""
+
+#: views/backend/subscription-dropdown-field.php:13
+msgid "Select a subscription option..."
+msgstr ""
+
+#: views/backend/subscription-dropdown-field.php:19
+msgid "Sequences"
+msgstr ""
+
+#: views/backend/subscription-dropdown-field.php:34
+msgid "Forms"
+msgstr ""
+
+#: views/backend/subscription-dropdown-field.php:48
+msgid "Tags"
+msgstr ""
