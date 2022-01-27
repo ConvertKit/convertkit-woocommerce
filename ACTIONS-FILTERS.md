@@ -79,7 +79,7 @@ add_filter( 'convertkit_for_woocommerce_checkout_add_opt_in_checkbox', function(
 </pre>
 <h3 id="convertkit_api_get_timeout">
 						convertkit_api_get_timeout
-						<code>includes/class-ckwc-api.php::1027</code>
+						<code>includes/class-ckwc-api.php::1157</code>
 					</h3><h4>Overview</h4>
 						<p>Defines the maximum time to allow the API request to run.</p><h4>Parameters</h4>
 					<table>
@@ -381,7 +381,7 @@ add_filter( 'convertkit_for_woocommerce_last_name', function( $last_name, $order
 					</tbody>
 				</table><h3 id="convertkit_api_form_subscribe_success">
 						convertkit_api_form_subscribe_success
-						<code>includes/class-ckwc-api.php::186</code>
+						<code>includes/class-ckwc-api.php::193</code>
 					</h3><h4>Overview</h4>
 						<p>Runs actions immediately after the email address was successfully subscribed to the form.</p><h4>Parameters</h4>
 					<table>
@@ -408,17 +408,21 @@ add_filter( 'convertkit_for_woocommerce_last_name', function( $last_name, $order
 							<td>$first_name</td>
 							<td>string</td>
 							<td>First</td>
+						</tr><tr>
+							<td></td>
+							<td>mixed 	$fields 	Custom Fields (false|array).</td>
+							<td>mixed 	$fields 	Custom Fields (false|array).</td>
 						</tr>
 						</tbody>
 					</table><h4>Usage</h4>
 <pre>
-do_action( 'convertkit_api_form_subscribe_success', function( $response, $form_id, $email, $first_name ) {
+do_action( 'convertkit_api_form_subscribe_success', function( $response, $form_id, $email, $first_name, $fields ) {
 	// ... your code here
-}, 10, 4 );
+}, 10, 5 );
 </pre>
 <h3 id="convertkit_api_sequence_subscribe_success">
 						convertkit_api_sequence_subscribe_success
-						<code>includes/class-ckwc-api.php::295</code>
+						<code>includes/class-ckwc-api.php::309</code>
 					</h3><h4>Overview</h4>
 						<p>Runs actions immediately after the email address was successfully subscribed to the sequence.</p><h4>Parameters</h4>
 					<table>
@@ -441,17 +445,21 @@ do_action( 'convertkit_api_form_subscribe_success', function( $response, $form_i
 							<td>$email</td>
 							<td>string</td>
 							<td>Email Address</td>
+						</tr><tr>
+							<td>$fields</td>
+							<td>mixed</td>
+							<td>Custom Fields (false|array)</td>
 						</tr>
 						</tbody>
 					</table><h4>Usage</h4>
 <pre>
-do_action( 'convertkit_api_sequence_subscribe_success', function( $response, $sequence_id, $email ) {
+do_action( 'convertkit_api_sequence_subscribe_success', function( $response, $sequence_id, $email, $fields ) {
 	// ... your code here
-}, 10, 3 );
+}, 10, 4 );
 </pre>
 <h3 id="convertkit_api_tag_subscribe_success">
 						convertkit_api_tag_subscribe_success
-						<code>includes/class-ckwc-api.php::380</code>
+						<code>includes/class-ckwc-api.php::401</code>
 					</h3><h4>Overview</h4>
 						<p>Runs actions immediately after the email address was successfully subscribed to the tag.</p><h4>Parameters</h4>
 					<table>
@@ -474,17 +482,21 @@ do_action( 'convertkit_api_sequence_subscribe_success', function( $response, $se
 							<td>$email</td>
 							<td>string</td>
 							<td>Email Address</td>
+						</tr><tr>
+							<td></td>
+							<td>mixed 	$fields 	Custom Fields (false|array).</td>
+							<td>mixed 	$fields 	Custom Fields (false|array).</td>
 						</tr>
 						</tbody>
 					</table><h4>Usage</h4>
 <pre>
-do_action( 'convertkit_api_tag_subscribe_success', function( $response, $tag_id, $email ) {
+do_action( 'convertkit_api_tag_subscribe_success', function( $response, $tag_id, $email, $fields ) {
 	// ... your code here
-}, 10, 3 );
+}, 10, 4 );
 </pre>
 <h3 id="convertkit_api_form_unsubscribe_success">
 						convertkit_api_form_unsubscribe_success
-						<code>includes/class-ckwc-api.php::580</code>
+						<code>includes/class-ckwc-api.php::601</code>
 					</h3><h4>Overview</h4>
 						<p>Runs actions immediately after the email address was successfully unsubscribed.</p><h4>Parameters</h4>
 					<table>
@@ -513,7 +525,7 @@ do_action( 'convertkit_api_form_unsubscribe_success', function( $response, $emai
 </pre>
 <h3 id="convertkit_api_purchase_create_success">
 						convertkit_api_purchase_create_success
-						<code>includes/class-ckwc-api.php::669</code>
+						<code>includes/class-ckwc-api.php::735</code>
 					</h3><h4>Overview</h4>
 						<p>Runs actions immediately after the purchase data address was successfully created.</p><h4>Parameters</h4>
 					<table>

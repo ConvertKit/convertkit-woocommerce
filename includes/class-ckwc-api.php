@@ -148,9 +148,10 @@ class CKWC_API {
 	 * @param   string $form_id    Form ID.
 	 * @param   string $email      Email Address.
 	 * @param   string $first_name First Name.
+	 * @param   mixed  $fields     Custom Fields (false|array).
 	 * @return  mixed               WP_Error | array
 	 */
-	public function form_subscribe( $form_id, $email, $first_name ) {
+	public function form_subscribe( $form_id, $email, $first_name, $fields = false ) {
 
 		// Backward compat. if $email is an array comprising of email and name keys.
 		if ( is_array( $email ) ) {
@@ -161,15 +162,20 @@ class CKWC_API {
 
 		$this->log( 'API: form_subscribe(): [ form_id: ' . $form_id . ', email: ' . $email . ', first_name: ' . $first_name . ' ]' );
 
-		$response = $this->post(
-			'forms/' . $form_id . '/subscribe',
-			array(
-				'api_secret' => $this->api_secret,
-				'email'      => $email,
-				'first_name' => $first_name,
-			)
+		// Build request parameters.
+		$params = array(
+			'api_key'    => $this->api_key,
+			'email'      => $email,
+			'first_name' => $first_name,
 		);
+		if ( $fields ) {
+			$params['fields'] = $fields;
+		}
 
+		// Send request.
+		$response = $this->post( 'forms/' . $form_id . '/subscribe', $params );
+
+		// Bail if an error occured.
 		if ( is_wp_error( $response ) ) {
 			$this->log( 'API: form_subscribe(): Error: ' . $response->get_error_message() );
 		}
@@ -183,8 +189,9 @@ class CKWC_API {
 		 * @param   string  $form_id    Form ID
 		 * @param   string  $email      Email Address
 		 * @param   string  $first_name First Name
+		 * @param   mixed   $fields     Custom Fields (false|array).
 		 */
-		do_action( 'convertkit_api_form_subscribe_success', $response, $form_id, $email, $first_name );
+		do_action( 'convertkit_api_form_subscribe_success', $response, $form_id, $email, $first_name, $fields );
 
 		return $response;
 
@@ -266,20 +273,26 @@ class CKWC_API {
 	 *
 	 * @param   string $sequence_id Sequence ID.
 	 * @param   string $email       Email Address.
+	 * @param   mixed  $fields      Custom Fields (false|array).
 	 * @return  mixed               WP_Error | array
 	 */
-	public function sequence_subscribe( $sequence_id, $email ) {
+	public function sequence_subscribe( $sequence_id, $email, $fields = false ) {
 
 		$this->log( 'API: sequence_subscribe(): [ sequence_id: ' . $sequence_id . ', email: ' . $email . ']' );
 
-		$response = $this->post(
-			'sequences/' . $sequence_id . '/subscribe',
-			array(
-				'api_key' => $this->api_key,
-				'email'   => $email,
-			)
+		// Build request parameters.
+		$params = array(
+			'api_key' => $this->api_key,
+			'email'   => $email,
 		);
+		if ( $fields ) {
+			$params['fields'] = $fields;
+		}
 
+		// Send request.
+		$response = $this->post( 'sequences/' . $sequence_id . '/subscribe', $params );
+
+		// Bail if an error occured.
 		if ( is_wp_error( $response ) ) {
 			$this->log( 'API: sequence_subscribe(): Error: ' . $response->get_error_message() );
 		}
@@ -292,8 +305,9 @@ class CKWC_API {
 		 * @param   array   $response       API Response
 		 * @param   string  $sequence_id    Sequence ID
 		 * @param   string  $email          Email Address
+		 * @param   mixed   $fields         Custom Fields (false|array)
 		 */
-		do_action( 'convertkit_api_sequence_subscribe_success', $response, $sequence_id, $email );
+		do_action( 'convertkit_api_sequence_subscribe_success', $response, $sequence_id, $email, $fields );
 
 		return $response;
 
@@ -351,20 +365,26 @@ class CKWC_API {
 	 *
 	 * @param   string $tag_id     Tag ID.
 	 * @param   string $email      Email Address.
+	 * @param   mixed  $fields     Custom Fields (false|array).
 	 * @return  mixed               WP_Error | array
 	 */
-	public function tag_subscribe( $tag_id, $email ) {
+	public function tag_subscribe( $tag_id, $email, $fields = false ) {
 
 		$this->log( 'API: tag_subscribe(): [ tag_id: ' . $tag_id . ', email: ' . $email . ']' );
 
-		$response = $this->post(
-			'tags/' . $tag_id . '/subscribe',
-			array(
-				'api_key' => $this->api_key,
-				'email'   => $email,
-			)
+		// Build request parameters.
+		$params = array(
+			'api_key' => $this->api_key,
+			'email'   => $email,
 		);
+		if ( $fields ) {
+			$params['fields'] = $fields;
+		}
 
+		// Send request.
+		$response = $this->post( 'tags/' . $tag_id . '/subscribe', $params );
+
+		// Bail if an error occured.
 		if ( is_wp_error( $response ) ) {
 			$this->log( 'API: tag_subscribe(): Error: ' . $response->get_error_message() );
 		}
@@ -377,8 +397,9 @@ class CKWC_API {
 		 * @param   array   $response   API Response
 		 * @param   string  $tag_id     Tag ID
 		 * @param   string  $email      Email Address
+		 * @param   mixed   $fields     Custom Fields (false|array).
 		 */
-		do_action( 'convertkit_api_tag_subscribe_success', $response, $tag_id, $email );
+		do_action( 'convertkit_api_tag_subscribe_success', $response, $tag_id, $email, $fields );
 
 		return $response;
 
@@ -585,7 +606,52 @@ class CKWC_API {
 	}
 
 	/**
-	 * Get HTMl from ConvertKit for the given Legacy Form ID.
+	 * Gets all custom fields from the API.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @return  mixed   WP_Error | array
+	 */
+	public function get_custom_fields() {
+
+		$this->log( 'API: get_custom_fields()' );
+
+		$custom_fields = array();
+
+		// Send request.
+		$response = $this->get(
+			'custom_fields',
+			array(
+				'api_key' => $this->api_key,
+			)
+		);
+
+		// If an error occured, return WP_Error.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: get_custom_fields(): Error: ' . $response->get_error_message() );
+			return $response;
+		}
+
+		// If no custom fields exist, return WP_Error.
+		if ( ! isset( $response['custom_fields'] ) ) {
+			$this->log( 'API: get_custom_fields(): Error: No custom fields exist in ConvertKit.', 'woocommerce-convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No custom fields exist in ConvertKit. Visit your ConvertKit account and create your first custom field.', 'woocommerce-convertkit' ) );
+		}
+		if ( ! count( $response['custom_fields'] ) ) {
+			$this->log( 'API: get_custom_fields(): Error: No custom fields exist in ConvertKit.', 'woocommerce-convertkit' );
+			return new WP_Error( 'convertkit_api_error', __( 'No custom fields exist in ConvertKit. Visit your ConvertKit account and create your first custom field.', 'woocommerce-convertkit' ) );
+		}
+
+		foreach ( $response['custom_fields'] as $custom_field ) {
+			$custom_fields[] = $custom_field;
+		}
+
+		return $custom_fields;
+
+	}
+
+	/**
+	 * Get HTML from ConvertKit for the given Legacy Form ID.
 	 *
 	 * This isn't specifically an API function, but for now it's best suited here.
 	 *
@@ -597,10 +663,10 @@ class CKWC_API {
 		// Define Legacy Form URL.
 		$url = add_query_arg(
 			array(
-				'api_key' => $this->api_key,
-				'v'       => 6,
+				'k' => $this->api_key,
+				'v' => 2,
 			),
-			'https://forms.convertkit.com/' . $id . '.html'
+			'https://api.convertkit.com/forms/' . $id . '/embed'
 		);
 
 		// Get HTML.
@@ -621,7 +687,7 @@ class CKWC_API {
 	public function get_landing_page_html( $url ) {
 
 		// Get HTML.
-		$body = $this->get_html( $url );
+		$body = $this->get_html( $url, false );
 
 		// Inject JS for subscriber forms to work.
 		$scripts = new WP_Scripts();
@@ -777,9 +843,10 @@ class CKWC_API {
 	 * This isn't specifically an API function, but for now it's best suited here.
 	 *
 	 * @param   string $url    URL of Form or Landing Page.
+	 * @param   bool   $body_only   Return HTML between <body> and </body> tags only.
 	 * @return  string          HTML
 	 */
-	private function get_html( $url ) {
+	private function get_html( $url, $body_only = true ) {
 
 		// Get HTML from URL.
 		$result = wp_remote_get(
@@ -800,6 +867,20 @@ class CKWC_API {
 		$http_response_code = wp_remote_retrieve_response_code( $result );
 		$body               = wp_remote_retrieve_body( $result );
 
+		// If the body appears to be JSON containing an error, the request for a Legacy Form
+		// through api.convertkit.com failed, so return a WP_Error now.
+		if ( $this->is_json( $body ) ) {
+			$json = json_decode( $body );
+			return new WP_Error(
+				'convertkit_api_error',
+				sprintf(
+					/* translators: API Error Message */
+					__( 'ConvertKit: %s', 'woocommerce-convertkit' ),
+					$json->error_message
+				)
+			);
+		}
+
 		// Get just the scheme and host from the URL.
 		$url_scheme           = wp_parse_url( $url );
 		$url_scheme_host_only = $url_scheme['scheme'] . '://' . $url_scheme['host'];
@@ -807,7 +888,13 @@ class CKWC_API {
 		// Load the landing page HTML into a DOMDocument.
 		libxml_use_internal_errors( true );
 		$html = new DOMDocument();
-		$html->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
+		if ( $body_only ) {
+			// Prevent DOMDocument from including a doctype on saveHTML().
+			// We don't use LIBXML_HTML_NOIMPLIED, as it requires a single root element, which Legacy Forms don't have.
+			$html->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_HTML_NODEFDTD );
+		} else {
+			$html->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
+		}
 
 		// Convert any relative URLs to absolute URLs in the HTML DOM.
 		$this->convert_relative_to_absolute_urls( $html->getElementsByTagName( 'a' ), 'href', $url_scheme_host_only );
@@ -816,8 +903,30 @@ class CKWC_API {
 		$this->convert_relative_to_absolute_urls( $html->getElementsByTagName( 'script' ), 'src', $url_scheme_host_only );
 		$this->convert_relative_to_absolute_urls( $html->getElementsByTagName( 'form' ), 'action', $url_scheme_host_only );
 
-		// Fetch the edited HTML.
-		return $html->saveHTML();
+		// If the entire HTML needs to be returned, return it now.
+		if ( ! $body_only ) {
+			return $html->saveHTML();
+		}
+
+		// Remove some HTML tags that DOMDocument adds, returning the output.
+		// We do this instead of using LIBXML_HTML_NOIMPLIED in loadHTML(), because Legacy Forms are not always contained in
+		// a single root / outer element, which is required for LIBXML_HTML_NOIMPLIED to correctly work.
+		return $this->strip_html_head_body_tags( $html->saveHTML() );
+
+	}
+
+	/**
+	 * Determines if the given string is JSON.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   string $string     Possible JSON String.
+	 * @return  bool                Is JSON String.
+	 */
+	private function is_json( $string ) {
+
+		json_decode( $string );
+		return json_last_error() === JSON_ERROR_NONE;
 
 	}
 
@@ -854,6 +963,27 @@ class CKWC_API {
 			// Prepend the URL to the attribute's value.
 			$element->setAttribute( $attribute, $url . $element->getAttribute( $attribute ) );
 		}
+
+	}
+
+	/**
+	 * Strips <html>, <head> and <body> opening and closing tags from the given markup.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   string $markup     HTML Markup.
+	 * @return  string              HTML Markup
+	 * */
+	private function strip_html_head_body_tags( $markup ) {
+
+		$markup = str_replace( '<html>', '', $markup );
+		$markup = str_replace( '</html>', '', $markup );
+		$markup = str_replace( '<head>', '', $markup );
+		$markup = str_replace( '</head>', '', $markup );
+		$markup = str_replace( '<body>', '', $markup );
+		$markup = str_replace( '</body>', '', $markup );
+
+		return $markup;
 
 	}
 
