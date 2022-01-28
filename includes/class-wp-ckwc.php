@@ -160,7 +160,7 @@ class WP_CKWC {
 	 */
 	public function load_language_files() {
 
-		load_plugin_textdomain( 'woocommerce-convertkit', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'woocommerce-convertkit', false, basename( dirname( CKWC_PLUGIN_FILE ) ) . '/languages/' );
 
 	}
 
