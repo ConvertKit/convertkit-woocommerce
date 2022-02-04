@@ -258,22 +258,32 @@ class Acceptance extends \Codeception\Module
 		// Save.
 		$I->click('Save changes');
 
-		// Define Form, Tag or Sequence to subscribe the Customer to, and/or Custom Field mappings,
-		// now that the API credentials are saved and the Forms, Tags and Sequences are listed.
-		if ($pluginFormTagSequence || $customFields) {
-			if ($pluginFormTagSequence) {
-				$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
-			}
-			if ($customFields) {
-				$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
-				$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
-				$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
-				$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
-				$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
-			}
-			$I->click('Save changes');
+		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are 
+		// saved and the Forms, Tags and Sequences are listed.
+		if ($pluginFormTagSequence) {
+			$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
+		} else {
+			$I->selectOption('#woocommerce_ckwc_subscription', 'Select a subscription option...');
 		}
 
+		// Define Order to Custom Field mappings, now that the API credentials are 
+		// saved and the Forms, Tags and Sequences are listed.
+		if ($customFields) {
+			$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
+			$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
+			$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
+			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
+		} else {
+			$I->selectOption('#woocommerce_ckwc_custom_field_phone', '(Don\'t send / map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', '(Don\'t send / map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', '(Don\'t send / map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', '(Don\'t send / map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', '(Don\'t send / map)');
+		}
+
+		$I->click('Save changes');
+		
 		// Create Product
 		switch ($productType) {
 			case 'zero':
@@ -652,6 +662,21 @@ class Acceptance extends \Codeception\Module
 		$I->assertEquals($subscriber['fields']['shipping_address'], '');
 		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
 		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
+	}
+
+	/**
+	 * Check the subscriber array's custom field data is empty.
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	array 			$subscriber 	Subscriber from API
+	 */ 	
+	public function apiCustomFieldDataIsEmpty($I, $subscriber)
+	{
+		$I->assertEquals($subscriber['fields']['phone_number'], '');
+		$I->assertEquals($subscriber['fields']['billing_address'], '');
+		$I->assertEquals($subscriber['fields']['shipping_address'], '');
+		$I->assertEquals($subscriber['fields']['payment_method'], '');
+		$I->assertEquals($subscriber['fields']['notes'], '');
 	}
 
 	/**
