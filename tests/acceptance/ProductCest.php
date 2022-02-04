@@ -54,6 +54,44 @@ class ProductCest
 	}
 
 	/**
+	 * Test that the meta box displayed when adding/editing a Product outputs
+	 * a <select> field for choosing a Form, Tag or Sequence.
+	 * 
+	 * @since 	1.4.3
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testProductFieldsWithIntegrationEnabled(AcceptanceTester $I)
+	{
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
+
+		// Navigate to Products > Add New.
+		$I->amOnAdminPage('post-new.php?post_type=product');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Check that the ConvertKit meta box exists.
+		$I->seeElementInDOM('#ckwc');
+
+		// Check that the dropdown field to select a Form, Tag or Sequence is displayed.
+		$I->seeElementInDOM('#ckwc_subscription');
+
+		// Select Form.
+		$I->fillSelect2Field($I, '#select2-ckwc_subscription-container', $_ENV['CONVERTKIT_API_FORM_NAME']);
+
+		// Define Product Title, otherwise WooCommerce won't save.
+		$I->fillField('post_title', 'Product Field Test');
+
+		// Save Product.
+		$I->click('Publish');
+
+		// Confirm settings saved.
+		$I->seeOptionIsSelected('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
+	}
+
+	/**
 	 * Test that the meta box displayed when adding/editing a Product does not
 	 * output a field, and instead tells the user to configure the integration,
 	 * when the integration is enabled but no API Key is specified.
@@ -69,6 +107,10 @@ class ProductCest
 
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
+
+		// Blank the API Fields.
+		$I->fillField('woocommerce_ckwc_api_key', '');
+		$I->fillField('woocommerce_ckwc_api_secret', '');
 
 		// Click the Save Changes button.
 		$I->click('Save changes');
@@ -127,4 +169,6 @@ class ProductCest
 		// Check that the dropdown field to select a Form, Tag or Sequence is displayed.
 		$I->seeElementInDOM('#ckwc_subscription');
 	}
+
+
 }
