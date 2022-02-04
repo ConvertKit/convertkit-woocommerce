@@ -232,7 +232,8 @@ class Acceptance extends \Codeception\Module
 		$pluginFormTagSequence = false,
 		$subscriptionEvent = false,
 		$sendPurchaseData = false,
-		$productFormTagSequence = false
+		$productFormTagSequence = false,
+		$customFields = false
 	)
 	{
 		// Define Opt In setting.
@@ -257,10 +258,19 @@ class Acceptance extends \Codeception\Module
 		// Save.
 		$I->click('Save changes');
 
-		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are saved
-		// and the Forms, Tags and Sequences are listed.
-		if ($pluginFormTagSequence) {
-			$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
+		// Define Form, Tag or Sequence to subscribe the Customer to, and/or Custom Field mappings,
+		// now that the API credentials are saved and the Forms, Tags and Sequences are listed.
+		if ($pluginFormTagSequence || $customFields) {
+			if ($pluginFormTagSequence) {
+				$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
+			}
+			if ($customFields) {
+				$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
+				$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
+				$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+				$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
+				$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
+			}
 			$I->click('Save changes');
 		}
 
@@ -504,6 +514,7 @@ class Acceptance extends \Codeception\Module
 		$I->fillField('#billing_postcode', '12345');
 		$I->fillField('#billing_phone', '123-123-1234');
 		$I->fillField('#billing_email', $emailAddress);
+		$I->fillField('#order_comments', 'Notes');
 	}
 
 	/**
@@ -612,6 +623,7 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	string 			$emailAddress 	Email Address
+	 * @return 	array 							Subscriber
 	 */ 	
 	public function apiCheckSubscriberExists($I, $emailAddress)
 	{
@@ -623,6 +635,23 @@ class Acceptance extends \Codeception\Module
 		// Check at least one subscriber was returned and it matches the email address.
 		$I->assertGreaterThan(0, $results['total_subscribers']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
+
+		return $results['subscribers'][0];
+	}
+
+	/**
+	 * Check the subscriber array's custom field data is valid.
+	 * 
+	 * @param 	AcceptanceTester $I 			AcceptanceTester
+	 * @param 	array 			$subscriber 	Subscriber from API
+	 */ 	
+	public function apiCustomFieldDataIsValid($I, $subscriber)
+	{
+		$I->assertEquals($subscriber['fields']['phone_number'], '123-123-1234');
+		$I->assertEquals($subscriber['fields']['billing_address'], 'First Last, Address Line 1, City, CA 12345');
+		$I->assertEquals($subscriber['fields']['shipping_address'], '');
+		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
+		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
 	}
 
 	/**

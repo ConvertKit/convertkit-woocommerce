@@ -1,0 +1,59 @@
+<?php
+/**
+ * Tests various setting combinations across the following settings:
+ * - Subscribe Event
+ * - Display Opt-In Checkbox
+ * - API Keys
+ * - Subscription Form
+ * 
+ * @since 	1.4.2
+ */
+class SettingCustomFieldsCest
+{
+	/**
+	 * Run common actions before running the test functions in this class.
+	 * 
+	 * @since 	1.4.3
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _before(AcceptanceTester $I)
+	{
+		// Activate WooCommerce and ConvertKit Plugins.
+		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
+	}
+
+	/**
+	 * Test that Custom Field options are saved when selected at
+	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * 
+	 * @since 	1.4.3
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testCustomFields(AcceptanceTester $I)
+	{
+		// Set Order to Custom Field mappings.
+		$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
+		$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
+		$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+		$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
+		$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
+
+		// Save.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the settings saved.
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
+	}
+}
