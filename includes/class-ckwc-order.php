@@ -1,6 +1,6 @@
 <?php
 /**
- * ConvertKit Checkout class.
+ * ConvertKit Order class.
  *
  * @package CKWC
  * @author ConvertKit
@@ -367,7 +367,7 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		$this->mark_purchase_data_sent( $order_id );
+		$this->mark_purchase_data_sent( $order_id, $response['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
 		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
@@ -378,15 +378,58 @@ class CKWC_Order {
 	}
 
 	/**
+	 * Returns an array of WooCommerce Orders that have not had their Purchase Data
+	 * sent to ConvertKit.
+	 * 
+	 * @since 	1.4.3
+	 * 
+	 * @return 	mixed 	false | array
+	 */
+	public function get_orders_not_sent_to_convertkit() {
+
+		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
+		$query = new WP_Query( array(
+			'post_type' => 'shop_order',
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+			'meta_query' => array(
+				array(
+					'key' => 'ckwc_purchase_data_id',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+			'fields' => 'ids',
+			'cache_results' => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		) );
+
+		var_dump( $query );
+		die();
+
+		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
+		// return false.
+		if ( ! $query->post_count ) {
+			return false;
+		}
+
+		// Return the array of Order IDs.
+		return $query->posts;
+
+	}
+
+	/**
 	 * Mark purchase data as being sent to ConvertKit for the given Order ID.
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   int $order_id   Order ID.
+	 * @param   int $order_id   				Order ID.
+	 * @param 	int $convertkit_purchase_id 	ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
 	 */
-	private function mark_purchase_data_sent( $order_id ) {
+	private function mark_purchase_data_sent( $order_id, $convertkit_purchase_data_id ) {
 
 		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
+		update_post_meta( $order_id, 'ckwc_purchase_data_id', $convertkit_purchase_data_id );
 
 	}
 

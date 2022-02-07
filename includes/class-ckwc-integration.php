@@ -206,6 +206,13 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
+			'send_old_purchases' => array(
+				'title'       => __( 'Send Old Purchase Data', 'woocommerce-convertkit' ),
+				'label'       => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
+				'type'        => 'send_old_purchases',
+				'default'     => 'no',
+				'desc_tip'    => false,
+			),
 
 			// Debugging.
 			'debug'           => array(
@@ -306,6 +313,36 @@ class CKWC_Integration extends WC_Integration {
 
 		ob_start();
 		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/subscription.php';
+		return ob_get_clean();
+
+	}
+
+	/**
+	 * Output HTML for the Send Old Purchase Data button.
+	 * 
+	 * Conditionally renders the button if WooCommerce Orders exist that do not have a ckwc_purchase_data_id,
+	 * meaning the Purchase Data option wasn't enabled in the past, and/or the Plugin wasn't installed
+	 * in the past.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   string $key    Setting Field Key.
+	 * @param   array  $data   Setting Field Configuration.
+	 */
+	public function generate_send_old_purchases_html( $key, $data ) {
+
+		// Fetch array of WooCommerce Order IDs that have not been sent to ConvertKit.
+		$unsynced_order_ids =WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
+
+		// If no Orders exist that do not have a ckwc_purchase_data_id, there's
+		// no 'old' WooCommerce Orders to send to ConvertKit's Purchases endpoint.
+		if ( ! $unsynced_order_ids ) {
+			return;
+		}
+
+		// Return HTML for button.
+		ob_start();
+		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/send-old-purchases.php';
 		return ob_get_clean();
 
 	}
