@@ -608,6 +608,18 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to delete option table rows for review requests.
+	 * Useful for resetting the review state between tests.
+	 * 
+	 * @since 	1.4.3
+	 */
+	public function deleteConvertKitReviewRequestOptions($I)
+	{
+		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-request');
+		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-dismissed');
+	}
+
+	/**
 	 * Check the given email address exists as a subscriber on ConvertKit.
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester

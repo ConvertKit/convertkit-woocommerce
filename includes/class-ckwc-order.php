@@ -159,6 +159,12 @@ class CKWC_Order {
 			);
 		}
 
+		// The customer was subscribed to ConvertKit, so request a Plugin review.
+		// This can safely be called multiple times, as the review request
+		// class will ensure once a review request is dismissed by the user,
+		// it is never displayed again.
+		WP_CKWC()->get_class( 'review_request' )->request_review();
+
 	}
 
 	/**
@@ -371,6 +377,12 @@ class CKWC_Order {
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
 		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
+
+		// The customer's purchase data was sent to ConvertKit, so request a Plugin review.
+		// This can safely be called multiple times, as the review request
+		// class will ensure once a review request is dismissed by the user,
+		// it is never displayed again.
+		WP_CKWC()->get_class( 'review_request' )->request_review();
 
 		// Return.
 		return $response;

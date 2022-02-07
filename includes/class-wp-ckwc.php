@@ -142,7 +142,8 @@ class WP_CKWC {
 	 */
 	private function initialize_global() {
 
-		$this->classes['order'] = new CKWC_Order();
+		$this->classes['order']          = new CKWC_Order();
+		$this->classes['review_request'] = new CKWC_Review_Request( 'ConvertKit for WooCommerce', 'convertkit-for-woocommerce' );
 
 		/**
 		 * Initialize integration classes for the frontend web site.
