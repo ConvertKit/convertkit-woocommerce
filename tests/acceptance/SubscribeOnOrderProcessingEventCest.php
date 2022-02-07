@@ -144,7 +144,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.4.2
+	 * @since 	1.4.3
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -181,7 +181,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.4.2
+	 * @since 	1.4.3
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
@@ -218,7 +218,7 @@ class SubscribeOnOrderProcessingEventCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 * 
-	 * @since 	1.4.2
+	 * @since 	1.4.3
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
