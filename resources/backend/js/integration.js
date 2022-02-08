@@ -18,6 +18,7 @@ var ckwcSettings = {
  * @since 	1.4.2
  */
 jQuery( document ).ready(
+
 	function( $ ) {
 
 		// Bail if we're not viewing the Integration Settings,
@@ -47,7 +48,21 @@ jQuery( document ).ready(
 			}
 		);
 
+		// Sync Past Orders when button pressed and confirmed.
+		$( 'a#ckwc_sync_past_orders' ).on( 'click', function ( e ) {
+
+			var result = confirm( 'Do you want to send past Orders to ConvertKit?' );
+
+			// Bail if the user cancelled.
+            if ( ! result ) {
+                e.preventDefault();
+                return false;
+            }
+
+		} );
+
 	}
+
 );
 
 /**

@@ -41,6 +41,39 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
+	 * Output the Integration settings screen, depending on whether the request
+	 * is for the settings or the Sync Past Orders screen.
+	 * 
+	 * @since 	1.4.3
+	 */
+	public function admin_options() {
+
+		// Get the requested screen name.
+		$screen_name = $this->get_integration_screen_name();
+
+		// Load the requested screen.
+		switch ( $screen_name ) {
+
+			/**
+			 * Sync Past Orders.
+			 */
+			case 'sync_past_orders':
+				include_once CKWC_PLUGIN_PATH . '/views/backend/settings/sync-past-orders.php';
+				break;
+
+			/**
+			 * Settings.
+			 */
+			default:
+				// Load WooCommerce Integration's Settings screen.
+				parent::admin_options();
+				break;
+
+		}
+
+    }
+
+	/**
 	 * Defines the fields to display on this integration's screen at WooCommerce > Settings > Integration > ConvertKit.
 	 *
 	 * Also loads JS for conditionally showing UI settings, based on the value of other settings.
@@ -206,12 +239,21 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
-			'send_old_purchases' => array(
-				'title'       => __( 'Send Old Purchase Data', 'woocommerce-convertkit' ),
+			'sync_past_orders' => array(
+				'title'       => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
 				'label'       => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
-				'type'        => 'send_old_purchases',
-				'default'     => 'no',
+				'type'        => 'sync_past_orders_button',
+				'default'     => '',
 				'desc_tip'    => false,
+				'url' 		  => admin_url( add_query_arg(
+		        	array(
+		        		'page' => 'wc-settings',
+		        		'tab' => 'integration',
+		        		'section' => 'ckwc',
+		        		'sub_section' => 'sync_past_orders',
+		        	),
+		        	'admin.php'	
+		        ) ),
 			),
 
 			// Debugging.
@@ -235,28 +277,62 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Enqueue Javascript for the Integration Settings screen.
+	 * Enqueue Javascript for the Integration Settings screens.
 	 *
 	 * @since   1.4.2
 	 */
 	public function enqueue_scripts() {
 
-		// Bail if we cannot determine if we are viewing the Integration Settings screen.
-		if ( ! function_exists( 'get_current_screen' ) ) {
+		// Get the requested screen name.
+		$screen_name = $this->get_integration_screen_name();
+
+		// Bail if the screen name is false, as this means no request was made to load this Integration's screens.
+		if ( ! $screen_name ) {
 			return;
 		}
 
-		// Get screen.
-		$screen = get_current_screen();
+		// Depending on the screen name, enqueue scripts now.
+		switch ( $screen_name ) {
 
-		// Bail if we're not on the Integration Settings screen.
-		if ( $screen->id !== 'woocommerce_page_wc-settings' ) {
-			return;
+			/**
+			 * Sync Past Orders Screen.
+			 */
+			case 'sync_past_orders':
+				// Fetch array of WooCommerce Order IDs that have not been sent to ConvertKit.
+				$unsynced_order_ids =WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
+
+				// Bail if all Orders have been sent to ConvertKit.
+				if ( ! $unsynced_order_ids ) {
+					return;
+				}
+
+				// Enqueue.
+				wp_enqueue_script( 'jquery-ui-progressbar' );
+				wp_enqueue_script( 'ckwc-synchronous-ajax', CKWC_PLUGIN_URL . 'resources/backend/js/synchronous-ajax.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
+        		wp_enqueue_script( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/js/sync-past-orders.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
+				wp_localize_script( 'ckwc-sync-past-orders', 'ckwc_sync_past_orders', array(
+					'action'                        => 'page_generator_pro_generate_' . $type,
+		            'action_on_finished'            => 'page_generator_pro_generate_' . $type . '_after',
+		            'id'                            => count( $unsynced_order_ids ),
+		            'number_of_requests'            => $settings['numberOfPosts'],
+		            'resume_index'                  => $settings['resumeIndex'],
+		            'stop_on_error'                 => (int) $this->base->get_class( 'settings' )->get_setting( $this->base->plugin->name . '-generate', 'stop_on_error', 0 ),
+		            'stop_on_error_pause'           => (int) ( $this->base->get_class( 'settings' )->get_setting( $this->base->plugin->name . '-generate', 'stop_on_error_pause', 5 ) * 1000 ),
+				) );
+				break;
+
+			/**
+			 * Settings Screen.
+			 */
+			case 'settings':
+			default:
+				wp_enqueue_script( 'ckwc-integration', CKWC_PLUGIN_URL . 'resources/backend/js/integration.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
+				break;
+
 		}
 
 		// Enqueue JS.
-		wp_enqueue_script( 'ckwc-integration', CKWC_PLUGIN_URL . 'resources/backend/js/integration.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
-
+		
 	}
 
 	/**
@@ -318,18 +394,17 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Output HTML for the Send Old Purchase Data button.
-	 * 
-	 * Conditionally renders the button if WooCommerce Orders exist that do not have a ckwc_purchase_data_id,
-	 * meaning the Purchase Data option wasn't enabled in the past, and/or the Plugin wasn't installed
-	 * in the past.
+	 * Conditionally renders the "Sync X Past Orders" button if WooCommerce Orders exist that do not have a ckwc_purchase_data_id
+	 * meta key present, meaning either:
+	 * - the Purchase Data option wasn't enabled in the past, and/or
+	 * - the Plugin wasn't installed prior to now.
 	 *
 	 * @since   1.4.3
 	 *
 	 * @param   string $key    Setting Field Key.
 	 * @param   array  $data   Setting Field Configuration.
 	 */
-	public function generate_send_old_purchases_html( $key, $data ) {
+	public function generate_sync_past_orders_button_html( $key, $data ) {
 
 		// Fetch array of WooCommerce Order IDs that have not been sent to ConvertKit.
 		$unsynced_order_ids =WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
@@ -340,9 +415,18 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
+		// Update the description based on the number of Orders that have not been sent to ConvertKit.
+		$data['description'] = sprintf( 
+    		__( '%s have not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or Orders were created prior to installing this integration.<br />Use the sync button to send data for these Orders to ConvertKit.', 'woocommerce-convertkit' ),
+        	sprintf( 
+        		_n( '%s WooCommerce Order', '%s WooCommerce Orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
+        		number_format_i18n( count( $unsynced_order_ids ) )
+        	)
+        );
+
 		// Return HTML for button.
 		ob_start();
-		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/send-old-purchases.php';
+		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/sync-past-orders-button.php';
 		return ob_get_clean();
 
 	}
@@ -453,6 +537,53 @@ class CKWC_Integration extends WC_Integration {
 	public function option_exists( $name ) {
 
 		return ! empty( $this->get_option( $name ) );
+
+	}
+
+	/**
+	 * Determines which part of the Integration Settings screen was requested.
+	 * 
+	 * @since 	1.4.3
+	 * 
+	 * @return 	string 	Integration Settings Screen.
+	 */
+	private function get_integration_screen_name() {
+
+		// Return false if no request for a page was made.
+		if ( ! isset( $_REQUEST['page'] ) ) {
+			return false;
+		}
+
+		// Return false if the page request isn't for WooCommerce Settings.
+		if ( $_REQUEST['page'] !== 'wc-settings' ) {
+			return false;
+		}
+
+		// Return false if the settings page request isn't for an Integration.
+		if ( ! isset( $_REQUEST['tab'] ) ) {
+			return false;
+		}
+		if ( $_REQUEST['tab'] !== 'integration' ) {
+			return false;
+		}
+
+		// Return false if the Integration request doesn't specify a section.
+		if ( ! isset( $_REQUEST['section'] ) ) {
+			return false;
+		}
+
+		// Return false if the Integration request section isn't for this Plugin.
+		if ( $_REQUEST['section'] !== 'ckwc' ) {
+			return false;
+		}
+
+		// If a sub section is defined, return its name now.
+		if ( isset( $_REQUEST['sub_section'] ) ) {
+			return sanitize_text_field( $_REQUEST['sub_section'] );
+		}
+
+		// The request is for the Integration's main settings screen.
+		return 'settings';
 
 	}
 

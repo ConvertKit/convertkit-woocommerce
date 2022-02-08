@@ -390,7 +390,7 @@ class CKWC_Order {
 		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
 		$query = new WP_Query( array(
 			'post_type' => 'shop_order',
-			'post_status' => 'publish',
+			'post_status' => 'any',
 			'posts_per_page' => -1,
 			'meta_query' => array(
 				array(
@@ -403,9 +403,6 @@ class CKWC_Order {
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 		) );
-
-		var_dump( $query );
-		die();
 
 		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
 		// return false.
