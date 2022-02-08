@@ -51,7 +51,9 @@ class CKWC_Admin_AJAX {
 		$result = WP_CKWC()->get_class( 'order' )->send_purchase_data( $id );
 
 		// Return a JSON error if the result is a WP_Error.
-		wp_send_json_error( $result->get_error_message() );
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( $result->get_error_message() );
+		}
 
 		// Return JSON success
 		wp_send_json_success( sprintf(
