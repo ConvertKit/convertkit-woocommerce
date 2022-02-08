@@ -9,22 +9,22 @@
     <div id="progress-bar"></div>
     <div id="progress">
         <span id="progress-number">0</span>
-        <span> / <?php echo count( $order_ids ); ?></span>
+        <span> / <?php echo count( $this->unsynced_order_ids ); ?></span>
     </div>
 
-    <!-- Status Updates -->
+    <!-- Log -->
     <div id="log">
         <ul></ul>
     </div>
 
     <p>
         <!-- Cancel Button -->
-        <a href="#" class="button button-secondary cancel">
+        <a href="<?php echo $return_url; ?>" class="button button-secondary cancel">
             <?php _e( 'Cancel Sync', 'page-generator-pro' ); ?>
         </a>
 
         <!-- Return Button (display when routine finishes) -->
-        <a href="#" class="button button-secondary return">
+        <a href="<?php echo $return_url; ?>" class="button button-secondary return">
             <?php _e( 'Return to Settings', 'page-generator-pro' ); ?>
         </a>
     </p>

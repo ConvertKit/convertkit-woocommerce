@@ -283,14 +283,26 @@ class CKWC_Order {
 
 		// If no Order could be fetched, bail.
 		if ( ! $order ) {
-			return;
+			return new WP_Error(
+				'convertkit_for_woocommerce_error',
+				sprintf(
+					__( 'Order ID %s could not be found in WooCommerce.', 'woocommerce-convertkit' ),
+					$order_id
+				)
+			);
 		}
 
 		// If purchase data has already been sent to ConvertKit, don't send any data to ConvertKit.
 		// This ensures that we don't unecessarily send data multiple times
 		// when the Order's status is transitioned.
 		if ( $this->purchase_data_sent( $order_id ) ) {
-			return;
+			return new WP_Error(
+				'convertkit_for_woocommerce_error',
+				sprintf(
+					__( 'Order ID %s has already been sent to ConvertKit.', 'woocommerce-convertkit' ),
+					$order_id
+				)
+			);
 		}
 
 		// Build array of Products for the API call.

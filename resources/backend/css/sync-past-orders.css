@@ -39,3 +39,6 @@
 #log ul li.error {
 	background: #e7140d;
 }
+
+/* Hide Save Button that WooCommerce always provides */
+button.woocommerce-save-button { display: none !important; }

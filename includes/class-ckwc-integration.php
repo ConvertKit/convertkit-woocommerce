@@ -16,6 +16,16 @@
 class CKWC_Integration extends WC_Integration {
 
 	/**
+	 * Holds an array of WooCommerce Order IDs not sent to ConvertKit.
+	 * False if all Orders have been sent to ConvertKit.
+	 * 
+	 * @since 	1.4.3
+	 * 
+	 * @var 	mixed
+	 */
+	private $unsynced_order_ids = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @since   1.0.0
@@ -34,6 +44,7 @@ class CKWC_Integration extends WC_Integration {
 		// Load Admin screens, save settings.
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
 		}
@@ -58,6 +69,17 @@ class CKWC_Integration extends WC_Integration {
 			 * Sync Past Orders.
 			 */
 			case 'sync_past_orders':
+				// Define URL to return to main Integration Settings screen.
+				$return_url = admin_url( add_query_arg(
+		        	array(
+		        		'page' => 'wc-settings',
+		        		'tab' => 'integration',
+		        		'section' => 'ckwc',
+		        	),
+		        	'admin.php'	
+		        ) );
+
+		        // Load view.
 				include_once CKWC_PLUGIN_PATH . '/views/backend/settings/sync-past-orders.php';
 				break;
 
@@ -299,25 +321,25 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			case 'sync_past_orders':
 				// Fetch array of WooCommerce Order IDs that have not been sent to ConvertKit.
-				$unsynced_order_ids =WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
+				$this->unsynced_order_ids = WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
 
 				// Bail if all Orders have been sent to ConvertKit.
-				if ( ! $unsynced_order_ids ) {
+				if ( ! $this->unsynced_order_ids ) {
 					return;
 				}
 
 				// Enqueue.
 				wp_enqueue_script( 'jquery-ui-progressbar' );
 				wp_enqueue_script( 'ckwc-synchronous-ajax', CKWC_PLUGIN_URL . 'resources/backend/js/synchronous-ajax.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
-        		wp_enqueue_script( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/js/sync-past-orders.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
+        		wp_enqueue_script( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/js/sync-past-orders.js', array( 'jquery', 'wp-i18n' ), CKWC_PLUGIN_VERSION, true );
 				wp_localize_script( 'ckwc-sync-past-orders', 'ckwc_sync_past_orders', array(
-					'action'                        => 'page_generator_pro_generate_' . $type,
-		            'action_on_finished'            => 'page_generator_pro_generate_' . $type . '_after',
-		            'id'                            => count( $unsynced_order_ids ),
-		            'number_of_requests'            => $settings['numberOfPosts'],
-		            'resume_index'                  => $settings['resumeIndex'],
-		            'stop_on_error'                 => (int) $this->base->get_class( 'settings' )->get_setting( $this->base->plugin->name . '-generate', 'stop_on_error', 0 ),
-		            'stop_on_error_pause'           => (int) ( $this->base->get_class( 'settings' )->get_setting( $this->base->plugin->name . '-generate', 'stop_on_error_pause', 5 ) * 1000 ),
+					'action'                        => 'ckwc_sync_past_orders',
+					'nonce'							=> wp_create_nonce( 'ckwc_sync_past_orders' ),
+					'ids'							=> $this->unsynced_order_ids,
+		            'number_of_requests'            => count( $this->unsynced_order_ids ),
+		            'resume_index'                  => 0,
+		            'stop_on_error'                 => 0,
+		            'stop_on_error_pause'           => 2000,
 				) );
 				break;
 
@@ -330,8 +352,42 @@ class CKWC_Integration extends WC_Integration {
 				break;
 
 		}
+		
+	}
 
-		// Enqueue JS.
+	/**
+	 * Enqueue CSS for the Integration Settings screens.
+	 *
+	 * @since   1.4.3
+	 */
+	public function enqueue_styles() {
+
+		// Get the requested screen name.
+		$screen_name = $this->get_integration_screen_name();
+
+		// Bail if the screen name is false, as this means no request was made to load this Integration's screens.
+		if ( ! $screen_name ) {
+			return;
+		}
+
+		// Depending on the screen name, enqueue scripts now.
+		switch ( $screen_name ) {
+
+			/**
+			 * Sync Past Orders Screen.
+			 */
+			case 'sync_past_orders':
+				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . '/resources/backend/css/sync-past-orders.css', false, CKWC_PLUGIN_VERSION );
+				break;
+
+			/**
+			 * Settings Screen.
+			 */
+			case 'settings':
+			default:
+				break;
+
+		}
 		
 	}
 

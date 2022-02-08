@@ -25,21 +25,22 @@
 		// Default Settings.
 		var settings = $.extend( {
 			// Required.
-			url: 			'',
+			url: 			'', // AJAX url.
 			number_requests:0, // Total number of requests that will be sent.
 			offset: 		0, // The offset to start at.
-			data: 			{},
+			action:         '', // The WordPress registered AJAX action name to use for each request.
+			nonce: 			'', // WordPress nonce, which your AJAX function should validate.
+            ids:            '', // Array of IDs or keys to iterate through, sending one with each request.
 			wait: 			5000, // Number of milliseconds to wait.
 			stop_on_error: 	0, // 1: stop, 0: continue and retry the same request, -1: continue but skip the failed request.
 
 			// Optional.
-			progress_bar: 	'.progress-bar',
-			progress_count: '#progress-number',
-			log:  			'#log',
-			cancel_button:  '#synchronous_request_cancel',
-			type: 			'post',
-			cache: 			false,
-			dataType: 		'json',
+			progress_count: '#progress-number', // DOM selector that contains successful request count.
+			log:  			'#log', // DOM selector for the log.
+			cancel_button:  '.cancel', // DOM selector for the cancel button.
+			type: 			'post', // AJAX request type.
+			cache: 			false, // Whether to cache requests.
+			dataType: 		'json', // Response data type.
 
 			/**
              * Called when an AJAX request returns a successful response.
@@ -56,11 +57,11 @@
 
                 if ( response.success ) {
                     // Output Log
-                    $( 'ul', $( this.log ) ).append( '<li class="success">' + ( currentIndex + 1 ) + '/' + this.number_of_requests + ': ' + response.data + '</li>' );
+                    $( 'ul', $( this.log ) ).append( '<li class="success">' + ( currentIndex + 1 ) + '/' + this.number_requests + ': ' + response.data + '</li>' );
                 } else {
                     // Something went wrong.
                     // Define message.
-                    var message = ( currentIndex + 1 ) + '/' + this.number_of_requests + ': Response Error: ' + response.data;
+                    var message = ( currentIndex + 1 ) + '/' + this.number_requests + ': Response Error: ' + response.data;
                     switch ( this.stop_on_error ) {
                         // Stop sending any further requests.
                         case 1:
@@ -104,7 +105,7 @@
                 }
 
                 // Output Log.
-                $( '#log ul' ).append( '<li class="error">' + ( currentIndex + 1 )  + '/' + ckwc_sync_past_orders.number_of_requests + ': Request Error: ' + xhr.status + ' ' + xhr.statusText + '</li>' );
+                $( '#log ul' ).append( '<li class="error">' + ( currentIndex + 1 )  + '/' + ckwc_sync_past_orders.number_requests + ': Request Error: ' + xhr.status + ' ' + xhr.statusText + '</li>' );
 
                 // Run the next request, unless the user clicked the cancel button.
                 if ( this.cancelled == true ) {
@@ -127,10 +128,19 @@
 					$( 'ul', $( this.log ) ).append( '<li class="success">Process cancelled by user.</li>' );
 				} else {
 					$( 'ul', $( this.log ) ).append( '<li class="success">Finished.</li>' );
+
+					// Disable the cancel button.
+	            	$( settings.cancel_button ).attr( 'disabled', 'disabled' );
 				}
 
 			},
 
+			/**
+			 * If the on screen log exceeds 100 entries, clear it
+			 * for UI / browser performance.
+			 * 
+			 * @since 	1.4.3
+			 */
 			maybeResetLog: function() {
 
 				// If the log exceeds 100 items, reset it.
@@ -149,10 +159,13 @@
 		// Bind a listener to the cancel button.
 		if ( settings.cancel_button ) {
 
-	        $( cancel_button ).on( 'click', function( e ) {
+	        $( settings.cancel_button ).on( 'click', function( e ) {
 
 	            e.preventDefault();
 	            settings.cancelled = true;
+
+	            // Disable the cancel button.
+	            $( settings.cancel_button ).attr( 'disabled', 'disabled' );
 
 	        } );
 
@@ -181,11 +194,6 @@
    			return true;
    		}
 
-   		// Include currentIndex in settings.data.
-   		var data = $.extend( {
-   			current_index: currentIndex
-   		}, settings.data );
-
    		// Send AJAX request.
 		$.ajax( {
 		    url:      	settings.url,
@@ -193,7 +201,12 @@
 		    async:    	true,
 		    cache:    	settings.cache,
 		    dataType: 	settings.dataType,
-		    data: 		data,
+		    data: 		{
+		    	action: 		settings.action,
+		    	nonce: 			settings.nonce,
+		    	id: 			settings.ids[ currentIndex ],
+		    	current_index: 	currentIndex
+		    },
 		    success: function( response ) {
 
 		    	// Call onRequestSuccess closure.
@@ -232,9 +245,6 @@
 				    	return;
 		    		}, settings.wait );
 		    	} else {
-		    		// Call updateSettings closure.
-		    		settings = settings.updateSettings( settings );
-
 			    	// Start next request.
 			    	synchronousAjaxRequest( settings, currentIndex, progressbar, progressCounter );
 			    	return;
