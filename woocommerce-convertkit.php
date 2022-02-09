@@ -70,6 +70,11 @@ function WP_CKWC_Integration() { // phpcs:ignore
 		return false;
 	}
 
+	// Bail if integrations is null.
+	if ( is_null( WC()->integrations ) ) {
+		return false;
+	}
+
 	// Get registered WooCommerce integrations.
 	$integrations = WC()->integrations->get_integrations();
 

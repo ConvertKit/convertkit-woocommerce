@@ -16,13 +16,6 @@ class SyncPastOrdersCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
-
-		// Disable the Integration.
-		$I->loadConvertKitSettingsScreen($I);
-		$I->uncheckOption('#woocommerce_ckwc_enabled');
-		$I->fillField('woocommerce_ckwc_api_key', '');
-		$I->fillField('woocommerce_ckwc_api_secret', '');
-		$I->click('Save changes');
 	}
 
 	/**
@@ -35,6 +28,14 @@ class SyncPastOrdersCest
 	 */
 	public function testNoButtonDisplayedWhenIntegrationDisabled(AcceptanceTester $I)
 	{
+		// Disable the Integration.
+		$I->loadConvertKitSettingsScreen($I);
+		$I->seeInSource('sdjkfhjkdgfjsdf');
+		$I->fillField('woocommerce_ckwc_api_key', '');
+		$I->fillField('woocommerce_ckwc_api_secret', '');
+		$I->uncheckOption('#woocommerce_ckwc_enabled');
+		$I->click('Save changes');
+
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
@@ -209,6 +210,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrderWithInvalidAPICredentials(AcceptanceTester $I)
 	{
 		// @TODO
+
 	}
 
 	/**
@@ -222,5 +224,6 @@ class SyncPastOrdersCest
 	public function testSyncPastOrder(AcceptanceTester $I)
 	{
 		// @TODO
+
 	}
 }
