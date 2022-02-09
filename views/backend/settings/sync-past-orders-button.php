@@ -12,7 +12,7 @@
 	<td class="forminp">
 		<fieldset>
 			<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-			<a href="<?php echo $data['url']; ?>" id="ckwc_sync_past_orders" class="button button-secondary">
+			<a href="<?php echo $data['url']; ?>" id="ckwc_sync_past_orders" class="button button-secondary <?php echo esc_attr( $data['class'] ); ?>">
 				<?php
 				echo sprintf(
 					_n( 'Sync %s Past Order', 'Sync %s Past Orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),

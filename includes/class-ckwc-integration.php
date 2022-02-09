@@ -16,6 +16,33 @@
 class CKWC_Integration extends WC_Integration {
 
 	/**
+	 * Holds the ConvertKit Forms Resource.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @var     ConvertKit_Resource_Forms;
+	 */
+	private $forms = false;
+
+	/**
+	 * Holds the ConvertKit Sequences Resource.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @var     ConvertKit_Resource_Sequences;
+	 */
+	private $sequences = false;
+
+	/**
+	 * Holds the ConvertKit Tags Resource.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @var     ConvertKit_Resource_Tags;
+	 */
+	private $tags = false;
+
+	/**
 	 * Holds an array of WooCommerce Order IDs not sent to ConvertKit.
 	 * False if all Orders have been sent to ConvertKit.
 	 * 
@@ -36,6 +63,11 @@ class CKWC_Integration extends WC_Integration {
 		$this->id                 = 'ckwc';
 		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
 		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
+
+		// Initialize resource classes.
+		$this->forms = new CKWC_Resource_Forms();
+		$this->sequences = new CKWC_Resource_Sequences();
+		$this->tags = new CKWC_Resource_Tags();
 
 		// Initialize form fields and settings.
 		$this->init_form_fields();
@@ -276,6 +308,9 @@ class CKWC_Integration extends WC_Integration {
 		        	),
 		        	'admin.php'	
 		        ) ),
+
+		        // The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled subscribe',
 			),
 
 			// Debugging.
@@ -349,6 +384,9 @@ class CKWC_Integration extends WC_Integration {
 			case 'settings':
 			default:
 				wp_enqueue_script( 'ckwc-integration', CKWC_PLUGIN_URL . 'resources/backend/js/integration.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
+				wp_localize_script( 'ckwc-integration', 'ckwc_integration', array(
+					'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to ConvertKit?', 'woocommerce-convertkit' ),
+				) );
 				break;
 
 		}
@@ -425,12 +463,9 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API.
-		$forms = new CKWC_Resource_Forms();
-		$forms->refresh();
-		$sequences = new CKWC_Resource_Sequences();
-		$sequences->refresh();
-		$tags = new CKWC_Resource_Tags();
-		$tags->refresh();
+		$this->forms->refresh();
+		$this->sequences->refresh();
+		$this->tags->refresh();
 
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
@@ -438,9 +473,9 @@ class CKWC_Integration extends WC_Integration {
 			'class'     => 'select ' . $data['class'],
 			'name'      => $field,
 			'value'     => $this->get_option( $key ),
-			'forms'     => $forms,
-			'tags'      => $tags,
-			'sequences' => $sequences,
+			'forms'     => $this->forms,
+			'tags'      => $this->tags,
+			'sequences' => $this->sequences,
 		);
 
 		ob_start();
@@ -461,6 +496,11 @@ class CKWC_Integration extends WC_Integration {
 	 * @param   array  $data   Setting Field Configuration.
 	 */
 	public function generate_sync_past_orders_button_html( $key, $data ) {
+
+		// Bail if the Integration isn't enabled and doesn't have an API Key and Secret specified.
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
 
 		// Fetch array of WooCommerce Order IDs that have not been sent to ConvertKit.
 		$unsynced_order_ids =WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
@@ -650,14 +690,9 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	private function resources_delete() {
 
-		$forms = new CKWC_Resource_Forms();
-		$forms->delete();
-
-		$tags = new CKWC_Resource_Tags();
-		$tags->delete();
-
-		$sequences = new CKWC_Resource_Sequences();
-		$sequences->delete();
+		$this->forms->delete();
+		$this->tags->delete();
+		$this->sequences->delete();
 
 	}
 

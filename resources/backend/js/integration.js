@@ -51,9 +51,10 @@ jQuery( document ).ready(
 		// Sync Past Orders when button pressed and confirmed.
 		$( 'a#ckwc_sync_past_orders' ).on( 'click', function ( e ) {
 
-			var result = confirm( 'Do you want to send past Orders to ConvertKit?' );
+			// Confirm that the user wants to sync past orders.
+			var result = confirm( ckwc_integration.sync_past_orders_confirmation_message );
 
-			// Bail if the user cancelled.
+			// Prevent clicking the link if the user cancels.
             if ( ! result ) {
                 e.preventDefault();
                 return false;
@@ -93,7 +94,7 @@ function ckwcRefreshUI() {
 						}
 
 						// Hide this row if the input or select element within the row has the CSS class of the setting name.
-						if ( $( 'input, select', $( this ) ).hasClass( setting ) ) {
+						if ( $( 'input, select, a', $( this ) ).hasClass( setting ) ) {
 							$( this ).hide();
 						}
 					}
