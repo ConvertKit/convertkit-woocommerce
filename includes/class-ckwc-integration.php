@@ -18,10 +18,10 @@ class CKWC_Integration extends WC_Integration {
 	/**
 	 * Holds an array of WooCommerce Order IDs not sent to ConvertKit.
 	 * False if all Orders have been sent to ConvertKit.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @var 	mixed
+	 *
+	 * @since   1.4.3
+	 *
+	 * @var     mixed
 	 */
 	private $unsynced_order_ids = false;
 
@@ -54,8 +54,8 @@ class CKWC_Integration extends WC_Integration {
 	/**
 	 * Output the Integration settings screen, depending on whether the request
 	 * is for the settings or the Sync Past Orders screen.
-	 * 
-	 * @since 	1.4.3
+	 *
+	 * @since   1.4.3
 	 */
 	public function admin_options() {
 
@@ -70,16 +70,18 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			case 'sync_past_orders':
 				// Define URL to return to main Integration Settings screen.
-				$return_url = admin_url( add_query_arg(
-		        	array(
-		        		'page' => 'wc-settings',
-		        		'tab' => 'integration',
-		        		'section' => 'ckwc',
-		        	),
-		        	'admin.php'	
-		        ) );
+				$return_url = admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'wc-settings',
+							'tab'     => 'integration',
+							'section' => 'ckwc',
+						),
+						'admin.php'
+					)
+				);
 
-		        // Load view.
+				// Load view.
 				include_once CKWC_PLUGIN_PATH . '/views/backend/settings/sync-past-orders.php';
 				break;
 
@@ -93,7 +95,7 @@ class CKWC_Integration extends WC_Integration {
 
 		}
 
-    }
+	}
 
 	/**
 	 * Defines the fields to display on this integration's screen at WooCommerce > Settings > Integration > ConvertKit.
@@ -106,7 +108,7 @@ class CKWC_Integration extends WC_Integration {
 
 		$this->form_fields = array(
 			// Enable/Disable entire integration.
-			'enabled'         => array(
+			'enabled'          => array(
 				'title'   => __( 'Enable/Disable', 'woocommerce-convertkit' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable ConvertKit integration', 'woocommerce-convertkit' ),
@@ -114,7 +116,7 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// API Key and Secret.
-			'api_key'         => array(
+			'api_key'          => array(
 				'title'       => __( 'API Key', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
@@ -131,7 +133,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled',
 			),
-			'api_secret'      => array(
+			'api_secret'       => array(
 				'title'       => __( 'API Secret', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => '',
@@ -150,7 +152,7 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Subscribe.
-			'event'           => array(
+			'event'            => array(
 				'title'       => __( 'Subscribe Event', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'pending',
@@ -165,7 +167,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
-			'subscription'    => array(
+			'subscription'     => array(
 				'title'       => __( 'Subscription', 'woocommerce-convertkit' ),
 				'type'        => 'subscription',
 				'default'     => '',
@@ -174,7 +176,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
-			'name_format'     => array(
+			'name_format'      => array(
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'first',
@@ -191,7 +193,7 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Subscribe: Display Opt In Checkbox Settings.
-			'display_opt_in'  => array(
+			'display_opt_in'   => array(
 				'title'       => __( 'Opt-In Checkbox', 'woocommerce-convertkit' ),
 				'label'       => __( 'Display an Opt-In checkbox on checkout', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
@@ -206,7 +208,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
-			'opt_in_label'    => array(
+			'opt_in_label'     => array(
 				'title'       => __( 'Opt-In Checkbox: Label', 'woocommerce-convertkit' ),
 				'type'        => 'text',
 				'default'     => __( 'I want to subscribe to the newsletter', 'woocommerce-convertkit' ),
@@ -216,7 +218,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe display_opt_in',
 			),
-			'opt_in_status'   => array(
+			'opt_in_status'    => array(
 				'title'       => __( 'Opt-In Checkbox: Default Status', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'checked',
@@ -230,7 +232,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe display_opt_in',
 			),
-			'opt_in_location' => array(
+			'opt_in_location'  => array(
 				'title'       => __( 'Opt-In Checkbox: Display Location', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'billing',
@@ -246,7 +248,7 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Purchase Data.
-			'send_purchases'  => array(
+			'send_purchases'   => array(
 				'title'       => __( 'Purchase Data', 'woocommerce-convertkit' ),
 				'label'       => __( 'Send purchase data to ConvertKit.', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
@@ -262,27 +264,29 @@ class CKWC_Integration extends WC_Integration {
 				'class'       => 'enabled subscribe',
 			),
 			'sync_past_orders' => array(
-				'title'       => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
-				'label'       => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
-				'type'        => 'sync_past_orders_button',
-				'default'     => '',
-				'desc_tip'    => false,
-				'url' 		  => admin_url( add_query_arg(
-		        	array(
-		        		'page' => 'wc-settings',
-		        		'tab' => 'integration',
-		        		'section' => 'ckwc',
-		        		'sub_section' => 'sync_past_orders',
-		        	),
-		        	'admin.php'	
-		        ) ),
+				'title'    => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
+				'label'    => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
+				'type'     => 'sync_past_orders_button',
+				'default'  => '',
+				'desc_tip' => false,
+				'url'      => admin_url(
+					add_query_arg(
+						array(
+							'page'        => 'wc-settings',
+							'tab'         => 'integration',
+							'section'     => 'ckwc',
+							'sub_section' => 'sync_past_orders',
+						),
+						'admin.php'
+					)
+				),
 
-		        // The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'    => 'enabled subscribe',
 			),
 
 			// Debugging.
-			'debug'           => array(
+			'debug'            => array(
 				'title'       => __( 'Debug', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'label'       => __( 'Write data to a log file', 'woocommerce-convertkit' ),
@@ -334,16 +338,20 @@ class CKWC_Integration extends WC_Integration {
 				// Enqueue.
 				wp_enqueue_script( 'jquery-ui-progressbar' );
 				wp_enqueue_script( 'ckwc-synchronous-ajax', CKWC_PLUGIN_URL . 'resources/backend/js/synchronous-ajax.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
-        		wp_enqueue_script( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/js/sync-past-orders.js', array( 'jquery', 'wp-i18n' ), CKWC_PLUGIN_VERSION, true );
-				wp_localize_script( 'ckwc-sync-past-orders', 'ckwc_sync_past_orders', array(
-					'action'                        => 'ckwc_sync_past_orders',
-					'nonce'							=> wp_create_nonce( 'ckwc_sync_past_orders' ),
-					'ids'							=> $this->unsynced_order_ids,
-		            'number_of_requests'            => count( $this->unsynced_order_ids ),
-		            'resume_index'                  => 0,
-		            'stop_on_error'                 => 0,
-		            'stop_on_error_pause'           => 2000,
-				) );
+				wp_enqueue_script( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/js/sync-past-orders.js', array( 'jquery', 'wp-i18n' ), CKWC_PLUGIN_VERSION, true );
+				wp_localize_script(
+					'ckwc-sync-past-orders',
+					'ckwc_sync_past_orders',
+					array(
+						'action'              => 'ckwc_sync_past_orders',
+						'nonce'               => wp_create_nonce( 'ckwc_sync_past_orders' ),
+						'ids'                 => $this->unsynced_order_ids,
+						'number_of_requests'  => count( $this->unsynced_order_ids ),
+						'resume_index'        => 0,
+						'stop_on_error'       => 0,
+						'stop_on_error_pause' => 2000,
+					)
+				);
 				break;
 
 			/**
@@ -352,13 +360,17 @@ class CKWC_Integration extends WC_Integration {
 			case 'settings':
 			default:
 				wp_enqueue_script( 'ckwc-integration', CKWC_PLUGIN_URL . 'resources/backend/js/integration.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
-				wp_localize_script( 'ckwc-integration', 'ckwc_integration', array(
-					'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to ConvertKit?', 'woocommerce-convertkit' ),
-				) );
+				wp_localize_script(
+					'ckwc-integration',
+					'ckwc_integration',
+					array(
+						'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to ConvertKit?', 'woocommerce-convertkit' ),
+					)
+				);
 				break;
 
 		}
-		
+
 	}
 
 	/**
@@ -394,7 +406,7 @@ class CKWC_Integration extends WC_Integration {
 				break;
 
 		}
-		
+
 	}
 
 	/**
@@ -468,7 +480,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param   string $key    Setting Field Key.
 	 * @param   array  $data   Setting Field Configuration.
 	 */
-	public function generate_sync_past_orders_button_html( $key, $data ) {
+	public function generate_sync_past_orders_button_html( $key, $data ) { /* phpcs:ignore */
 
 		// Bail if the Integration isn't enabled and doesn't have an API Key and Secret specified.
 		if ( ! $this->is_enabled() ) {
@@ -476,7 +488,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Fetch array of WooCommerce Order IDs that have not been sent to ConvertKit.
-		$unsynced_order_ids =WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
+		$unsynced_order_ids = WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
 
 		// If no Orders exist that do not have a ckwc_purchase_data_id, there's
 		// no 'old' WooCommerce Orders to send to ConvertKit's Purchases endpoint.
@@ -485,13 +497,15 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Update the description based on the number of Orders that have not been sent to ConvertKit.
-		$data['description'] = sprintf( 
-    		__( '%s have not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or Orders were created prior to installing this integration.<br />Use the sync button to send data for these Orders to ConvertKit.', 'woocommerce-convertkit' ),
-        	sprintf( 
-        		_n( '%s WooCommerce Order', '%s WooCommerce Orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
-        		number_format_i18n( count( $unsynced_order_ids ) )
-        	)
-        );
+		$data['description'] = sprintf(
+			/* translators: Number of WooCommerce Orders  */
+			__( '%s have not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or Orders were created prior to installing this integration.<br />Use the sync button to send data for these Orders to ConvertKit.', 'woocommerce-convertkit' ),
+			sprintf(
+				/* translators: number of Orders not sent to ConvertKit */
+				_n( '%s WooCommerce Order', '%s WooCommerce Orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
+				number_format_i18n( count( $unsynced_order_ids ) )
+			)
+		);
 
 		// Return HTML for button.
 		ob_start();
@@ -611,44 +625,44 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Determines which part of the Integration Settings screen was requested.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @return 	string 	Integration Settings Screen.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @return  string  Integration Settings Screen.
 	 */
 	private function get_integration_screen_name() {
 
 		// Return false if no request for a page was made.
-		if ( ! isset( $_REQUEST['page'] ) ) {
+		if ( ! isset( $_REQUEST['page'] ) ) { // phpcs:ignore
 			return false;
 		}
 
 		// Return false if the page request isn't for WooCommerce Settings.
-		if ( $_REQUEST['page'] !== 'wc-settings' ) {
+		if ( sanitize_text_field( $_REQUEST['page'] ) !== 'wc-settings' ) { // phpcs:ignore
 			return false;
 		}
 
 		// Return false if the settings page request isn't for an Integration.
-		if ( ! isset( $_REQUEST['tab'] ) ) {
+		if ( ! isset( $_REQUEST['tab'] ) ) { // phpcs:ignore
 			return false;
 		}
-		if ( $_REQUEST['tab'] !== 'integration' ) {
+		if ( sanitize_text_field( $_REQUEST['tab'] ) !== 'integration' ) { // phpcs:ignore
 			return false;
 		}
 
 		// Return false if the Integration request doesn't specify a section.
-		if ( ! isset( $_REQUEST['section'] ) ) {
+		if ( ! isset( $_REQUEST['section'] ) ) { // phpcs:ignore
 			return false;
 		}
 
 		// Return false if the Integration request section isn't for this Plugin.
-		if ( $_REQUEST['section'] !== 'ckwc' ) {
+		if ( sanitize_text_field( $_REQUEST['section'] ) !== 'ckwc' ) { // phpcs:ignore
 			return false;
 		}
 
 		// If a sub section is defined, return its name now.
-		if ( isset( $_REQUEST['sub_section'] ) ) {
-			return sanitize_text_field( $_REQUEST['sub_section'] );
+		if ( isset( $_REQUEST['sub_section'] ) ) { // phpcs:ignore
+			return sanitize_text_field( $_REQUEST['sub_section'] ); // phpcs:ignore
 		}
 
 		// The request is for the Integration's main settings screen.

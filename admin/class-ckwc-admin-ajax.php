@@ -28,8 +28,8 @@ class CKWC_Admin_AJAX {
 
 	/**
 	 * Called by AJAX to send the given Order ID to ConvertKit.
-	 * 
-	 * @since 	1.4.3
+	 *
+	 * @since   1.4.3
 	 */
 	public function sync_past_orders() {
 
@@ -55,13 +55,16 @@ class CKWC_Admin_AJAX {
 			wp_send_json_error( $result->get_error_message() );
 		}
 
-		// Return JSON success
-		wp_send_json_success( sprintf(
-			__( 'WooCommerce Order ID #%1$s added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
-			$id,
-			$result['id']
-		) );
-		
+		// Return JSON success.
+		wp_send_json_success(
+			sprintf(
+				/* translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID */
+				__( 'WooCommerce Order ID #%1$s added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
+				$id,
+				$result['id']
+			)
+		);
+
 	}
 
 }

@@ -286,6 +286,7 @@ class CKWC_Order {
 			return new WP_Error(
 				'convertkit_for_woocommerce_error',
 				sprintf(
+					/* translators: WooCommerce Order ID */
 					__( 'Order ID %s could not be found in WooCommerce.', 'woocommerce-convertkit' ),
 					$order_id
 				)
@@ -299,6 +300,7 @@ class CKWC_Order {
 			return new WP_Error(
 				'convertkit_for_woocommerce_error',
 				sprintf(
+					/* translators: WooCommerce Order ID */
 					__( 'Order ID %s has already been sent to ConvertKit.', 'woocommerce-convertkit' ),
 					$order_id
 				)
@@ -392,29 +394,31 @@ class CKWC_Order {
 	/**
 	 * Returns an array of WooCommerce Orders that have not had their Purchase Data
 	 * sent to ConvertKit.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @return 	mixed 	false | array
+	 *
+	 * @since   1.4.3
+	 *
+	 * @return  mixed   false | array
 	 */
 	public function get_orders_not_sent_to_convertkit() {
 
 		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
-		$query = new WP_Query( array(
-			'post_type' => 'shop_order',
-			'post_status' => 'any',
-			'posts_per_page' => -1,
-			'meta_query' => array(
-				array(
-					'key' => 'ckwc_purchase_data_id',
-					'compare' => 'NOT EXISTS',
+		$query = new WP_Query(
+			array(
+				'post_type'              => 'shop_order',
+				'post_status'            => 'any',
+				'posts_per_page'         => -1,
+				'meta_query'             => array(
+					array(
+						'key'     => 'ckwc_purchase_data_id',
+						'compare' => 'NOT EXISTS',
+					),
 				),
-			),
-			'fields' => 'ids',
-			'cache_results' => false,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		) );
+				'fields'                 => 'ids',
+				'cache_results'          => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
 
 		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
 		// return false.
@@ -432,8 +436,8 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   int $order_id   				Order ID.
-	 * @param 	int $convertkit_purchase_id 	ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
+	 * @param   int $order_id                       Order ID.
+	 * @param   int $convertkit_purchase_data_id    ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
 	 */
 	private function mark_purchase_data_sent( $order_id, $convertkit_purchase_data_id ) {
 

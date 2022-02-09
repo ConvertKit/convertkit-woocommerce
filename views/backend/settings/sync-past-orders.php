@@ -1,31 +1,41 @@
-<h2><?php _e( 'ConvertKit', 'woocommerce-convertkit' ); ?></h2>
+<?php
+/**
+ * Outputs the Sync Past Orders screen.
+ *
+ * @package CKWC
+ * @author ConvertKit
+ */
+
+?>
+
+<h2><?php esc_html_e( 'ConvertKit', 'woocommerce-convertkit' ); ?></h2>
 
 <div>
-    <p>
-    	<?php _e( 'Do not navigate away from this page until this script is done, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed.', 'page-generator-pro' ); ?>
-    </p>
+	<p>
+		<?php esc_html_e( 'Do not navigate away from this page until this script is done, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed.', 'woocommerce-convertkit' ); ?>
+	</p>
 
-    <!-- Progress Bar -->
-    <div id="progress-bar"></div>
-    <div id="progress">
-        <span id="progress-number">0</span>
-        <span> / <?php echo count( $this->unsynced_order_ids ); ?></span>
-    </div>
+	<!-- Progress Bar -->
+	<div id="progress-bar"></div>
+	<div id="progress">
+		<span id="progress-number">0</span>
+		<span> / <?php echo count( $this->unsynced_order_ids ); ?></span>
+	</div>
 
-    <!-- Log -->
-    <div id="log">
-        <ul></ul>
-    </div>
+	<!-- Log -->
+	<div id="log">
+		<ul></ul>
+	</div>
 
-    <p>
-        <!-- Cancel Button -->
-        <a href="<?php echo $return_url; ?>" class="button button-secondary cancel">
-            <?php _e( 'Cancel Sync', 'page-generator-pro' ); ?>
-        </a>
+	<p>
+		<!-- Cancel Button -->
+		<a href="<?php echo esc_attr( $return_url ); ?>" class="button button-secondary cancel">
+			<?php esc_html_e( 'Cancel Sync', 'woocommerce-convertkit' ); ?>
+		</a>
 
-        <!-- Return Button (display when routine finishes) -->
-        <a href="<?php echo $return_url; ?>" class="button button-secondary return">
-            <?php _e( 'Return to Settings', 'page-generator-pro' ); ?>
-        </a>
-    </p>
+		<!-- Return Button (display when routine finishes) -->
+		<a href="<?php echo esc_attr( $return_url ); ?>" class="button button-secondary return">
+			<?php esc_html_e( 'Return to Settings', 'woocommerce-convertkit' ); ?>
+		</a>
+	</p>
 </div>
