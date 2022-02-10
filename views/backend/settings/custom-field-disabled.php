@@ -15,7 +15,7 @@
 	</th>
 	<td class="forminp">
 		<span class="<?php echo esc_attr( $data['class'] ); ?>">
-			<?php esc_html_e( 'To select the Custom Field to map this Order value to, specify a valid API Key and Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
+			<?php esc_html_e( 'To select the custom field to map this order value to, specify a valid API Key, API Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
 		</span>
 	</td>
 </tr>
