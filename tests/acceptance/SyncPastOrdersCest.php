@@ -32,6 +32,9 @@ class SyncPastOrdersCest
 	 */
 	public function testNoButtonDisplayedWhenIntegrationDisabled(AcceptanceTester $I)
 	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+
 		// Disable the Integration.
 		$I->loadConvertKitSettingsScreen($I);
 		$I->checkOption('#woocommerce_ckwc_enabled');
@@ -40,26 +43,43 @@ class SyncPastOrdersCest
 		$I->uncheckOption('#woocommerce_ckwc_enabled');
 		$I->click('Save changes');
 
-		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Don't define a subscribe Event
-			false // Don't send purchase data to ConvertKit
-		);
+		// Create Product.
+		$productName = 'Simple Product';
+		$productID = $I->wooCommerceCreateSimpleProduct($I, false);
+
+		// Define Email Address for this Test.
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($emailAddress);
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+
+		// Add Product to Cart and load Checkout.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress);
+
+		// Click Place order button.
+		$I->click('Place order');
+
+		// Wait until JS completes and redirects.
+		$I->waitForElement('.woocommerce-order-received', 10);
+		
+		// Get data.
+		$result = [
+			'email_address' => $emailAddress,
+			'product_id' => $productID,
+			'order_id' => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+		];
+
+		// Login as the Administrator
+		$I->loginAsAdmin();
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Confirm that no Sync Past Order button is displayed.
 		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
-
-		// Delete the Product and Order.
-		$I->dontHavePostInDatabase(['ID' => $result['product_id']]);
-		$I->dontHavePostInDatabase(['ID' => $result['order_id']]);
 	}
 
 	/**
@@ -72,6 +92,9 @@ class SyncPastOrdersCest
 	 */
 	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
 	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
@@ -99,10 +122,6 @@ class SyncPastOrdersCest
 
 		// Confirm that no Sync Past Order button is displayed.
 		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
-
-		// Delete the Product and Order.
-		$I->dontHavePostInDatabase(['ID' => $result['product_id']]);
-		$I->dontHavePostInDatabase(['ID' => $result['order_id']]);
 	}
 
 	/**
@@ -116,6 +135,9 @@ class SyncPastOrdersCest
 	 */
 	public function testNoButtonDisplayedWhenNoOrders(AcceptanceTester $I)
 	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
@@ -139,6 +161,9 @@ class SyncPastOrdersCest
 	 */
 	public function testNoButtonDisplayedWhenNoPastOrders(AcceptanceTester $I)
 	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
@@ -159,10 +184,6 @@ class SyncPastOrdersCest
 
 		// Confirm that no Sync Past Order button is displayed.
 		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
-
-		// Delete the Product and Order.
-		$I->dontHavePostInDatabase(['ID' => $result['product_id']]);
-		$I->dontHavePostInDatabase(['ID' => $result['order_id']]);
 	}
 
 	/**
@@ -179,6 +200,9 @@ class SyncPastOrdersCest
 	 */
 	public function testSyncPastOrder(AcceptanceTester $I)
 	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
@@ -226,10 +250,6 @@ class SyncPastOrdersCest
 
 		// Confirm that the Settings screen is displayed.
 		$I->seeInSource('Enable ConvertKit integration');
-
-		// Delete the Product and Order.
-		$I->dontHavePostInDatabase(['ID' => $result['product_id']]);
-		$I->dontHavePostInDatabase(['ID' => $result['order_id']]);
 	}
 
 	/**
@@ -243,6 +263,9 @@ class SyncPastOrdersCest
 	 */
 	public function testSyncPastOrderWithInvalidAPICredentials(AcceptanceTester $I)
 	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		
 		// Enable the Integration and define invalid API Credentials.
 		$I->loadConvertKitSettingsScreen($I);
 		$I->checkOption('#woocommerce_ckwc_enabled');
@@ -294,9 +317,5 @@ class SyncPastOrdersCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address'], $result['product_id']);
-
-		// Delete the Product and Order.
-		$I->dontHavePostInDatabase(['ID' => $result['product_id']]);
-		$I->dontHavePostInDatabase(['ID' => $result['order_id']]);
 	}
 }
