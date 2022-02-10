@@ -14,6 +14,8 @@
 		<?php echo esc_html( $this->get_tooltip_html( $data ) ); ?>
 	</th>
 	<td class="forminp">
-		<?php esc_html_e( 'To select the Custom Field to map this Order value to, specify a valid API Key and Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
+		<span class="<?php echo esc_attr( $data['class'] ); ?>">
+			<?php esc_html_e( 'To select the Custom Field to map this Order value to, specify a valid API Key and Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
+		</span>
 	</td>
 </tr>
