@@ -275,11 +275,11 @@ class Acceptance extends \Codeception\Module
 			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
 			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
 		} else {
-			$I->selectOption('#woocommerce_ckwc_custom_field_phone', '(Don\'t send / map)');
-			$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', '(Don\'t send / map)');
-			$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', '(Don\'t send / map)');
-			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', '(Don\'t send / map)');
-			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', '(Don\'t send / map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_phone', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', '(Don\'t send or map)');
 		}
 
 		$I->click('Save changes');

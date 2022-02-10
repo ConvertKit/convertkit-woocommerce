@@ -10,7 +10,7 @@
 
 <select class="<?php echo esc_attr( $custom_field['class'] ); ?>" id="<?php echo esc_attr( $custom_field['id'] ); ?>" name="<?php echo esc_attr( $custom_field['name'] ); ?>">
 	<option <?php selected( '', $custom_field['value'] ); ?> value="">
-		<?php esc_html_e( '(Don\'t send / map)', 'woocommerce-convertkit' ); ?>
+		<?php esc_html_e( '(Don\'t send or map)', 'woocommerce-convertkit' ); ?>
 	</option>
 
 	<?php
