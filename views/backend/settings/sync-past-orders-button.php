@@ -15,8 +15,8 @@
 			<a href="<?php echo esc_attr( $data['url'] ); ?>" id="ckwc_sync_past_orders" class="button button-secondary <?php echo esc_attr( $data['class'] ); ?>">
 				<?php
 				echo sprintf(
-					/* translators: number of Orders not sent to ConvertKit */
-					esc_html( _n( 'Sync %s Past Order', 'Sync %s Past Orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ) ),
+					/* translators: number of orders not sent to ConvertKit */
+					esc_html( _n( 'Sync %s past order', 'Sync %s past orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ) ),
 					esc_html( number_format_i18n( count( $unsynced_order_ids ) ) )
 				);
 				?>

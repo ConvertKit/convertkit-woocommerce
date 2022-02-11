@@ -12,7 +12,7 @@
 
 <div>
 	<p>
-		<?php esc_html_e( 'Do not navigate away from this page until this script is done, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed.', 'woocommerce-convertkit' ); ?>
+		<?php esc_html_e( 'Do not navigate away from this page until the process is completed, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed.', 'woocommerce-convertkit' ); ?>
 	</p>
 
 	<!-- Progress Bar -->
@@ -35,7 +35,7 @@
 
 		<!-- Return Button (display when routine finishes) -->
 		<a href="<?php echo esc_attr( $return_url ); ?>" class="button button-secondary return">
-			<?php esc_html_e( 'Return to Settings', 'woocommerce-convertkit' ); ?>
+			<?php esc_html_e( 'Return to settings', 'woocommerce-convertkit' ); ?>
 		</a>
 	</p>
 </div>

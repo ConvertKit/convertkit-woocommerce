@@ -245,8 +245,8 @@ class SyncPastOrdersCest
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
 
-		// Click the Return to Settings button.
-		$I->click('Return to Settings');
+		// Click the Return to settings button.
+		$I->click('Return to settings');
 
 		// Confirm that the Settings screen is displayed.
 		$I->seeInSource('Enable ConvertKit integration');

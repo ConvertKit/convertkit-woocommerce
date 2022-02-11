@@ -499,10 +499,10 @@ class CKWC_Integration extends WC_Integration {
 		// Update the description based on the number of Orders that have not been sent to ConvertKit.
 		$data['description'] = sprintf(
 			/* translators: Number of WooCommerce Orders  */
-			__( '%s have not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or Orders were created prior to installing this integration.<br />Use the sync button to send data for these Orders to ConvertKit.', 'woocommerce-convertkit' ),
+			__( '%s have not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to ConvertKit.', 'woocommerce-convertkit' ),
 			sprintf(
 				/* translators: number of Orders not sent to ConvertKit */
-				_n( '%s WooCommerce Order', '%s WooCommerce Orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
+				_n( '%s WooCommerce order', '%s WooCommerce orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
 				number_format_i18n( count( $unsynced_order_ids ) )
 			)
 		);
