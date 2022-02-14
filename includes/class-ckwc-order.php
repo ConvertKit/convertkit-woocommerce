@@ -71,7 +71,7 @@ class CKWC_Order {
 			return;
 		}
 
-		// Subscribe customer's email address to a form or tag.
+		// Subscribe customer's email address to a form, tag or sequence.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_subscribe_customer' ), 99999, 1 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_subscribe_customer' ), 99999, 3 );
 
@@ -117,6 +117,10 @@ class CKWC_Order {
 		if ( ! $order ) {
 			return;
 		}
+
+		// If configured in the Integration, map Phone, Billing and/or Shipping Addresses to ConvertKit
+		// Custom Fields now.
+		$fields = $this->custom_field_data( $order );
 
 		// Build an array of Forms, Tags and Sequences to subscribe the Customer to, based on
 		// the global integration settings and any Product-specific settings.
@@ -176,9 +180,16 @@ class CKWC_Order {
 				$subscription['id'],
 				$this->email( $order ),
 				$this->name( $order ),
-				$order_id
+				$order_id,
+				$fields
 			);
 		}
+
+		// The customer was subscribed to ConvertKit, so request a Plugin review.
+		// This can safely be called multiple times, as the review request
+		// class will ensure once a review request is dismissed by the user,
+		// it is never displayed again.
+		WP_CKWC()->get_class( 'review_request' )->request_review();
 
 	}
 
@@ -193,23 +204,24 @@ class CKWC_Order {
 	 * @param   string $email          Email Address.
 	 * @param   string $name           Customer Name.
 	 * @param   int    $order_id       WooCommerce Order ID.
+	 * @param   mixed  $custom_fields  Custom Fields (false | array).
 	 * @return  mixed                   WP_Error | array
 	 */
-	public function subscribe_customer( $resource_type, $resource_id, $email, $name, $order_id ) {
+	public function subscribe_customer( $resource_type, $resource_id, $email, $name, $order_id, $custom_fields ) {
 
 		// Call API to subscribe the email address to the given Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
-				$result = $this->api->form_subscribe( $resource_id, $email, $name );
+				$result = $this->api->form_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 
 			case 'tag':
-				$result = $this->api->tag_subscribe( $resource_id, $email );
+				$result = $this->api->tag_subscribe( $resource_id, $email, $custom_fields );
 				break;
 
 			case 'sequence':
 			case 'course':
-				$result = $this->api->sequence_subscribe( $resource_id, $email );
+				$result = $this->api->sequence_subscribe( $resource_id, $email, $custom_fields );
 				break;
 		}
 
@@ -419,6 +431,12 @@ class CKWC_Order {
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
 		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
 
+		// The customer's purchase data was sent to ConvertKit, so request a Plugin review.
+		// This can safely be called multiple times, as the review request
+		// class will ensure once a review request is dismissed by the user,
+		// it is never displayed again.
+		WP_CKWC()->get_class( 'review_request' )->request_review();
+
 		// Return.
 		return $response;
 
@@ -552,7 +570,7 @@ class CKWC_Order {
 	/**
 	 * Returns the customer's email address for the given WooCommerce Order,
 	 * immediately before it is sent to ConvertKit when subscribing the Customer
-	 * to a Form or Tag.
+	 * to a Form, Tag or Sequence.
 	 *
 	 * @since   1.0.0
 	 *
@@ -567,7 +585,7 @@ class CKWC_Order {
 		/**
 		 * Returns the customer's email address for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
-		 * to a Form or Tag.
+		 * to a Form, Tag or Sequence.
 		 *
 		 * @since   1.0.0
 		 *
@@ -671,7 +689,7 @@ class CKWC_Order {
 	/**
 	 * Returns the customer's last name for the given WooCommerce Order,
 	 * immediately before it is sent to ConvertKit when subscribing the Customer
-	 * to a Form or Tag.
+	 * to a Form, Tag or Sequence.
 	 *
 	 * @since   1.0.0
 	 *
@@ -686,7 +704,7 @@ class CKWC_Order {
 		/**
 		 * Returns the customer's last name for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
-		 * to a Form or Tag.
+		 * to a Form, Tag or Sequence.
 		 *
 		 * @since   1.0.0
 		 *
@@ -697,6 +715,61 @@ class CKWC_Order {
 
 		// Return.
 		return $last_name;
+
+	}
+
+	/**
+	 * Returns an array of ConvertKit Custom Field Key/Value pairs, with values
+	 * comprising of Order data based, to be sent to ConvertKit when an Order's
+	 * Customer is subscribed via a Form, Tag or Sequence.
+	 *
+	 * Returns false if no Order data should be stored in ConvertKit Custom Fields.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   WC_Order|WC_Order_Refund $order  Order.
+	 * @return  mixed                            array | false
+	 */
+	private function custom_field_data( $order ) {
+
+		$fields = array();
+
+		if ( $this->integration->get_option( 'custom_field_phone' ) ) {
+			$fields[ $this->integration->get_option( 'custom_field_phone' ) ] = $order->get_billing_phone();
+		}
+		if ( $this->integration->get_option( 'custom_field_billing_address' ) ) {
+			$fields[ $this->integration->get_option( 'custom_field_billing_address' ) ] = str_replace( '<br/>', ', ', $order->get_formatted_billing_address() );
+		}
+		if ( $this->integration->get_option( 'custom_field_shipping_address' ) ) {
+			$fields[ $this->integration->get_option( 'custom_field_shipping_address' ) ] = str_replace( '<br/>', ', ', $order->get_formatted_shipping_address() );
+		}
+		if ( $this->integration->get_option( 'custom_field_payment_method' ) ) {
+			$fields[ $this->integration->get_option( 'custom_field_payment_method' ) ] = $order->get_payment_method();
+		}
+		if ( $this->integration->get_option( 'custom_field_customer_note' ) ) {
+			$fields[ $this->integration->get_option( 'custom_field_customer_note' ) ] = $order->get_customer_note();
+		}
+
+		/**
+		 * Returns an array of ConvertKit Custom Field Key/Value pairs, with values
+		 * comprising of Order data based, to be sent to ConvertKit when an Order's
+		 * Customer is subscribed via a Form, Tag or Sequence.
+		 *
+		 * Returns false if no Order data should be stored in ConvertKit Custom Fields.
+		 *
+		 * @since   1.4.3
+		 *
+		 * @param   mixed                       $fields     Custom Field Key/Value pairs (false | array).
+		 * @param   WC_Order|WC_Order_Refund    $order      WooCommerce Order.
+		 */
+		$fields = apply_filters( 'convertkit_for_woocommerce_custom_field_data', $fields, $order );
+
+		// If the fields array is empty, no Custom Field mappings exist.
+		if ( ! count( $fields ) ) {
+			return false;
+		}
+
+		return $fields;
 
 	}
 

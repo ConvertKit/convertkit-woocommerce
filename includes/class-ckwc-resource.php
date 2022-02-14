@@ -124,6 +124,10 @@ class CKWC_Resource {
 			case 'tags':
 				$results = $api->get_tags();
 				break;
+
+			case 'custom_fields':
+				$results = $api->get_custom_fields();
+				break;
 		}
 
 		// Bail if an error occured.

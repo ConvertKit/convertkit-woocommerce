@@ -94,8 +94,8 @@ function ckwcRefreshUI() {
 							return;
 						}
 
-						// Hide this row if the input or select element within the row has the CSS class of the setting name.
-						if ( $( 'input, select, a', $( this ) ).hasClass( setting ) ) {
+						// Hide this row if the input, select, link or span element within the row has the CSS class of the setting name.
+						if ( $( 'input, select, a, span', $( this ) ).hasClass( setting ) ) {
 							$( this ).hide();
 						}
 					}
