@@ -36,6 +36,27 @@ class CKWC_Order {
 	private $api;
 
 	/**
+	 * The Meta Key used to store that the WooCommerce Order
+	 * was successfully sent to ConvertKit.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @var 	string
+	 */
+	private $purchase_data_sent_meta_key = 'ckwc_purchase_data_sent';
+
+	/**
+	 * The Meta Key used to store the ConvertKit Transaction ID
+	 * when purchase data is successfully sent to ConvertKit
+	 * for a WooCommerce Order.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @var 	string
+	 */
+	private $purchase_data_id_meta_key = 'ckwc_purchase_data_id';
+
+	/**
 	 * Constructor
 	 *
 	 * @since   1.0.0
@@ -284,7 +305,7 @@ class CKWC_Order {
 		// If no Order could be fetched, bail.
 		if ( ! $order ) {
 			return new WP_Error(
-				'convertkit_for_woocommerce_error',
+				'convertkit_for_woocommerce_error_order_missing',
 				sprintf(
 					/* translators: WooCommerce Order ID */
 					__( 'Order ID %s could not be found in WooCommerce.', 'woocommerce-convertkit' ),
@@ -298,7 +319,7 @@ class CKWC_Order {
 		// when the Order's status is transitioned.
 		if ( $this->purchase_data_sent( $order_id ) ) {
 			return new WP_Error(
-				'convertkit_for_woocommerce_error',
+				'convertkit_for_woocommerce_error_order_exists',
 				sprintf(
 					/* translators: WooCommerce Order ID */
 					__( 'Order ID %s has already been sent to ConvertKit.', 'woocommerce-convertkit' ),
@@ -324,6 +345,18 @@ class CKWC_Order {
 				'unit_price' => $item->get_product()->get_price(),
 				'quantity'   => $item->get_quantity(),
 			);
+		}
+
+		// If no Products exist, mark purchase data as sent and return.
+		if ( ! count( $products ) ) {
+			// Mark the purchase data as being sent, so future Order status transitions don't send it again.
+			$this->mark_purchase_data_sent( $order_id, 0 );
+
+			// Add a note to the WooCommerce Order that no purchase data was sent.
+			$order->add_order_note( __( '[ConvertKit] Purchase Data skipped, as this Order has no Products', 'woocommerce-convertkit' ) );
+
+			// Return.
+			return true;
 		}
 
 		// Build API parameters.
@@ -409,7 +442,7 @@ class CKWC_Order {
 				'posts_per_page'         => -1,
 				'meta_query'             => array(
 					array(
-						'key'     => 'ckwc_purchase_data_id',
+						'key'     => $this->purchase_data_id_meta_key,
 						'compare' => 'NOT EXISTS',
 					),
 				),
@@ -441,8 +474,8 @@ class CKWC_Order {
 	 */
 	private function mark_purchase_data_sent( $order_id, $convertkit_purchase_data_id ) {
 
-		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
-		update_post_meta( $order_id, 'ckwc_purchase_data_id', $convertkit_purchase_data_id );
+		update_post_meta( $order_id, $this->purchase_data_sent_meta_key, 'yes' );
+		update_post_meta( $order_id, $this->purchase_data_id_meta_key, $convertkit_purchase_data_id );
 
 	}
 
@@ -456,11 +489,20 @@ class CKWC_Order {
 	 */
 	private function purchase_data_sent( $order_id ) {
 
-		if ( 'yes' === get_post_meta( $order_id, 'ckwc_purchase_data_sent', true ) ) {
-			return true;
+		// Return false if Purchase Data Sent Meta Key isn't yes.
+		if ( 'yes' !== get_post_meta( $order_id, $this->purchase_data_sent_meta_key, true ) ) {
+			return false;
 		}
 
-		return false;
+		// Return false if Purchase Data ID Meta Key doesn't exist in this Order.
+		// This is stored in 1.4.3 and higher, ensuring we have a mapping
+		// stored for the WooCommerce Order ID --> ConvertKit Purchase / Transaction ID.
+		if ( ! metadata_exists( 'post', $order_id, $this->purchase_data_id_meta_key ) ) {
+			return false;
+		}
+
+		// Purchase data for this Order has previously been sent to ConvertKit.
+		return true;
 
 	}
 
