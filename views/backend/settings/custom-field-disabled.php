@@ -1,6 +1,6 @@
 <?php
 /**
- * Outputs the Subscription setting table row for the integration's settings,
+ * Outputs the Custom Field setting table row for the integration's settings,
  * when the integration is disabled or does not have valid API credentials.
  *
  * @package CKWC
@@ -15,7 +15,7 @@
 	</th>
 	<td class="forminp">
 		<span class="<?php echo esc_attr( $data['class'] ); ?>">
-			<?php esc_html_e( 'To select the Form, Tag or Sequence to subscribe Customers to, specify a valid API Key and Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
+			<?php esc_html_e( 'To select the custom field to map this order value to, specify a valid API Key, API Secret, and click Save changes.', 'woocommerce-convertkit' ); ?>
 		</span>
 	</td>
 </tr>
