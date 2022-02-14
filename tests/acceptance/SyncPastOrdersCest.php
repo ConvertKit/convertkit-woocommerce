@@ -95,16 +95,8 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
 
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable integration.
-		$I->checkOption('#woocommerce_ckwc_enabled');
-		$I->fillField('woocommerce_ckwc_api_key', '');
-		$I->fillField('woocommerce_ckwc_api_secret', '');
-
-		// Save changes.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
@@ -117,8 +109,19 @@ class SyncPastOrdersCest
 			false // Don't send purchase data to ConvertKit
 		);
 
+		// Login as the Administrator
+		$I->loginAsAdmin();
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable integration, removing API Keys.
+		$I->checkOption('#woocommerce_ckwc_enabled');
+		$I->fillField('woocommerce_ckwc_api_key', '');
+		$I->fillField('woocommerce_ckwc_api_secret', '');
+
+		// Save changes.
+		$I->click('Save changes');
 
 		// Confirm that no Sync Past Order button is displayed.
 		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
@@ -359,13 +362,9 @@ class SyncPastOrdersCest
 	{
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
-		
-		// Enable the Integration and define invalid API Credentials.
-		$I->loadConvertKitSettingsScreen($I);
-		$I->checkOption('#woocommerce_ckwc_enabled');
-		$I->fillField('woocommerce_ckwc_api_key', 'invalidApiKey');
-		$I->fillField('woocommerce_ckwc_api_secret', 'invalidApiSecret');
-		$I->click('Save changes');
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
@@ -384,6 +383,13 @@ class SyncPastOrdersCest
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable the Integration and define invalid API Credentials.
+		$I->loadConvertKitSettingsScreen($I);
+		$I->checkOption('#woocommerce_ckwc_enabled');
+		$I->fillField('woocommerce_ckwc_api_key', 'invalidApiKey');
+		$I->fillField('woocommerce_ckwc_api_secret', 'invalidApiSecret');
+		$I->click('Save changes');
 
 		// Confirm that the Sync Past Order button is displayed.
 		$I->seeElementInDOM('a#ckwc_sync_past_orders');
