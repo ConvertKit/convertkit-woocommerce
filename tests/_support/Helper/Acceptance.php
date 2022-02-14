@@ -261,9 +261,9 @@ class Acceptance extends \Codeception\Module
 		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are 
 		// saved and the Forms, Tags and Sequences are listed.
 		if ($pluginFormTagSequence) {
-			$I->selectOption('#woocommerce_ckwc_subscription', $pluginFormTagSequence);
+      $I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', $pluginFormTagSequence);
 		} else {
-			$I->selectOption('#woocommerce_ckwc_subscription', 'Select a subscription option...');
+      $I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', 'Select a subscription option...');
 		}
 
 		// Define Order to Custom Field mappings, now that the API credentials are 

@@ -70,6 +70,7 @@ class CKWC_Integration extends WC_Integration {
 		// Load Admin screens, save settings.
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
 		}
@@ -317,21 +318,33 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function enqueue_scripts() {
 
-		// Bail if we cannot determine if we are viewing the Integration Settings screen.
-		if ( ! function_exists( 'get_current_screen' ) ) {
-			return;
-		}
-
-		// Get screen.
-		$screen = get_current_screen();
-
 		// Bail if we're not on the Integration Settings screen.
-		if ( $screen->id !== 'woocommerce_page_wc-settings' ) {
+		if ( ! $this->is_integration_settings_screen() ) {
 			return;
 		}
 
 		// Enqueue JS.
 		wp_enqueue_script( 'ckwc-integration', CKWC_PLUGIN_URL . 'resources/backend/js/integration.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
+
+		// Enqueue Select2 JS.
+		ckwc_select2_enqueue_scripts();
+
+	}
+
+	/**
+	 * Enqueue CSS for the Integration Settings screen.
+	 *
+	 * @since   1.4.3
+	 */
+	public function enqueue_styles() {
+
+		// Bail if we're not on the Integration Settings screen.
+		if ( ! $this->is_integration_settings_screen() ) {
+			return;
+		}
+
+		// Enqueue Select2 CSS.
+		ckwc_select2_enqueue_styles();
 
 	}
 
@@ -385,8 +398,8 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
-			'id'        => $field,
-			'class'     => 'select ' . $data['class'],
+			'id'        => 'woocommerce_ckwc_subscription',
+			'class'     => 'select ckwc-select2 ' . $data['class'],
 			'name'      => $field,
 			'value'     => $this->get_option( $key ),
 			'forms'     => $this->forms,
@@ -568,7 +581,34 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Deletes all cached Forms, Tags, Sequences and Custom Fields from the options table.
+	 * Checks if the request is for this integration's settings screen.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @return  bool
+	 */
+	private function is_integration_settings_screen() {
+
+		// Return false if we cannot reliably determine the current screen that is viewed,
+		// due to WordPress' get_current_screen() function being unavailable.
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+
+		// Get screen.
+		$screen = get_current_screen();
+
+		// Return false if we're not on the Integration Settings screen.
+		if ( $screen->id !== 'woocommerce_page_wc-settings' ) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Deletes all cached Forms, Tags and Sequences from the options table.
 	 *
 	 * @since   1.4.2
 	 */
