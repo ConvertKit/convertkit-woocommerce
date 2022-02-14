@@ -25,7 +25,7 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	private $unsynced_order_ids = false;
 
-  /**
+	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
@@ -346,7 +346,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
-			'sync_past_orders' => array(
+			'sync_past_orders'              => array(
 				'title'    => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
 				'label'    => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
 				'type'     => 'sync_past_orders_button',
@@ -450,6 +450,9 @@ class CKWC_Integration extends WC_Integration {
 						'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to ConvertKit?', 'woocommerce-convertkit' ),
 					)
 				);
+
+				// Enqueue Select2 JS.
+				ckwc_select2_enqueue_scripts();
 				break;
 
 		}
@@ -486,6 +489,8 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			case 'settings':
 			default:
+				// Enqueue Select2 CSS.
+				ckwc_select2_enqueue_styles();
 				break;
 
 		}
@@ -539,7 +544,7 @@ class CKWC_Integration extends WC_Integration {
 			$this->tags = new CKWC_Resource_Tags();
 			$this->tags->refresh();
 		}
-    
+
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
 			'id'        => 'woocommerce_ckwc_subscription',
@@ -645,10 +650,10 @@ class CKWC_Integration extends WC_Integration {
 		// Update the description based on the number of Orders that have not been sent to ConvertKit.
 		$data['description'] = sprintf(
 			/* translators: Number of WooCommerce Orders  */
-			__( '%s have not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to ConvertKit.', 'woocommerce-convertkit' ),
+			__( '%s not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to ConvertKit.', 'woocommerce-convertkit' ),
 			sprintf(
 				/* translators: number of Orders not sent to ConvertKit */
-				_n( '%s WooCommerce order', '%s WooCommerce orders', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
+				_n( '%s WooCommerce order has', '%s WooCommerce orders have', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),
 				number_format_i18n( count( $unsynced_order_ids ) )
 			)
 		);

@@ -38,10 +38,10 @@ class CKWC_Order {
 	/**
 	 * The Meta Key used to store that the WooCommerce Order
 	 * was successfully sent to ConvertKit.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @var 	string
+	 *
+	 * @since   1.4.4
+	 *
+	 * @var     string
 	 */
 	private $purchase_data_sent_meta_key = 'ckwc_purchase_data_sent';
 
@@ -49,10 +49,10 @@ class CKWC_Order {
 	 * The Meta Key used to store the ConvertKit Transaction ID
 	 * when purchase data is successfully sent to ConvertKit
 	 * for a WooCommerce Order.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @var 	string
+	 *
+	 * @since   1.4.4
+	 *
+	 * @var     string
 	 */
 	private $purchase_data_id_meta_key = 'ckwc_purchase_data_id';
 
