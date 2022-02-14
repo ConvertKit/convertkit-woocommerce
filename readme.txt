@@ -46,6 +46,10 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
+### 1.4.3 2022-02-14
+* Added: Settings: Options to Map WooCommerce Order Data (Phone, Billing Address etc) to ConvertKit Custom Fields
+* Added: Select2 dropdown for Forms, Tags and Sequence selection with search functionality for improved UX.
+
 ### 1.4.2 2022-01-28
 * Added: Testing and compatibility for WooCommerce 6.1
 * Added: PHP 8.x compatibility
