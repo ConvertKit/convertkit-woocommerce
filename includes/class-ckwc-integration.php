@@ -348,7 +348,7 @@ class CKWC_Integration extends WC_Integration {
 						'ids'                 => $this->unsynced_order_ids,
 						'number_of_requests'  => count( $this->unsynced_order_ids ),
 						'resume_index'        => 0,
-						'stop_on_error'       => 0,
+						'stop_on_error'       => -1, // 1: stop, 0: continue and retry the same request, -1: continue but skip the failed request.
 						'stop_on_error_pause' => 2000,
 					)
 				);
