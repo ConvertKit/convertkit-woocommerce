@@ -34,8 +34,47 @@ class CKWC_Admin_Product {
 		// Fetch integration.
 		$this->integration = WP_CKWC_Integration();
 
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'add_meta_boxes_product', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_product', array( $this, 'save_product' ) );
+
+	}
+
+	/**
+	 * Enqueue Javascript for the WooCommerce Add / Edit Product screen.
+	 *
+	 * @since   1.4.3
+	 */
+	public function enqueue_scripts() {
+
+		// Bail if we're not on the Add / Edit Product screen.
+		if ( ! $this->is_edit_product_screen() ) {
+			return;
+		}
+
+		// Enqueue Select2 JS.
+		ckwc_select2_enqueue_scripts();
+
+	}
+
+	/**
+	 * Enqueue CSS for the WooCommerce Add / Edit Product screen.
+	 *
+	 * @since   1.4.3
+	 */
+	public function enqueue_styles() {
+
+		// Bail if we're not on the Add / Edit Product screen.
+		if ( ! $this->is_edit_product_screen() ) {
+			return;
+		}
+
+		// Enqueue CSS.
+		wp_enqueue_style( 'ckwc-product', CKWC_PLUGIN_URL . '/resources/backend/css/product.css', false, CKWC_PLUGIN_VERSION );
+
+		// Enqueue Select2 CSS.
+		ckwc_select2_enqueue_styles();
 
 	}
 
@@ -76,7 +115,7 @@ class CKWC_Admin_Product {
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
 			'id'        => 'ckwc_subscription',
-			'class'     => 'widefat',
+			'class'     => 'ckwc-select2 widefat',
 			'name'      => 'ckwc_subscription',
 			'value'     => get_post_meta( $post->ID, 'ckwc_subscription', true ),
 			'forms'     => $forms,
@@ -123,6 +162,33 @@ class CKWC_Admin_Product {
 
 		// Update Post Meta.
 		update_post_meta( $post_id, 'ckwc_subscription', $data['ckwc_subscription'] );
+
+	}
+
+	/**
+	 * Checks if the request is for viewing the WooCommerce Add / Edit Product screen.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @return  bool
+	 */
+	private function is_edit_product_screen() {
+
+		// Return false if we cannot reliably determine the current screen that is viewed,
+		// due to WordPress' get_current_screen() function being unavailable.
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+
+		// Get screen.
+		$screen = get_current_screen();
+
+		// Return false if we're not on the Add / Edit Product screen.
+		if ( $screen->id !== 'product' ) {
+			return false;
+		}
+
+		return true;
 
 	}
 
