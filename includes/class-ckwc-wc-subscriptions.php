@@ -24,7 +24,7 @@ class CKWC_WC_Subscriptions {
 	 * 
 	 * @var 	string
 	 */
-    private $plugin_folder_filename = 'all-in-one-seo-pack/all_in_one_seo_pack.php';
+    private $plugin_folder_filename = 'woocommerce-subscriptions/woocommerce-subscriptions.php';
 
     /**
 	 * The minimum version the third party Plugin must be for this
@@ -90,9 +90,9 @@ class CKWC_WC_Subscriptions {
 		}
 
 		// Do not opt in if the Order is a WooCommerce Subscription renewal, resubscription or plan switch.
-		if ( wcs_order_contains_renewal( $order ) ||
-			wcs_order_contains_resubscribe( $order ) ||
-			wcs_order_contains_switch( $order ) ) {
+		if ( wcs_order_contains_renewal( $order_id ) ||
+			wcs_order_contains_resubscribe( $order_id ) ||
+			wcs_order_contains_switch( $order_id ) ) {
 			return false;
 		}
 
