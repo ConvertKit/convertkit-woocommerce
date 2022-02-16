@@ -226,8 +226,13 @@ class Acceptance extends \Codeception\Module
 	 */
 	public function setupWooCommercePlugin($I)
 	{
-		// Setup Stripe as Payment Method, as a payment method is required for Checkout to succeed,
-		// and it's the required payment method for subscription products.
+		// Enable "Cash on Delivery" Payment Method.
+		// If no Payment Method is enabled, WooCommerce Checkout tests will always fail.
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=checkout&section=cod');
+		$I->checkOption('#woocommerce_cod_enabled');
+		$I->click('Save changes');
+
+		// Setup Stripe as Payment Method, as it's required for subscription products.
 		$I->haveOptionInDatabase('woocommerce_stripe_settings', [
 			'enabled' => 'yes',
 			'title' => 'Credit Card (Stripe)',
@@ -338,21 +343,25 @@ class Acceptance extends \Codeception\Module
 		switch ($productType) {
 			case 'zero':
 				$productName = 'Zero Value Product';
+				$paymentMethod = 'cod';
 				$productID = $I->wooCommerceCreateZeroValueProduct($I, $productFormTagSequence);
 				break;
 
 			case 'virtual':
 				$productName = 'Virtual Product';
+				$paymentMethod = 'cod';
 				$productID = $I->wooCommerceCreateVirtualProduct($I, $productFormTagSequence);
 				break;
 
 			case 'subscription':
 				$productName = 'Subscription Product';
+				$paymentMethod = 'stripe';
 				$productID = $I->wooCommerceCreateSubscriptionProduct($I, $productFormTagSequence);
 				break;
 
 			case 'simple':
 				$productName = 'Simple Product';
+				$paymentMethod = 'cod';
 				$productID = $I->wooCommerceCreateSimpleProduct($I, $productFormTagSequence);
 				break;
 		}
@@ -367,7 +376,7 @@ class Acceptance extends \Codeception\Module
 		$I->logOut();
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress);
+		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod);
 
 		// Handle Opt-In Checkbox
 		if ($displayOptIn) {
@@ -598,8 +607,14 @@ class Acceptance extends \Codeception\Module
 	 * and prefilling the standard WooCommerce Billing Fields.
 	 * 
 	 * @since 	1.0.0
+	 * 
+	 * @param 	AcceptanceTester 	$I 	 			AcceptanceTester.
+	 * @param 	string  			$productID 		Product ID.
+	 * @param 	string  			$productName	Product Name.
+	 * @param 	string  			$emailAddress 	Email Address (wordpress@convertkit.com).
+	 * @param 	string  			$paymentMethod 	Payment Method (cod|stripe).
 	 */
-	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com')
+	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod')
 	{
 		// Load the Product on the frontend site.
 		$I->amOnPage('/?p=' . $productID );
@@ -635,12 +650,28 @@ class Acceptance extends \Codeception\Module
 		$I->fillField('#billing_email', $emailAddress);
 		$I->fillField('#order_comments', 'Notes');
 
-		// Complete Credit Card Details.
-		$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
-		$I->fillField('cardnumber', '4242424242424242');
-		$I->fillfield('exp-date', '01/26');
-		$I->fillField('cvc', '123');
-		$I->switchToIFrame(); // Switch back to main window.
+		// Depending on the payment method required, complete some fields.
+		switch ($paymentMethod) {
+			/**
+			 * Card
+			 */
+			case 'stripe':
+				// Complete Credit Card Details.
+				$I->click('label[for="payment_method_stripe"]');
+				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
+				$I->fillField('cardnumber', '4242424242424242');
+				$I->fillfield('exp-date', '01/26');
+				$I->fillField('cvc', '123');
+				$I->switchToIFrame(); // Switch back to main window.
+				break;
+
+			/**
+			 * COD
+			 */
+			default:
+				$I->click('label[for="payment_method_cod"]');
+				break;
+		}
 	}
 
 	/**
