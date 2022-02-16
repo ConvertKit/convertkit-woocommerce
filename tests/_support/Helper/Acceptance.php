@@ -93,7 +93,11 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to activate the WooCommerce Plugin and the ConvertKit for WooCommerce Plugin.
+	 * Helper method to activate the following Plugins:
+	 * - WooCommerce
+	 * - WooCommerce Stripe Gateway
+	 * - WooCommerce Subscriptions
+	 * - ConvertKit for WooCommerce
 	 * 
 	 * @since 	1.0.0
 	 */
@@ -110,6 +114,24 @@ class Acceptance extends \Codeception\Module
 
 		// Check that the Plugin activated successfully.
 		$I->seePluginActivated('woocommerce');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Activate the WooCommerce Stripe Gateway Plugin.
+		$I->activatePlugin('woocommerce-gateway-stripe');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('woocommerce-gateway-stripe');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Activate the WooCommerce Subscriptions Plugin.
+		$I->activatePlugin('woocommerce-subscriptions');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('woocommerce-subscriptions');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -204,17 +226,45 @@ class Acceptance extends \Codeception\Module
 	 */
 	public function setupWooCommercePlugin($I)
 	{
-		// Enable "Cash on Delivery" Payment Method.
-		// If no Payment Method is enabled, WooCommerce Checkout tests will always fail.
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=checkout&section=cod');
-		$I->checkOption('#woocommerce_cod_enabled');
-		$I->click('Save changes');
+		// Setup Stripe as Payment Method, as a payment method is required for Checkout to succeed,
+		// and it's the required payment method for subscription products.
+		$I->haveOptionInDatabase('woocommerce_stripe_settings', [
+			'enabled' => 'yes',
+			'title' => 'Credit Card (Stripe)',
+			'description' => 'Pay with your credit card via Stripe.',
+			'api_credentials' => '',
+			'testmode' => 'yes',
+			'test_publishable_key' => $_ENV['STRIPE_TEST_PUBLISHABLE_KEY'],
+			'test_secret_key' => $_ENV['STRIPE_TEST_SECRET_KEY'],
+			'publishable_key' => '',
+			'secret_key' => '',
+			'webhook' => '',
+			'test_webhook_secret' => '',
+			'webhook_secret' => '',
+			'inline_cc_form' => 'yes', // Required so one iframe is output by Stripe, instead of 3.
+			'statement_descriptor' => '',
+			'capture' => 'yes',
+			'payment_request' => 'no',
+			'payment_request_button_type' => 'buy',
+			'payment_request_button_theme' => 'dark',
+			'payment_request_button_locations' => [
+				'checkout',
+			],
+			'payment_request_button_size' => 'default',
+			'saved_cards' => 'no',
+			'logging' => 'no',
+			'upe_checkout_experience_enabled' => 'disabled',
+			'title_upe' => '',
+			'is_short_statement_descriptor_enabled' => 'no',
+			'upe_checkout_experience_accepted_payments' => [],
+			'short_statement_descriptor' => 'CK',
+		]);
 	}
 
 	/**
 	 * Helper method to:
 	 * - configure the Plugin's opt in, subscribe event and purchase options,
-	 * - create a WooCommerce Product (simple or virtual)
+	 * - create a WooCommerce Product (simple|virtual|zero|subscription)
 	 * - log out as the WordPress Administrator
 	 * - add the WooCommerce Product to the cart
 	 * - complete checkout
@@ -261,9 +311,9 @@ class Acceptance extends \Codeception\Module
 		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are 
 		// saved and the Forms, Tags and Sequences are listed.
 		if ($pluginFormTagSequence) {
-      $I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', $pluginFormTagSequence);
+			$I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', $pluginFormTagSequence);
 		} else {
-      $I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', 'Select a subscription option...');
+			$I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', 'Select a subscription option...');
 		}
 
 		// Define Order to Custom Field mappings, now that the API credentials are 
@@ -296,6 +346,11 @@ class Acceptance extends \Codeception\Module
 				$productID = $I->wooCommerceCreateVirtualProduct($I, $productFormTagSequence);
 				break;
 
+			case 'subscription':
+				$productName = 'Subscription Product';
+				$productID = $I->wooCommerceCreateSubscriptionProduct($I, $productFormTagSequence);
+				break;
+
 			case 'simple':
 				$productName = 'Simple Product';
 				$productID = $I->wooCommerceCreateSimpleProduct($I, $productFormTagSequence);
@@ -326,11 +381,11 @@ class Acceptance extends \Codeception\Module
 		}
 		
 		// Click Place order button.
-		$I->click('Place order');
+		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.
-		$I->waitForElement('.woocommerce-order-received', 10);
-		
+		$I->waitForElement('.woocommerce-order-received', 30);
+
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
 		// a few checks to be certain.
@@ -344,6 +399,7 @@ class Acceptance extends \Codeception\Module
 			'email_address' => $emailAddress,
 			'product_id' => $productID,
 			'order_id' => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+			'subscription_id' => ( ( $productType == 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 111 ),
 		];
 	}
 
@@ -389,7 +445,7 @@ class Acceptance extends \Codeception\Module
 				'_downloadable' => 'no',
 				'_manage_stock' => 'no',
 				'_price' => 10,
-				'_product_version' => '5.9.0',
+				'_product_version' => '6.2.0',
 				'_regular_price' => 10,
 				'_sold_individually' => 'no',
 				'_stock' => null,
@@ -428,7 +484,7 @@ class Acceptance extends \Codeception\Module
 				'_downloadable' => 'no',
 				'_manage_stock' => 'no',
 				'_price' => 10,
-				'_product_version' => '5.9.0',
+				'_product_version' => '6.2.0',
 				'_regular_price' => 10,
 				'_sold_individually' => 'no',
 				'_stock' => null,
@@ -467,7 +523,7 @@ class Acceptance extends \Codeception\Module
 				'_downloadable' => 'no',
 				'_manage_stock' => 'no',
 				'_price' => 0,
-				'_product_version' => '5.9.0',
+				'_product_version' => '6.2.0',
 				'_regular_price' => 0,
 				'_sold_individually' => 'no',
 				'_stock' => null,
@@ -480,6 +536,59 @@ class Acceptance extends \Codeception\Module
 
 				// ConvertKit Integration Form/Tag/Sequence
 				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
+			],
+		]);
+	}
+
+	/**
+	 * Creates a 'Subscription product' in WooCommerce that can be used for tests, which
+	 * is set to renew daily.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @return 	int 	Product ID
+	 */
+	public function wooCommerceCreateSubscriptionProduct($I, $productFormTagSequence = false)
+	{
+		return $I->havePostInDatabase([
+			'post_type'		=> 'product',
+			'post_status'	=> 'publish',
+			'post_name' 	=> 'subscription-product',
+			'post_title'	=> 'Subscription Product',
+			'post_content'	=> 'Subscription Product Content',
+			'meta_input' => [
+				'_backorders' => 'no',
+				'_download_expiry' => -1,
+				'_download_limit' => -1,
+				'_downloadable' => 'yes',
+				'_manage_stock' => 'no',
+				'_price' => 10,
+				'_product_version' => '6.2.0',
+				'_regular_price' => 10,
+				'_sold_individually' => 'no',
+				'_stock' => null,
+				'_stock_status' => 'instock',
+				'_subscription_length' => 0,
+				'_subscription_limit' => 'no',
+				'_subscription_one_time_shipping' => 'no',
+				'_subscription_payment_sync_date' => 0,
+				'_subscription_period' => 'day',
+				'_subscription_period_interval' => 1,
+				'_subscription_price' => 10,
+				'_subscription_sign_up_fee' => 0,
+				'_subscription_trial_length' => 0,
+				'_subscription_trial_period' => 'day',
+				'_tax_class' => '',
+				'_tax_status' => 'taxable',
+				'_virtual' => 'yes',
+				'_wc_average_rating' => 0,
+				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence.
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
+			],
+			'tax_input' => [
+				[ 'product_type' => 'subscription' ],
 			],
 		]);
 	}
@@ -525,6 +634,13 @@ class Acceptance extends \Codeception\Module
 		$I->fillField('#billing_phone', '123-123-1234');
 		$I->fillField('#billing_email', $emailAddress);
 		$I->fillField('#order_comments', 'Notes');
+
+		// Complete Credit Card Details.
+		$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
+		$I->fillField('cardnumber', '4242424242424242');
+		$I->fillfield('exp-date', '01/26');
+		$I->fillField('cvc', '123');
+		$I->switchToIFrame(); // Switch back to main window.
 	}
 
 	/**
