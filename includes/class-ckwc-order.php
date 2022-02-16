@@ -470,11 +470,11 @@ class CKWC_Order {
 		 * If the Order already opted in the Customer, this filter will not be fired.
 		 * If the Order does not permit the Customer be opted in (i.e. they declined at checkout),
 		 * this filter will not be fired.
-		 * 
-		 * @since 	1.4.4
-		 * 
-		 * @param 	bool 	$should_opt_in_customer 	Should opt in Customer.
-		 * @param 	int 	$order_id 					Order ID.
+		 *
+		 * @since   1.4.4
+		 *
+		 * @param   bool    $should_opt_in_customer     Should opt in Customer.
+		 * @param   int     $order_id                   Order ID.
 		 */
 		$should_opt_in_customer = apply_filters( 'convertkit_for_woocommerce_order_should_opt_in_customer', $should_opt_in_customer, $order_id );
 
