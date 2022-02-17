@@ -96,7 +96,6 @@ class Acceptance extends \Codeception\Module
 	 * Helper method to activate the following Plugins:
 	 * - WooCommerce
 	 * - WooCommerce Stripe Gateway
-	 * - WooCommerce Subscriptions
 	 * - ConvertKit for WooCommerce
 	 * 
 	 * @since 	1.0.0
@@ -127,15 +126,6 @@ class Acceptance extends \Codeception\Module
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
-		// Activate the WooCommerce Subscriptions Plugin.
-		$I->activatePlugin('woocommerce-subscriptions');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('woocommerce-subscriptions');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
 		// Activate the Plugin.
 		$I->activatePlugin('convertkit-for-woocommerce');
 
@@ -148,6 +138,30 @@ class Acceptance extends \Codeception\Module
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
 		$I->amOnAdminPage('options-permalink.php');
+	}
+
+	/**
+	 * Helper method to activate the following Plugins:
+	 * - WooCommerce Subscriptions
+	 * 
+	 * @since 	1.4.4
+	 */
+	public function activateWooCommerceSubscriptionsPlugin($I)
+	{
+		// Login as the Administrator
+		$I->loginAsAdmin();
+
+		// Go to the Plugins screen in the WordPress Administration interface.
+		$I->amOnPluginsPage();
+
+		// Activate the WooCommerce Subscriptions Plugin.
+		$I->activatePlugin('woocommerce-subscriptions');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated('woocommerce-subscriptions');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
 	}
 
 	/**
@@ -175,6 +189,30 @@ class Acceptance extends \Codeception\Module
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
 		$I->amOnAdminPage('options-permalink.php');
+	}
+
+	/**
+	 * Helper method to deactivate the following Plugins:
+	 * - WooCommerce Subscriptions
+	 * 
+	 * @since 	1.4.4
+	 */
+	public function deactivateWooCommerceSubscriptionsPlugin($I)
+	{
+		// Login as the Administrator
+		$I->loginAsAdmin();
+
+		// Go to the Plugins screen in the WordPress Administration interface.
+		$I->amOnPluginsPage();
+
+		// Activate the WooCommerce Subscriptions Plugin.
+		$I->deactivatePlugin('woocommerce-subscriptions');
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginDeactivated('woocommerce-subscriptions');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
 	}
 
 	/**
@@ -291,6 +329,9 @@ class Acceptance extends \Codeception\Module
 		$customFields = false
 	)
 	{
+		// Go to the Plugin's Settings Screen.
+		$I->loadConvertKitSettingsScreen($I);
+
 		// Define Opt In setting.
 		if ($displayOptIn) {
 			$I->checkOption('#woocommerce_ckwc_display_opt_in');	
