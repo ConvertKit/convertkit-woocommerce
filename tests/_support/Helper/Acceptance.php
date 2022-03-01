@@ -258,17 +258,21 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to setup the WooCommerce Plugin.
+	 * Helper method to setup the WooCommerce Plugin's payment methods.
 	 * 
 	 * @since 	1.0.0
 	 */
 	public function setupWooCommercePlugin($I)
 	{
-		// Enable "Cash on Delivery" Payment Method.
-		// If no Payment Method is enabled, WooCommerce Checkout tests will always fail.
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=checkout&section=cod');
-		$I->checkOption('#woocommerce_cod_enabled');
-		$I->click('Save changes');
+		// Setup Cash on Delivery as Payment Method.
+		$I->haveOptionInDatabase('woocommerce_cod_settings', [
+			'enabled' => 'yes',
+			'title' => 'Cash on delivery',
+			'description' => 'Pay with cash upon delivery',
+			'instructions' => 'Pay with cash upon delivery',
+			'enable_for_methods' => [],
+			'enable_for_virtual' => 'yes',
+		]);
 
 		// Setup Stripe as Payment Method, as it's required for subscription products.
 		$I->haveOptionInDatabase('woocommerce_stripe_settings', [
@@ -710,7 +714,7 @@ class Acceptance extends \Codeception\Module
 			 * COD
 			 */
 			default:
-				$I->click('label[for="payment_method_cod"]');
+				// COD is selected by default, so no need to click anything.
 				break;
 		}
 	}

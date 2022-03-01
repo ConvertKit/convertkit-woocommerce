@@ -19,7 +19,11 @@ class SettingSubscribeEventsCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
@@ -32,9 +36,6 @@ class SettingSubscribeEventsCest
 	 */
 	public function testOrderCreatedWithoutOptInCheckbox(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Created.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Created');
 
@@ -58,9 +59,6 @@ class SettingSubscribeEventsCest
 	 */
 	public function testOrderProcessing(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Processing.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Processing');
 
@@ -84,9 +82,6 @@ class SettingSubscribeEventsCest
 	 */
 	public function testOrderCompleted(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Completed.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Completed');
 
