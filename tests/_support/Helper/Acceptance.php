@@ -789,6 +789,9 @@ class Acceptance extends \Codeception\Module
 	 */ 	
 	public function wooCommerceOrderNoteExists($I, $orderID, $noteText)
 	{
+		// Logout.
+		$I->logOut();
+
 		// Login as Administrator.
 		$I->loginAsAdmin();
 
