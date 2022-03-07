@@ -645,9 +645,10 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	mixed 			$firstName 		Name (false = don't check name matches)
 	 * @return 	array 							Subscriber
 	 */ 	
-	public function apiCheckSubscriberExists($I, $emailAddress)
+	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
 	{
 		// Run request.
 		$results = $this->apiRequest('subscribers', 'GET', [
@@ -657,6 +658,11 @@ class Acceptance extends \Codeception\Module
 		// Check at least one subscriber was returned and it matches the email address.
 		$I->assertGreaterThan(0, $results['total_subscribers']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
+
+		// If defined, check that the name matches for the subscriber.
+		if ($firstName) {
+			$I->assertEquals($firstName, $results['subscribers'][0]['first_name']);
+		}
 
 		return $results['subscribers'][0];
 	}
