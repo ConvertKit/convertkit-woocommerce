@@ -16,6 +16,9 @@ class SettingDebugLogCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
@@ -28,9 +31,6 @@ class SettingDebugLogCest
 	 */
 	public function testDebugEnabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Check "Debug" checkbox.
 		$I->checkOption('#woocommerce_ckwc_debug');
 
@@ -48,5 +48,20 @@ class SettingDebugLogCest
 
 		// Confirm that a ConvertKit Log File exists in the dropdown selection of logs.
 		$I->seeInSource('<option value="convertkit-' . date('Y-m-d'));
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }

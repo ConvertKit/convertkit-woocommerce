@@ -20,6 +20,9 @@ class SettingSubscribeEventsCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
@@ -32,9 +35,6 @@ class SettingSubscribeEventsCest
 	 */
 	public function testOrderCreatedWithoutOptInCheckbox(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Created.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Created');
 
@@ -58,9 +58,6 @@ class SettingSubscribeEventsCest
 	 */
 	public function testOrderProcessing(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Processing.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Processing');
 
@@ -84,9 +81,6 @@ class SettingSubscribeEventsCest
 	 */
 	public function testOrderCompleted(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Completed.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Completed');
 
@@ -98,5 +92,20 @@ class SettingSubscribeEventsCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Completed');
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }

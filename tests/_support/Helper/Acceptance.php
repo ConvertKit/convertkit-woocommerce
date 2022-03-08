@@ -70,26 +70,25 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to activate the Plugin.
+	 * Helper method to activate the ConvertKit Plugin, checking
+	 * it activated and no errors were output.
 	 * 
-	 * @since 	1.0.0
+	 * @since 	1.9.6
 	 */
 	public function activateConvertKitPlugin($I)
 	{
-		// Login as the Administrator
-		$I->loginAsAdmin();
+		$I->activateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+	}
 
-		// Go to the Plugins screen in the WordPress Administration interface.
-		$I->amOnPluginsPage();
-
-		// Activate the Plugin.
-		$I->activatePlugin('convertkit-for-woocommerce');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-for-woocommerce');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+	/**
+	 * Helper method to deactivate the ConvertKit Plugin, checking
+	 * it activated and no errors were output.
+	 * 
+	 * @since 	1.9.6
+	 */
+	public function deactivateConvertKitPlugin($I)
+	{
+		$I->deactivateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
 	}
 
 	/**
@@ -99,29 +98,11 @@ class Acceptance extends \Codeception\Module
 	 */
 	public function activateWooCommerceAndConvertKitPlugins($I)
 	{
-		// Login as the Administrator
-		$I->loginAsAdmin();
+		// Activate ConvertKit Plugin.
+		$I->activateConvertKitPlugin($I);
 
-		// Go to the Plugins screen in the WordPress Administration interface.
-		$I->amOnPluginsPage();
-
-		// Activate the WooCommerce Plugin.
-		$I->activatePlugin('woocommerce');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('woocommerce');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Activate the Plugin.
-		$I->activatePlugin('convertkit-for-woocommerce');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-for-woocommerce');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		// Activate WooCommerce Plugin.
+		$I->activateThirdPartyPlugin($I, 'woocommerce');
 
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
@@ -129,11 +110,40 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to deactivate the Plugin.
+	 * Helper method to activate a third party Plugin, checking
+	 * it activated and no errors were output.
 	 * 
-	 * @since 	1.0.0
+	 * @since 	1.9.6.7
+	 * 
+	 * @param 	string 	$name 	Plugin Slug.
 	 */
-	public function deactivateConvertKitPlugin($I)
+	public function activateThirdPartyPlugin($I, $name)
+	{
+		// Login as the Administrator
+		$I->loginAsAdmin();
+
+		// Go to the Plugins screen in the WordPress Administration interface.
+		$I->amOnPluginsPage();
+
+		// Activate the Plugin.
+		$I->activatePlugin($name);
+
+		// Check that the Plugin activated successfully.
+		$I->seePluginActivated($name);
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+	}
+
+	/**
+	 * Helper method to activate a third party Plugin, checking
+	 * it activated and no errors were output.
+	 * 
+	 * @since 	1.9.6.7
+	 * 
+	 * @param 	string 	$name 	Plugin Slug.
+	 */
+	public function deactivateThirdPartyPlugin($I, $name)
 	{
 		// Login as the Administrator
 		$I->loginAsAdmin();
@@ -142,17 +152,34 @@ class Acceptance extends \Codeception\Module
 		$I->amOnPluginsPage();
 
 		// Deactivate the Plugin.
-		$I->deactivatePlugin('convertkit-for-woocommerce');
+		$I->deactivatePlugin($name);
 
 		// Check that the Plugin deactivated successfully.
-		$I->seePluginDeactivated('convertkit-for-woocommerce');
+		$I->seePluginDeactivated($name);
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
+	}
 
-		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
-		// WooCommerce Products work.
-		$I->amOnAdminPage('options-permalink.php');
+	/**
+	 * Helper method to reset the ConvertKit Plugin settings, as if it's a clean installation.
+	 * 
+	 * @since 	1.4.4
+	 */
+	public function resetConvertKitPlugin($I)
+	{
+		// Plugin Settings.
+		$I->dontHaveOptionInDatabase('woocommerce_ckwc_settings');
+
+		// Resources.
+		$I->dontHaveOptionInDatabase('ckwc_custom_fields');
+		$I->dontHaveOptionInDatabase('ckwc_forms');
+		$I->dontHaveOptionInDatabase('ckwc_sequences');
+		$I->dontHaveOptionInDatabase('ckwc_tags');
+
+		// Review Request.
+		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-request');
+		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-dismissed');
 	}
 
 	/**
