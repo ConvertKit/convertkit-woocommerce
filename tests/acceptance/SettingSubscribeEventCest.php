@@ -39,8 +39,8 @@ class SettingSubscribeEventCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
-		// Set Subscribe Event = Order Created.
-		$I->selectOption('#woocommerce_ckwc_event', 'Order Created');
+		// Set Subscribe Event = Order Order Pending payment.
+		$I->selectOption('#woocommerce_ckwc_event', 'Order Pending payment');
 
 		// Save.
 		$I->click('Save changes');
