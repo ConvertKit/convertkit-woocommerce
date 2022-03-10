@@ -20,6 +20,9 @@ class WooCommerceSubscriptionsSubscribeEventCest
 		// Activate Plugins.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
+		// Activate WooCommerce Subscriptions Plugin.
+		$I->activateThirdPartyPlugin($I, 'woocommerce-subscriptions');
+
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
@@ -42,9 +45,6 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 */
 	public function testOptInWhenCheckedWithFormAndSubscriptionProduct(AcceptanceTester $I)
 	{
-		// Activate WooCommerce Subscriptions Plugin.
-		$I->activateWooCommerceSubscriptionsPlugin($I);
-
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
@@ -81,9 +81,6 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Confirm that the email address is not subscribed to ConvertKit, as the Order is for a renewal, not a new subscription.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Deactivate WooCommerce Subscriptions Plugin.
-		$I->deactivateWooCommerceSubscriptionsPlugin($I);
 	}
 
 	/**
@@ -100,9 +97,6 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 */
 	public function testOptInWhenCheckedWithFormAndNonSubscriptionProduct(AcceptanceTester $I)
 	{
-		// Activate WooCommerce Subscriptions Plugin.
-		$I->activateWooCommerceSubscriptionsPlugin($I);
-
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
@@ -125,8 +119,21 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+	}
 
-		// Deactivate WooCommerce Subscriptions Plugin.
-		$I->deactivateWooCommerceSubscriptionsPlugin($I);
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateThirdPartyPlugin($I, 'woocommerce-subscriptions');
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }
