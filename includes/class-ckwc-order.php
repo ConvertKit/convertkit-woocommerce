@@ -195,12 +195,12 @@ class CKWC_Order {
 				break;
 
 			case 'tag':
-				$result = $this->api->tag_subscribe( $resource_id, $email, $custom_fields );
+				$result = $this->api->tag_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 
 			case 'sequence':
 			case 'course':
-				$result = $this->api->sequence_subscribe( $resource_id, $email, $custom_fields );
+				$result = $this->api->sequence_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 		}
 

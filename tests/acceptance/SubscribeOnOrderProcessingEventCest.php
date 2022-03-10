@@ -52,7 +52,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -123,7 +123,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -164,7 +164,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -201,7 +201,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -238,7 +238,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -379,7 +379,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -422,7 +422,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -465,7 +465,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -509,7 +509,7 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -526,5 +526,20 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Confirm that the email address was not added to ConvertKit a second time.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }

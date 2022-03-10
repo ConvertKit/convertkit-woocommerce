@@ -697,4 +697,19 @@ class PurchaseDataCest
 		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
 		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
+	}
 }

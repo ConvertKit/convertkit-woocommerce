@@ -70,26 +70,25 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to activate the Plugin.
+	 * Helper method to activate the ConvertKit Plugin, checking
+	 * it activated and no errors were output.
 	 * 
-	 * @since 	1.0.0
+	 * @since 	1.9.6
 	 */
 	public function activateConvertKitPlugin($I)
 	{
-		// Login as the Administrator
-		$I->loginAsAdmin();
+		$I->activateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+	}
 
-		// Go to the Plugins screen in the WordPress Administration interface.
-		$I->amOnPluginsPage();
-
-		// Activate the Plugin.
-		$I->activatePlugin('convertkit-for-woocommerce');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-for-woocommerce');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+	/**
+	 * Helper method to deactivate the ConvertKit Plugin, checking
+	 * it activated and no errors were output.
+	 * 
+	 * @since 	1.9.6
+	 */
+	public function deactivateConvertKitPlugin($I)
+	{
+		$I->deactivateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
 	}
 
 	/**
@@ -102,38 +101,14 @@ class Acceptance extends \Codeception\Module
 	 */
 	public function activateWooCommerceAndConvertKitPlugins($I)
 	{
-		// Login as the Administrator
-		$I->loginAsAdmin();
+		// Activate ConvertKit Plugin.
+		$I->activateConvertKitPlugin($I);
 
-		// Go to the Plugins screen in the WordPress Administration interface.
-		$I->amOnPluginsPage();
+		// Activate WooCommerce Plugin.
+		$I->activateThirdPartyPlugin($I, 'woocommerce');
 
-		// Activate the WooCommerce Plugin.
-		$I->activatePlugin('woocommerce');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('woocommerce');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Activate the WooCommerce Stripe Gateway Plugin.
-		$I->activatePlugin('woocommerce-gateway-stripe');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('woocommerce-gateway-stripe');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Activate the Plugin.
-		$I->activatePlugin('convertkit-for-woocommerce');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('convertkit-for-woocommerce');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		// Activate WooCommerce Stripe Gateway Plugin.
+		$I->activateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
 
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
@@ -141,12 +116,14 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to activate the following Plugins:
-	 * - WooCommerce Subscriptions
+	 * Helper method to activate a third party Plugin, checking
+	 * it activated and no errors were output.
 	 * 
-	 * @since 	1.4.4
+	 * @since 	1.9.6.7
+	 * 
+	 * @param 	string 	$name 	Plugin Slug.
 	 */
-	public function activateWooCommerceSubscriptionsPlugin($I)
+	public function activateThirdPartyPlugin($I, $name)
 	{
 		// Login as the Administrator
 		$I->loginAsAdmin();
@@ -154,22 +131,25 @@ class Acceptance extends \Codeception\Module
 		// Go to the Plugins screen in the WordPress Administration interface.
 		$I->amOnPluginsPage();
 
-		// Activate the WooCommerce Subscriptions Plugin.
-		$I->activatePlugin('woocommerce-subscriptions');
+		// Activate the Plugin.
+		$I->activatePlugin($name);
 
 		// Check that the Plugin activated successfully.
-		$I->seePluginActivated('woocommerce-subscriptions');
+		$I->seePluginActivated($name);
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 	}
 
 	/**
-	 * Helper method to deactivate the Plugin.
+	 * Helper method to activate a third party Plugin, checking
+	 * it activated and no errors were output.
 	 * 
-	 * @since 	1.0.0
+	 * @since 	1.9.6.7
+	 * 
+	 * @param 	string 	$name 	Plugin Slug.
 	 */
-	public function deactivateConvertKitPlugin($I)
+	public function deactivateThirdPartyPlugin($I, $name)
 	{
 		// Login as the Administrator
 		$I->loginAsAdmin();
@@ -178,41 +158,34 @@ class Acceptance extends \Codeception\Module
 		$I->amOnPluginsPage();
 
 		// Deactivate the Plugin.
-		$I->deactivatePlugin('convertkit-for-woocommerce');
+		$I->deactivatePlugin($name);
 
 		// Check that the Plugin deactivated successfully.
-		$I->seePluginDeactivated('convertkit-for-woocommerce');
+		$I->seePluginDeactivated($name);
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
-		// WooCommerce Products work.
-		$I->amOnAdminPage('options-permalink.php');
 	}
 
 	/**
-	 * Helper method to deactivate the following Plugins:
-	 * - WooCommerce Subscriptions
+	 * Helper method to reset the ConvertKit Plugin settings, as if it's a clean installation.
 	 * 
 	 * @since 	1.4.4
 	 */
-	public function deactivateWooCommerceSubscriptionsPlugin($I)
+	public function resetConvertKitPlugin($I)
 	{
-		// Login as the Administrator
-		$I->loginAsAdmin();
+		// Plugin Settings.
+		$I->dontHaveOptionInDatabase('woocommerce_ckwc_settings');
 
-		// Go to the Plugins screen in the WordPress Administration interface.
-		$I->amOnPluginsPage();
+		// Resources.
+		$I->dontHaveOptionInDatabase('ckwc_custom_fields');
+		$I->dontHaveOptionInDatabase('ckwc_forms');
+		$I->dontHaveOptionInDatabase('ckwc_sequences');
+		$I->dontHaveOptionInDatabase('ckwc_tags');
 
-		// Activate the WooCommerce Subscriptions Plugin.
-		$I->deactivatePlugin('woocommerce-subscriptions');
-
-		// Check that the Plugin activated successfully.
-		$I->seePluginDeactivated('woocommerce-subscriptions');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		// Review Request.
+		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-request');
+		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-dismissed');
 	}
 
 	/**
@@ -258,7 +231,7 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to setup the WooCommerce Plugin's payment methods.
+	 * Helper method to setup the WooCommerce Plugin.
 	 * 
 	 * @since 	1.0.0
 	 */
@@ -333,9 +306,6 @@ class Acceptance extends \Codeception\Module
 		$customFields = false
 	)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Define Opt In setting.
 		if ($displayOptIn) {
 			$I->checkOption('#woocommerce_ckwc_display_opt_in');	
@@ -439,7 +409,7 @@ class Acceptance extends \Codeception\Module
 
 		// Wait until JS completes and redirects.
 		$I->waitForElement('.woocommerce-order-received', 30);
-
+		
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
 		// a few checks to be certain.
@@ -453,7 +423,7 @@ class Acceptance extends \Codeception\Module
 			'email_address' => $emailAddress,
 			'product_id' => $productID,
 			'order_id' => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
-			'subscription_id' => ( ( $productType == 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 111 ),
+			'subscription_id' => ( ( $productType == 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
 
@@ -499,7 +469,7 @@ class Acceptance extends \Codeception\Module
 				'_downloadable' => 'no',
 				'_manage_stock' => 'no',
 				'_price' => 10,
-				'_product_version' => '6.2.0',
+				'_product_version' => '6.3.0',
 				'_regular_price' => 10,
 				'_sold_individually' => 'no',
 				'_stock' => null,
@@ -538,7 +508,7 @@ class Acceptance extends \Codeception\Module
 				'_downloadable' => 'no',
 				'_manage_stock' => 'no',
 				'_price' => 10,
-				'_product_version' => '6.2.0',
+				'_product_version' => '6.3.0',
 				'_regular_price' => 10,
 				'_sold_individually' => 'no',
 				'_stock' => null,
@@ -546,45 +516,6 @@ class Acceptance extends \Codeception\Module
 				'_tax_class' => '',
 				'_tax_status' => 'taxable',
 				'_virtual' => 'yes',
-				'_wc_average_rating' => 0,
-				'_wc_review_count' => 0,
-
-				// ConvertKit Integration Form/Tag/Sequence
-				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
-			],
-		]);
-	}
-
-	/**
-	 * Creates a zero value 'Simple product' in WooCommerce that can be used for tests.
-	 * 
-	 * @since 	1.0.0
-	 * 
-	 * @return 	int 	Product ID
-	 */
-	public function wooCommerceCreateZeroValueProduct($I, $productFormTagSequence = false)
-	{
-		return $I->havePostInDatabase([
-			'post_type'		=> 'product',
-			'post_status'	=> 'publish',
-			'post_name' 	=> 'zero-value-product',
-			'post_title'	=> 'Zero Value Product',
-			'post_content'	=> 'Zero Value Product Content',
-			'meta_input' => [
-				'_backorders' => 'no',
-				'_download_expiry' => -1,
-				'_download_limit' => -1,
-				'_downloadable' => 'no',
-				'_manage_stock' => 'no',
-				'_price' => 0,
-				'_product_version' => '6.2.0',
-				'_regular_price' => 0,
-				'_sold_individually' => 'no',
-				'_stock' => null,
-				'_stock_status' => 'instock',
-				'_tax_class' => '',
-				'_tax_status' => 'taxable',
-				'_virtual' => 'no',
 				'_wc_average_rating' => 0,
 				'_wc_review_count' => 0,
 
@@ -643,6 +574,45 @@ class Acceptance extends \Codeception\Module
 			],
 			'tax_input' => [
 				[ 'product_type' => 'subscription' ],
+			],
+		]);
+	}
+
+	/**
+	 * Creates a zero value 'Simple product' in WooCommerce that can be used for tests.
+	 * 
+	 * @since 	1.0.0
+	 * 
+	 * @return 	int 	Product ID
+	 */
+	public function wooCommerceCreateZeroValueProduct($I, $productFormTagSequence = false)
+	{
+		return $I->havePostInDatabase([
+			'post_type'		=> 'product',
+			'post_status'	=> 'publish',
+			'post_name' 	=> 'zero-value-product',
+			'post_title'	=> 'Zero Value Product',
+			'post_content'	=> 'Zero Value Product Content',
+			'meta_input' => [
+				'_backorders' => 'no',
+				'_download_expiry' => -1,
+				'_download_limit' => -1,
+				'_downloadable' => 'no',
+				'_manage_stock' => 'no',
+				'_price' => 0,
+				'_product_version' => '6.3.0',
+				'_regular_price' => 0,
+				'_sold_individually' => 'no',
+				'_stock' => null,
+				'_stock_status' => 'instock',
+				'_tax_class' => '',
+				'_tax_status' => 'taxable',
+				'_virtual' => 'no',
+				'_wc_average_rating' => 0,
+				'_wc_review_count' => 0,
+
+				// ConvertKit Integration Form/Tag/Sequence
+				'ckwc_subscription' => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 			],
 		]);
 	}
@@ -791,7 +761,7 @@ class Acceptance extends \Codeception\Module
 	{
 		// Logout.
 		$I->logOut();
-
+		
 		// Login as Administrator.
 		$I->loginAsAdmin();
 
@@ -840,9 +810,10 @@ class Acceptance extends \Codeception\Module
 	 * 
 	 * @param 	AcceptanceTester $I 			AcceptanceTester
 	 * @param 	string 			$emailAddress 	Email Address
+	 * @param 	mixed 			$firstName 		Name (false = don't check name matches)
 	 * @return 	array 							Subscriber
 	 */ 	
-	public function apiCheckSubscriberExists($I, $emailAddress)
+	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
 	{
 		// Run request.
 		$results = $this->apiRequest('subscribers', 'GET', [
@@ -852,6 +823,11 @@ class Acceptance extends \Codeception\Module
 		// Check at least one subscriber was returned and it matches the email address.
 		$I->assertGreaterThan(0, $results['total_subscribers']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
+
+		// If defined, check that the name matches for the subscriber.
+		if ($firstName) {
+			$I->assertEquals($firstName, $results['subscribers'][0]['first_name']);
+		}
 
 		return $results['subscribers'][0];
 	}

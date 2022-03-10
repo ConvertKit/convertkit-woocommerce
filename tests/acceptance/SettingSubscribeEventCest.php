@@ -39,7 +39,7 @@ class SettingSubscribeEventCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
-		// Set Subscribe Event = Order Pending payment.
+		// Set Subscribe Event = Order Order Pending payment.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Pending payment');
 
 		// Save.
@@ -96,5 +96,20 @@ class SettingSubscribeEventCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Completed');
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }

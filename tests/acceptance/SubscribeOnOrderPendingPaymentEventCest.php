@@ -51,7 +51,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
+		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
@@ -112,7 +112,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
+		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
@@ -146,7 +146,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -183,7 +183,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -220,7 +220,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -322,5 +322,20 @@ class SubscribeOnOrderPendingPaymentEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }

@@ -67,4 +67,19 @@ class SettingPurchasesCest
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
 	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
+	}
 }
