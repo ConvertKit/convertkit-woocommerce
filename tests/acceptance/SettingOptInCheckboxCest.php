@@ -16,7 +16,11 @@ class SettingOptInCheckboxCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -280,20 +284,5 @@ class SettingOptInCheckboxCest
 		
 		// Confirm that the Opt-In checkbox is displayed in the Order section on the Checkout screen.
 		$I->seeElementInDOM('.woocommerce-additional-fields #ckwc_opt_in');
-	}
-
-	/**
-	 * Deactivate and reset Plugin(s) after each test, if the test passes.
-	 * We don't use _after, as this would provide a screenshot of the Plugin
-	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function _passed(AcceptanceTester $I)
-	{
-		$I->deactivateConvertKitPlugin($I);
-		$I->resetConvertKitPlugin($I);
 	}
 }

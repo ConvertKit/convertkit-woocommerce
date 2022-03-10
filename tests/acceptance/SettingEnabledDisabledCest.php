@@ -15,6 +15,7 @@ class SettingEnabledDisabledCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Setup WooCommerce Plugin.

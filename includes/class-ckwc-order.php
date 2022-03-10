@@ -457,15 +457,29 @@ class CKWC_Order {
 			return false;
 		}
 
-		// Get Post Meta value.
-		$opt_in = get_post_meta( $order_id, 'ckwc_opt_in', true );
-
 		// If opt in is anything other than 'yes', do not opt in.
-		if ( $opt_in !== 'yes' ) {
+		if ( 'yes' !== get_post_meta( $order_id, 'ckwc_opt_in', true ) ) {
 			return false;
 		}
 
-		return true;
+		// If here, permit opt in.
+		$should_opt_in_customer = true;
+
+		/**
+		 * Determine if the Customer should be opted in to ConvertKit.
+		 * If the Order already opted in the Customer, this filter will not be fired.
+		 * If the Order does not permit the Customer be opted in (i.e. they declined at checkout),
+		 * this filter will not be fired.
+		 *
+		 * @since   1.4.4
+		 *
+		 * @param   bool    $should_opt_in_customer     Should opt in Customer.
+		 * @param   int     $order_id                   Order ID.
+		 */
+		$should_opt_in_customer = apply_filters( 'convertkit_for_woocommerce_order_should_opt_in_customer', $should_opt_in_customer, $order_id );
+
+		// Return.
+		return $should_opt_in_customer;
 
 	}
 

@@ -15,6 +15,7 @@ class SettingPurchasesCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Enable Integration and define its API Keys.

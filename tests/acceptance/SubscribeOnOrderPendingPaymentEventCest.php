@@ -1,11 +1,11 @@
 <?php
 /**
  * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form
- * or Tag on the Order Created event when an order is placed through WooCommerce.
+ * or Tag on the Order Pending payment (i.e. Order created) event when an order is placed through WooCommerce.
  * 
  * @since 	1.4.2
  */
-class SubscribeOnOrderCreatedEventCest
+class SubscribeOnOrderPendingPaymentEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
@@ -46,7 +46,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -77,7 +77,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -107,7 +107,7 @@ class SubscribeOnOrderCreatedEventCest
 			false, // Don't display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -139,7 +139,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false, // Don't send purchase data to ConvertKit
 			false, // Don't define a Product level Form, Tag or Sequence
 			true // Map Order data to Custom Fields
@@ -176,7 +176,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_TAG_NAME'], // Tag to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false, // Don't send purchase data to ConvertKit
 			false, // Don't define a Product level Form, Tag or Sequence
 			true // Map Order data to Custom Fields
@@ -213,7 +213,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_SEQUENCE_NAME'], // Tag to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Processing" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false, // Don't send purchase data to ConvertKit
 			false, // Don't define a Product level Form, Tag or Sequence
 			true // Map Order data to Custom Fields
@@ -250,7 +250,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			'Select a subscription option...', // Don't select a Form to subscribe the email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -282,7 +282,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			'Select a subscription option...', // Don't select a Form to subscribe the email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -313,7 +313,7 @@ class SubscribeOnOrderCreatedEventCest
 			false, // Don't display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			'Select a subscription option...', // Don't select a Form to subscribe the email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 

@@ -41,6 +41,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-forms.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-sequences.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-tags.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-review-request.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 
 // Load files that are only used in the WordPress Administration interface.
 if ( is_admin() ) {

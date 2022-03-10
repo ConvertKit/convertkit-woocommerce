@@ -95,6 +95,13 @@ class CKWC_Checkout {
 	 */
 	public function save_opt_in_checkbox( $order_id ) {
 
+		// Bail if the given Order ID isn't for a WooCommerce Order.
+		// Third party Plugins e.g. WooCommerce Subscriptions may call the `woocommerce_checkout_update_order_meta`
+		// action with a non-Order ID, resulting in inadvertent opt ins.
+		if ( get_post_type( $order_id ) !== 'shop_order' ) {
+			return;
+		}
+
 		// Don't opt in by default.
 		$opt_in = 'no';
 
