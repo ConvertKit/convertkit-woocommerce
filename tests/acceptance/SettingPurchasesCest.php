@@ -15,7 +15,11 @@ class SettingPurchasesCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
@@ -28,9 +32,6 @@ class SettingPurchasesCest
 	 */
 	public function testSendPurchaseDataEnabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Check "Send purchase data to ConvertKit" checkbox.
 		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
@@ -54,9 +55,6 @@ class SettingPurchasesCest
 	 */
 	public function testSendPurchaseDataDisabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Uncheck "Send purchase data to ConvertKit" checkbox.
 		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 

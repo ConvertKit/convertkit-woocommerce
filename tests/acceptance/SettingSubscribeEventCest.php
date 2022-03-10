@@ -19,7 +19,11 @@ class SettingSubscribeEventCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
@@ -58,9 +62,6 @@ class SettingSubscribeEventCest
 	 */
 	public function testOrderProcessing(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Processing.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Processing');
 
@@ -84,9 +85,6 @@ class SettingSubscribeEventCest
 	 */
 	public function testOrderCompleted(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Completed.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Completed');
 

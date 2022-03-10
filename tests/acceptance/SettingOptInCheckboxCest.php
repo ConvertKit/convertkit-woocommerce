@@ -16,7 +16,14 @@ class SettingOptInCheckboxCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
+		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
+
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**
@@ -29,9 +36,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxDisabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Disable the Opt-In Checkbox option.
 		$I->uncheckOption('#woocommerce_ckwc_display_opt_in');
 
@@ -64,9 +68,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxEnabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
@@ -103,9 +104,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxLabel(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Define the custom label.
 		$customLabel = 'Custom Label';
 
@@ -148,9 +146,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxDefaultStatusEnabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
@@ -190,9 +185,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxDefaultStatusDisabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
@@ -232,9 +224,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxDisplayLocationBilling(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
@@ -271,9 +260,6 @@ class SettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxDisplayLocationOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
