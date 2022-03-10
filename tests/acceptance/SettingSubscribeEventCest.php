@@ -8,7 +8,7 @@
  * 
  * @since 	1.4.2
  */
-class SettingSubscribeEventsCest
+class SettingSubscribeEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
@@ -23,20 +23,20 @@ class SettingSubscribeEventsCest
 	}
 
 	/**
-	 * Test that the Order Created option is saved when selected at
+	 * Test that the Order Pending payment option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
 	 * @since 	1.4.2
 	 * 
 	 * @param 	AcceptanceTester 	$I 	Tester
 	 */
-	public function testOrderCreatedWithoutOptInCheckbox(AcceptanceTester $I)
+	public function testOrderPendingPaymentWithoutOptInCheckbox(AcceptanceTester $I)
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
-		// Set Subscribe Event = Order Created.
-		$I->selectOption('#woocommerce_ckwc_event', 'Order Created');
+		// Set Subscribe Event = Order Pending payment.
+		$I->selectOption('#woocommerce_ckwc_event', 'Order Pending payment');
 
 		// Save.
 		$I->click('Save changes');
@@ -45,7 +45,7 @@ class SettingSubscribeEventsCest
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Confirm the setting saved.
-		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Created');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Pending payment');
 			
 	}
 	/**
