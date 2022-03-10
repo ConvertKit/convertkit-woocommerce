@@ -46,6 +46,11 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
+### 1.4.4 2022-03-10
+* Fix: Include Name when subscribing to a Tag or Sequence
+* Fix: Settings: Change Susbcribe Event's "Order Created" label to "Order Pending payment", to reflect WooCommerce Order's status labels
+* Fix: WooCommerce Subscriptions: Don't resubscribe customer when a WooCommerce Order created is for a subscription renewal
+
 ### 1.4.3 2022-02-14
 * Added: Settings: Options to Map WooCommerce Order Data (Phone, Billing Address etc) to ConvertKit Custom Fields
 * Added: Select2 dropdown for Forms, Tags and Sequence selection with search functionality for improved UX.
