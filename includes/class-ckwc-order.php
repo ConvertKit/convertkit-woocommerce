@@ -290,6 +290,16 @@ class CKWC_Order {
 	 */
 	public function send_purchase_data( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
+		// Bail if the old and new status are the same i.e. the Order status did not change.
+		if ( $status_old === $status_new ) {
+			return;
+		}
+
+		// Bail if the Purchase Data Event doesn't match the Order's status.
+		if ( $this->integration->get_option( 'send_purchases_event' ) !== $status_new ) {
+			return;
+		}
+
 		// Get WooCommerce Order.
 		$order = wc_get_order( $order_id );
 

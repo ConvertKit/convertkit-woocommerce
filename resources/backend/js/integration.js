@@ -9,6 +9,7 @@
 var ckwcSettings = {
 	'enabled': false,
 	'display_opt_in': false,
+	'send_purchases': false
 };
 
 /**
@@ -30,6 +31,7 @@ jQuery( document ).ready(
 		ckwcSettings = {
 			'enabled': $( 'input[name="woocommerce_ckwc_enabled"]' ).prop( 'checked' ),
 			'display_opt_in': $( 'input[name="woocommerce_ckwc_display_opt_in"]' ).prop( 'checked' ),
+			'send_purchases': $( 'input[name="woocommerce_ckwc_send_purchases"]' ).prop( 'checked' )
 		};
 
 		// Refresh UI.
@@ -73,7 +75,7 @@ function ckwcRefreshUI() {
 				$( 'table.form-table tr' ).each(
 					function() {
 						// Skip if this table row is for the setting we've just checked/unchecked.
-						if ( $( '[id^="woocommerce_ckwc_' + setting + '"]', $( this ) ).length > 0 ) {
+						if ( $( '[id="woocommerce_ckwc_' + setting + '"]', $( this ) ).length > 0 ) {
 							return;
 						}
 
