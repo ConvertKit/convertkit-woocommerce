@@ -703,7 +703,8 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Send Purchase Data Event is set to Order Completed, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
-	 * - The Order is created via the frontend checkout.
+	 * - The Order is created via the frontend checkout, and
+	 * - The Order's status is changed from processing to completed.
 	 * 
 	 * @since 	1.4.2
 	 * 
@@ -736,6 +737,47 @@ class PurchaseDataCest
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+	}
+
+	/**
+	 * Test that the Customer's purchase is not sent to ConvertKit when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The Send Purchase Data Event is set to Order Completed, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Order is created via the frontend checkout, and
+	 * - The Order's status is changed from processing to cancelled.
+	 * 
+	 * @since 	1.4.2
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testDontSendPurchaseDataOnOrderCancelledWithSimpleProductCheckout(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product
+			false, // Don't display Opt-In checkbox on Checkout
+			false, // Don't check Opt-In checkbox on Checkout
+			false, // Form to subscribe email address to (not used)
+			false, // Subscribe Event
+			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed
+		);
+
+		// Confirm that the purchase was not added to ConvertKit.
+		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+
+		// Change Order Status = Completed.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-cancelled');
+
+		// Confirm that the purchase was not added to ConvertKit.
+		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
+
+		// Check that the Order's Notes does not include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 	}
 
 	/**
