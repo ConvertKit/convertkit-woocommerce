@@ -382,7 +382,7 @@ class Acceptance extends \Codeception\Module
 		}
 
 		// Define Email Address for this Test.
-		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
+		$emailAddress = $I->generateEmailAddress();
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($emailAddress);
@@ -708,7 +708,7 @@ class Acceptance extends \Codeception\Module
 		$I->loginAsAdmin();
 
 		// Define Email Address for this Manual Order.
-		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '-' . $productID . '@convertkit.com';
+		$emailAddress = $I->generateEmailAddress();
 
 		// Create User for this Manual Order.
 		$userID = $I->haveUserInDatabase('test', 'subscriber', [
@@ -803,6 +803,20 @@ class Acceptance extends \Codeception\Module
 	{
 		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-request');
 		$I->dontHaveOptionInDatabase('convertkit-for-woocommerce-review-dismissed');
+	}
+
+	/**
+	 * Generates a unique email address for use in a test, comprising of a prefix,
+	 * date + time and PHP version number.
+	 * 
+	 * This ensures that if tests are run in parallel, the same email address
+	 * isn't used for two tests across parallel testing runs.
+	 * 
+	 * @since 	1.4.5
+	 */
+	public function generateEmailAddress()
+	{
+		return 'wordpress-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '@convertkit.com';
 	}
 
 	/**
