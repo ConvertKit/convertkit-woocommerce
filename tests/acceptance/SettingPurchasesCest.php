@@ -23,7 +23,7 @@ class SettingPurchasesCest
 	}
 
 	/**
-	 * Test that purchase data is sent to ConvertKit when enabled at
+	 * Test that the Purchase Data option is saved when enabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
 	 * @since 	1.4.2
@@ -46,7 +46,7 @@ class SettingPurchasesCest
 	}
 
 	/**
-	 * Test that purchase data is not sent to ConvertKit when disabled at
+	 * Test that the Purchase Data option is saved when disabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 * 
 	 * @since 	1.4.2
@@ -66,6 +66,52 @@ class SettingPurchasesCest
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
+	}
+
+	/**
+	 * Test that the Purchase Data Event option is saved when set to Order Processing at
+	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * 
+	 * @since 	1.4.5
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testSendPurchaseDataEventOrderProcessing(AcceptanceTester $I)
+	{
+		// Set Event = Order Processing.
+		$I->selectOption('#woocommerce_ckwc_send_purchases_event', 'Order Processing');
+
+		// Save.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the setting saved.
+		$I->seeOptionIsSelected('#woocommerce_ckwc_send_purchases_event', 'Order Processing');
+	}
+
+	/**
+	 * Test that the Purchase Data Event option is saved when set to Order Completed at
+	 * WooCommerce > Settings > Integration > ConvertKit.
+	 * 
+	 * @since 	1.4.5
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testSendPurchaseDataEventOrderCompleted(AcceptanceTester $I)
+	{
+		// Set Event = Order Completed.
+		$I->selectOption('#woocommerce_ckwc_send_purchases_event', 'Order Completed');
+
+		// Save.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the setting saved.
+		$I->seeOptionIsSelected('#woocommerce_ckwc_send_purchases_event', 'Order Completed');
 	}
 
 	/**
