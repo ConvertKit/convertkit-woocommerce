@@ -320,7 +320,12 @@ class Acceptance extends \Codeception\Module
 
 		// Define Send Purchase Data setting.
 		if ($sendPurchaseData) {
-			$I->checkOption('#woocommerce_ckwc_send_purchases');	
+			$I->checkOption('#woocommerce_ckwc_send_purchases');
+
+			// If sendPurchaseData is true, set send purchase data event to processing.
+			// Otherwise set to the string value of sendPurchaseData i.e. completed.
+			$sendPurchaseDataEvent = (($sendPurchaseData === true) ? 'processing' : $sendPurchaseData);
+			$I->selectOption('#woocommerce_ckwc_send_purchases_event', $sendPurchaseDataEvent);
 		} else {
 			$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 		}
