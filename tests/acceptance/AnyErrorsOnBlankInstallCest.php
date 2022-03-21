@@ -3,17 +3,6 @@
 class AnyErrorsOnBlankInstallCest
 {
 	/**
-	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function _before(AcceptanceTester $I)
-	{
-	}
-
-	/**
 	 * Check that no PHP errors or notices are displayed at WooCommerce > Settings > Integration > ConvertKit, when the Plugin is activated
 	 * and not configured.
 	 * 

@@ -1,11 +1,11 @@
 <?php
 /**
  * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form
- * or Tag on the Order Created event when an order is placed through WooCommerce.
+ * or Tag on the Order Pending payment (i.e. Order created) event when an order is placed through WooCommerce.
  * 
  * @since 	1.4.2
  */
-class SubscribeOnOrderCreatedEventCest
+class SubscribeOnOrderPendingPaymentEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
@@ -46,12 +46,12 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
+		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
@@ -77,7 +77,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -107,12 +107,12 @@ class SubscribeOnOrderCreatedEventCest
 			false, // Don't display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
 		// Confirm that the email address was added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
+		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
@@ -139,14 +139,14 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false, // Don't send purchase data to ConvertKit
 			false, // Don't define a Product level Form, Tag or Sequence
 			true // Map Order data to Custom Fields
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -176,14 +176,14 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_TAG_NAME'], // Tag to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false, // Don't send purchase data to ConvertKit
 			false, // Don't define a Product level Form, Tag or Sequence
 			true // Map Order data to Custom Fields
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -213,14 +213,14 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_SEQUENCE_NAME'], // Tag to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Processing" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false, // Don't send purchase data to ConvertKit
 			false, // Don't define a Product level Form, Tag or Sequence
 			true // Map Order data to Custom Fields
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -250,7 +250,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			'Select a subscription option...', // Don't select a Form to subscribe the email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -282,7 +282,7 @@ class SubscribeOnOrderCreatedEventCest
 			true, // Display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			'Select a subscription option...', // Don't select a Form to subscribe the email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -313,7 +313,7 @@ class SubscribeOnOrderCreatedEventCest
 			false, // Don't display Opt-In checkbox on Checkout
 			false, // Don't check Opt-In checkbox on Checkout
 			'Select a subscription option...', // Don't select a Form to subscribe the email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -322,5 +322,20 @@ class SubscribeOnOrderCreatedEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }

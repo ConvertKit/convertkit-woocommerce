@@ -192,10 +192,33 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Subscribe Event', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'pending',
-				'description' => __( 'When should customers be subscribed?', 'woocommerce-convertkit' ),
+				'description' => implode(
+					'<br />',
+					array(
+						__( 'When should customers be subscribed?', 'woocommerce-convertkit' ),
+						sprintf(
+							/* translators: %1$s: Status name, %2$s: Status description */
+							'<strong>%1$s</strong> %2$s',
+							__( 'Pending payment:', 'woocommerce-convertkit' ),
+							__( 'WooCommerce order created, payment not received.', 'woocommerce-convertkit' )
+						),
+						sprintf(
+							/* translators: %1$s: Status name, %2$s: Status description */
+							'<strong>%1$s</strong> %2$s',
+							__( 'Processing:', 'woocommerce-convertkit' ),
+							__( 'WooCommerce order created, payment received, order awaiting fulfilment.', 'woocommerce-convertkit' )
+						),
+						sprintf(
+							/* translators: %1$s: Status name, %2$s: Status description */
+							'<strong>%1$s</strong> %2$s',
+							__( 'Completed:', 'woocommerce-convertkit' ),
+							__( 'WooCommerce order created, payment received, order fulfiled.', 'woocommerce-convertkit' )
+						),
+					)
+				),
 				'desc_tip'    => false,
 				'options'     => array(
-					'pending'    => __( 'Order Created', 'woocommerce-convertkit' ),
+					'pending'    => __( 'Order Pending payment', 'woocommerce-convertkit' ),
 					'processing' => __( 'Order Processing', 'woocommerce-convertkit' ),
 					'completed'  => __( 'Order Completed', 'woocommerce-convertkit' ),
 				),
@@ -366,6 +389,37 @@ class CKWC_Integration extends WC_Integration {
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'    => 'enabled subscribe',
+			),
+			'send_purchases_event'          => array(
+				'title'       => __( 'Purchase Data Event', 'woocommerce-convertkit' ),
+				'type'        => 'select',
+				'default'     => 'processing',
+				'description' => implode(
+					'<br />',
+					array(
+						__( 'When should purchase data be sent?', 'woocommerce-convertkit' ),
+						sprintf(
+							/* translators: %1$s: Status name, %2$s: Status description */
+							'<strong>%1$s</strong> %2$s',
+							__( 'Processing:', 'woocommerce-convertkit' ),
+							__( 'WooCommerce order created, payment received, order awaiting fulfilment.', 'woocommerce-convertkit' )
+						),
+						sprintf(
+							/* translators: %1$s: Status name, %2$s: Status description */
+							'<strong>%1$s</strong> %2$s',
+							__( 'Completed:', 'woocommerce-convertkit' ),
+							__( 'WooCommerce order created, payment received, order fulfiled.', 'woocommerce-convertkit' )
+						),
+					)
+				),
+				'desc_tip'    => false,
+				'options'     => array(
+					'processing' => __( 'Order Processing', 'woocommerce-convertkit' ),
+					'completed'  => __( 'Order Completed', 'woocommerce-convertkit' ),
+				),
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled subscribe send_purchases',
 			),
 
 			// Debugging.

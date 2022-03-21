@@ -3,7 +3,7 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
-Tested up to: 5.9
+Tested up to: 5.9.2
 Requires PHP: 5.6.20
 Stable tag: trunk
 License: GPLv2 or later
@@ -45,6 +45,14 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.4.5 2022-03-17
+* Added: Settings: Purchase Data: Option to specify when purchase data should be sent to ConvertKit based on WooCommerce Order status 
+
+### 1.4.4 2022-03-10
+* Fix: Include Name when subscribing to a Tag or Sequence
+* Fix: Settings: Change Subscribe Event's "Order Created" label to "Order Pending payment", to reflect WooCommerce Order's status labels
+* Fix: WooCommerce Subscriptions: Don't resubscribe customer when a WooCommerce Order created is for a subscription renewal
 
 ### 1.4.3 2022-02-14
 * Added: Settings: Options to Map WooCommerce Order Data (Phone, Billing Address etc) to ConvertKit Custom Fields

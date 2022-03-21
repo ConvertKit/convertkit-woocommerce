@@ -216,12 +216,12 @@ class CKWC_Order {
 				break;
 
 			case 'tag':
-				$result = $this->api->tag_subscribe( $resource_id, $email, $custom_fields );
+				$result = $this->api->tag_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 
 			case 'sequence':
 			case 'course':
-				$result = $this->api->sequence_subscribe( $resource_id, $email, $custom_fields );
+				$result = $this->api->sequence_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 		}
 
@@ -310,6 +310,16 @@ class CKWC_Order {
 	 * @return  mixed               WP_Error | array
 	 */
 	public function send_purchase_data( $order_id, $status_old = 'new', $status_new = 'pending' ) {
+
+		// Bail if the old and new status are the same i.e. the Order status did not change.
+		if ( $status_old === $status_new ) {
+			return;
+		}
+
+		// Bail if the Purchase Data Event doesn't match the Order's status.
+		if ( $this->integration->get_option( 'send_purchases_event' ) !== $status_new ) {
+			return;
+		}
 
 		// Get WooCommerce Order.
 		$order = wc_get_order( $order_id );
@@ -555,15 +565,29 @@ class CKWC_Order {
 			return false;
 		}
 
-		// Get Post Meta value.
-		$opt_in = get_post_meta( $order_id, 'ckwc_opt_in', true );
-
 		// If opt in is anything other than 'yes', do not opt in.
-		if ( $opt_in !== 'yes' ) {
+		if ( 'yes' !== get_post_meta( $order_id, 'ckwc_opt_in', true ) ) {
 			return false;
 		}
 
-		return true;
+		// If here, permit opt in.
+		$should_opt_in_customer = true;
+
+		/**
+		 * Determine if the Customer should be opted in to ConvertKit.
+		 * If the Order already opted in the Customer, this filter will not be fired.
+		 * If the Order does not permit the Customer be opted in (i.e. they declined at checkout),
+		 * this filter will not be fired.
+		 *
+		 * @since   1.4.4
+		 *
+		 * @param   bool    $should_opt_in_customer     Should opt in Customer.
+		 * @param   int     $order_id                   Order ID.
+		 */
+		$should_opt_in_customer = apply_filters( 'convertkit_for_woocommerce_order_should_opt_in_customer', $should_opt_in_customer, $order_id );
+
+		// Return.
+		return $should_opt_in_customer;
 
 	}
 

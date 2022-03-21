@@ -55,7 +55,7 @@ class SettingNameFormatCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -80,7 +80,7 @@ class SettingNameFormatCest
 	 */
 	public function testNameFormatBillingLastName(AcceptanceTester $I)
 	{
-		// Set Name Format = Billing First Name
+		// Set Name Format = Billing Last Name
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing Last Name');
 
 		// Save
@@ -99,7 +99,7 @@ class SettingNameFormatCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -143,7 +143,7 @@ class SettingNameFormatCest
 			true, // Display Opt-In checkbox on Checkout
 			true, // Check Opt-In checkbox on Checkout
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Created', // Subscribe on WooCommerce "Order Created" event
+			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event
 			false // Don't send purchase data to ConvertKit
 		);
 
@@ -155,5 +155,20 @@ class SettingNameFormatCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }
