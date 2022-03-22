@@ -369,27 +369,6 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
 			),
-			'sync_past_orders'              => array(
-				'title'    => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
-				'label'    => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
-				'type'     => 'sync_past_orders_button',
-				'default'  => '',
-				'desc_tip' => false,
-				'url'      => admin_url(
-					add_query_arg(
-						array(
-							'page'        => 'wc-settings',
-							'tab'         => 'integration',
-							'section'     => 'ckwc',
-							'sub_section' => 'sync_past_orders',
-						),
-						'admin.php'
-					)
-				),
-
-				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'    => 'enabled subscribe',
-			),
 			'send_purchases_event'          => array(
 				'title'       => __( 'Purchase Data Event', 'woocommerce-convertkit' ),
 				'type'        => 'select',
@@ -420,6 +399,27 @@ class CKWC_Integration extends WC_Integration {
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe send_purchases',
+			),
+			'sync_past_orders'              => array(
+				'title'    => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
+				'label'    => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
+				'type'     => 'sync_past_orders_button',
+				'default'  => '',
+				'desc_tip' => false,
+				'url'      => admin_url(
+					add_query_arg(
+						array(
+							'page'        => 'wc-settings',
+							'tab'         => 'integration',
+							'section'     => 'ckwc',
+							'sub_section' => 'sync_past_orders',
+						),
+						'admin.php'
+					)
+				),
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'    => 'enabled subscribe',
 			),
 
 			// Debugging.
@@ -704,7 +704,7 @@ class CKWC_Integration extends WC_Integration {
 		// Update the description based on the number of Orders that have not been sent to ConvertKit.
 		$data['description'] = sprintf(
 			/* translators: Number of WooCommerce Orders  */
-			__( '%s not been sent to ConvertKit. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to ConvertKit.', 'woocommerce-convertkit' ),
+			__( '%s not been sent to ConvertKit based on the Purchase Data Event setting above. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to ConvertKit.', 'woocommerce-convertkit' ),
 			sprintf(
 				/* translators: number of Orders not sent to ConvertKit */
 				_n( '%s WooCommerce order has', '%s WooCommerce orders have', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),

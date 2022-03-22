@@ -307,18 +307,18 @@ class CKWC_Order {
 	 * @param   int    $order_id   WooCommerce Order ID.
 	 * @param   string $status_old Order's Old Status.
 	 * @param   string $status_new Order's New Status.
-	 * @return  mixed               WP_Error | array
+	 * @return  mixed               false | WP_Error | array
 	 */
 	public function send_purchase_data( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
 		// Bail if the old and new status are the same i.e. the Order status did not change.
 		if ( $status_old === $status_new ) {
-			return;
+			return false;
 		}
 
 		// Bail if the Purchase Data Event doesn't match the Order's status.
 		if ( $this->integration->get_option( 'send_purchases_event' ) !== $status_new ) {
-			return;
+			return false;
 		}
 
 		// Get WooCommerce Order.
@@ -462,18 +462,47 @@ class CKWC_Order {
 	 */
 	public function get_orders_not_sent_to_convertkit() {
 
+		// Depending on the Purchase Data Event setting, determine the Order statuses that should
+		// be included.
+		switch ( $this->integration->get_option( 'send_purchases_event' ) ) {
+			case 'completed':
+				// Only past Orders marked as completed should be included when syncing past Orders.
+				// This ensures we don't include Orders created since the Plugin's activation that
+				// are marked as Processing and should only be sent once marked as Completed.
+				$post_statuses = array(
+					'wc-completed',
+				);
+				break;
+
+			case 'processing':
+			default:
+				// Any past Orders that are marked as processing or completed should be included when syncing
+				// past Orders.
+				$post_statuses = array(
+					'wc-processing',
+					'wc-completed',
+				);
+				break;
+		}
+
 		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
 		$query = new WP_Query(
 			array(
 				'post_type'              => 'shop_order',
-				'post_status'            => 'any',
 				'posts_per_page'         => -1,
+
+				// Only include Orders that do not match the Purchase Data Event integration setting.
+				'post_status'            => $post_statuses,
+
+				// Only include Orders that do not have a ConvertKit Purchase Data ID.
 				'meta_query'             => array(
 					array(
 						'key'     => $this->purchase_data_id_meta_key,
 						'compare' => 'NOT EXISTS',
 					),
 				),
+
+				// For performance, don't update caches and just return Order IDs, not complete objects.
 				'fields'                 => 'ids',
 				'cache_results'          => false,
 				'update_post_meta_cache' => false,

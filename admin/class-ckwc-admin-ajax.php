@@ -33,22 +33,28 @@ class CKWC_Admin_AJAX {
 	 */
 	public function sync_past_orders() {
 
+		// Validate nonce.
+		check_ajax_referer( 'ckwc_sync_past_orders', 'nonce' );
+
 		// Check that required request parameters exist.
-		if ( ! isset( $_REQUEST['nonce'] ) ) {
-			wp_send_json_error( __( 'The \'nonce\' parameter is missing from the request.', 'woocommerce-convertkit' ) );
-		}
 		if ( ! isset( $_REQUEST['id'] ) ) {
 			wp_send_json_error( __( 'The \'id\' parameter is missing from the request.', 'woocommerce-convertkit' ) );
 		}
 
-		// Validate nonce.
-		check_ajax_referer( 'ckwc_sync_past_orders', 'nonce' );
-
 		// Get ID.
 		$id = absint( sanitize_text_field( $_REQUEST['id'] ) );
 
+		// Fetch integration.
+		$this->integration = WP_CKWC_Integration();
+
 		// Send purchase data for this Order to ConvertKit.
-		$result = WP_CKWC()->get_class( 'order' )->send_purchase_data( $id );
+		// We deliberately set the old status and new status to be different, and the new status to match
+		// the integration's Purchase Data Event setting, otherwise the Order won't be sent to ConvertKit's Purchase Data.
+		$result = WP_CKWC()->get_class( 'order' )->send_purchase_data(
+			$id,
+			'new', // old status.
+			$this->integration->get_option( 'send_purchases_event' ) // new status.
+		);
 
 		// Return a JSON error if the result is a WP_Error.
 		if ( is_wp_error( $result ) ) {
