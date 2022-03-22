@@ -267,7 +267,7 @@ class SyncPastOrdersCest
 
 	/**
 	 * Tests that a WooCommerce Order, which has had its Purchase Data sent to ConvertKit
-	 * in Plugin version 1.4.2 or older, will be synced in 1.4.3 and higher, to ensure that
+	 * in Plugin version 1.4.2 or older, will be synced in 1.4.5 and higher, to ensure that
 	 * the ConvertKit Purchase / Transaction ID is stored in the Order's metadata.
 	 * 
 	 * 1.4.2 and older would mark a WooCommerce Order as sent to ConvertKit by adding the 'ckwc_purchase_data_sent'
@@ -417,5 +417,20 @@ class SyncPastOrdersCest
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address'], $result['product_id']);
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 * 
+	 * @since 	1.4.4
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function _passed(AcceptanceTester $I)
+	{
+		$I->deactivateConvertKitPlugin($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }
