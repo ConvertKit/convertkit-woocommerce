@@ -15,12 +15,10 @@ codeception.dist.yml
 codeception.yml
 composer.json
 composer.lock
-convertkit.zip
-DEPLOYMENT.md
-DEVELOPMENT.md
+convertkit-for-woocommerce.zip
 LICENSE
-log.txt
 phpcs.xml
+phpstan.neon
+phpstan.neon.dist
+phpstan.neon.example
 README.md
-SETUP.md
-TESTING.md
