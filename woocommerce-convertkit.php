@@ -74,7 +74,7 @@ function WP_CKWC_Integration() { // phpcs:ignore
 	}
 
 	// Bail if integrations is null.
-	if ( is_null( WC()->integrations ) ) {
+	if ( is_null( WC()->integrations ) ) { // @phpstan-ignore-line
 		return false;
 	}
 

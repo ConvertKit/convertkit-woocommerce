@@ -20,7 +20,7 @@ class CKWC_Admin_Product {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @var     WC_Integration
+	 * @var     CKWC_Integration
 	 */
 	private $integration;
 
@@ -71,7 +71,7 @@ class CKWC_Admin_Product {
 		}
 
 		// Enqueue CSS.
-		wp_enqueue_style( 'ckwc-product', CKWC_PLUGIN_URL . '/resources/backend/css/product.css', false, CKWC_PLUGIN_VERSION );
+		wp_enqueue_style( 'ckwc-product', CKWC_PLUGIN_URL . '/resources/backend/css/product.css', array(), CKWC_PLUGIN_VERSION );
 
 		// Enqueue Select2 CSS.
 		ckwc_select2_enqueue_styles();

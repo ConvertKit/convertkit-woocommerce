@@ -87,7 +87,7 @@ function ckwc_select2_enqueue_scripts() {
  */
 function ckwc_select2_enqueue_styles() {
 
-	wp_enqueue_style( 'ckwc-select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', false, CKWC_PLUGIN_VERSION );
-	wp_enqueue_style( 'ckwc-admin-select2', CKWC_PLUGIN_URL . '/resources/backend/css/select2.css', false, CKWC_PLUGIN_VERSION );
+	wp_enqueue_style( 'ckwc-select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), CKWC_PLUGIN_VERSION );
+	wp_enqueue_style( 'ckwc-admin-select2', CKWC_PLUGIN_URL . '/resources/backend/css/select2.css', array(), CKWC_PLUGIN_VERSION );
 
 }

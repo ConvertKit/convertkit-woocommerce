@@ -163,7 +163,7 @@ class WP_CKWC {
 	 */
 	public function load_language_files() {
 
-		load_plugin_textdomain( 'woocommerce-convertkit', false, basename( dirname( CKWC_PLUGIN_FILE ) ) . '/languages/' );
+		load_plugin_textdomain( 'woocommerce-convertkit', false, basename( dirname( CKWC_PLUGIN_FILE ) ) . '/languages/' ); // @phpstan-ignore-line
 
 	}
 
@@ -194,7 +194,7 @@ class WP_CKWC {
 			// Admin UI.
 			if ( is_admin() ) {
 				wp_die(
-					esc_attr( $error ),
+					esc_attr( $error->get_error_message() ),
 					esc_html__( 'ConvertKit for WooCommerce Error', 'woocommerce-convertkit' ),
 					array(
 						'back_link' => true,
@@ -220,7 +220,7 @@ class WP_CKWC {
 	 */
 	public static function get_instance() {
 
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof self ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof self ) ) { // @phpstan-ignore-line
 			self::$instance = new self();
 		}
 

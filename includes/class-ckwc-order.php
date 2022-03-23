@@ -22,7 +22,7 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @var     WC_Integration
+	 * @var     CKWC_Integration
 	 */
 	private $integration;
 
@@ -177,7 +177,7 @@ class CKWC_Order {
 			list( $subscription['type'], $subscription['id'] ) = explode( ':', $subscription_raw );
 			$this->subscribe_customer(
 				$subscription['type'],
-				$subscription['id'],
+				(int) $subscription['id'],
 				$this->email( $order ),
 				$this->name( $order ),
 				$order_id,
@@ -222,6 +222,17 @@ class CKWC_Order {
 			case 'sequence':
 			case 'course':
 				$result = $this->api->sequence_subscribe( $resource_id, $email, $name, $custom_fields );
+				break;
+
+			default:
+				$result = new WP_Error(
+					'convertkit_for_woocommerce_order_subscribe_customer_error',
+					sprintf(
+						/* translators: Resource Type */
+						__( 'Resource type %s is not supported in CKWC_Order::subscribe_customer()', 'woocommerce-convertkit' ),
+						$resource_type
+					)
+				);
 				break;
 		}
 
@@ -354,17 +365,17 @@ class CKWC_Order {
 		$products = array();
 		foreach ( $order->get_items() as $item_key => $item ) {
 			// If this Order Item's Product could not be found, skip it.
-			if ( ! $item->get_product() ) {
+			if ( ! $item->get_product() ) { // @phpstan-ignore-line
 				continue;
 			}
 
 			// Add Product to array of Products.
 			$products[] = array(
-				'pid'        => $item->get_product()->get_id(),
+				'pid'        => $item->get_product()->get_id(), // @phpstan-ignore-line
 				'lid'        => $item_key,
 				'name'       => $item->get_name(),
-				'sku'        => $item->get_product()->get_sku(),
-				'unit_price' => $item->get_product()->get_price(),
+				'sku'        => $item->get_product()->get_sku(), // @phpstan-ignore-line
+				'unit_price' => $item->get_product()->get_price(), // @phpstan-ignore-line
 				'quantity'   => $item->get_quantity(),
 			);
 		}

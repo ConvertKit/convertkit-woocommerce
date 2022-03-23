@@ -32,9 +32,9 @@ class CKWC_WC_Subscriptions {
 	 *
 	 * @since   1.4.4
 	 *
-	 * @var     decimal
+	 * @var     string
 	 */
-	private $minimum_supported_version = 1;
+	private $minimum_supported_version = '1.0.0';
 
 	/**
 	 * The third party Plugin functions that must exist for this classes code
@@ -57,6 +57,8 @@ class CKWC_WC_Subscriptions {
 	 * @since   1.4.4
 	 */
 	public function __construct() {
+
+		add_action( 'admin_init', array( $this, 'is_plugin_active' ) );
 
 		// Check if the Order should opt in the Customer.
 		add_filter( 'convertkit_for_woocommerce_order_should_opt_in_customer', array( $this, 'order_should_opt_in_customer' ), 10, 2 );
@@ -110,7 +112,7 @@ class CKWC_WC_Subscriptions {
 	 *
 	 * @return  bool    Plugin is Active
 	 */
-	private function is_plugin_active() {
+	public function is_plugin_active() {
 
 		// Load is_plugin_active() function if not available i.e. this is a cron request.
 		if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -128,7 +130,7 @@ class CKWC_WC_Subscriptions {
 		}
 
 		// If the third party Plugin doesn't match the minimum supported version, deem it as not active.
-		if ( $this->minimum_supported_version && $this->get_version() < $this->minimum_supported_version ) {
+		if ( ! version_compare( $this->get_version(), $this->minimum_supported_version, '>=' ) ) {
 			return false;
 		}
 
@@ -151,11 +153,11 @@ class CKWC_WC_Subscriptions {
 	 *
 	 * @since   1.4.4
 	 *
-	 * @return  decimal     Version
+	 * @return  string     Version
 	 */
 	private function get_version() {
 
-		$plugin_data = get_file_data( WP_PLUGIN_DIR . '/' . $this->plugin_folder_filename, array( 'Version' => 'Version' ), false );
+		$plugin_data = get_file_data( WP_PLUGIN_DIR . '/' . $this->plugin_folder_filename, array( 'Version' => 'Version' ) );
 		return $plugin_data['Version'];
 
 	}

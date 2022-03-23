@@ -535,7 +535,7 @@ class CKWC_Integration extends WC_Integration {
 			 * Sync Past Orders Screen.
 			 */
 			case 'sync_past_orders':
-				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . '/resources/backend/css/sync-past-orders.css', false, CKWC_PLUGIN_VERSION );
+				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . '/resources/backend/css/sync-past-orders.css', array(), CKWC_PLUGIN_VERSION );
 				break;
 
 			/**
@@ -586,15 +586,15 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
-		if ( ! $this->forms ) {
+		if ( ! $this->forms ) { // @phpstan-ignore-line
 			$this->forms = new CKWC_Resource_Forms();
 			$this->forms->refresh();
 		}
-		if ( ! $this->sequences ) {
+		if ( ! $this->sequences ) { // @phpstan-ignore-line
 			$this->sequences = new CKWC_Resource_Sequences();
 			$this->sequences->refresh();
 		}
-		if ( ! $this->tags ) {
+		if ( ! $this->tags ) { // @phpstan-ignore-line
 			$this->tags = new CKWC_Resource_Tags();
 			$this->tags->refresh();
 		}
@@ -654,7 +654,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Custom Fields, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
-		if ( ! $this->custom_fields ) {
+		if ( ! $this->custom_fields ) { // @phpstan-ignore-line
 			$this->custom_fields = new CKWC_Resource_Custom_Fields();
 			$this->custom_fields->refresh();
 		}
@@ -833,7 +833,7 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @since   1.4.3
 	 *
-	 * @return  string  Integration Settings Screen.
+	 * @return  bool|string  Integration Settings Screen.
 	 */
 	private function get_integration_screen_name() {
 
