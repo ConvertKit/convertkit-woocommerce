@@ -821,31 +821,6 @@ class CKWC_API {
 	}
 
 	/**
-	 * Backward compat. function for updating Forms, Landing Pages and Tags in WordPress options table.
-	 *
-	 * @since   1.0.0
-	 *
-	 * @param   string $api_key    API Key.
-	 * @param   string $api_secret API Secret.
-	 */
-	public function update_resources( $api_key, $api_secret ) { // phpcs:ignore
-
-		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.4.2', 'refresh() in ConvertKit_Resource_Forms, ConvertKit_Resource_Landing_Pages and ConvertKit_Resource_Tags classes.' );
-
-		// Initialize resource classes.
-		$forms         = new ConvertKit_Resource_Forms();
-		$landing_pages = new ConvertKit_Resource_Landing_Pages();
-		$tags          = new ConvertKit_Resource_Tags();
-
-		// Refresh resources by calling the API and storing the results.
-		$forms->refresh();
-		$landing_pages->refresh();
-		$tags->refresh();
-
-	}
-
-	/**
 	 * Backward compat. function for getting a ConvertKit subscriber by their ID.
 	 *
 	 * @since   1.4.2
