@@ -49,6 +49,23 @@ jQuery( document ).ready(
 			}
 		);
 
+		// Sync Past Orders when button pressed and confirmed.
+		$( 'a#ckwc_sync_past_orders' ).on(
+			'click',
+			function ( e ) {
+
+				// Confirm that the user wants to sync past orders.
+				var result = confirm( ckwc_integration.sync_past_orders_confirmation_message );
+
+				// Prevent clicking the link if the user cancels.
+				if ( ! result ) {
+					e.preventDefault();
+					return false;
+				}
+
+			}
+		);
+
 	}
 );
 

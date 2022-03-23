@@ -1,0 +1,44 @@
+#log {
+	clear: both;
+	float: left;
+	width: 100%;
+	height: calc(100vh - 450px);
+	overflow-y: scroll;
+	margin: 20px 0 20px 0;
+	font-family: "Courier New", Monaco, monospace;
+	font-size: 13px;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+}
+#log ul {
+	clear: both;
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+}
+#log ul li {
+	clear: both;
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+	box-sizing: border-box;
+}
+#log ul li:last-child {
+	border-bottom: none;
+}
+#log ul li.success {
+
+}
+#log ul li.warning {
+	background: #fdae03;
+}
+#log ul li.error {
+	background: #e7140d;
+}
+
+/* Hide Save Button that WooCommerce always provides */
+button.woocommerce-save-button { display: none !important; }

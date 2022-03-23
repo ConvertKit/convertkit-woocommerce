@@ -99,6 +99,7 @@ class WP_CKWC {
 			return;
 		}
 
+		$this->classes['admin_ajax']    = new CKWC_Admin_AJAX();
 		$this->classes['admin_plugin']  = new CKWC_Admin_Plugin();
 		$this->classes['admin_product'] = new CKWC_Admin_Product();
 

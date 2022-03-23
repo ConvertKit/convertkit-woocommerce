@@ -1,6 +1,6 @@
 <?php
 /**
- * ConvertKit Checkout class.
+ * ConvertKit Order class.
  *
  * @package CKWC
  * @author ConvertKit
@@ -34,6 +34,27 @@ class CKWC_Order {
 	 * @var     CKWC_API
 	 */
 	private $api;
+
+	/**
+	 * The Meta Key used to store that the WooCommerce Order
+	 * was successfully sent to ConvertKit.
+	 *
+	 * @since   1.4.4
+	 *
+	 * @var     string
+	 */
+	private $purchase_data_sent_meta_key = 'ckwc_purchase_data_sent';
+
+	/**
+	 * The Meta Key used to store the ConvertKit Transaction ID
+	 * when purchase data is successfully sent to ConvertKit
+	 * for a WooCommerce Order.
+	 *
+	 * @since   1.4.4
+	 *
+	 * @var     string
+	 */
+	private $purchase_data_id_meta_key = 'ckwc_purchase_data_id';
 
 	/**
 	 * Constructor
@@ -286,18 +307,18 @@ class CKWC_Order {
 	 * @param   int    $order_id   WooCommerce Order ID.
 	 * @param   string $status_old Order's Old Status.
 	 * @param   string $status_new Order's New Status.
-	 * @return  mixed               WP_Error | array
+	 * @return  mixed               false | WP_Error | array
 	 */
 	public function send_purchase_data( $order_id, $status_old = 'new', $status_new = 'pending' ) {
 
 		// Bail if the old and new status are the same i.e. the Order status did not change.
 		if ( $status_old === $status_new ) {
-			return;
+			return false;
 		}
 
 		// Bail if the Purchase Data Event doesn't match the Order's status.
 		if ( $this->integration->get_option( 'send_purchases_event' ) !== $status_new ) {
-			return;
+			return false;
 		}
 
 		// Get WooCommerce Order.
@@ -305,14 +326,28 @@ class CKWC_Order {
 
 		// If no Order could be fetched, bail.
 		if ( ! $order ) {
-			return;
+			return new WP_Error(
+				'convertkit_for_woocommerce_error_order_missing',
+				sprintf(
+					/* translators: WooCommerce Order ID */
+					__( 'Order ID %s could not be found in WooCommerce.', 'woocommerce-convertkit' ),
+					$order_id
+				)
+			);
 		}
 
 		// If purchase data has already been sent to ConvertKit, don't send any data to ConvertKit.
 		// This ensures that we don't unecessarily send data multiple times
 		// when the Order's status is transitioned.
 		if ( $this->purchase_data_sent( $order_id ) ) {
-			return;
+			return new WP_Error(
+				'convertkit_for_woocommerce_error_order_exists',
+				sprintf(
+					/* translators: WooCommerce Order ID */
+					__( 'Order ID %s has already been sent to ConvertKit.', 'woocommerce-convertkit' ),
+					$order_id
+				)
+			);
 		}
 
 		// Build array of Products for the API call.
@@ -332,6 +367,18 @@ class CKWC_Order {
 				'unit_price' => $item->get_product()->get_price(),
 				'quantity'   => $item->get_quantity(),
 			);
+		}
+
+		// If no Products exist, mark purchase data as sent and return.
+		if ( ! count( $products ) ) {
+			// Mark the purchase data as being sent, so future Order status transitions don't send it again.
+			$this->mark_purchase_data_sent( $order_id, 0 );
+
+			// Add a note to the WooCommerce Order that no purchase data was sent.
+			$order->add_order_note( __( '[ConvertKit] Purchase Data skipped, as this Order has no Products', 'woocommerce-convertkit' ) );
+
+			// Return.
+			return true;
 		}
 
 		// Build API parameters.
@@ -389,7 +436,7 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		$this->mark_purchase_data_sent( $order_id );
+		$this->mark_purchase_data_sent( $order_id, $response['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
 		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
@@ -406,15 +453,86 @@ class CKWC_Order {
 	}
 
 	/**
+	 * Returns an array of WooCommerce Orders that have not had their Purchase Data
+	 * sent to ConvertKit.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @return  mixed   false | array
+	 */
+	public function get_orders_not_sent_to_convertkit() {
+
+		// Depending on the Purchase Data Event setting, determine the Order statuses that should
+		// be included.
+		switch ( $this->integration->get_option( 'send_purchases_event' ) ) {
+			case 'completed':
+				// Only past Orders marked as completed should be included when syncing past Orders.
+				// This ensures we don't include Orders created since the Plugin's activation that
+				// are marked as Processing and should only be sent once marked as Completed.
+				$post_statuses = array(
+					'wc-completed',
+				);
+				break;
+
+			case 'processing':
+			default:
+				// Any past Orders that are marked as processing or completed should be included when syncing
+				// past Orders.
+				$post_statuses = array(
+					'wc-processing',
+					'wc-completed',
+				);
+				break;
+		}
+
+		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
+		$query = new WP_Query(
+			array(
+				'post_type'              => 'shop_order',
+				'posts_per_page'         => -1,
+
+				// Only include Orders that do not match the Purchase Data Event integration setting.
+				'post_status'            => $post_statuses,
+
+				// Only include Orders that do not have a ConvertKit Purchase Data ID.
+				'meta_query'             => array(
+					array(
+						'key'     => $this->purchase_data_id_meta_key,
+						'compare' => 'NOT EXISTS',
+					),
+				),
+
+				// For performance, don't update caches and just return Order IDs, not complete objects.
+				'fields'                 => 'ids',
+				'cache_results'          => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
+
+		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
+		// return false.
+		if ( ! $query->post_count ) {
+			return false;
+		}
+
+		// Return the array of Order IDs.
+		return $query->posts;
+
+	}
+
+	/**
 	 * Mark purchase data as being sent to ConvertKit for the given Order ID.
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   int $order_id   Order ID.
+	 * @param   int $order_id                       Order ID.
+	 * @param   int $convertkit_purchase_data_id    ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
 	 */
-	private function mark_purchase_data_sent( $order_id ) {
+	private function mark_purchase_data_sent( $order_id, $convertkit_purchase_data_id ) {
 
-		update_post_meta( $order_id, 'ckwc_purchase_data_sent', 'yes' );
+		update_post_meta( $order_id, $this->purchase_data_sent_meta_key, 'yes' );
+		update_post_meta( $order_id, $this->purchase_data_id_meta_key, $convertkit_purchase_data_id );
 
 	}
 
@@ -428,11 +546,20 @@ class CKWC_Order {
 	 */
 	private function purchase_data_sent( $order_id ) {
 
-		if ( 'yes' === get_post_meta( $order_id, 'ckwc_purchase_data_sent', true ) ) {
-			return true;
+		// Return false if Purchase Data Sent Meta Key isn't yes.
+		if ( 'yes' !== get_post_meta( $order_id, $this->purchase_data_sent_meta_key, true ) ) {
+			return false;
 		}
 
-		return false;
+		// Return false if Purchase Data ID Meta Key doesn't exist in this Order.
+		// This is stored in 1.4.3 and higher, ensuring we have a mapping
+		// stored for the WooCommerce Order ID --> ConvertKit Purchase / Transaction ID.
+		if ( ! metadata_exists( 'post', $order_id, $this->purchase_data_id_meta_key ) ) {
+			return false;
+		}
+
+		// Purchase data for this Order has previously been sent to ConvertKit.
+		return true;
 
 	}
 
