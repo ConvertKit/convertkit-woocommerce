@@ -758,16 +758,23 @@ class Acceptance extends \Codeception\Module
 		$I->click('#btn-ok');
 
 		// Create Order.
+		$I->executeJS('window.scrollTo(0,0);');
 		$I->click('button.save_order');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
+		// Determine the Order ID.
+		$orderID = $I->grabTextFrom('h2.woocommerce-order-data__heading');
+		$orderID = str_replace('Order #', '', $orderID);
+		$orderID = str_replace('details', '', $orderID);
+		$orderID = trim($orderID);
+
 		// Return.
 		return [
 			'email_address' => $emailAddress,
 			'product_id' => $productID,
-			'order_id' => (int) filter_var($I->grabTextFrom('h2.woocommerce-order-data__heading'), FILTER_SANITIZE_NUMBER_INT),
+			'order_id' => $orderID,
 		];
 	}
 
