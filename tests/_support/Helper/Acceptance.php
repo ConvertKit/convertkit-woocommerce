@@ -282,6 +282,17 @@ class Acceptance extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to setup the Custom Order Numbers Plugin.
+	 * 
+	 * @since 	1.0.0
+	 */
+	public function setupCustomOrderNumbersPlugin($I)
+	{
+		// Setup WooCommerce Order Number prefix based on the current date and PHP version.
+		$I->haveOptionInDatabase('alg_wc_custom_order_numbers_prefix', 'ckwc-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '-');
+	}
+
+	/**
 	 * Helper method to:
 	 * - configure the Plugin's opt in, subscribe event and purchase options,
 	 * - create a WooCommerce Product (simple|virtual|zero|subscription)
@@ -427,7 +438,7 @@ class Acceptance extends \Codeception\Module
 		return [
 			'email_address' => $emailAddress,
 			'product_id' => $productID,
-			'order_id' => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+			'order_id' => $I->grabTextFrom('.woocommerce-order-overview__order strong'),
 			'subscription_id' => ( ( $productType == 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
@@ -446,6 +457,13 @@ class Acceptance extends \Codeception\Module
 		// We perform the order status change by editing the Order as a WordPress Administrator would,
 		// so that WooCommerce triggers its actions and filters that our integration hooks into.
 		$I->loginAsAdmin();
+
+		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
+		if (strpos($orderID, '-') !== false) {
+			$orderIDParts = explode('-', $orderID);
+			$orderID = $orderIDParts[count($orderIDParts)-1];
+		}
+		
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
 		$I->submitForm('form#post', [
 			'order_status' => $orderStatus,
@@ -770,6 +788,12 @@ class Acceptance extends \Codeception\Module
 		// Login as Administrator.
 		$I->loginAsAdmin();
 
+		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
+		if (strpos($orderID, '-') !== false) {
+			$orderIDParts = explode('-', $orderID);
+			$orderID = $orderIDParts[count($orderIDParts)-1];
+		}
+
 		// Load Edit Order screen.
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
 
@@ -790,6 +814,12 @@ class Acceptance extends \Codeception\Module
 	{
 		// Login as Administrator.
 		$I->loginAsAdmin();
+
+		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
+		if (strpos($orderID, '-') !== false) {
+			$orderIDParts = explode('-', $orderID);
+			$orderID = $orderIDParts[count($orderIDParts)-1];
+		}
 
 		// Load Edit Order screen.
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
