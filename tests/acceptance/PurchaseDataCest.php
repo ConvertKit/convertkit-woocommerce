@@ -19,8 +19,15 @@ class PurchaseDataCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
+		// Activate Custom Order Numbers, so that we can prefix Order IDs with
+		// an environment-specific string.
+		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
+
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
+
+		// Setup Custom Order Numbers Plugin.
+		$I->setupCustomOrderNumbersPlugin($I);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -792,6 +799,7 @@ class PurchaseDataCest
 	public function _passed(AcceptanceTester $I)
 	{
 		$I->deactivateConvertKitPlugin($I);
+		$I->deactivateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
 		$I->resetConvertKitPlugin($I);
 	}
 }
