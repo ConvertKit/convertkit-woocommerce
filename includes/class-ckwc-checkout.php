@@ -21,7 +21,7 @@ class CKWC_Checkout {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @var     WC_Integration
+	 * @var     CKWC_Integration
 	 */
 	private $integration;
 

@@ -15,6 +15,27 @@
 class CKWC_Resource {
 
 	/**
+	 * Holds the Settings Key that stores site wide ConvertKit settings
+	 *
+	 * @var     string
+	 */
+	public $settings_name = '';
+
+	/**
+	 * The type of resource
+	 *
+	 * @var     string
+	 */
+	public $type = '';
+
+	/**
+	 * Holds the resources from the ConvertKit API
+	 *
+	 * @var     WP_Error|array
+	 */
+	public $resources = array();
+
+	/**
 	 * Constructor. Populate the resources array of e.g. forms, landing pages or tags.
 	 *
 	 * @since   1.4.2
@@ -128,6 +149,16 @@ class CKWC_Resource {
 			case 'custom_fields':
 				$results = $api->get_custom_fields();
 				break;
+
+			default:
+				$results = new WP_Error(
+					'convertkit_for_woocommerce_resource_refresh_error',
+					sprintf(
+						/* translators: Resource Type */
+						__( 'Resource type %s is not supported in CKWC_Resource class.', 'woocommerce-convertkit' ),
+						$this->type
+					)
+				);
 		}
 
 		// Bail if an error occured.
@@ -153,27 +184,6 @@ class CKWC_Resource {
 	public function delete() {
 
 		delete_option( $this->settings_name );
-
-	}
-
-	/**
-	 * Sorts the given array of resources by name.
-	 *
-	 * @since   1.4.2
-	 *
-	 * @param   array $data   Forms or Landing Pages from API.
-	 * @return  array           Sorted Forms or Landing Pages.
-	 */
-	private function sort_alphabetically( $data ) {
-
-		return usort(
-			$data,
-			function( $a, $b ) {
-
-				return strcmp( $a['name'], $b['name'] );
-
-			}
-		);
 
 	}
 

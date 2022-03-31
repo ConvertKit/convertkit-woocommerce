@@ -16,6 +16,15 @@
 class CKWC_Admin_AJAX {
 
 	/**
+	 * Holds the WooCommerce Integration instance for this Plugin.
+	 *
+	 * @since   1.4.5
+	 *
+	 * @var     CKWC_Integration
+	 */
+	private $integration;
+
+	/**
 	 * Constructor
 	 *
 	 * @since   1.0.0
