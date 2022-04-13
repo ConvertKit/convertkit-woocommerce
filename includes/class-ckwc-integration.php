@@ -164,17 +164,9 @@ class CKWC_Integration extends WC_Integration {
 
 		// Bail if the file upload failed.
 		if ( $_FILES['woocommerce_ckwc_import']['error'] !== 0 ) {
-			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
-			WC_Admin_Settings::add_error( __( 'An error occured uploading the configuration file.', 'woocommerce-convertkit' ) );
-
-			// Don't perform any further import steps.
 			return;
 		}
 		if ( ! $wp_filesystem->exists( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) ) {
-			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
-			WC_Admin_Settings::add_error( __( 'An error occured uploading the configuration file.', 'woocommerce-convertkit' ) );
-
-			// Don't perform any further import steps.
 			return;
 		}
 
