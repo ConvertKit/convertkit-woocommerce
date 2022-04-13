@@ -12,6 +12,7 @@ modules:
         - WPWebDriver
         - \Helper\Acceptance
         - \Codeception\Module\Asserts
+        - \Codeception\Module\Filesystem
     config:
         WPDb:
             dsn: '%TEST_SITE_DB_DSN%'

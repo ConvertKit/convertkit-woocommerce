@@ -73,8 +73,10 @@ class CKWC_Integration extends WC_Integration {
 		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
 		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
 
-		// Maybe import or export settings.
-		$this->maybe_perform_import_export_actions();
+		// Export configuration to JSON file, if requested.
+		if ( is_admin() ) {
+			$this->maybe_export_configuration();
+		}
 
 		// Initialize form fields and settings.
 		$this->init_form_fields();
@@ -84,21 +86,16 @@ class CKWC_Integration extends WC_Integration {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+
+			// Takes the form data and saves it to WooCommerce's settings.
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
+
+			// Sanitizes and tests specific setting fields to ensure they're valid.
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
+
+			// Import configuration, if a configuration file was uploaded.
+			$this->maybe_import_configuration();
 		}
-
-	}
-
-	/**
-	 * Possibly perform import or export functions.
-	 *
-	 * @since   1.4.6
-	 */
-	private function maybe_perform_import_export_actions() {
-
-		$this->maybe_export_configuration();
-		$this->maybe_import_configuration();
 
 	}
 
@@ -118,9 +115,14 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
-		// Define configuration data to include in the export file.
+		// Load settings.
 		$this->init_settings();
-		$json     = wp_json_encode(
+
+		// Discard some settings we don't want to include in the export file.
+		unset( $this->settings['import'], $this->settings['export'] );
+
+		// Define configuration data to include in the export file.
+		$json = wp_json_encode(
 			array(
 				'settings' => $this->settings,
 			)
@@ -144,6 +146,11 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	private function maybe_import_configuration() {
 
+		// Allow us to easily interact with the filesystem.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+		global $wp_filesystem;
+
 		// Bail if no configuration file was supplied.
 		if ( ! is_array( $_FILES ) ) {
 			return;
@@ -151,47 +158,62 @@ class CKWC_Integration extends WC_Integration {
 		if ( ! array_key_exists( 'woocommerce_ckwc_import', $_FILES ) ) {
 			return;
 		}
+
+		// Check nonce.
+		check_admin_referer( 'woocommerce-settings' );
+
+		// Bail if the file upload failed.
 		if ( $_FILES['woocommerce_ckwc_import']['error'] !== 0 ) {
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( __( 'An error occured uploading the configuration file.', 'woocommerce-convertkit' ) );
+
+			// Don't perform any further import steps.
+			return;
+		}
+		if ( ! $wp_filesystem->exists( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) ) {
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( __( 'An error occured uploading the configuration file.', 'woocommerce-convertkit' ) );
+
+			// Don't perform any further import steps.
 			return;
 		}
 
 		// Read file.
-		$handle = fopen( $_FILES['woocommerce_ckwc_import']['tmp_name'], 'r' ); /* phpcs:ignore */
-		$json   = fread( $handle, $_FILES['woocommerce_ckwc_import']['size'] ); /* phpcs:ignore */
-		fclose( $handle ); /* phpcs:ignore */
-
-		// Remove UTF8 BOM chars.
-		$bom  = pack( 'H*', 'EFBBBF' );
-		$json = preg_replace( "/^$bom/", '', $json );
+		$json = $wp_filesystem->get_contents( $_FILES['woocommerce_ckwc_import']['tmp_name'] );
 
 		// Decode.
-		$import = json_decode( $json, true ); /* phpcs:ignore */
+		$import = json_decode( $json, true );
 
 		// Bail if the data isn't JSON.
 		if ( is_null( $import ) ) {
-			// @TODO.
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( __( 'The uploaded configuration file isn\'t valid.', 'woocommerce-convertkit' ) );
+
+			// Don't perform any further import steps.
+			return;
 		}
 
 		// Bail if no settings exist.
 		if ( ! array_key_exists( 'settings', $import ) ) {
-			// @TODO.
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( __( 'The uploaded configuration file contains no settings.', 'woocommerce-convertkit' ) );
+
+			// Don't perform any further import steps.
+			return;
 		}
+
+		// Remove the action for processing this integration's form fields for this request, otherwise the submitted
+		// form fields will take precedence over the uploaded configuration file, resulting in no import taking place.
+		remove_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
 
 		// Import: Settings.
 		update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $import['settings'] ), 'yes' );
 
-		// Redirect.
-		wp_safe_redirect( admin_url(
-			add_query_arg(
-				array(
-					'page'        => 'wc-settings',
-					'tab'         => 'integration',
-					'section'     => 'ckwc',
-				),
-				'admin.php'
-			)
-		) );
-		exit();
+		// Initialize the settings again, so the imported settings that were saved above are read.
+		$this->init_settings();
+
+		// Add success message for output.
+		WC_Admin_Settings::add_message( __( 'Configuration imported successfully.', 'woocommerce-convertkit' ) );
 
 	}
 
@@ -567,34 +589,34 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Export and Import.
-			'export' 						=> array(
-				'title'    		=> __( 'Import &amp; Export', 'woocommerce-convertkit' ),
-				'label'			=> __( 'Export', 'woocommerce-convertkit' ),
-				'description'   => __( 'Downloads this plugin\'s configuration as a JSON file. This file includes sensitive API credentials. Use with caution.', 'woocommerce-convertkit' ),
-				'type'     		=> 'link_button',
-				'desc_tip' 		=> false,
-				'url'      		=> admin_url(
+			'export'                        => array(
+				'title'       => __( 'Import &amp; Export', 'woocommerce-convertkit' ),
+				'label'       => __( 'Export', 'woocommerce-convertkit' ),
+				'description' => __( 'Downloads this plugin\'s configuration as a JSON file. This file includes sensitive API credentials. Use with caution.', 'woocommerce-convertkit' ),
+				'type'        => 'link_button',
+				'desc_tip'    => false,
+				'url'         => admin_url(
 					add_query_arg(
 						array(
-							'page'        => 'wc-settings',
-							'tab'         => 'integration',
-							'section'     => 'ckwc',
-							'action' 	  => 'ckwc-export',
-							'nonce'		  => wp_create_nonce( 'ckwc-nonce' ),
+							'page'    => 'wc-settings',
+							'tab'     => 'integration',
+							'section' => 'ckwc',
+							'action'  => 'ckwc-export',
+							'nonce'   => wp_create_nonce( 'ckwc-nonce' ),
 						),
 						'admin.php'
 					)
 				),
 
-				'class' 		=> '',
+				'class'       => '',
 			),
-			'import' 						=> array(
-				'title'    		=> '',
-				'label'			=> '',
-				'description'   => __( 'Imports a configuration file generated by this plugin. This will overwrite any existing settings stored on this installation.', 'woocommerce-convertkit' ),
-				'type'     		=> 'file',
-				'desc_tip' 		=> false,
-				'class' 		=> '',
+			'import'                        => array(
+				'title'       => '',
+				'label'       => '',
+				'description' => __( 'Imports a configuration file generated by this plugin. This will overwrite any existing settings stored on this installation.', 'woocommerce-convertkit' ),
+				'type'        => 'file',
+				'desc_tip'    => false,
+				'class'       => '',
 			),
 		);
 
