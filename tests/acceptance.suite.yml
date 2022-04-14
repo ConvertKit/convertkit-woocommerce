@@ -47,3 +47,5 @@ modules:
             capabilities:
                 chromeOptions:
                     args: ["--headless", "--disable-gpu"]
+                    prefs:
+                        download.default_directory: '%WP_ROOT_FOLDER%'

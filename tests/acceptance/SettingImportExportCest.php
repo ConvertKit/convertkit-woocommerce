@@ -37,15 +37,14 @@ class SettingImportExportCest
 	{
 		// Click the Export button.
 		// This will download the file to $_ENV['WP_ROOT_FOLDER'].
-		$I->scrollTo('#export');
-		$I->click('a#export');
+		$I->click('#mainform a#export');
 
 		// Wait 2 seconds for the download to complete.
 		sleep(2);
 
 		// Check downloaded file exists and contains some expected information.
 		$I->openFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
-		$I->seeInThisFile('{"settings":{"api_key":"' . $_ENV['CONVERTKIT_API_KEY'] . '","api_secret":"' . $_ENV['CONVERTKIT_API_SECRET'] . '"');
+		$I->seeInThisFile('{"settings":{"enabled":"yes","api_key":"' . $_ENV['CONVERTKIT_API_KEY'] . '","api_secret":"' . $_ENV['CONVERTKIT_API_SECRET'] . '"');
 	
 		// Delete the file.
 		$I->deleteFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
