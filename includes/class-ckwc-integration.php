@@ -73,6 +73,11 @@ class CKWC_Integration extends WC_Integration {
 		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
 		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
 
+		// Export configuration to JSON file, if requested.
+		if ( is_admin() ) {
+			$this->maybe_export_configuration();
+		}
+
 		// Initialize form fields and settings.
 		$this->init_form_fields();
 		$this->init_settings();
@@ -81,9 +86,145 @@ class CKWC_Integration extends WC_Integration {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+
+			// Takes the form data and saves it to WooCommerce's settings.
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
+
+			// Sanitizes and tests specific setting fields to ensure they're valid.
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
+
+			// Import configuration, if a configuration file was uploaded.
+			$this->maybe_import_configuration();
 		}
+
+	}
+
+	/**
+	 * Prompts a browser download for the configuration file, if the user clicked
+	 * the Export button.
+	 *
+	 * @since   1.4.6
+	 */
+	private function maybe_export_configuration() {
+
+		// Bail if the action isn't for exporting a configuration file.
+		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore
+			return;
+		}
+		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore
+			return;
+		}
+
+		// Load settings.
+		$this->init_settings();
+
+		// Discard some settings we don't want to include in the export file.
+		unset( $this->settings['import'], $this->settings['export'] );
+
+		// Define configuration data to include in the export file.
+		$json = wp_json_encode(
+			array(
+				'settings' => $this->settings,
+			)
+		);
+
+		// Download.
+		header( 'Content-type: application/x-msdownload' );
+		header( 'Content-Disposition: attachment; filename=ckwc-export.json' );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+		echo $json; /* phpcs:ignore */
+		exit();
+
+	}
+
+	/**
+	 * Imports the configuration file, if it's included in the form request
+	 * and has the expected structure.
+	 *
+	 * @since   1.4.6
+	 */
+	private function maybe_import_configuration() {
+
+		// Allow us to easily interact with the filesystem.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+		global $wp_filesystem;
+
+		// Bail if no configuration file was supplied.
+		if ( ! is_array( $_FILES ) ) {
+			return;
+		}
+		if ( ! array_key_exists( 'woocommerce_ckwc_import', $_FILES ) ) {
+			return;
+		}
+
+		// Check nonce.
+		check_admin_referer( 'woocommerce-settings' );
+
+		// Bail if the file upload failed.
+		if ( $_FILES['woocommerce_ckwc_import']['error'] !== 0 ) {
+			return;
+		}
+		if ( ! $wp_filesystem->exists( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) ) {
+			return;
+		}
+
+		// Read file.
+		$json = $wp_filesystem->get_contents( $_FILES['woocommerce_ckwc_import']['tmp_name'] );
+
+		// Decode.
+		$import = json_decode( $json, true );
+
+		// Bail if the data isn't JSON.
+		if ( is_null( $import ) ) {
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( __( 'The uploaded configuration file isn\'t valid.', 'woocommerce-convertkit' ) );
+
+			// Don't perform any further import steps.
+			return;
+		}
+
+		// Bail if no settings exist.
+		if ( ! array_key_exists( 'settings', $import ) ) {
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( __( 'The uploaded configuration file contains no settings.', 'woocommerce-convertkit' ) );
+
+			// Don't perform any further import steps.
+			return;
+		}
+
+		// Remove the action for processing this integration's form fields for this request, otherwise the submitted
+		// form fields will take precedence over the uploaded configuration file, resulting in no import taking place.
+		remove_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
+
+		// Import: Settings.
+		update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $import['settings'] ), 'yes' );
+
+		// Initialize the settings again, so the imported settings that were saved above are read.
+		$this->init_settings();
+
+		// Add success message for output.
+		WC_Admin_Settings::add_message( __( 'Configuration imported successfully.', 'woocommerce-convertkit' ) );
+
+	}
+
+	/**
+	 * Verifies if the _convertkit_settings_tools_nonce nonce was included in the request,
+	 * and if so whether the nonce action is valid.
+	 *
+	 * @since   1.4.6
+	 *
+	 * @return  bool
+	 */
+	private function verify_nonce() {
+
+		// Bail if nonce verification fails.
+		if ( ! isset( $_REQUEST['_convertkit_settings_tools_nonce'] ) ) {
+			return false;
+		}
+
+		return wp_verify_nonce( $_REQUEST['_convertkit_settings_tools_nonce'], 'convertkit-settings-tools' );
 
 	}
 
@@ -438,6 +579,37 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled',
 			),
+
+			// Export and Import.
+			'export'                        => array(
+				'title'       => __( 'Import &amp; Export', 'woocommerce-convertkit' ),
+				'label'       => __( 'Export', 'woocommerce-convertkit' ),
+				'description' => __( 'Downloads this plugin\'s configuration as a JSON file. This file includes sensitive API credentials. Use with caution.', 'woocommerce-convertkit' ),
+				'type'        => 'link_button',
+				'desc_tip'    => false,
+				'url'         => admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'wc-settings',
+							'tab'     => 'integration',
+							'section' => 'ckwc',
+							'action'  => 'ckwc-export',
+							'nonce'   => wp_create_nonce( 'ckwc-nonce' ),
+						),
+						'admin.php'
+					)
+				),
+
+				'class'       => '',
+			),
+			'import'                        => array(
+				'title'       => '',
+				'label'       => '',
+				'description' => __( 'Imports a configuration file generated by this plugin. This will overwrite any existing settings stored on this installation.', 'woocommerce-convertkit' ),
+				'type'        => 'file',
+				'desc_tip'    => false,
+				'class'       => '',
+			),
 		);
 
 	}
@@ -715,6 +887,23 @@ class CKWC_Integration extends WC_Integration {
 		// Return HTML for button.
 		ob_start();
 		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/sync-past-orders-button.php';
+		return ob_get_clean();
+
+	}
+
+	/**
+	 * Renders a button that links to the given URL.
+	 *
+	 * @since   1.4.5
+	 *
+	 * @param   string $key    Setting Field Key.
+	 * @param   array  $data   Setting Field Configuration.
+	 */
+	public function generate_link_button_html( $key, $data ) { /* phpcs:ignore */
+
+		// Return HTML for button.
+		ob_start();
+		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/link-button.php';
 		return ob_get_clean();
 
 	}
