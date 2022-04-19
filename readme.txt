@@ -46,6 +46,9 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
+### 1.4.6 2022-04-19
+* Added: Settings: Import and Export configuration
+
 ### 1.4.5 2022-03-17
 * Added: Settings: Purchase Data: Option to specify when purchase data should be sent to ConvertKit based on WooCommerce Order status 
 
