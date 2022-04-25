@@ -170,7 +170,7 @@ class CKWC_Resource {
 
 		// Bail if the API Key and Secret hasn't been defined in the Plugin Settings.
 		if ( ! WP_CKWC_Integration()->is_enabled() ) {
-			return;
+			return false;
 		}
 
 		// Setup the API.
