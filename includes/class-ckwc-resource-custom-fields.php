@@ -28,11 +28,4 @@ class CKWC_Resource_Custom_Fields extends CKWC_Resource {
 	 */
 	public $type = 'custom_fields';
 
-	/**
-	 * Holds the forms from the ConvertKit API
-	 *
-	 * @var     array
-	 */
-	public $resources = array();
-
 }

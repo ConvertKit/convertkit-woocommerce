@@ -28,11 +28,4 @@ class CKWC_Resource_Tags extends CKWC_Resource {
 	 */
 	public $type = 'tags';
 
-	/**
-	 * Holds the tags from the ConvertKit API
-	 *
-	 * @var     array
-	 */
-	public $resources = array();
-
 }

@@ -28,11 +28,4 @@ class CKWC_Resource_Forms extends CKWC_Resource {
 	 */
 	public $type = 'forms';
 
-	/**
-	 * Holds the forms from the ConvertKit API
-	 *
-	 * @var     array
-	 */
-	public $resources = array();
-
 }
