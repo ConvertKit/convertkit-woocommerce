@@ -8,11 +8,26 @@
 actor: AcceptanceTester
 modules:
     enabled:
+        # wp-browser supplied classes, which provide WordPress specific functions
         - WPDb
         - WPWebDriver
-        - \Helper\Acceptance
+
+        # Codeception supplied classes, which provide assertions and filesystem functions
         - \Codeception\Module\Asserts
         - \Codeception\Module\Filesystem
+
+        # Our helper classes, which contain functions used across multiple tests.
+        # If you created a new file in tests/_support/Helper/Acceptance, add its namespace and class below,
+        - \Helper\Acceptance\ConvertKitAPI
+        - \Helper\Acceptance\Email
+        - \Helper\Acceptance\Plugin
+        - \Helper\Acceptance\Select2
+        - \Helper\Acceptance\ThirdPartyPlugin
+        - \Helper\Acceptance\WooCommerce
+        - \Helper\Acceptance\WPClassicEditor
+        - \Helper\Acceptance\WPMetabox
+        - \Helper\Acceptance\WPGutenberg
+        - \Helper\Acceptance\Xdebug
     config:
         WPDb:
             dsn: '%TEST_SITE_DB_DSN%'
