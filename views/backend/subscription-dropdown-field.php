@@ -7,14 +7,13 @@
  */
 
 ?>
-
 <select class="<?php echo esc_attr( $subscription['class'] ); ?>" id="<?php echo esc_attr( $subscription['id'] ); ?>" name="<?php echo esc_attr( $subscription['name'] ); ?>">
 	<option <?php selected( '', $subscription['value'] ); ?> value="">
 		<?php esc_html_e( 'Select a subscription option...', 'woocommerce-convertkit' ); ?>
 	</option>
 
 	<?php
-	if ( ! is_wp_error( $subscription['sequences']->get() ) ) {
+	if ( $subscription['sequences']->exist() ) {
 		?>
 		<optgroup label="<?php esc_attr_e( 'Sequences', 'woocommerce-convertkit' ); ?>">
 			<?php
@@ -29,7 +28,7 @@
 		<?php
 	}
 
-	if ( ! is_wp_error( $subscription['forms']->get() ) ) {
+	if ( $subscription['forms']->exist() ) {
 		?>
 		<optgroup label="<?php esc_attr_e( 'Forms', 'woocommerce-convertkit' ); ?>">
 			<?php
@@ -43,7 +42,7 @@
 		<?php
 	}
 
-	if ( ! is_wp_error( $subscription['tags']->get() ) ) {
+	if ( $subscription['tags']->exist() ) {
 		?>
 		<optgroup label="<?php esc_attr_e( 'Tags', 'woocommerce-convertkit' ); ?>">
 			<?php

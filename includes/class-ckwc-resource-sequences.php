@@ -28,11 +28,4 @@ class CKWC_Resource_Sequences extends CKWC_Resource {
 	 */
 	public $type = 'sequences';
 
-	/**
-	 * Holds the sequences from the ConvertKit API
-	 *
-	 * @var     array
-	 */
-	public $resources = array();
-
 }
