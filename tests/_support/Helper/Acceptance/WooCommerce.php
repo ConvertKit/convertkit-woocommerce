@@ -145,7 +145,11 @@ class WooCommerce extends \Codeception\Module
 			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', '(Don\'t send or map)');
 		}
 
+		// Save.
 		$I->click('Save changes');
+
+		// Wait until the settings page reloads, to avoid a browser alert later that navigating away will lose unsaved changes.
+		$I->waitForElement('#woocommerce_ckwc_enabled');
 		
 		// Create Product
 		switch ($productType) {
