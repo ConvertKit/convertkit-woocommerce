@@ -17,9 +17,9 @@ parameters:
     bootstrapFiles:
         - woocommerce-convertkit.php
 
-    # Location of WordPress installation
+    # Location of WordPress Plugins for PHPStan to scan, building symbols.
     scanDirectories:
-        - /Users/tim/Local Sites/convertkit-github/app/public
+        - /Users/tim/Local Sites/convertkit-github/app/public/wp-content/plugins
 
     # Should not need to edit anything below here
     # Rule Level: https://phpstan.org/user-guide/rule-levels
@@ -28,6 +28,5 @@ parameters:
     # Ignore the following errors, as PHPStan and PHPStan for WordPress haven't registered symbols for them yet,
     # so they're false positives.
     ignoreErrors:
-        - '#Constant WPINC not found.#'
         - '#Constant WP_PLUGIN_DIR not found.#'
         - '#Function apply_filters invoked with#' # apply_filters() accepted a variable number of parameters, which PHPStan fails to detect
