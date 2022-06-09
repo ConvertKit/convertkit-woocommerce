@@ -210,25 +210,6 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Verifies if the _convertkit_settings_tools_nonce nonce was included in the request,
-	 * and if so whether the nonce action is valid.
-	 *
-	 * @since   1.4.6
-	 *
-	 * @return  bool
-	 */
-	private function verify_nonce() {
-
-		// Bail if nonce verification fails.
-		if ( ! isset( $_REQUEST['_convertkit_settings_tools_nonce'] ) ) {
-			return false;
-		}
-
-		return wp_verify_nonce( $_REQUEST['_convertkit_settings_tools_nonce'], 'convertkit-settings-tools' );
-
-	}
-
-	/**
 	 * Output the Integration settings screen, depending on whether the request
 	 * is for the settings or the Sync Past Orders screen.
 	 *
