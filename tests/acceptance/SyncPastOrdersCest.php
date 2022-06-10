@@ -20,6 +20,9 @@ class SyncPastOrdersCest
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
+
+		// Setup Custom Order Numbers Plugin.
+		$I->setupCustomOrderNumbersPlugin($I);
 	}
 
 	/**

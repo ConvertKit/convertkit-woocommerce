@@ -17,9 +17,9 @@ parameters:
     bootstrapFiles:
         - woocommerce-convertkit.php
 
-    # Location of WordPress installation
+    # Location of WordPress Plugins for PHPStan to scan, building symbols.
     scanDirectories:
-        - /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress
+        - /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress/wp-content/plugins
 
     # Should not need to edit anything below here
     # Rule Level: https://phpstan.org/user-guide/rule-levels
@@ -29,3 +29,4 @@ parameters:
     # so they're false positives.
     ignoreErrors:
         - '#Constant WP_PLUGIN_DIR not found.#'
+        - '#Function apply_filters invoked with#' # apply_filters() accepted a variable number of parameters, which PHPStan fails to detect
