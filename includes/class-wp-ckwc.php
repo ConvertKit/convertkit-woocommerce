@@ -144,7 +144,7 @@ class WP_CKWC {
 	private function initialize_global() {
 
 		$this->classes['order']            = new CKWC_Order();
-		$this->classes['review_request']   = new CKWC_Review_Request( 'ConvertKit for WooCommerce', 'convertkit-for-woocommerce' );
+		$this->classes['review_request']   = new ConvertKit_Review_Request( 'ConvertKit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
 		$this->classes['wc_subscriptions'] = new CKWC_WC_Subscriptions();
 
 		/**
