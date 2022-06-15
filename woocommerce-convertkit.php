@@ -34,9 +34,6 @@ define( 'CKWC_PLUGIN_VERSION', '1.4.7' );
 if ( ! class_exists( 'ConvertKit_API' ) ) {
 	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-api.php';
 }
-if ( ! class_exists( 'ConvertKit_Log' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-log.php';
-}
 if ( ! class_exists( 'ConvertKit_Resource' ) ) {
 	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-resource.php';
 }
