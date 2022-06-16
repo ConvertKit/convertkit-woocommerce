@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Tests for the CKWC_Resource_Sequences class.
+ * 
+ * @since 	1.4.7
+ */
 class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 {
 	/**
@@ -64,7 +68,7 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
-	 * Test that the refresh() function performs as expected, storing data in the options table.
+	 * Test that the refresh() function performs as expected.
 	 * 
 	 * @since 	1.4.7
 	 */
@@ -95,7 +99,7 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
-	 * Test that the get() function performs as expected, storing data in the options table.
+	 * Test that the get() function performs as expected.
 	 * 
 	 * @since 	1.4.7
 	 */
@@ -110,7 +114,18 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
-	 * Test that the exist() function performs as expected, storing data in the options table.
+	 * Test that the count() function returns the number of resources.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testCount()
+	{
+		$result = $this->resource->get();
+		$this->assertEquals($this->resource->count(), count($result));
+	}
+
+	/**
+	 * Test that the exist() function performs as expected.
 	 * 
 	 * @since 	1.4.7
 	 */
