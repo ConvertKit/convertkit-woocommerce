@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Tests for the ConvertKit_API class.
+ * 
+ * @since 	1.9.7.4
+ */
 class APITest extends \Codeception\TestCase\WPTestCase
 {
 	/**
@@ -12,7 +16,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	 * 
 	 * @since 	1.4.4
 	 * 
-	 * @var 	CKWC_API
+	 * @var 	ConvertKit_API
 	 */
 	private $api;
 
@@ -33,8 +37,13 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+
+		// Activate Plugin.
+		activate_plugins('convertkit-woocommerce/woocommerce-convertkit');
+
+		// Initialize the classes we want to test.
 		$this->api = new CKWC_API( $_ENV['CONVERTKIT_API_KEY'], $_ENV['CONVERTKIT_API_SECRET'] );
-		sleep(2);
+		$this->api_no_data = new CKWC_API( $_ENV['CONVERTKIT_API_KEY_NO_DATA'], $_ENV['CONVERTKIT_API_SECRET_NO_DATA'] );
 	}
 
 	/**
@@ -44,7 +53,12 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function tearDown(): void
 	{
+		// Destroy the class we tested.
 		unset($this->api);
+
+		// Deactivate Plugin.
+		deactivate_plugins('convertkit-woocommerce/woocommerce-convertkit.php');
+		
 		parent::tearDown();
 	}
 
@@ -92,6 +106,20 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
+	 * Test that the `get_subscription_forms()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetSubscriptionFormsNoData()
+	{
+		$result = $this->api_no_data->get_subscription_forms();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
+
+	/**
 	 * Test that the `get_forms()` function returns expected data.
 	 * 
 	 * @since 	1.4.4
@@ -105,6 +133,20 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('name', reset($result));
 		$this->assertArrayHasKey('format', reset($result));
 		$this->assertArrayHasKey('embed_js', reset($result));
+	}
+
+	/**
+	 * Test that the `get_forms()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetFormsNoData()
+	{
+		$result = $this->api_no_data->get_forms();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
 	}
 
 	/**
@@ -184,6 +226,20 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
+	 * Test that the `get_landing_pages()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetLandingPagesNoData()
+	{
+		$result = $this->api_no_data->get_landing_pages();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
+
+	/**
 	 * Test that the `get_sequences()` function returns expected data.
 	 * 
 	 * @since 	1.4.4
@@ -195,7 +251,21 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		$this->assertIsArray($result);
 		$this->assertArrayHasKey('id', reset($result));
 		$this->assertArrayHasKey('name', reset($result));
-	} 
+	}
+
+	/**
+	 * Test that the `get_sequences()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetSequencesNoData()
+	{
+		$result = $this->api_no_data->get_sequences();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
 
 	/**
 	 * Test that the `sequence_subscribe()` function returns expected data
@@ -268,7 +338,21 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		$this->assertIsArray($result);
 		$this->assertArrayHasKey('id', reset($result));
 		$this->assertArrayHasKey('name', reset($result));
-	} 
+	}
+
+	/**
+	 * Test that the `get_tags()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetTagsNoData()
+	{
+		$result = $this->api_no_data->get_tags();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
 
 	/**
 	 * Test that the `tag_subscribe()` function returns expected data
@@ -496,6 +580,205 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		$this->assertIsArray($result);
 		$this->assertArrayHasKey('id', reset($result));
 		$this->assertArrayHasKey('name', reset($result));
+	}
+
+	/**
+	 * Test that the `get_custom_fields()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetCustomFieldsNoData()
+	{
+		$result = $this->api_no_data->get_custom_fields();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
+
+	/**
+	 * Test that the `get_posts()` function returns expected data.
+	 * 
+	 * @since 	1.9.7.4
+	 */
+	public function testGetPosts()
+	{
+		$result = $this->api->get_posts();
+
+		// Test array was returned.
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+
+		// Test expected response keys exist.
+		$this->assertArrayHasKey('total_posts', $result);
+		$this->assertArrayHasKey('page', $result);
+		$this->assertArrayHasKey('total_pages', $result);
+		$this->assertArrayHasKey('posts', $result);
+
+		// Test first post within posts array.
+		$this->assertArrayHasKey('id', reset($result['posts']));
+		$this->assertArrayHasKey('title', reset($result['posts']));
+		$this->assertArrayHasKey('url', reset($result['posts']));
+		$this->assertArrayHasKey('published_at', reset($result['posts']));
+		$this->assertArrayHasKey('is_paid', reset($result['posts']));
+	}
+
+	/**
+	 * Test that the `get_posts()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetPostsNoData()
+	{
+		$result = $this->api_no_data->get_posts();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
+
+	/**
+	 * Test that the `get_posts()` function returns expected data
+	 * when valid parameters are included.
+	 * 
+	 * @since 	1.9.7.4
+	 */
+	public function testGetPostsWithValidParameters()
+	{
+		$result = $this->api->get_posts(1, 2);
+
+		// Test array was returned.
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+
+		// Test expected response keys exist.
+		$this->assertArrayHasKey('total_posts', $result);
+		$this->assertArrayHasKey('page', $result);
+		$this->assertArrayHasKey('total_pages', $result);
+		$this->assertArrayHasKey('posts', $result);
+
+		// Test expected number of posts returned.
+		$this->assertCount(2, $result['posts']);
+
+		// Test first post within posts array.
+		$this->assertArrayHasKey('id', reset($result['posts']));
+		$this->assertArrayHasKey('title', reset($result['posts']));
+		$this->assertArrayHasKey('url', reset($result['posts']));
+		$this->assertArrayHasKey('published_at', reset($result['posts']));
+		$this->assertArrayHasKey('is_paid', reset($result['posts']));
+	}
+
+	/**
+	 * Test that the `get_posts()` function returns an error
+	 * when the page parameter is less than 1.
+	 * 
+	 * @since 	1.9.7.4
+	 */
+	public function testGetPostsWithInvalidPageParameter()
+	{
+		$result = $this->api->get_posts(0);
+		$this->assertInstanceOf(WP_Error::class, $result);
+		$this->assertEquals($result->get_error_code(), $this->errorCode);
+		$this->assertEquals('get_posts(): the page parameter must be equal to or greater than 1.', $result->get_error_message());
+	}
+
+	/**
+	 * Test that the `get_posts()` function returns an error
+	 * when the per_page parameter is less than 1.
+	 * 
+	 * @since 	1.9.7.4
+	 */
+	public function testGetPostsWithNegativePerPageParameter()
+	{
+		$result = $this->api->get_posts(1, 0);
+		$this->assertInstanceOf(WP_Error::class, $result);
+		$this->assertEquals($result->get_error_code(), $this->errorCode);
+		$this->assertEquals('get_posts(): the per_page parameter must be equal to or greater than 1.', $result->get_error_message());
+	}
+
+	/**
+	 * Test that the `get_posts()` function returns an error
+	 * when the per_page parameter is greater than 50.
+	 * 
+	 * @since 	1.9.7.4
+	 */
+	public function testGetPostsWithOutOfBoundsPerPageParameter()
+	{
+		$result = $this->api->get_posts(1, 100);
+		$this->assertInstanceOf(WP_Error::class, $result);
+		$this->assertEquals($result->get_error_code(), $this->errorCode);
+		$this->assertEquals('get_posts(): the per_page parameter must be equal to or less than 50.', $result->get_error_message());
+	}
+
+	/**
+	 * Test that the `get_all_posts()` function returns expected data.
+	 * 
+	 * @since 	1.9.7.6
+	 */
+	public function testGetAllPosts()
+	{
+		$result = $this->api->get_all_posts();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('id', reset($result));
+		$this->assertArrayHasKey('title', reset($result));
+		$this->assertArrayHasKey('url', reset($result));
+		$this->assertArrayHasKey('published_at', reset($result));
+		$this->assertArrayHasKey('is_paid', reset($result));
+	}
+
+	/**
+	 * Test that the `get_all_posts()` function returns a blank array when no data
+	 * exists on the ConvertKit account.
+	 * 
+	 * @since 	1.4.7
+	 */
+	public function testGetAllPostsNoData()
+	{
+		$result = $this->api_no_data->get_all_posts();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(0, $result);
+	}
+
+	/**
+	 * Test that the `get_all_posts()` function returns expected data
+	 * when valid parameters are included.
+	 * 
+	 * @since 	1.9.7.6
+	 */
+	public function testGetAllPostsWithValidParameters()
+	{
+		$result = $this->api->get_all_posts(2); // Number of posts to fetch in each request within the function.
+		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertIsArray($result);
+		$this->assertCount(4, $result);
+		$this->assertArrayHasKey('id', reset($result));
+		$this->assertArrayHasKey('title', reset($result));
+		$this->assertArrayHasKey('url', reset($result));
+		$this->assertArrayHasKey('published_at', reset($result));
+		$this->assertArrayHasKey('is_paid', reset($result));
+	}
+
+	/**
+	 * Test that the `get_all_posts()` function returns an error
+	 * when the page parameter is less than 1.
+	 * 
+	 * @since 	1.9.7.6
+	 */
+	public function testGetAllPostsWithInvalidPostsPerRequestParameter()
+	{
+		// Test with a number less than 1.
+		$result = $this->api->get_all_posts(0);
+		$this->assertInstanceOf(WP_Error::class, $result);
+		$this->assertEquals($result->get_error_code(), $this->errorCode);
+		$this->assertEquals('get_all_posts(): the posts_per_request parameter must be equal to or greater than 1.', $result->get_error_message());
+
+		// Test with a number greater than 50.
+		$result = $this->api->get_all_posts(51);
+		$this->assertInstanceOf(WP_Error::class, $result);
+		$this->assertEquals($result->get_error_code(), $this->errorCode);
+		$this->assertEquals('get_all_posts(): the posts_per_request parameter must be equal to or less than 50.', $result->get_error_message());
 	}
 
 	/**
