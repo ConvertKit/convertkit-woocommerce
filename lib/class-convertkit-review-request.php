@@ -2,7 +2,7 @@
 /**
  * ConvertKit Review Request class.
  *
- * @package CKWC
+ * @package ConvertKit
  * @author ConvertKit
  */
 
@@ -10,15 +10,15 @@
  * Displays a one time review request notification in the WordPress
  * Administration interface.
  *
- * @package CKWC
+ * @package ConvertKit
  * @author ConvertKit
  */
-class CKWC_Review_Request {
+class ConvertKit_Review_Request {
 
 	/**
 	 * Holds the Plugin name.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @var     string
 	 */
@@ -27,17 +27,26 @@ class CKWC_Review_Request {
 	/**
 	 * Holds the Plugin slug.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @var     string
 	 */
 	private $plugin_slug;
 
 	/**
+	 * Holds the Plugin path.
+	 *
+	 * @since   1.9.7.8
+	 *
+	 * @var     string
+	 */
+	private $plugin_path;
+
+	/**
 	 * Holds the number of days after the Plugin requests a review to then
 	 * display the review notification in WordPress' Administration interface.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @var     int
 	 */
@@ -46,16 +55,18 @@ class CKWC_Review_Request {
 	/**
 	 * Registers action and filter hooks.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @param   string $plugin_name    Plugin Name (e.g. ConvertKit).
 	 * @param   string $plugin_slug    Plugin Slug (e.g. convertkit).
+	 * @param   string $plugin_path    Plugin Path.
 	 */
-	public function __construct( $plugin_name, $plugin_slug ) {
+	public function __construct( $plugin_name, $plugin_slug, $plugin_path ) {
 
-		// Store the Plugin Name and Slug in the class.
+		// Store the Plugin name, slug and path in the class.
 		$this->plugin_name = $plugin_name;
 		$this->plugin_slug = $plugin_slug;
+		$this->plugin_path = $plugin_path;
 
 		// Register an AJAX action to dismiss the review.
 		add_action( 'wp_ajax_' . str_replace( '-', '_', $this->plugin_slug ) . '_dismiss_review', array( $this, 'dismiss_review' ) );
@@ -69,7 +80,7 @@ class CKWC_Review_Request {
 	 * Displays a dismissible WordPress Administration notice requesting a review, if requested
 	 * by the main Plugin and the Review Request hasn't been disabled.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 */
 	public function maybe_display_review_request() {
 
@@ -99,7 +110,7 @@ class CKWC_Review_Request {
 		}
 
 		// If here, display the request for a review.
-		include_once CKWC_PLUGIN_PATH . '/views/backend/review/notice.php';
+		include_once $this->plugin_path . '/views/backend/review/notice.php';
 
 	}
 
@@ -107,7 +118,7 @@ class CKWC_Review_Request {
 	 * Sets a flag in the options table requesting a review notification be displayed
 	 * in the WordPress Administration.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 */
 	public function request_review() {
 
@@ -127,7 +138,7 @@ class CKWC_Review_Request {
 	 * and the minimum time has passed between the Plugin requesting a review
 	 * and now.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @return  bool    Review Requested
 	 */
@@ -152,7 +163,7 @@ class CKWC_Review_Request {
 	/**
 	 * Dismisses the review notification, so it isn't displayed again.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 */
 	public function dismiss_review() {
 
@@ -168,7 +179,7 @@ class CKWC_Review_Request {
 	/**
 	 * Flag to indicate whether a review request has been dismissed by the user.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @return  bool    Review Dismissed
 	 */
@@ -181,7 +192,7 @@ class CKWC_Review_Request {
 	/**
 	 * Returns the Review URL for this Plugin.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @return  string  Review URL
 	 */
@@ -194,7 +205,7 @@ class CKWC_Review_Request {
 	/**
 	 * Returns the Support URL for this Plugin.
 	 *
-	 * @since   1.4.3
+	 * @since   1.9.6.7
 	 *
 	 * @return  string  Review URL
 	 */
