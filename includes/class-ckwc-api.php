@@ -58,26 +58,42 @@ class CKWC_API extends ConvertKit_API {
 		// WordPress requires that the text domain be a string (e.g. 'woocommerce-convertkit') and not a variable,
 		// otherwise localization won't work.
 		$this->error_messages = array(
+			// form_subscribe().
 			'form_subscribe_form_id_empty'                => __( 'form_subscribe(): the form_id parameter is empty.', 'woocommerce-convertkit' ),
 			'form_subscribe_email_empty'                  => __( 'form_subscribe(): the email parameter is empty.', 'woocommerce-convertkit' ),
+
+			// sequence_subscribe().
 			'sequence_subscribe_sequence_id_empty'        => __( 'sequence_subscribe(): the sequence_id parameter is empty.', 'woocommerce-convertkit' ),
 			'sequence_subscribe_email_empty'              => __( 'sequence_subscribe(): the email parameter is empty.', 'woocommerce-convertkit' ),
+
+			// tag_subscribe().
 			'tag_subscribe_tag_id_empty'                  => __( 'tag_subscribe(): the tag_id parameter is empty.', 'woocommerce-convertkit' ),
 			'tag_subscribe_email_empty'                   => __( 'tag_subscribe(): the email parameter is empty.', 'woocommerce-convertkit' ),
+
+			// get_subscriber_by_email().
 			'get_subscriber_by_email_email_empty'         => __( 'get_subscriber_by_email(): the email parameter is empty.', 'woocommerce-convertkit' ),
 			/* translators: Email Address */
+			'get_subscriber_by_email_none'                => __( 'No subscriber(s) exist in ConvertKit matching the email address %s.', 'woocommerce-convertkit' ),
+
+			// get_subscriber_by_id().
 			'get_subscriber_by_id_subscriber_id_empty'    => __( 'get_subscriber_by_id(): the subscriber_id parameter is empty.', 'woocommerce-convertkit' ),
-			/* translators: Subscriber ID */
-			'get_subscriber_by_id_none'                   => __( 'No subscriber(s) exist in ConvertKit matching the ID %s.', 'woocommerce-convertkit' ),
+
+			// get_subscriber_tags().
 			'get_subscriber_tags_subscriber_id_empty'     => __( 'get_subscriber_tags(): the subscriber_id parameter is empty.', 'woocommerce-convertkit' ),
-			/* translators: Subscriber ID */
+
+			// unsubscribe_email().
 			'unsubscribe_email_empty'                     => __( 'unsubscribe(): the email parameter is empty.', 'woocommerce-convertkit' ),
+
+			// get_all_posts().
 			'get_all_posts_posts_per_request_bound_too_low' => __( 'get_all_posts(): the posts_per_request parameter must be equal to or greater than 1.', 'woocommerce-convertkit' ),
 			'get_all_posts_posts_per_request_bound_too_high' => __( 'get_all_posts(): the posts_per_request parameter must be equal to or less than 50.', 'woocommerce-convertkit' ),
+
+			// get_posts().
 			'get_posts_page_parameter_bound_too_low'      => __( 'get_posts(): the page parameter must be equal to or greater than 1.', 'woocommerce-convertkit' ),
 			'get_posts_per_page_parameter_bound_too_low'  => __( 'get_posts(): the per_page parameter must be equal to or greater than 1.', 'woocommerce-convertkit' ),
 			'get_posts_per_page_parameter_bound_too_high' => __( 'get_posts(): the per_page parameter must be equal to or less than 50.', 'woocommerce-convertkit' ),
-			'get_forms_landing_pages_none'                => __( 'No forms exist in ConvertKit. Visit your ConvertKit account and create your first form.', 'woocommerce-convertkit' ),
+
+			// request().
 			/* translators: HTTP method */
 			'request_method_unsupported'                  => __( 'API request method %s is not supported in ConvertKit_API class.', 'woocommerce-convertkit' ),
 			'request_rate_limit_exceeded'                 => __( 'Rate limit hit.', 'woocommerce-convertkit' ),
