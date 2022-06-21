@@ -12,12 +12,6 @@ parameters:
         - woocommerce-convertkit.php
         - admin/
         - includes/
-        - lib/
-
-    # Paths to exclude
-    # This should comprise of any third party libraries used in the Plugin
-    excludePaths:
-        - lib/browser.php
 
     # Files that include Plugin-specific PHP constants
     bootstrapFiles:
@@ -35,4 +29,3 @@ parameters:
     # so they're false positives.
     ignoreErrors:
         - '#Constant WP_PLUGIN_DIR not found.#'
-        - '#Function apply_filters invoked with#' # apply_filters() accepted a variable number of parameters, which PHPStan fails to detect
