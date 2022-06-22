@@ -1,10 +1,10 @@
 <?php
 /**
- * Tests for the CKWC_Resource_Sequences class.
+ * Tests for the CKWC_Resource_Sequences class when no data is present in the API.
  * 
  * @since 	1.4.7
  */
-class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
+class ResourceSequencesNoDataTest extends \Codeception\TestCase\WPTestCase
 {
 	/**
 	 * @var \WpunitTester
@@ -40,8 +40,8 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 
 		// Enable integration, storing API Key and Secret in Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'yes' );
-		WP_CKWC_Integration()->update_option( 'api_key', $_ENV['CONVERTKIT_API_KEY'] );
-		WP_CKWC_Integration()->update_option( 'api_secret', $_ENV['CONVERTKIT_API_SECRET'] );
+		WP_CKWC_Integration()->update_option( 'api_key', $_ENV['CONVERTKIT_API_KEY_NO_DATA'] );
+		WP_CKWC_Integration()->update_option( 'api_secret', $_ENV['CONVERTKIT_API_SECRET_NO_DATA'] );
 
 		// Initialize the resource class we want to test.
 		$this->resource = new CKWC_Resource_Sequences();
@@ -74,11 +74,11 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function testRefresh()
 	{
-		// Confirm that the data is stored in the options table and includes some expected keys.
+		// Confirm that no resources exist in the stored options table data.
 		$result = $this->resource->refresh();
+		$this->assertNotInstanceOf(WP_Error::class, $result);
 		$this->assertIsArray($result);
-		$this->assertArrayHasKey('id', reset($result));
-		$this->assertArrayHasKey('name', reset($result));
+		$this->assertCount(0, $result);
 	}
 
 	/**
@@ -105,12 +105,11 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function testGet()
 	{
-		// Confirm that the data is fetched from the options table when using get(), and includes some expected keys.
+		// Confirm that no resources exist in the stored options table data.
 		$result = $this->resource->get();
 		$this->assertNotInstanceOf(WP_Error::class, $result);
 		$this->assertIsArray($result);
-		$this->assertArrayHasKey('id', reset($result));
-		$this->assertArrayHasKey('name', reset($result));
+		$this->assertCount(0, $result);
 	}
 
 	/**
@@ -131,8 +130,8 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function testExist()
 	{
-		// Confirm that the function returns true, because resources exist.
+		// Confirm that the function returns true, because no resources exist.
 		$result = $this->resource->exist();
-		$this->assertSame($result, true);
+		$this->assertSame($result, false);
 	}
 }
