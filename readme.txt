@@ -46,10 +46,8 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
-### 1.4.8 2022-06-23
+### 1.4.7 2022-06-23
 * Fix: Type checks and consistent return types on API class
-
-### 1.4.7 2022-06-09
 * Fix: Performance: Improved caching of Forms, Tags and Sequences to prevent API timeouts and slow loading in the WordPress Administration
 
 ### 1.4.6 2022-04-19
