@@ -161,6 +161,7 @@ class ConvertKit_API {
 			/* translators: HTTP method */
 			'request_method_unsupported'                  => __( 'API request method %s is not supported in ConvertKit_API class.', 'convertkit' ),
 			'request_rate_limit_exceeded'                 => __( 'Rate limit hit.', 'convertkit' ),
+			'response_type_unexpected' 					  => __( 'The response from the API is not of the expected type array.', 'convertkit' ),
 		);
 		// phpcs:enable
 
@@ -358,6 +359,12 @@ class ConvertKit_API {
 			return $response;
 		}
 
+		// If the response isn't an array as we expect, log that no sequences exist and return a blank array.
+		if ( ! is_array( $response['courses'] ) ) {
+			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.' );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'response_type_unexpected' ) );
+		}
+
 		// If no sequences exist, log that no sequences exist and return a blank array.
 		if ( ! count( $response['courses'] ) ) {
 			$this->log( 'API: get_sequences(): Error: No sequences exist in ConvertKit.' );
@@ -460,6 +467,12 @@ class ConvertKit_API {
 		if ( is_wp_error( $response ) ) {
 			$this->log( 'API: get_tags(): Error: ' . $response->get_error_message() );
 			return $response;
+		}
+
+		// If the response isn't an array as we expect, log that no tags exist and return a blank array.
+		if ( ! is_array( $response['tags'] ) ) {
+			$this->log( 'API: get_tags(): Error: No tags exist in ConvertKit.' );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'response_type_unexpected' ) );
 		}
 
 		// If no tags exist, log that no tags exist and return a blank array.
@@ -768,6 +781,12 @@ class ConvertKit_API {
 			return $response;
 		}
 
+		// If the response isn't an array as we expect, log that no tags exist and return a blank array.
+		if ( ! is_array( $response['custom_fields'] ) ) {
+			$this->log( 'API: get_custom_fields(): Error: No custom fields exist in ConvertKit.' );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'response_type_unexpected' ) );
+		}
+
 		// If no custom fields exist, log that no custom fields exist and return a blank array.
 		if ( ! count( $response['custom_fields'] ) ) {
 			$this->log( 'API: get_custom_fields(): Error: No custom fields exist in ConvertKit.' );
@@ -892,6 +911,12 @@ class ConvertKit_API {
 			return $response;
 		}
 
+		// If the response isn't an array as we expect, log that no posts exist and return a blank array.
+		if ( ! is_array( $response['posts'] ) ) {
+			$this->log( 'API: get_posts(): Error: No broadcasts exist in ConvertKit.' );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'response_type_unexpected' ) );
+		}
+
 		// If no posts exist, log that no posts exist and return a blank array.
 		if ( ! count( $response['posts'] ) ) {
 			$this->log( 'API: get_posts(): Error: No broadcasts exist in ConvertKit.' );
@@ -942,10 +967,12 @@ class ConvertKit_API {
 		$body = $this->get_html( $url, false );
 
 		// Inject JS for subscriber forms to work.
+		// phpcs:disable WordPress.WP.EnqueuedResources
 		$scripts = new WP_Scripts();
-		$script  = "<script type='text/javascript' src='" . trailingslashit( $scripts->base_url ) . "wp-includes/js/jquery/jquery.js?ver=1.4.0'></script>"; // phpcs:ignore
-		$script .= "<script type='text/javascript' src='" . $this->plugin_url . 'resources/frontend/js/convertkit.js?ver=' . $this->plugin_version . "'></script>"; // phpcs:ignore
-		$script .= "<script type='text/javascript'>/* <![CDATA[ */var convertkit = {\"ajaxurl\":\"" . admin_url( 'admin-ajax.php' ) . '"};/* ]]> */</script>'; // phpcs:ignore
+		$script  = "<script type='text/javascript' src='" . trailingslashit( $scripts->base_url ) . "wp-includes/js/jquery/jquery.js?ver=1.4.0'></script>";
+		$script .= "<script type='text/javascript' src='" . $this->plugin_url . 'resources/frontend/js/convertkit.js?ver=' . $this->plugin_version . "'></script>";
+		$script .= "<script type='text/javascript'>/* <![CDATA[ */var convertkit = {\"ajaxurl\":\"" . admin_url( 'admin-ajax.php' ) . '"};/* ]]> */</script>';
+		// phpcs:enable
 
 		$body = str_replace( '</head>', '</head>' . $script, $body );
 
@@ -963,7 +990,7 @@ class ConvertKit_API {
 	 */
 	public function purchase_create( $purchase ) {
 
-		$this->log( 'API: purchase_create(): [ purchase: ' . print_r( $purchase, true ) . ']' ); // phpcs:ignore
+		$this->log( 'API: purchase_create(): [ purchase: ' . print_r( $purchase, true ) . ']' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 
 		$response = $this->post(
 			'purchases',
@@ -988,31 +1015,6 @@ class ConvertKit_API {
 		do_action( 'convertkit_api_purchase_create_success', $response, $purchase );
 
 		return $response;
-
-	}
-
-	/**
-	 * Backward compat. function for updating Forms, Landing Pages and Tags in WordPress options table.
-	 *
-	 * @since   1.0.0
-	 *
-	 * @param   string $api_key    API Key.
-	 * @param   string $api_secret API Secret.
-	 */
-	public function update_resources( $api_key, $api_secret ) { // phpcs:ignore
-
-		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'refresh() in ConvertKit_Resource_Forms, ConvertKit_Resource_Landing_Pages and ConvertKit_Resource_Tags classes.' );
-
-		// Initialize resource classes.
-		$forms         = new ConvertKit_Resource_Forms();
-		$landing_pages = new ConvertKit_Resource_Landing_Pages();
-		$tags          = new ConvertKit_Resource_Tags();
-
-		// Refresh resources by calling the API and storing the results.
-		$forms->refresh();
-		$landing_pages->refresh();
-		$tags->refresh();
 
 	}
 

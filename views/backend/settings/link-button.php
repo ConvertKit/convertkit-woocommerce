@@ -20,7 +20,7 @@
 				echo esc_html( $data['label'] );
 				?>
 			</a>
-			<?php echo $this->get_description_html( $data ); // phpcs:ignore ?>
+			<?php echo $this->get_description_html( $data ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</fieldset>
 	</td>
 </tr>

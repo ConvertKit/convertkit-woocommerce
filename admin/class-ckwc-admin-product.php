@@ -143,7 +143,7 @@ class CKWC_Admin_Product {
 			return;
 		}
 
-		$data = stripslashes_deep( $_POST ); // phpcs:ignore
+		$data = stripslashes_deep( $_POST );
 
 		// Bail if nonce is missing.
 		if ( ! isset( $data['ckwc_nonce'] ) ) {

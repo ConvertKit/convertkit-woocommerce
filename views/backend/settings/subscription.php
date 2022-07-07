@@ -18,7 +18,7 @@
 			<?php
 			// Load subscription dropdown field.
 			require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
-			echo $this->get_description_html( $data ); // phpcs:ignore
+			echo $this->get_description_html( $data ); // phpcs:ignore WordPress.Security.EscapeOutput
 			?>
 		</fieldset>
 	</td>

@@ -87,6 +87,7 @@ class CKWC_API extends ConvertKit_API {
 			/* translators: HTTP method */
 			'request_method_unsupported'                  => __( 'API request method %s is not supported in ConvertKit_API class.', 'woocommerce-convertkit' ),
 			'request_rate_limit_exceeded'                 => __( 'Rate limit hit.', 'woocommerce-convertkit' ),
+			'response_type_unexpected' 					  => __( 'The response from the API is not of the expected type array.', 'woocommerce-convertkit' ),
 		);
 
 	}

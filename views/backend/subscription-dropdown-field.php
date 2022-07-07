@@ -46,9 +46,9 @@
 		?>
 		<optgroup label="<?php esc_attr_e( 'Tags', 'woocommerce-convertkit' ); ?>">
 			<?php
-			foreach ( $subscription['tags']->get() as $tag ) { // phpcs:ignore
+			foreach ( $subscription['tags']->get() as $convertkit_tag ) {
 				?>
-				<option value="tag:<?php echo esc_attr( $tag['id'] ); ?>"<?php selected( 'tag:' . esc_attr( $tag['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $tag['name'] ); ?></option>
+				<option value="tag:<?php echo esc_attr( $convertkit_tag['id'] ); ?>"<?php selected( 'tag:' . esc_attr( $convertkit_tag['id'] ), $subscription['value'] ); ?>><?php echo esc_html( $convertkit_tag['name'] ); ?></option>
 				<?php
 			}
 			?>
