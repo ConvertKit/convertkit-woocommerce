@@ -111,7 +111,7 @@ class CKWC_Checkout {
 		} else {
 			// Opt in checkbox is displayed at checkout.
 			// Opt in if it is checked.
-			if ( isset( $_POST['ckwc_opt_in'] ) ) { /* phpcs:ignore */
+			if ( isset( $_POST['ckwc_opt_in'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$opt_in = 'yes';
 			}
 		}

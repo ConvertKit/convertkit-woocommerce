@@ -108,10 +108,10 @@ class CKWC_Integration extends WC_Integration {
 	private function maybe_export_configuration() {
 
 		// Bail if the action isn't for exporting a configuration file.
-		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore
+		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;
 		}
-		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore
+		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;
 		}
 
@@ -133,7 +133,7 @@ class CKWC_Integration extends WC_Integration {
 		header( 'Content-Disposition: attachment; filename=ckwc-export.json' );
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );
-		echo $json; /* phpcs:ignore */
+		echo $json; // phpcs:ignore WordPress.Security.EscapeOutput
 		exit();
 
 	}
@@ -838,7 +838,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param   string $key    Setting Field Key.
 	 * @param   array  $data   Setting Field Configuration.
 	 */
-	public function generate_sync_past_orders_button_html( $key, $data ) { /* phpcs:ignore */
+	public function generate_sync_past_orders_button_html( $key, $data ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 
 		// Bail if the Integration isn't enabled and doesn't have an API Key and Secret specified.
 		if ( ! $this->is_enabled() ) {
@@ -880,7 +880,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @param   string $key    Setting Field Key.
 	 * @param   array  $data   Setting Field Configuration.
 	 */
-	public function generate_link_button_html( $key, $data ) { /* phpcs:ignore */
+	public function generate_link_button_html( $key, $data ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 
 		// Return HTML for button.
 		ob_start();
@@ -914,10 +914,10 @@ class CKWC_Integration extends WC_Integration {
 	 * @param   string $api_key    API Key.
 	 * @return  string              API Key
 	 */
-	public function validate_api_key_field( $key, $api_key ) { /* phpcs:ignore */
+	public function validate_api_key_field( $key, $api_key ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 
 		// If the integration isn't enabled, don't validate the API Key.
-		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) { /* phpcs:ignore */
+		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->resources_delete();
 			return $api_key;
 		}
@@ -1007,38 +1007,42 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	private function get_integration_screen_name() {
 
+		// The settings screen is loaded without a nonce in WooCommerce, so we cannot perform verification.
+		// phpcs:disable WordPress.Security.NonceVerification
+
 		// Return false if no request for a page was made.
-		if ( ! isset( $_REQUEST['page'] ) ) { // phpcs:ignore
+		if ( ! isset( $_REQUEST['page'] ) ) {
 			return false;
 		}
 
 		// Return false if the page request isn't for WooCommerce Settings.
-		if ( sanitize_text_field( $_REQUEST['page'] ) !== 'wc-settings' ) { // phpcs:ignore
+		if ( sanitize_text_field( $_REQUEST['page'] ) !== 'wc-settings' ) {
 			return false;
 		}
 
 		// Return false if the settings page request isn't for an Integration.
-		if ( ! isset( $_REQUEST['tab'] ) ) { // phpcs:ignore
+		if ( ! isset( $_REQUEST['tab'] ) ) {
 			return false;
 		}
-		if ( sanitize_text_field( $_REQUEST['tab'] ) !== 'integration' ) { // phpcs:ignore
+		if ( sanitize_text_field( $_REQUEST['tab'] ) !== 'integration' ) {
 			return false;
 		}
 
 		// Return false if the Integration request doesn't specify a section.
-		if ( ! isset( $_REQUEST['section'] ) ) { // phpcs:ignore
+		if ( ! isset( $_REQUEST['section'] ) ) {
 			return false;
 		}
 
 		// Return false if the Integration request section isn't for this Plugin.
-		if ( sanitize_text_field( $_REQUEST['section'] ) !== 'ckwc' ) { // phpcs:ignore
+		if ( sanitize_text_field( $_REQUEST['section'] ) !== 'ckwc' ) {
 			return false;
 		}
 
 		// If a sub section is defined, return its name now.
-		if ( isset( $_REQUEST['sub_section'] ) ) { // phpcs:ignore
-			return sanitize_text_field( $_REQUEST['sub_section'] ); // phpcs:ignore
+		if ( isset( $_REQUEST['sub_section'] ) ) {
+			return sanitize_text_field( $_REQUEST['sub_section'] );
 		}
+		// phpcs:enable
 
 		// The request is for the Integration's main settings screen.
 		return 'settings';

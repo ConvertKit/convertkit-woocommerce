@@ -66,7 +66,7 @@ if ( is_admin() ) {
  *
  * @since   1.4.2
  */
-function WP_CKWC() { // phpcs:ignore
+function WP_CKWC() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
 
 	return WP_CKWC::get_instance();
 
@@ -77,7 +77,7 @@ function WP_CKWC() { // phpcs:ignore
  *
  * @since   1.0.0
  */
-function WP_CKWC_Integration() { // phpcs:ignore
+function WP_CKWC_Integration() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
 
 	// Bail if WooCommerce isn't active.
 	if ( ! function_exists( 'WC' ) ) {
