@@ -59,6 +59,7 @@ if ( is_admin() ) {
 	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-ajax.php';
 	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
+	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
 }
 
 /**
