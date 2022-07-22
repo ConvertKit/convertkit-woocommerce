@@ -70,7 +70,7 @@ jQuery( document ).ready(
 											new Option(
 												item.name,
 												$( 'optgroup#ckwc-' + resource, $( field ) ).data( 'option-value-prefix' ) + item.id,
-												false, 
+												false,
 												( selectedOption == item.id ? true : false )
 											)
 										);
@@ -80,7 +80,7 @@ jQuery( document ).ready(
 
 							// Trigger a change event on the select field, to allow Select2 instances to repopulate their options.
 							$( field ).trigger( 'change' );
-							
+
 							// Enable button.
 							$( button ).prop( 'disabled', false );
 

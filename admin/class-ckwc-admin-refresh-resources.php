@@ -41,7 +41,7 @@ class CKWC_Admin_Refresh_Resources {
 		$resources = array();
 
 		// Fetch forms.
-		$forms   = new CKWC_Resource_Forms();
+		$forms              = new CKWC_Resource_Forms();
 		$resources['forms'] = $forms->refresh();
 
 		// Bail if an error occured.
@@ -50,7 +50,7 @@ class CKWC_Admin_Refresh_Resources {
 		}
 
 		// Fetch sequences.
-		$sequences   = new CKWC_Resource_Sequences();
+		$sequences              = new CKWC_Resource_Sequences();
 		$resources['sequences'] = $sequences->refresh();
 
 		// Bail if an error occured.
@@ -59,7 +59,7 @@ class CKWC_Admin_Refresh_Resources {
 		}
 
 		// Fetch tags.
-		$tags   = new CKWC_Resource_Tags();
+		$tags              = new CKWC_Resource_Tags();
 		$resources['tags'] = $tags->refresh();
 
 		// Bail if an error occured.
@@ -68,10 +68,10 @@ class CKWC_Admin_Refresh_Resources {
 		}
 
 		// Return resources as a zero based sequential array, so that JS retains the order of resources.
-		$resources['forms'] = array_values( $resources['forms'] );
+		$resources['forms']     = array_values( $resources['forms'] );
 		$resources['sequences'] = array_values( $resources['sequences'] );
-		$resources['tags'] = array_values( $resources['tags'] );
-		
+		$resources['tags']      = array_values( $resources['tags'] );
+
 		wp_send_json_success( $resources );
 
 	}
