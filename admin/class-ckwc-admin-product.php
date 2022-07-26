@@ -143,25 +143,33 @@ class CKWC_Admin_Product {
 			return;
 		}
 
-		$data = stripslashes_deep( $_POST );
-
-		// Bail if nonce is missing.
-		if ( ! isset( $data['ckwc_nonce'] ) ) {
+		// Bail if this is an autosave.
+		if ( wp_is_post_autosave( $post_id ) ) {
 			return;
 		}
 
-		// Bail if nonce verification fails.
-		if ( ! wp_verify_nonce( $data['ckwc_nonce'], 'ckwc' ) ) {
+		// Bail if this is a post revision.
+		if ( wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+
+		// Bail if no nonce field exists.
+		if ( ! isset( $_POST['ckwc_nonce'] ) ) {
+			return;
+		}
+
+		// Bail if the nonce verification fails.
+		if ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['ckwc_nonce'] ) ), 'ckwc' ) ) {
 			return;
 		}
 
 		// Bail if no Form / Tag option exists in POST data.
-		if ( ! isset( $data['ckwc_subscription'] ) ) {
+		if ( ! isset( $_POST['ckwc_subscription'] ) ) {
 			return;
 		}
 
-		// Update Post Meta.
-		update_post_meta( $post_id, 'ckwc_subscription', $data['ckwc_subscription'] );
+		// Save Post's settings.
+		update_post_meta( $post_id, 'ckwc_subscription', sanitize_text_field( wp_unslash( $_POST['ckwc_subscription'] ) ) );
 
 	}
 
