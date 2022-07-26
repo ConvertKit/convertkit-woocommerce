@@ -99,9 +99,10 @@ class WP_CKWC {
 			return;
 		}
 
-		$this->classes['admin_ajax']    = new CKWC_Admin_AJAX();
-		$this->classes['admin_plugin']  = new CKWC_Admin_Plugin();
-		$this->classes['admin_product'] = new CKWC_Admin_Product();
+		$this->classes['admin_ajax']       = new CKWC_Admin_AJAX();
+		$this->classes['admin_plugin']     = new CKWC_Admin_Plugin();
+		$this->classes['admin_product']    = new CKWC_Admin_Product();
+		$this->classes['admin_quick_edit'] = new CKWC_Admin_Quick_Edit();
 
 		/**
 		 * Initialize integration classes for the WordPress Administration interface.
