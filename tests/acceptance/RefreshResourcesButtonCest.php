@@ -51,7 +51,7 @@ class RefreshResourcesButtonCest
 
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist in the Select2 field, this will fail the test.
-		$I->fillSelect2Field($I, '#select2-wp-convertkit-form-container', $_ENV['CONVERTKIT_API_FORM_NAME']);
+		$I->fillSelect2Field($I, '#select2-ckwc_subscription-container', $_ENV['CONVERTKIT_API_FORM_NAME']);
 	}
 
 	/**
