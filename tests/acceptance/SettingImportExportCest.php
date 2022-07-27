@@ -69,7 +69,6 @@ class SettingImportExportCest
 		$I->click('Save changes');
 
 		// Confirm success message displays.
-		// @TODO.
 		$I->seeInSource('Configuration imported successfully.');
 
 		// Confirm that the fake API Key and Secret are populated.
@@ -97,7 +96,6 @@ class SettingImportExportCest
 		$I->click('Save changes');
 
 		// Confirm error message displays.
-		// @TODO.
 		$I->seeInSource('The uploaded configuration file contains no settings.');
 	}
 
@@ -121,7 +119,6 @@ class SettingImportExportCest
 		$I->click('Save changes');
 
 		// Confirm error message displays.
-		// @TODO.
 		$I->seeInSource('The uploaded configuration file isn\'t valid.');
 	}
 

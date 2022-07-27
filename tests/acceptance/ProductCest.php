@@ -171,6 +171,140 @@ class ProductCest
 	}
 
 	/**
+	 * Test that the no Bulk Edit fields are displayed when the integration is not setup.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testBulkEditWithIntegrationDisabled(AcceptanceTester $I)
+	{
+		// Programmatically create two Products.
+		$productIDs = array(
+			$I->havePostInDatabase([
+				'post_type' 	=> 'product',
+				'post_title' 	=> 'ConvertKit: Product: Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Bulk Edit #1',
+			]),
+			$I->havePostInDatabase([
+				'post_type' 	=> 'product',
+				'post_title' 	=> 'ConvertKit: Product: Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Bulk Edit #2',
+			])
+		);
+
+		// Open Bulk Edit.
+		$I->openBulkEdit($I, 'product', $productIDs);
+
+		// Confirm the Bulk Edit field isn't displayed.
+		$I->dontSeeElementInDOM('#ckwc-bulk-edit #ckwc_subscription');
+	}
+
+	/**
+	 * Test that the defined form displays when chosen via
+	 * WordPress' Bulk Edit functionality.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testBulkEditUsingDefinedForm(AcceptanceTester $I)
+	{
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
+
+		// Programmatically create two PRoducts.
+		$productIDs = array(
+			$I->havePostInDatabase([
+				'post_type' 	=> 'product',
+				'post_title' 	=> 'ConvertKit: Product: Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Bulk Edit #1',
+			]),
+			$I->havePostInDatabase([
+				'post_type' 	=> 'product',
+				'post_title' 	=> 'ConvertKit: Product: Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Bulk Edit #2',
+			])
+		);
+
+		// Bulk Edit the Products in the Pages WP_List_Table.
+		$I->bulkEdit($I, 'product', $productIDs, [
+			'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
+		]);
+
+		// Iterate through Products to observe expected changes were made to the settings in the database.
+		foreach($productIDs as $productID) {
+			$I->seePostMetaInDatabase([
+				'post_id' 	=> $productID,
+				'meta_key' 	=> 'ckwc_subscription',
+				'meta_value'=> 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+			]);
+		}
+	}
+
+	/**
+	 * Test that the existing settings are honored and not changed
+	 * when the Bulk Edit options are set to 'No Change'.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testBulkEditWithNoChanges(AcceptanceTester $I)
+	{
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
+
+		// Programmatically create two Products with a defined form.
+		$productIDs = array(
+			$I->havePostInDatabase([
+				'post_type' 	=> 'product',
+				'post_title' 	=> 'ConvertKit: Product: Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Bulk Edit with No Change #1',
+				'meta_input'	=> [
+					'ckwc_subscription' => 'form:'.$_ENV['CONVERTKIT_API_FORM_ID'],
+				],
+			]),
+			$I->havePostInDatabase([
+				'post_type' 	=> 'product',
+				'post_title' 	=> 'ConvertKit: Page: Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Bulk Edit with No Change #2',
+				'meta_input'	=> [
+					'ckwc_subscription' => 'form:'.$_ENV['CONVERTKIT_API_FORM_ID'],
+				],
+			])
+		);
+
+		// Bulk Edit the Products in the Products WP_List_Table.
+		$I->bulkEdit($I, 'product', $productIDs, [
+			'ckwc_subscription' => [ 'select', '— No Change —' ],
+		]);
+
+		// Iterate through Products to observe no changes were made to the settings in the database.
+		foreach($productIDs as $productID) {
+			$I->seePostMetaInDatabase([
+				'post_id' 	=> $productID,
+				'meta_key' 	=> 'ckwc_subscription',
+				'meta_value'=> 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+			]);
+		}
+	}
+
+	/**
+	 * Test that the Bulk Edit fields do not display when a search on a WP_List_Table
+	 * returns no results.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testBulkEditFieldsHiddenWhenNoProductsFound(AcceptanceTester $I)
+	{
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
+
+		// Emulate the user searching for Products with a query string that yields no results.
+		$I->amOnAdminPage('edit.php?post_type=product&s=nothing');
+
+		// Confirm that the Bulk Edit fields do not display.
+		$I->dontSeeElement('#ckwc-bulk-edit');
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
