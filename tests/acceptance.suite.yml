@@ -28,6 +28,7 @@ modules:
         - \Helper\Acceptance\WPClassicEditor
         - \Helper\Acceptance\WPMetabox
         - \Helper\Acceptance\WPGutenberg
+        - \Helper\Acceptance\WPQuickEdit
         - \Helper\Acceptance\Xdebug
     config:
         WPDb:

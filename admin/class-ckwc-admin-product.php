@@ -129,8 +129,8 @@ class CKWC_Admin_Product {
 	}
 
 	/**
-	 * Saves the WooCommerce Product's Form or Tag to subscribe the Customer to when a
-	 * Product is edited, overriding the Plugin default's Form / Tag.
+	 * Saves the WooCommerce Product's Form, Sequence or Tag to subscribe the Customer to when
+	 * either editing a Product or using the Quick Edit functionality.
 	 *
 	 * @since   1.0.0
 	 *
