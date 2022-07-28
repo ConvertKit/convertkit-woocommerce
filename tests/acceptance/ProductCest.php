@@ -171,6 +171,41 @@ class ProductCest
 	}
 
 	/**
+	 * Test that the defined resource (Form, Tag, Sequence) is saved when chosen via
+	 * WordPress' Quick Edit functionality.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testQuickEditUsingDefinedResource(AcceptanceTester $I)
+	{
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin($I);
+
+		// Programmatically create a Product.
+		$productID = $I->havePostInDatabase([
+			'post_type' 	=> 'product',
+			'post_title' 	=> 'ConvertKit: Product: Resource: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Quick Edit',
+		]);
+
+		// Quick Edit the Product in the Products WP_List_Table.
+		$I->quickEdit($I, 'product', $productID, [
+			'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
+		]);
+
+		// Reload the Products admin screen.
+		$I->amOnAdminPage('edit.php?post_type=product');
+
+		// Confirm that the chosen Resource is the selected option.
+		$I->seePostMetaInDatabase([
+			'post_id' 	=> $productID,
+			'meta_key' 	=> 'ckwc_subscription',
+			'meta_value'=> 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+		]);
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
