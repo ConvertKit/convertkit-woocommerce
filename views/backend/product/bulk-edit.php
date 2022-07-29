@@ -1,13 +1,13 @@
 <?php
 /**
- * Quick Edit view
+ * Bulk Edit view
  *
- * @package CKWC
+ * @package ConvertKit
  * @author ConvertKit
  */
 
 ?>
-<div class="ckwc-quick-edit" style="display:none;">
+<div id="ckwc-bulk-edit" style="display:none;">
 	<h4><?php esc_html_e( 'ConvertKit for WooCommerce', 'woocommerce-convertkit' ); ?></h4>
 
 	<?php
@@ -17,3 +17,4 @@
 	wp_nonce_field( 'ckwc', 'ckwc_nonce' );
 	?>
 </div>
+
