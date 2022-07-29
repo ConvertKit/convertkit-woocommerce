@@ -12,7 +12,7 @@
 
 	<?php
 	// Load subscription dropdown field.
-	require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
+	require CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
 
 	wp_nonce_field( 'ckwc', 'ckwc_nonce' );
 	?>
