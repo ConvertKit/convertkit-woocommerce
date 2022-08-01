@@ -44,7 +44,7 @@ jQuery( document ).ready(
 
 							// Get currently selected option.
 							var selectedOption = $( field ).val();
-
+							
 							// Remove existing select options.
 							$( 'option', $( field ) ).each(
 								function() {
@@ -66,12 +66,13 @@ jQuery( document ).ready(
 								// resoruces = array of resources.
 								resources.forEach(
 									function( item ) {
+										var value = $( 'optgroup#ckwc-' + resource, $( field ) ).data( 'option-value-prefix' ) + item.id;
 										$( 'optgroup#ckwc-' + resource, $( field ) ).append(
 											new Option(
 												item.name,
-												$( 'optgroup#ckwc-' + resource, $( field ) ).data( 'option-value-prefix' ) + item.id,
+												value,
 												false,
-												( selectedOption == item.id ? true : false )
+												( selectedOption == value ? true : false )
 											)
 										);
 									}
