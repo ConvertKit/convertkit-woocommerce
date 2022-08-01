@@ -24,9 +24,11 @@ modules:
         - \Helper\Acceptance\Select2
         - \Helper\Acceptance\ThirdPartyPlugin
         - \Helper\Acceptance\WooCommerce
+        - \Helper\Acceptance\WPBulkEdit
         - \Helper\Acceptance\WPClassicEditor
         - \Helper\Acceptance\WPMetabox
         - \Helper\Acceptance\WPGutenberg
+        - \Helper\Acceptance\WPQuickEdit
         - \Helper\Acceptance\Xdebug
     config:
         WPDb:

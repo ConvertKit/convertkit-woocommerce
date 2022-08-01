@@ -8,6 +8,15 @@
 
 ?>
 <select class="<?php echo esc_attr( $subscription['class'] ); ?>" id="<?php echo esc_attr( $subscription['id'] ); ?>" name="<?php echo esc_attr( $subscription['name'] ); ?>">
+	<?php
+	// If Bulk Edit is true, add a No Change option and select it.
+	if ( array_key_exists( 'is_bulk_edit', $subscription ) && $subscription['is_bulk_edit'] === true ) {
+		?>
+		<option value="-1"<?php selected( '', $subscription['value'] ); ?>><?php esc_html_e( '— No Change —', 'woocommerce-convertkit' ); ?></option>
+		<?php
+	}
+	?>
+
 	<option <?php selected( '', $subscription['value'] ); ?> value="" data-preserve-on-refresh="1">
 		<?php esc_html_e( 'Select a subscription option...', 'woocommerce-convertkit' ); ?>
 	</option>

@@ -7,7 +7,7 @@
  */
 
 // Load subscription dropdown field.
-require_once CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
+require CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
 ?>
 
 <button class="ckwc-refresh-resources" class="button button-secondary" title="<?php esc_attr_e( 'Refresh sequences, forms and tags from ConvertKit account', 'woocommerce-convertkit' ); ?>" data-field="#<?php echo esc_attr( $subscription['id'] ); ?>">
