@@ -44,7 +44,7 @@ jQuery( document ).ready(
 
 							// Get currently selected option.
 							var selectedOption = $( field ).val();
-							
+
 							// Remove existing select options.
 							$( 'option', $( field ) ).each(
 								function() {
