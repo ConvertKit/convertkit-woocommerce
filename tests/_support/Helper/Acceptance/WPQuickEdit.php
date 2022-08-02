@@ -24,19 +24,16 @@ class WPQuickEdit extends \Codeception\Module
 
 		// Apply configuration.
 		foreach ($configuration as $field=>$attributes) {
-			// Field ID will be prefixed with wp-convertkit-quick-edit.
-			$fieldID = 'wp-convertkit-quick-edit-' . $field;
-
 			// Check that the field exists.
-			$I->seeElementInDOM('#convertkit-quick-edit #' . $fieldID);
+			$I->seeElementInDOM('#ckwc-quick-edit #' . $field);
 			
 			// Depending on the field's type, define its value.
 			switch ($attributes[0]) {
 				case 'select':
-					$I->selectOption('#convertkit-quick-edit #' . $fieldID, $attributes[1]);
+					$I->selectOption('#ckwc-quick-edit #' . $field, $attributes[1]);
 					break;
 				default:
-					$I->fillField('#convertkit-quick-edit #' . $fieldID, $attributes[1]);
+					$I->fillField('#ckwc-quick-edit #' . $field, $attributes[1]);
 					break;
 			}
 		}

@@ -24,19 +24,16 @@ class WPBulkEdit extends \Codeception\Module
 
 		// Apply configuration.
 		foreach ($configuration as $field=>$attributes) {
-			// Field ID will be prefixed with wp-convertkit-bulk-edit-.
-			$fieldID = 'wp-convertkit-bulk-edit-' . $field;
-
 			// Check that the field exists.
-			$I->seeElementInDOM('#convertkit-bulk-edit #' . $fieldID);
+			$I->seeElementInDOM('#ckwc-bulk-edit #' . $field);
 			
 			// Depending on the field's type, define its value.
 			switch ($attributes[0]) {
 				case 'select':
-					$I->selectOption('#convertkit-bulk-edit #' . $fieldID, $attributes[1]);
+					$I->selectOption('#ckwc-bulk-edit #' . $field, $attributes[1]);
 					break;
 				default:
-					$I->fillField('#convertkit-bulk-edit #' . $fieldID, $attributes[1]);
+					$I->fillField('#ckwc-bulk-edit #' . $field, $attributes[1]);
 					break;
 			}
 		}
