@@ -73,10 +73,10 @@ class RefreshResourcesButtonCest
 		$I->openQuickEdit($I, 'product', $pageID);
 
 		// Click the refresh button.
-		$I->click('button.ckwc-refresh-resources');
+		$I->click('#ckwc-quick-edit button.ckwc-refresh-resources');
 
 		// Wait for button to change its state from disabled.
-		$I->waitForElementVisible('button.ckwc-refresh-resources:not(:disabled)');
+		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources:not(:disabled)');
 
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist, this will fail the test.
@@ -108,10 +108,10 @@ class RefreshResourcesButtonCest
 		$I->openBulkEdit($I, 'product', $productIDs);
 
 		// Click the refresh button.
-		$I->click('button.ckwc-refresh-resources');
+		$I->click('#ckwc-bulk-edit button.ckwc-refresh-resources');
 
 		// Wait for button to change its state from disabled.
-		$I->waitForElementVisible('button.ckwc-refresh-resources:not(:disabled)');
+		$I->waitForElementVisible('#ckwc-bulk-edit button.ckwc-refresh-resources:not(:disabled)');
 
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist, this will fail the test.
