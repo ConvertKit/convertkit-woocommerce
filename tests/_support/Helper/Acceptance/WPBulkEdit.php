@@ -10,7 +10,7 @@ class WPBulkEdit extends \Codeception\Module
 	/**
 	 * Bulk Edits the given Post IDs, changing form field values and saving.
 	 * 
-	 * @since 	1.9.8.0
+	 * @since 	1.4.8
 	 * 
 	 * @param 	$I 	AcceptanceHelper 	Acceptance Helper.
 	 * @param 	string 	$postType 		Programmatic Post Type.
@@ -24,16 +24,19 @@ class WPBulkEdit extends \Codeception\Module
 
 		// Apply configuration.
 		foreach ($configuration as $field=>$attributes) {
+			// Field ID will be prefixed with wp-convertkit-bulk-edit-.
+			$fieldID = 'wp-convertkit-bulk-edit-' . $field;
+
 			// Check that the field exists.
-			$I->seeElementInDOM('#ckwc-bulk-edit #' . $field);
+			$I->seeElementInDOM('#convertkit-bulk-edit #' . $fieldID);
 			
 			// Depending on the field's type, define its value.
 			switch ($attributes[0]) {
 				case 'select':
-					$I->selectOption('#ckwc-bulk-edit #' . $field, $attributes[1]);
+					$I->selectOption('#convertkit-bulk-edit #' . $fieldID, $attributes[1]);
 					break;
 				default:
-					$I->fillField('#ckwc-bulk-edit #' . $field, $attributes[1]);
+					$I->fillField('#convertkit-bulk-edit #' . $fieldID, $attributes[1]);
 					break;
 			}
 		}
@@ -51,7 +54,7 @@ class WPBulkEdit extends \Codeception\Module
 	/**
 	 * Opens the Bulk Edit form for the given Post ID.
 	 * 
-	 * @since 	1.9.8.1
+	 * @since 	1.4.8
 	 * 
 	 * @param 	$I 	AcceptanceHelper 	Acceptance Helper.
 	 * @param 	string 	$postType 		Programmatic Post Type.
