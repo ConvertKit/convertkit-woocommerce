@@ -10,7 +10,7 @@ class WPBulkEdit extends \Codeception\Module
 	/**
 	 * Bulk Edits the given Post IDs, changing form field values and saving.
 	 * 
-	 * @since 	1.9.8.0
+	 * @since 	1.4.8
 	 * 
 	 * @param 	$I 	AcceptanceHelper 	Acceptance Helper.
 	 * @param 	string 	$postType 		Programmatic Post Type.
@@ -51,7 +51,7 @@ class WPBulkEdit extends \Codeception\Module
 	/**
 	 * Opens the Bulk Edit form for the given Post ID.
 	 * 
-	 * @since 	1.9.8.1
+	 * @since 	1.4.8
 	 * 
 	 * @param 	$I 	AcceptanceHelper 	Acceptance Helper.
 	 * @param 	string 	$postType 		Programmatic Post Type.

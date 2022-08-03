@@ -33,8 +33,8 @@ jQuery( document ).ready(
 
 			// Move Plugin's Quick Edit fields container into the inline editor, if they don't yet exist.
 			// This only needs to be done once.
-			if ( $( '.inline-edit-wrapper fieldset.inline-edit-col-left:first-child .ckwc-quick-edit' ).length === 0 ) {
-				$( '.ckwc-quick-edit' ).appendTo( '.inline-edit-wrapper fieldset.inline-edit-col-left:first-child' ).show();
+			if ( $( '.quick-edit-row .inline-edit-wrapper fieldset.inline-edit-col-left:first-child #ckwc-quick-edit' ).length === 0 ) {
+				$( '#ckwc-quick-edit' ).appendTo( '.quick-edit-row .inline-edit-wrapper fieldset.inline-edit-col-left:first-child' ).show();
 			}
 
 			// Iterate through any ConvertKit inline data, assigning values to Quick Edit fields.
@@ -42,7 +42,7 @@ jQuery( document ).ready(
 				function() {
 
 					// Assign the setting's value to the setting's Quick Edit field.
-					$( '.ckwc-quick-edit select[name="' + $( this ).data( 'setting' ) + '"]' ).val( $( this ).data( 'value' ) );
+					$( '#ckwc-quick-edit select[name="' + $( this ).data( 'setting' ) + '"]' ).val( $( this ).data( 'value' ) );
 
 				}
 			);

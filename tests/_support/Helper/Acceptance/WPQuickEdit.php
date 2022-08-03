@@ -19,6 +19,40 @@ class WPQuickEdit extends \Codeception\Module
 	 */
 	public function quickEdit($I, $postType, $postID, $configuration)
 	{
+		// Open Quick Edit form for the Post.
+		$I->openQuickEdit($I, $postType, $postID);
+
+		// Apply configuration.
+		foreach ($configuration as $field=>$attributes) {
+			// Check that the field exists.
+			$I->seeElementInDOM('#ckwc-quick-edit #' . $field);
+			
+			// Depending on the field's type, define its value.
+			switch ($attributes[0]) {
+				case 'select':
+					$I->selectOption('#ckwc-quick-edit #' . $field, $attributes[1]);
+					break;
+				default:
+					$I->fillField('#ckwc-quick-edit #' . $field, $attributes[1]);
+					break;
+			}
+		}
+
+		// Click Update.
+		$I->click('Update');
+	}
+
+	/**
+	 * Opens the Quick Edit form for the given Post ID.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	$I 	AcceptanceHelper 	Acceptance Helper.
+	 * @param 	string 	$postType 		Programmatic Post Type.
+	 * @param 	int 	$postID 		Post ID.
+	 */
+	public function openQuickEdit($I, $postType, $postID)
+	{
 		// Navigate to Post Type's WP_List_Table.
 		$I->amOnAdminPage('edit.php?post_type='.$postType);
 
@@ -30,27 +64,5 @@ class WPQuickEdit extends \Codeception\Module
 		
 		// Click Quick Edit link.
 		$I->click('tr#post-'.$postID.' button.editinline');
-
-		// Apply configuration.
-		foreach ($configuration as $field=>$attributes) {
-			// Check that the field exists.
-			$I->seeElementInDOM('#' . $field);
-			
-			// Depending on the field's type, define its value.
-			switch ($attributes[0]) {
-				case 'select2':
-					$I->fillSelect2Field($I, '#select2-' . $field . '-container', $attributes[1]);
-					break;
-				case 'select':
-					$I->selectOption('#' . $field, $attributes[1]);
-					break;
-				default:
-					$I->fillField('#' . $field, $attributes[1]);
-					break;
-			}
-		}
-
-		// Click Update.
-		$I->click('Update');
 	}
 }

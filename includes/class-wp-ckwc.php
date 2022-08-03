@@ -99,11 +99,12 @@ class WP_CKWC {
 			return;
 		}
 
-		$this->classes['admin_ajax']       = new CKWC_Admin_AJAX();
-		$this->classes['admin_bulk_edit']  = new CKWC_Admin_Bulk_Edit();
-		$this->classes['admin_plugin']     = new CKWC_Admin_Plugin();
-		$this->classes['admin_product']    = new CKWC_Admin_Product();
-		$this->classes['admin_quick_edit'] = new CKWC_Admin_Quick_Edit();
+		$this->classes['admin_ajax']              = new CKWC_Admin_AJAX();
+		$this->classes['admin_bulk_edit']         = new CKWC_Admin_Bulk_Edit();
+		$this->classes['admin_plugin']            = new CKWC_Admin_Plugin();
+		$this->classes['admin_product']           = new CKWC_Admin_Product();
+		$this->classes['admin_quick_edit']        = new CKWC_Admin_Quick_Edit();
+		$this->classes['admin_refresh_resources'] = new CKWC_Admin_Refresh_Resources();
 
 		/**
 		 * Initialize integration classes for the WordPress Administration interface.
