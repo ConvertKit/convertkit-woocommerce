@@ -24,8 +24,8 @@ jobs:
     # Use ${{ secrets.NAME }} to include any GitHub Secrets in ${{ env.NAME }}
     # The base folder will always be /home/runner/work/github-repo-name/github-repo-name
     env:
-      ROOT_DIR: /home/runner/work/convertkit-wordpress/convertkit-wordpress/wordpress
-      PLUGIN_DIR: /home/runner/work/convertkit-wordpress/convertkit-wordpress/wordpress/wp-content/plugins/convertkit
+      ROOT_DIR: /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress
+      PLUGIN_DIR: /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress/wp-content/plugins/convertkit-woocommerce
       DB_NAME: test
       DB_USER: root
       DB_PASS: root
