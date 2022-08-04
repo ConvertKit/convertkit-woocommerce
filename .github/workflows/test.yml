@@ -13,7 +13,7 @@ on:
 jobs:
   tests:
     # Name.
-    name: WordPress ${{ matrix.wp-versions }} on PHP ${{ matrix.php-versions }}
+    name: ${{ matrix.test-groups }} / WordPress ${{ matrix.wp-versions }} / PHP ${{ matrix.php-versions }}
 
     # Virtual Environment to use.
     # @see: https://github.com/actions/virtual-environments
@@ -46,6 +46,16 @@ jobs:
       matrix:
         wp-versions: [ '6.0.1' ] #[ '5.6.7', '5.7.5', '5.8.3', '5.9' ]
         php-versions: [ '7.2', '7.3', '7.4', '8.0' ] #[ '7.3', '7.4', '8.0', '8.1' ]
+        
+        # Folder names within the 'tests' folder to run tests in parallel.
+        test-groups: [
+          'acceptance/general',
+          'acceptance/integrations',
+          'acceptance/purchase-data',
+          'acceptance/settings',
+          'acceptance/subscribe',
+          'acceptance/sync-past-orders'
+        ]
 
     # Steps to install, configure and run tests
     steps:
@@ -99,9 +109,14 @@ jobs:
         run: wp-cli core install --url=127.0.0.1 --title=ConvertKit --admin_user=admin --admin_password=password --admin_email=wordpress@convertkit.local
 
       # env.INSTALL_PLUGINS is a list of Plugin slugs, space separated e.g. contact-form-7 woocommerce.
-      - name: Install and Activate Free Third Party WordPress Plugins
+      - name: Install Free Third Party WordPress Plugins
         working-directory: ${{ env.ROOT_DIR }}
-        run: wp-cli plugin install ${{ env.INSTALL_PLUGINS }} --activate
+        run: wp-cli plugin install ${{ env.INSTALL_PLUGINS }}
+
+      # env.ACTIVATE_PLUGINS is a list of Plugin slugs, space separated e.g. contact-form-7 woocommerce.
+      - name: Activate Free Third Party WordPress Plugins
+        working-directory: ${{ env.ROOT_DIR }}
+        run: wp-cli plugin activate ${{ env.ACTIVATE_PLUGINS }}
 
       # These should be stored as a separated list of URLs in the repository Settings > Secrets > Repository Secret > CONVERTKIT_PAID_PLUGIN_URLS.
       # We cannot include the URLs in this file, as they're not Plugins we are permitted to distribute.
@@ -174,51 +189,27 @@ jobs:
 
       # This ensures the Plugin's log file can be written to.
       # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chmod for Plugin Directory
-        run: sudo chmod g+w ${{ env.PLUGIN_DIR }}
-
-      # This ensures the Plugin's log file can be written to.
-      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chown for Plugin Directory
-        run: sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
-
-      # This ensures WooCommerce log files can be written to.
-      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chmod for WooCommerce Logs Directory
-        run: sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
-
-      # This ensures WooCommerce log files can be written to.
-      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chown for WooCommerce Logs Directory
-        run: sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
-
-      # We run these before the main tests, as typically CodeSniffer is fast. If there's a failure, we can tell
-      # the user sooner.
-      - name: Run WordPress Coding Standards Tests
-        working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/phpcs ./ -v -s
-
-      # Run PHPStan for static analysis.
-      - name: Run PHPStan Static Analysis
-        working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/phpstan --memory-limit=1024M
+      - name: Set Permissions for Plugin Directory
+        run: |
+          sudo chmod g+w ${{ env.PLUGIN_DIR }}
+          sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
 
       # Build Codeception Tests.
       - name: Build Tests
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept build
 
-      # Run Codeception WordPress Unit Tests.
-      - name: Run WordPress Unit Tests
+      # Run Codeception WPUnit Tests on the PHP 7.2 instance before the acceptance/general acceptance tests.
+      # We run these once to avoid hitting API rate limits.
+      - name: Run tests/wpunit
+        if: ${{ matrix.php-versions == '7.2' && matrix.test-groups == 'acceptance/general' }}
         working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run wpunit --fail-fast
+        run: php vendor/bin/codecept run tests/wpunit --fail-fast
 
       # Run Codeception Acceptance Tests.
-      - name: Run Acceptance Tests
+      - name: Run tests/${{ matrix.test-groups }}
         working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run acceptance --fail-fast
-
-      # If the repository has other tests, such as unit tests, add the Codeception commands here to run them now.
+        run: php vendor/bin/codecept run tests/${{ matrix.test-groups }} --fail-fast
 
       # Artifacts are data generated by this workflow that we want to access, such as log files, screenshots, HTML output.
       # The if: always() directive means that this will run when the workflow fails e.g. if a test fails, which is needed
