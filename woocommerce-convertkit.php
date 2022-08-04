@@ -9,13 +9,13 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.4.7
+ * Version: 1.4.8
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 6.6.1
+ * WC tested up to: 6.7.0
  */
 
 // Bail if Plugin is already loaded.
@@ -28,7 +28,7 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '1.4.7' );
+define( 'CKWC_PLUGIN_VERSION', '1.4.8' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
 if ( ! class_exists( 'ConvertKit_API' ) ) {

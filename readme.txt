@@ -3,7 +3,7 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
-Tested up to: 6.0
+Tested up to: 6.0.1
 Requires PHP: 5.6.20
 Stable tag: trunk
 License: GPLv2 or later
@@ -45,6 +45,11 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.4.8 2022-08-04
+* Added: Bulk and Quick Edit Subscription when viewing list of WooCommerce Products
+* Added: Refresh button for Subscription field when editing a WooCommerce Product, to fetch latest data from ConvertKit account
+* Fix: Performance: Don't perform API requests on every WordPress Administration screen when no Forms, Sequences or Tags exist
 
 ### 1.4.7 2022-06-23
 * Fix: Type checks and consistent return types on API class
