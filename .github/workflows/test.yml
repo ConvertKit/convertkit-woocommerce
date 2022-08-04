@@ -189,6 +189,12 @@ jobs:
           sudo chmod g+w ${{ env.PLUGIN_DIR }}
           sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
 
+      # This ensures WooCommerce log files can be written to.
+      - name: Set Permissions for WooCommerce Logs Directory
+        run: |
+          sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
+          sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
+
       # Build Codeception Tests.
       - name: Build Tests
         working-directory: ${{ env.PLUGIN_DIR }}
