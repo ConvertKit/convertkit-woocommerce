@@ -109,9 +109,13 @@ jobs:
         run: wp-cli core install --url=127.0.0.1 --title=ConvertKit --admin_user=admin --admin_password=password --admin_email=wordpress@convertkit.local
 
       # env.INSTALL_PLUGINS is a list of Plugin slugs, space separated e.g. contact-form-7 woocommerce.
+      # We activate the Plugins so that any directories they create are added now, before we later set
+      # directory permissions in this action.
+      # These Plugins won't be active when Codeception's acceptance tests run, as Codeception copies
+      # the tests/_data/dump.sql, which has no active Plugins specified.
       - name: Install Free Third Party WordPress Plugins
         working-directory: ${{ env.ROOT_DIR }}
-        run: wp-cli plugin install ${{ env.INSTALL_PLUGINS }}
+        run: wp-cli plugin install ${{ env.INSTALL_PLUGINS }} --activate
 
       # These should be stored as a separated list of URLs in the repository Settings > Secrets > Repository Secret > CONVERTKIT_PAID_PLUGIN_URLS.
       # We cannot include the URLs in this file, as they're not Plugins we are permitted to distribute.
