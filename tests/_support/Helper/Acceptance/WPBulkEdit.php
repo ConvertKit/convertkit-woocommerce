@@ -39,10 +39,13 @@ class WPBulkEdit extends \Codeception\Module
 		}
 
 		// Scroll to Update button.
-		$I->scrollTo('#bulk_edit');
+		$I->scrollTo('input#bulk_edit');
 
 		// Click Update.
 		$I->click('Update');
+
+		// Wait for a notification to display.
+		$I->waitForElementVisible('div.updated');
 
 		// Confirm that Bulk Editing saved with no errors.
 		$I->seeInSource(count($postIDs).' '.$postType.'s updated');
