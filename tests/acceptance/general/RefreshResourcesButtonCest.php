@@ -109,7 +109,7 @@ class RefreshResourcesButtonCest
 		$I->openBulkEdit($I, 'product', $productIDs);
 
 		// Click the refresh button.
-		$I->waitForElementVisible('#ckwc-bulk-edit button.ckwc-refresh-resources');
+		$I->scrollTo('#ckwc-bulk-edit button.ckwc-refresh-resources');
 		$I->click('#ckwc-bulk-edit button.ckwc-refresh-resources');
 
 		// Wait for button to change its state from disabled.
