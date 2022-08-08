@@ -85,43 +85,6 @@ class RefreshResourcesButtonCest
 	}
 
 	/**
-	 * Test that the refresh buttons for Forms, Sequences and Tags works when Bulk Editing WooCommerce Products.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function testRefreshResourcesOnBulkEdit(AcceptanceTester $I)
-	{
-		// Programmatically create two Pages.
-		$productIDs = array(
-			$I->havePostInDatabase([
-				'post_type' 	=> 'product',
-				'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Bulk Edit #1',
-			]),
-			$I->havePostInDatabase([
-				'post_type' 	=> 'product',
-				'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Bulk Edit #2',
-			])
-		);
-
-		// Open Bulk Edit form for the Products in the WooCommerce Products WP_List_Table.
-		$I->openBulkEdit($I, 'product', $productIDs);
-
-		// Click the refresh button.
-		$I->wait(2);
-		$I->scrollTo('#ckwc-bulk-edit button.ckwc-refresh-resources');
-		$I->click('#ckwc-bulk-edit button.ckwc-refresh-resources');
-
-		// Wait for button to change its state from disabled.
-		$I->waitForElementVisible('#ckwc-bulk-edit button.ckwc-refresh-resources:not(:disabled)');
-
-		// Change resource to value specified in the .env file, which should now be available.
-		// If the expected dropdown value does not exist, this will fail the test.
-		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
-	}
-
-	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
