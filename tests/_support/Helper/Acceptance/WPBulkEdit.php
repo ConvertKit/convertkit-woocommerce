@@ -45,7 +45,7 @@ class WPBulkEdit extends \Codeception\Module
 		$I->click('Update');
 
 		// Wait for a notification to display.
-		$I->waitForElementVisible('div.updated');
+		$I->waitForElementVisible('div.updated.notice.is-dismissible');
 
 		// Confirm that Bulk Editing saved with no errors.
 		$I->seeInSource(count($postIDs).' '.$postType.'s updated');
