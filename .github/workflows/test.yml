@@ -49,7 +49,7 @@ jobs:
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
-          'acceptance/general RefreshResourcesButtonCest'
+          'acceptance general/RefreshResourcesButtonCest'
         ]
 
     # Steps to install, configure and run tests
