@@ -54,6 +54,21 @@ class Plugin extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to deactivate the following Plugins:
+	 * - WooCommerce
+	 * - WooCommerce Stripe Gateway
+	 * - ConvertKit for WooCommerce
+	 * 
+	 * @since 	1.0.0
+	 */
+	public function deactivateWooCommerceAndConvertKitPlugins($I)
+	{
+		$I->deactivateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+		$I->deactivateThirdPartyPlugin($I, 'woocommerce');
+		$I->deactivateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
+	}
+
+	/**
 	 * Helper method to setup the Plugin's API Key and Secret.
 	 * 
 	 * @since 	1.9.6

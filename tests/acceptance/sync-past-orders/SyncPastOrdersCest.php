@@ -21,6 +21,9 @@ class SyncPastOrdersCest
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
+		// Activate Custom Order Numbers Plugin.
+		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
+
 		// Setup Custom Order Numbers Plugin.
 		$I->setupCustomOrderNumbersPlugin($I);
 	}
@@ -242,8 +245,13 @@ class SyncPastOrdersCest
 		// Wait a few seconds for the API call to be made.
 		$I->wait(5);
 
+		// Extract the Post ID from the Order ID, as the Custom Order Numbers Plugin does not prefix
+		// the order ID in the database or log entries.
+		$orderIDParts = explode('-', $result['order_id']);
+		$postID = $orderIDParts[ count($orderIDParts) - 1 ];
+
 		// Confirm that the log shows a success message.
-		$I->seeInSource('WooCommerce Order ID #' . $result['order_id'] . ' added to ConvertKit Purchase Data successfully.');
+		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
@@ -259,12 +267,12 @@ class SyncPastOrdersCest
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
 		$I->seePostMetaInDatabase([
-			'post_id' => $result['order_id'],
+			'post_id' => $postID,
 			'meta_key' => 'ckwc_purchase_data_sent'
 		]);
 		$I->seePostMetaInDatabase([
-			'post_id' => $result['order_id'],
-			'meta_key' => 'ckwc_purchase_data_id'
+			'post_id' => $postID,
+			'meta_key' => 'ckwc_purchase_data_id',
 		]);
 	}
 
@@ -307,10 +315,15 @@ class SyncPastOrdersCest
 			true // Don't send purchase data to ConvertKit
 		);
 
+		// Extract the Post ID from the Order ID, as the Custom Order Numbers Plugin does not prefix
+		// the order ID in the database .
+		$orderIDParts = explode('-', $result['order_id']);
+		$postID = $orderIDParts[ count($orderIDParts) - 1 ];
+
 		// Remove the Transaction ID metadata in the Order, as if it were sent
 		// by 1.4.2 or older.
 		$I->dontHavePostMetaInDatabase([
-			'post_id' => $result['order_id'],
+			'post_id' => $postID,
 			'meta_key' => 'ckwc_purchase_data_id'
 		]);
 
@@ -333,7 +346,7 @@ class SyncPastOrdersCest
 		$I->wait(5);
 
 		// Confirm that the log shows a success message.
-		$I->seeInSource('WooCommerce Order ID #' . $result['order_id'] . ' added to ConvertKit Purchase Data successfully.');
+		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
@@ -343,11 +356,11 @@ class SyncPastOrdersCest
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
 		$I->seePostMetaInDatabase([
-			'post_id' => $result['order_id'],
+			'post_id' => $postID,
 			'meta_key' => 'ckwc_purchase_data_sent'
 		]);
 		$I->seePostMetaInDatabase([
-			'post_id' => $result['order_id'],
+			'post_id' => $postID,
 			'meta_key' => 'ckwc_purchase_data_id'
 		]);
 	}
@@ -433,7 +446,8 @@ class SyncPastOrdersCest
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
-		$I->deactivateConvertKitPlugin($I);
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
+		$I->deactivateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
 		$I->resetConvertKitPlugin($I);
 	}
 }

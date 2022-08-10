@@ -13,7 +13,7 @@ on:
 jobs:
   tests:
     # Name.
-    name: WordPress ${{ matrix.wp-versions }} on PHP ${{ matrix.php-versions }}
+    name: ${{ matrix.test-groups }} / WordPress ${{ matrix.wp-versions }} / PHP ${{ matrix.php-versions }}
 
     # Virtual Environment to use.
     # @see: https://github.com/actions/virtual-environments
@@ -30,7 +30,7 @@ jobs:
       DB_USER: root
       DB_PASS: root
       DB_HOST: localhost
-      INSTALL_PLUGINS: "custom-order-numbers-for-woocommerce disable-welcome-messages-and-tips woocommerce woocommerce-gateway-stripe" # Don't include this repository's Plugin here.
+      INSTALL_PLUGINS: "custom-order-numbers-for-woocommerce woocommerce woocommerce-gateway-stripe" # Don't include this repository's Plugin here.
       STRIPE_TEST_PUBLISHABLE_KEY: ${{ secrets.STRIPE_TEST_PUBLISHABLE_KEY }} # Stripe Test API Publishable Key, stored in the repository's Settings > Secrets
       STRIPE_TEST_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY }} # Stripe Test API Secret Key, stored in the repository's Settings > Secrets
       CONVERTKIT_API_KEY: ${{ secrets.CONVERTKIT_API_KEY }} # ConvertKit API Key, stored in the repository's Settings > Secrets
@@ -44,8 +44,18 @@ jobs:
     # For PHP, make sure that an nginx configuration file exists for the required PHP version in this repository at tests/nginx/php-x.x.conf
     strategy:
       matrix:
-        wp-versions: [ '6.0.1' ] #[ '5.6.7', '5.7.5', '5.8.3', '5.9' ]
-        php-versions: [ '7.2', '7.3', '7.4', '8.0' ] #[ '7.3', '7.4', '8.0', '8.1' ]
+        wp-versions: [ '6.0.1' ]
+        php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
+        
+        # Folder names within the 'tests' folder to run tests in parallel.
+        test-groups: [
+          'acceptance/general',
+          'acceptance/integrations',
+          'acceptance/purchase-data',
+          'acceptance/settings',
+          'acceptance/subscribe',
+          'acceptance/sync-past-orders'
+        ]
 
     # Steps to install, configure and run tests
     steps:
@@ -99,15 +109,19 @@ jobs:
         run: wp-cli core install --url=127.0.0.1 --title=ConvertKit --admin_user=admin --admin_password=password --admin_email=wordpress@convertkit.local
 
       # env.INSTALL_PLUGINS is a list of Plugin slugs, space separated e.g. contact-form-7 woocommerce.
-      - name: Install and Activate Free Third Party WordPress Plugins
+      # We activate the Plugins so that any directories they create are added now, before we later set
+      # directory permissions in this action.
+      # These Plugins won't be active when Codeception's acceptance tests run, as Codeception copies
+      # the tests/_data/dump.sql, which has no active Plugins specified.
+      - name: Install Free Third Party WordPress Plugins
         working-directory: ${{ env.ROOT_DIR }}
         run: wp-cli plugin install ${{ env.INSTALL_PLUGINS }} --activate
 
       # These should be stored as a separated list of URLs in the repository Settings > Secrets > Repository Secret > CONVERTKIT_PAID_PLUGIN_URLS.
       # We cannot include the URLs in this file, as they're not Plugins we are permitted to distribute.
-      - name: Install and Activate Paid Third Party WordPress Plugins
+      - name: Install Paid Third Party WordPress Plugins
         working-directory: ${{ env.ROOT_DIR }}
-        run: wp-cli plugin install ${{ secrets.CONVERTKIT_PAID_PLUGIN_URLS }} --activate
+        run: wp-cli plugin install ${{ secrets.CONVERTKIT_PAID_PLUGIN_URLS }}
       
       # WP_DEBUG = true is required so any WordPress / PHP errors are output and caught by tests.
       # FS_METHOD = direct is required for WP_Filesystem to operate without suppressed PHP fopen() errors that trip up tests.
@@ -174,51 +188,33 @@ jobs:
 
       # This ensures the Plugin's log file can be written to.
       # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chmod for Plugin Directory
-        run: sudo chmod g+w ${{ env.PLUGIN_DIR }}
-
-      # This ensures the Plugin's log file can be written to.
-      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chown for Plugin Directory
-        run: sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
+      - name: Set Permissions for Plugin Directory
+        run: |
+          sudo chmod g+w ${{ env.PLUGIN_DIR }}
+          sudo chown www-data:www-data ${{ env.PLUGIN_DIR }}
 
       # This ensures WooCommerce log files can be written to.
-      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chmod for WooCommerce Logs Directory
-        run: sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
-
-      # This ensures WooCommerce log files can be written to.
-      # We don't recursively do this, as it'll prevent Codeception from writing to the /tests/_output directory.
-      - name: Set chown for WooCommerce Logs Directory
-        run: sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
-
-      # We run these before the main tests, as typically CodeSniffer is fast. If there's a failure, we can tell
-      # the user sooner.
-      - name: Run WordPress Coding Standards Tests
-        working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/phpcs ./ -v -s
-
-      # Run PHPStan for static analysis.
-      - name: Run PHPStan Static Analysis
-        working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/phpstan --memory-limit=1024M
+      - name: Set Permissions for WooCommerce Logs Directory
+        run: |
+          sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
+          sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
 
       # Build Codeception Tests.
       - name: Build Tests
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept build
 
-      # Run Codeception WordPress Unit Tests.
-      - name: Run WordPress Unit Tests
+      # Run Codeception WPUnit Tests on the PHP 7.2 instance before the acceptance/general acceptance tests.
+      # We run these once to avoid hitting API rate limits.
+      - name: Run tests/wpunit
+        if: ${{ matrix.php-versions == '7.4' && matrix.test-groups == 'acceptance/general' }}
         working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run wpunit --fail-fast
+        run: php vendor/bin/codecept run tests/wpunit --fail-fast
 
       # Run Codeception Acceptance Tests.
-      - name: Run Acceptance Tests
+      - name: Run tests/${{ matrix.test-groups }}
         working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run acceptance --fail-fast
-
-      # If the repository has other tests, such as unit tests, add the Codeception commands here to run them now.
+        run: php vendor/bin/codecept run tests/${{ matrix.test-groups }} --fail-fast
 
       # Artifacts are data generated by this workflow that we want to access, such as log files, screenshots, HTML output.
       # The if: always() directive means that this will run when the workflow fails e.g. if a test fails, which is needed

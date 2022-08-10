@@ -132,8 +132,8 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->deactivateThirdPartyPlugin($I, 'woocommerce-subscriptions');
-		$I->deactivateConvertKitPlugin($I);
 		$I->resetConvertKitPlugin($I);
 	}
 }

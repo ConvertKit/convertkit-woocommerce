@@ -55,35 +55,6 @@ class RefreshResourcesButtonCest
 	}
 
 	/**
-	 * Test that the refresh buttons for Forms, Sequences and Tags works when Quick Editing a WooCommerce Product.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
-	 */
-	public function testRefreshResourcesOnQuickEdit(AcceptanceTester $I)
-	{
-		// Programmatically create a Product.
-		$pageID = $I->havePostInDatabase([
-			'post_type' 	=> 'product',
-			'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Quick Edit',
-		]);
-
-		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
-		$I->openQuickEdit($I, 'product', $pageID);
-
-		// Click the refresh button.
-		$I->click('#ckwc-quick-edit button.ckwc-refresh-resources');
-
-		// Wait for button to change its state from disabled.
-		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources:not(:disabled)');
-
-		// Change resource to value specified in the .env file, which should now be available.
-		// If the expected dropdown value does not exist, this will fail the test.
-		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
-	}
-
-	/**
 	 * Test that the refresh buttons for Forms, Sequences and Tags works when Bulk Editing WooCommerce Products.
 	 * 
 	 * @since 	1.4.8
@@ -108,10 +79,42 @@ class RefreshResourcesButtonCest
 		$I->openBulkEdit($I, 'product', $productIDs);
 
 		// Click the refresh button.
+		$I->wait(2);
+		$I->scrollTo('select[name="comment_status"]');
 		$I->click('#ckwc-bulk-edit button.ckwc-refresh-resources');
 
 		// Wait for button to change its state from disabled.
 		$I->waitForElementVisible('#ckwc-bulk-edit button.ckwc-refresh-resources:not(:disabled)');
+
+		// Change resource to value specified in the .env file, which should now be available.
+		// If the expected dropdown value does not exist, this will fail the test.
+		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
+	}
+
+	/**
+	 * Test that the refresh buttons for Forms, Sequences and Tags works when Quick Editing a WooCommerce Product.
+	 * 
+	 * @since 	1.4.8
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testRefreshResourcesOnQuickEdit(AcceptanceTester $I)
+	{
+		// Programmatically create a Product.
+		$pageID = $I->havePostInDatabase([
+			'post_type' 	=> 'product',
+			'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Quick Edit',
+		]);
+
+		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
+		$I->openQuickEdit($I, 'product', $pageID);
+
+		// Click the refresh button.
+		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources');
+		$I->click('#ckwc-quick-edit button.ckwc-refresh-resources');
+
+		// Wait for button to change its state from disabled.
+		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources:not(:disabled)');
 
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist, this will fail the test.
@@ -172,7 +175,7 @@ class RefreshResourcesButtonCest
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
-		$I->deactivateConvertKitPlugin($I);
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->resetConvertKitPlugin($I);
 	}
 }
