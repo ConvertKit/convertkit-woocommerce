@@ -119,6 +119,49 @@ class RefreshResourcesButtonCest
 	}
 
 	/**
+	 * Test that the refresh button triggers an error message when the AJAX request fails,
+	 * or the ConvertKit API returns an error.
+	 * 
+	 * @since 	1.4.9
+	 * 
+	 * @param 	AcceptanceTester 	$I 	Tester
+	 */
+	public function testRefreshResourcesErrorNotice(AcceptanceTester $I)
+	{
+		// Specify invalid API credentials, so that the AJAX request returns an error.
+		$I->haveOptionInDatabase('woocommerce_ckwc_settings', [
+			'enabled'	 => 'yes',
+			'api_key'    => 'fakeApiKey',
+			'api_secret' => 'fakeApiSecret',
+			'debug'      => 'yes',
+		]);
+
+		// Programmatically create a Product.
+		$pageID = $I->havePostInDatabase([
+			'post_type' 	=> 'product',
+			'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Quick Edit',
+		]);
+
+		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
+		$I->openQuickEdit($I, 'product', $pageID);
+
+		// Click the refresh button.
+		$I->click('#ckwc-quick-edit button.ckwc-refresh-resources');
+
+		// Wait for button to change its state from disabled.
+		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources:not(:disabled)');
+
+		// Confirm that an error notification is displayed on screen, with the expected error message.
+		$I->seeElementInDOM('div.ckwc-error');
+		$I->see('Authorization Failed: API Key not valid');
+
+		// Confirm that the notice is dismissible.
+		$I->click('div.ckwc-error button.notice-dismiss');
+		$I->wait(1);
+		$I->dontSeeElementInDOM('div.ckwc-error');
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
