@@ -798,7 +798,7 @@ class PurchaseDataCest
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
-		$I->deactivateConvertKitPlugin($I);
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->deactivateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
 		$I->resetConvertKitPlugin($I);
 	}
