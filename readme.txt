@@ -46,6 +46,9 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
+### 1.4.9 2022-08-15
+* Added: Refresh button: Show error notification when refreshing fails
+
 ### 1.4.8 2022-08-04
 * Added: Bulk and Quick Edit Subscription when viewing list of WooCommerce Products
 * Added: Refresh button for Subscription field when editing a WooCommerce Product, to fetch latest data from ConvertKit account
