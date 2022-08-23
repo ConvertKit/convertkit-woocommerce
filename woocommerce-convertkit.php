@@ -32,13 +32,13 @@ define( 'CKWC_PLUGIN_VERSION', '1.4.9' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
 if ( ! class_exists( 'ConvertKit_API' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-api.php';
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api.php';
 }
 if ( ! class_exists( 'ConvertKit_Resource' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-resource.php';
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource.php';
 }
 if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-review-request.php';
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php';
 }
 
 // Load plugin files that are always required.
