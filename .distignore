@@ -20,9 +20,14 @@ codeception.yml
 composer.json
 composer.lock
 convertkit-for-woocommerce.zip
+DEPLOYMENT.md
+DEVELOPMENT.md
 LICENSE
+log.txt
 phpcs.xml
 phpstan.neon
 phpstan.neon.dist
 phpstan.neon.example
 README.md
+SETUP.md
+TESTING.md
