@@ -48,7 +48,7 @@
 	</p>
 
 	<div>
-		<input type="file" name="woocommerce_ckwc_import" />
+		<input type="file" name="woocommerce_ckwc_import" id="woocommerce_ckwc_import" />
 	</div>
 
 	<p class="submit">
