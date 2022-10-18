@@ -247,8 +247,8 @@ class CKWC_Integration extends WC_Integration {
 			 * Settings.
 			 */
 			default:
-				// Load WooCommerce Integration's Settings screen.
-				parent::admin_options();
+				// Load view.
+				include_once CKWC_PLUGIN_PATH . '/views/backend/settings/settings.php';
 				break;
 
 		}
@@ -696,6 +696,8 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			case 'settings':
 			default:
+				wp_enqueue_style( 'ckwc-settings', CKWC_PLUGIN_URL . '/resources/backend/css/settings.css', array(), CKWC_PLUGIN_VERSION );
+				
 				// Enqueue Select2 CSS.
 				ckwc_select2_enqueue_styles();
 				break;
