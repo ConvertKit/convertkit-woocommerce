@@ -697,7 +697,7 @@ class CKWC_Integration extends WC_Integration {
 			case 'settings':
 			default:
 				wp_enqueue_style( 'ckwc-settings', CKWC_PLUGIN_URL . '/resources/backend/css/settings.css', array(), CKWC_PLUGIN_VERSION );
-				
+
 				// Enqueue Select2 CSS.
 				ckwc_select2_enqueue_styles();
 				break;

@@ -16,6 +16,6 @@
 	<div><input type="hidden" name="section" value="<?php echo esc_attr( $this->id ); ?>" /></div>
 
 	<table class="form-table ckwc">
-		<?php echo $this->generate_settings_html( $this->get_form_fields(), false ); ?>
+		<?php echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 	</table>
 </div>
