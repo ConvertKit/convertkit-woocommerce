@@ -1,6 +1,7 @@
 <?php
 /**
- * Outputs the Sync Past Orders screen.
+ * Outputs the Sync Past Orders screen, with markup that enables styling
+ * to be applied to improve the UI.
  *
  * @package CKWC
  * @author ConvertKit
@@ -8,9 +9,9 @@
 
 ?>
 
-<h2><?php esc_html_e( 'ConvertKit', 'woocommerce-convertkit' ); ?></h2>
+<div class="postbox">
+	<h2><?php echo esc_html( $this->get_method_title() ); ?></h2>
 
-<div>
 	<p>
 		<?php esc_html_e( 'Do not navigate away from this page until the process is completed, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed.', 'woocommerce-convertkit' ); ?>
 	</p>
