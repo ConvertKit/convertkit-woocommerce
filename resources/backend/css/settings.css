@@ -6,6 +6,13 @@ body.woocommerce_page_wc-settings {
 }
 
 /**
+ * First Section
+ */
+body.woocommerce_page_wc-settings .wrap form#mainform ul.subsubsub {
+	margin: 0 0 20px 0;
+}
+
+/**
  * Section
  */
 body.woocommerce_page_wc-settings .wrap .postbox {
@@ -30,17 +37,17 @@ body.woocommerce_page_wc-settings .wrap .postbox p {
 body.woocommerce_page_wc-settings .wrap p.submit {
 	padding: 0;
 }
-body.woocommerce_page_wc-settings .wrap .button {
-	margin:  0 5px 0 0;
+body.woocommerce_page_wc-settings .wrap p.submit .button {
+	margin: 0 5px 0 0;
 	padding: 4px 12px;
 	font-size: 14px;
 }
-body.woocommerce_page_wc-settings .wrap .button-primary {
+body.woocommerce_page_wc-settings .wrap p.submit .button-primary {
 	background: #fb6970;
 	border-color: #fb6970;
 	color: #fff;
 }
-body.woocommerce_page_wc-settings .wrap .button-primary:hover {
+body.woocommerce_page_wc-settings .wrap p.submit .button-primary:hover {
 	background: #fb5058;
 	border-color: #fb5058;
 }
