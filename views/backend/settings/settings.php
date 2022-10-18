@@ -34,7 +34,7 @@
 	</p>
 
 	<p class="submit">
-		<a href="<?php echo esc_attr( $export_url ); ?>" class="button button-primary">
+		<a href="<?php echo esc_attr( $export_url ); ?>" class="button button-primary" id="export">
 			<?php esc_html_e( 'Export', 'woocommerce-convertkit' ); ?>
 		</a>
 	</p>
