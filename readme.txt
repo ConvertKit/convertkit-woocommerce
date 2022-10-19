@@ -3,7 +3,7 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
-Tested up to: 6.0.2
+Tested up to: 6.0.3
 Requires PHP: 5.6.20
 Stable tag: trunk
 License: GPLv2 or later
