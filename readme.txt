@@ -46,6 +46,9 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
+### 1.5.1 2022-10-25
+* Updated: ConvertKit WordPress Libraries to 1.2.1
+
 ### 1.5.0 2022-09-07
 * Development: Moved /lib folder to managed repository
 
