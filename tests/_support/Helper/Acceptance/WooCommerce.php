@@ -242,7 +242,7 @@ class WooCommerce extends \Codeception\Module
 			'email_address'   => $emailAddress,
 			'product_id'      => $productID,
 			'order_id'        => $I->grabTextFrom('.woocommerce-order-overview__order strong'),
-			'subscription_id' => ( ( $productType == 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
+			'subscription_id' => ( ( $productType === 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
 

@@ -108,7 +108,7 @@ class ConvertKitAPI extends \Codeception\Module
 		// Iterate through the array of products, to find a pid matching the Product ID.
 		$productExistsInPurchase = false;
 		foreach ($purchase['products'] as $product) {
-			if ($productID == $product['pid']) {
+			if ($productID === (int) $product['pid']) {
 				$productExistsInPurchase = true;
 				break;
 			}
@@ -161,7 +161,7 @@ class ConvertKitAPI extends \Codeception\Module
 		// Iterate through purchases to find one where the transaction ID matches the order ID.
 		foreach ($purchases as $purchase) {
 			// Skip if order ID does not match.
-			if ($purchase['transaction_id'] != $orderID) {
+			if ($purchase['transaction_id'] !== $orderID) {
 				continue;
 			}
 
@@ -188,7 +188,7 @@ class ConvertKitAPI extends \Codeception\Module
 		$data       = $purchases['purchases'];
 		$totalPages = $purchases['total_pages'];
 
-		if ($totalPages == 1) {
+		if ($totalPages === 1) {
 			return $data;
 		}
 
