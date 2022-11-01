@@ -13,7 +13,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -41,19 +41,19 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInWhenCheckedWithFormAndSubscriptionProduct(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'subscription', // Subscription Product
-			true, // Display Opt-In checkbox on Checkout
-			true, // Check Opt-In checkbox on Checkout
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
-			false // Don't send purchase data to ConvertKit
+			'subscription', // Subscription Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Confirm that the email address was added to ConvertKit.
@@ -71,7 +71,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Trigger a renewal of the subscription, as if the recurring payment was made, by visiting WooCommerce > Status >
 		// Scheduled Actions and searching for the Subscription ID.
-		// https://woocommerce.com/document/testing-subscription-renewal-payments/
+		// https://woocommerce.com/document/testing-subscription-renewal-payments/.
 		$I->amOnAdminPage('admin.php?page=wc-status&tab=action-scheduler&s=' . $result['subscription_id'] . '&action=-1&paged=1&action2=-1&status=pending');
 		$I->moveMouseOver('tbody tr td.column-hook');
 		$I->click('span.run a');
@@ -93,19 +93,19 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInWhenCheckedWithFormAndNonSubscriptionProduct(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			true, // Display Opt-In checkbox on Checkout
-			true, // Check Opt-In checkbox on Checkout
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Completed', // Subscribe on WooCommerce "Order Completed" event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Completed', // Subscribe on WooCommerce "Order Completed" event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Confirm that the email address wasn't yet added to ConvertKit.
@@ -128,7 +128,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

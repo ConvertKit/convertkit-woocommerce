@@ -1,10 +1,12 @@
 <?php
 namespace Helper\Acceptance;
 
-// Define any custom actions related to third party Plugins that
-// would be used across multiple tests.
-// These are then available in $I->{yourFunctionName}
-
+/**
+ * Helper methods and actions related to third party Plugins,
+ * which are then available using $I->{yourFunctionName}.
+ *
+ * @since   1.9.6
+ */
 class ThirdPartyPlugin extends \Codeception\Module
 {
 	/**
@@ -13,11 +15,12 @@ class ThirdPartyPlugin extends \Codeception\Module
 	 *
 	 * @since   1.9.6.7
 	 *
-	 * @param   string $name   Plugin Slug.
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 * @param   string           $name  Plugin Slug.
 	 */
 	public function activateThirdPartyPlugin($I, $name)
 	{
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Go to the Plugins screen in the WordPress Administration interface.
@@ -25,6 +28,10 @@ class ThirdPartyPlugin extends \Codeception\Module
 
 		// Activate the Plugin.
 		$I->activatePlugin($name);
+
+		// Go to the Plugins screen again; this prevents any Plugin that loads a wizard-style screen from
+		// causing seePluginActivated() to fail.
+		$I->amOnPluginsPage();
 
 		// Check that the Plugin activated successfully.
 		$I->seePluginActivated($name);
@@ -39,11 +46,12 @@ class ThirdPartyPlugin extends \Codeception\Module
 	 *
 	 * @since   1.9.6.7
 	 *
-	 * @param   string $name   Plugin Slug.
+	 * @param   AcceptanceTester $I      Acceptance Tester.
+	 * @param   string           $name   Plugin Slug.
 	 */
 	public function deactivateThirdPartyPlugin($I, $name)
 	{
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Go to the Plugins screen in the WordPress Administration interface.

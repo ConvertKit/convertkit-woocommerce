@@ -11,7 +11,7 @@ class SettingPurchasesCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -28,14 +28,14 @@ class SettingPurchasesCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataEnabled(AcceptanceTester $I)
 	{
 		// Check "Send purchase data to ConvertKit" checkbox.
 		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -51,14 +51,14 @@ class SettingPurchasesCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataDisabled(AcceptanceTester $I)
 	{
 		// Uncheck "Send purchase data to ConvertKit" checkbox.
 		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -74,7 +74,7 @@ class SettingPurchasesCest
 	 *
 	 * @since   1.4.5
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataEventOrderProcessing(AcceptanceTester $I)
 	{
@@ -97,7 +97,7 @@ class SettingPurchasesCest
 	 *
 	 * @since   1.4.5
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataEventOrderCompleted(AcceptanceTester $I)
 	{
@@ -121,7 +121,7 @@ class SettingPurchasesCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

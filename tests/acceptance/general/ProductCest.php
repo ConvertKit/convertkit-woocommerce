@@ -12,7 +12,7 @@ class ProductCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -30,7 +30,7 @@ class ProductCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testProductFieldsWithIntegrationDisabled(AcceptanceTester $I)
 	{
@@ -59,7 +59,7 @@ class ProductCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testProductFieldsWithIntegrationEnabled(AcceptanceTester $I)
 	{
@@ -98,7 +98,7 @@ class ProductCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testProductFieldsWithIntegrationEnabledAndNoAPIKey(AcceptanceTester $I)
 	{
@@ -140,7 +140,7 @@ class ProductCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testProductFieldsWithIntegrationEnabledAndInvalidAPIKey(AcceptanceTester $I)
 	{
@@ -176,7 +176,7 @@ class ProductCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testQuickEditUsingDefinedResource(AcceptanceTester $I)
 	{
@@ -219,7 +219,7 @@ class ProductCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testBulkEditWithIntegrationDisabled(AcceptanceTester $I)
 	{
@@ -252,7 +252,7 @@ class ProductCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testBulkEditUsingDefinedForm(AcceptanceTester $I)
 	{
@@ -303,7 +303,7 @@ class ProductCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testBulkEditWithNoChanges(AcceptanceTester $I)
 	{
@@ -360,7 +360,7 @@ class ProductCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testBulkEditFieldsHiddenWhenNoProductsFound(AcceptanceTester $I)
 	{
@@ -381,7 +381,7 @@ class ProductCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

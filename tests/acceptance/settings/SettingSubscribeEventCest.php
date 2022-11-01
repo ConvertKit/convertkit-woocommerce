@@ -15,7 +15,7 @@ class SettingSubscribeEventCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -32,7 +32,7 @@ class SettingSubscribeEventCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOrderPendingPaymentWithoutOptInCheckbox(AcceptanceTester $I)
 	{
@@ -58,7 +58,7 @@ class SettingSubscribeEventCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOrderProcessing(AcceptanceTester $I)
 	{
@@ -81,7 +81,7 @@ class SettingSubscribeEventCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOrderCompleted(AcceptanceTester $I)
 	{
@@ -105,7 +105,7 @@ class SettingSubscribeEventCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

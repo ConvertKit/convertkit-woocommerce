@@ -7,6 +7,8 @@
 class ResourceTagsTest extends \Codeception\TestCase\WPTestCase
 {
 	/**
+	 * The testing implementation.
+	 *
 	 * @var \WpunitTester
 	 */
 	protected $tester;

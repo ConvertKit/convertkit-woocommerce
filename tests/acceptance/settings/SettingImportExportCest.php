@@ -15,7 +15,7 @@ class SettingImportExportCest
 	 *
 	 * @since   1.4.6
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -31,7 +31,7 @@ class SettingImportExportCest
 	 *
 	 * @since   1.4.6
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testExportConfiguration(AcceptanceTester $I)
 	{
@@ -55,7 +55,7 @@ class SettingImportExportCest
 	 *
 	 * @since   1.4.6
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testImportConfiguration(AcceptanceTester $I)
 	{
@@ -82,7 +82,7 @@ class SettingImportExportCest
 	 *
 	 * @since   1.4.6
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testImportConfigurationWithInvalidFile(AcceptanceTester $I)
 	{
@@ -105,7 +105,7 @@ class SettingImportExportCest
 	 *
 	 * @since   1.4.6
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testImportConfigurationWithFakeJSONFile(AcceptanceTester $I)
 	{
@@ -129,7 +129,7 @@ class SettingImportExportCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

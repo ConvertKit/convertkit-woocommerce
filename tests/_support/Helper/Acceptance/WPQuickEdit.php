@@ -1,21 +1,23 @@
 <?php
 namespace Helper\Acceptance;
 
-// Define any custom actions related to WordPress' Quick Edit functionality that
-// would be used across multiple tests.
-// These are then available in $I->{yourFunctionName}
-
+/**
+ * Helper methods and actions related to WordPress' Quick Edit functionality,
+ * which are then available using $I->{yourFunctionName}.
+ *
+ * @since   1.9.6
+ */
 class WPQuickEdit extends \Codeception\Module
 {
 	/**
 	 * Quick Edits the given Post ID, changing form field values and saving.
 	 *
-	 * @since   1.4.8
+	 * @since   1.9.8.0
 	 *
-	 * @param   $I  AcceptanceHelper    Acceptance Helper.
-	 * @param   string                                   $postType       Programmatic Post Type.
-	 * @param   int                                      $postID         Post ID.
-	 * @param   array                                    $configuration  Configuration (field => value key/value array).
+	 * @param   AcceptanceHelper $I              Acceptance Helper.
+	 * @param   string           $postType       Programmatic Post Type.
+	 * @param   int              $postID         Post ID.
+	 * @param   array            $configuration  Configuration (field => value key/value array).
 	 */
 	public function quickEdit($I, $postType, $postID, $configuration)
 	{
@@ -24,16 +26,19 @@ class WPQuickEdit extends \Codeception\Module
 
 		// Apply configuration.
 		foreach ($configuration as $field => $attributes) {
+			// Field ID will be prefixed with wp-convertkit-quick-edit.
+			$fieldID = 'wp-convertkit-quick-edit-' . $field;
+
 			// Check that the field exists.
-			$I->seeElementInDOM('#ckwc-quick-edit #' . $field);
+			$I->seeElementInDOM('#convertkit-quick-edit #' . $fieldID);
 
 			// Depending on the field's type, define its value.
 			switch ($attributes[0]) {
 				case 'select':
-					$I->selectOption('#ckwc-quick-edit #' . $field, $attributes[1]);
+					$I->selectOption('#convertkit-quick-edit #' . $fieldID, $attributes[1]);
 					break;
 				default:
-					$I->fillField('#ckwc-quick-edit #' . $field, $attributes[1]);
+					$I->fillField('#convertkit-quick-edit #' . $fieldID, $attributes[1]);
 					break;
 			}
 		}
@@ -45,11 +50,11 @@ class WPQuickEdit extends \Codeception\Module
 	/**
 	 * Opens the Quick Edit form for the given Post ID.
 	 *
-	 * @since   1.4.8
+	 * @since   1.9.8.1
 	 *
-	 * @param   $I  AcceptanceHelper    Acceptance Helper.
-	 * @param   string                                   $postType       Programmatic Post Type.
-	 * @param   int                                      $postID         Post ID.
+	 * @param   AcceptanceHelper $I              Acceptance Helper.
+	 * @param   string           $postType       Programmatic Post Type.
+	 * @param   int              $postID         Post ID.
 	 */
 	public function openQuickEdit($I, $postType, $postID)
 	{

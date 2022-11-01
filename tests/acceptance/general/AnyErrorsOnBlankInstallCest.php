@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Tests for any output errors on a clean installation and activation,
+ * with no Plugin configuration.
+ *
+ * @since   1.4.2
+ */
 class AnyErrorsOnBlankInstallCest
 {
 	/**
@@ -8,7 +13,7 @@ class AnyErrorsOnBlankInstallCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSettingsScreen(AcceptanceTester $I)
 	{
@@ -25,14 +30,14 @@ class AnyErrorsOnBlankInstallCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testAddNewProduct(AcceptanceTester $I)
 	{
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Navigate to Products > Add New
+		// Navigate to Products > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
 		// Check that no PHP warnings or notices were output.
@@ -46,7 +51,7 @@ class AnyErrorsOnBlankInstallCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

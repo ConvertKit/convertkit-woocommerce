@@ -12,7 +12,7 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -32,14 +32,14 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDisabled(AcceptanceTester $I)
 	{
 		// Disable the Opt-In Checkbox option.
 		$I->uncheckOption('#woocommerce_ckwc_display_opt_in');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -64,14 +64,14 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxEnabled(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -100,7 +100,7 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxLabel(AcceptanceTester $I)
 	{
@@ -113,7 +113,7 @@ class SettingOptInCheckboxCest
 		// Define the Opt-In Checkbox label.
 		$I->fillField('#woocommerce_ckwc_opt_in_label', $customLabel);
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -142,17 +142,17 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDefaultStatusEnabled(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Default Status = Checked
+		// Set the Opt-In Checkbox Default Status = Checked.
 		$I->checkOption('#woocommerce_ckwc_opt_in_status', 'Checked');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -181,17 +181,17 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDefaultStatusDisabled(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Default Status = Unchecked
+		// Set the Opt-In Checkbox Default Status = Unchecked.
 		$I->selectOption('#woocommerce_ckwc_opt_in_status', 'Unchecked');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -220,17 +220,17 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDisplayLocationBilling(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Display Location = Billing
+		// Set the Opt-In Checkbox Display Location = Billing.
 		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Billing');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -256,17 +256,17 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDisplayLocationOrder(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Display Location = Order
+		// Set the Opt-In Checkbox Display Location = Order.
 		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Order');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -293,7 +293,7 @@ class SettingOptInCheckboxCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

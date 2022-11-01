@@ -1,16 +1,20 @@
 <?php
 namespace Helper\Acceptance;
 
-// Define any custom actions related to the WooCommerce Plugin that
-// would be used across multiple tests.
-// These are then available in $I->{yourFunctionName}
-
+/**
+ * Helper methods and actions related to WooCommerce,
+ * which are then available using $I->{yourFunctionName}.
+ *
+ * @since   1.0.0
+ */
 class WooCommerce extends \Codeception\Module
 {
 	/**
 	 * Helper method to setup the WooCommerce Plugin.
 	 *
 	 * @since   1.0.0
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
 	 */
 	public function setupWooCommercePlugin($I)
 	{
@@ -68,6 +72,8 @@ class WooCommerce extends \Codeception\Module
 	 * Helper method to setup the Custom Order Numbers Plugin.
 	 *
 	 * @since   1.0.0
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
 	 */
 	public function setupCustomOrderNumbersPlugin($I)
 	{
@@ -87,6 +93,16 @@ class WooCommerce extends \Codeception\Module
 	 * so it's better to have the code here than in every single test.
 	 *
 	 * @since   1.9.6
+	 *
+	 * @param   AcceptanceTester $I                          AcceptanceTester.
+	 * @param   string           $productType                WooCommerce Product Type (simple|virtual|zero|subscription).
+	 * @param   bool             $displayOptIn               Display Opt In on Checkout.
+	 * @param   bool             $checkOptIn                 Check Opt In checkbox on Checkout.
+	 * @param   mixed            $pluginFormTagSequence      Plugin Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @param   mixed            $subscriptionEvent          Subscription event setting.
+	 * @param   bool             $sendPurchaseData           Send WooCommerce Order data to ConvertKit Purchase Data API.
+	 * @param   mixed            $productFormTagSequence     Product Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @param   bool             $customFields               Map WooCommerce fields to ConvertKit Custom Fields.
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig(
 		$I,
@@ -157,7 +173,7 @@ class WooCommerce extends \Codeception\Module
 		// Wait until the settings page reloads, to avoid a browser alert later that navigating away will lose unsaved changes.
 		$I->waitForElement('#woocommerce_ckwc_enabled');
 
-		// Create Product
+		// Create Product.
 		switch ($productType) {
 			case 'zero':
 				$productName   = 'Zero Value Product';
@@ -196,7 +212,7 @@ class WooCommerce extends \Codeception\Module
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod);
 
-		// Handle Opt-In Checkbox
+		// Handle Opt-In Checkbox.
 		if ($displayOptIn) {
 			if ($checkOptIn) {
 				$I->checkOption('#ckwc_opt_in');
@@ -221,7 +237,7 @@ class WooCommerce extends \Codeception\Module
 		$I->seeInSource('received');
 		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
 
-		// Return data
+		// Return data.
 		return [
 			'email_address'   => $emailAddress,
 			'product_id'      => $productID,
@@ -235,9 +251,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   AcceptanceTester $I
-	 * @param   int              $orderID        WooCommerce Order ID
-	 * @param   string           $orderStatus    Order Status
+	 * @param   AcceptanceTester $I              Acceptance Tester.
+	 * @param   int              $orderID        WooCommerce Order ID.
+	 * @param   string           $orderStatus    Order Status.
 	 */
 	public function wooCommerceChangeOrderStatus($I, $orderID, $orderStatus)
 	{
@@ -265,7 +281,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.0.0
 	 *
-	 * @return  int     Product ID
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
+	 * @param   mixed            $productFormTagSequence Product Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @return  int                                         Product ID
 	 */
 	public function wooCommerceCreateSimpleProduct($I, $productFormTagSequence = false)
 	{
@@ -294,7 +312,7 @@ class WooCommerce extends \Codeception\Module
 					'_wc_average_rating' => 0,
 					'_wc_review_count'   => 0,
 
-					// ConvertKit Integration Form/Tag/Sequence
+					// ConvertKit Integration Form/Tag/Sequence.
 					'ckwc_subscription'  => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 				],
 			]
@@ -306,7 +324,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.0.0
 	 *
-	 * @return  int     Product ID
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
+	 * @param   mixed            $productFormTagSequence Product Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @return  int                                         Product ID
 	 */
 	public function wooCommerceCreateVirtualProduct($I, $productFormTagSequence = false)
 	{
@@ -335,7 +355,7 @@ class WooCommerce extends \Codeception\Module
 					'_wc_average_rating' => 0,
 					'_wc_review_count'   => 0,
 
-					// ConvertKit Integration Form/Tag/Sequence
+					// ConvertKit Integration Form/Tag/Sequence.
 					'ckwc_subscription'  => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 				],
 			]
@@ -348,7 +368,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.4.4
 	 *
-	 * @return  int     Product ID
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
+	 * @param   mixed            $productFormTagSequence Product Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @return  int                                         Product ID
 	 */
 	public function wooCommerceCreateSubscriptionProduct($I, $productFormTagSequence = false)
 	{
@@ -402,7 +424,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.0.0
 	 *
-	 * @return  int     Product ID
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
+	 * @param   mixed            $productFormTagSequence Product Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @return  int                                         Product ID
 	 */
 	public function wooCommerceCreateZeroValueProduct($I, $productFormTagSequence = false)
 	{
@@ -431,7 +455,7 @@ class WooCommerce extends \Codeception\Module
 					'_wc_average_rating' => 0,
 					'_wc_review_count'   => 0,
 
-					// ConvertKit Integration Form/Tag/Sequence
+					// ConvertKit Integration Form/Tag/Sequence.
 					'ckwc_subscription'  => ( $productFormTagSequence ? $productFormTagSequence : '' ),
 				],
 			]
@@ -516,11 +540,11 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.0.0
 	 *
-	 * @param   AcceptanceTester $I
-	 * @param   int              $productID      Product ID
-	 * @param   string           $productName    Product Name
-	 * @param   string           $orderStatus    Order Status
-	 * @param   string           $paymentMethod  Payment Method
+	 * @param   AcceptanceTester $I              Acceptance Tester.
+	 * @param   int              $productID      Product ID.
+	 * @param   string           $productName    Product Name.
+	 * @param   string           $orderStatus    Order Status.
+	 * @param   string           $paymentMethod  Payment Method.
 	 * @return  int                                 Order ID
 	 */
 	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod)
@@ -585,9 +609,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   int              $orderID       Order ID
-	 * @param   string           $noteText      Order Note Text
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID       Order ID.
+	 * @param   string           $noteText      Order Note Text.
 	 */
 	public function wooCommerceOrderNoteExists($I, $orderID, $noteText)
 	{
@@ -615,9 +639,9 @@ class WooCommerce extends \Codeception\Module
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   int              $orderID       Order ID
-	 * @param   string           $noteText      Order Note Text
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID       Order ID.
+	 * @param   string           $noteText      Order Note Text.
 	 */
 	public function wooCommerceOrderNoteDoesNotExist($I, $orderID, $noteText)
 	{

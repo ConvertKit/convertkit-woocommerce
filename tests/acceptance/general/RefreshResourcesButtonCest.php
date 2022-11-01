@@ -12,7 +12,7 @@ class RefreshResourcesButtonCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -39,11 +39,11 @@ class RefreshResourcesButtonCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesOnProduct(AcceptanceTester $I)
 	{
-		// Navigate to Product > Add New
+		// Navigate to Product > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
 		// Click the refresh button.
@@ -62,7 +62,7 @@ class RefreshResourcesButtonCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesOnBulkEdit(AcceptanceTester $I)
 	{
@@ -103,7 +103,7 @@ class RefreshResourcesButtonCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesOnQuickEdit(AcceptanceTester $I)
 	{
@@ -136,7 +136,7 @@ class RefreshResourcesButtonCest
 	 *
 	 * @since   1.4.9
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesErrorNotice(AcceptanceTester $I)
 	{
@@ -185,7 +185,7 @@ class RefreshResourcesButtonCest
 	 *
 	 * @since   1.4.8
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
