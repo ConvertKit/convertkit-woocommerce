@@ -5,10 +5,10 @@ class AnyErrorsOnBlankInstallCest
 	/**
 	 * Check that no PHP errors or notices are displayed at WooCommerce > Settings > Integration > ConvertKit, when the Plugin is activated
 	 * and not configured.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSettingsScreen(AcceptanceTester $I)
 	{
@@ -22,16 +22,16 @@ class AnyErrorsOnBlankInstallCest
 	/**
 	 * Check that no errors are displayed on Products > Add New, when the Plugin is activated
 	 * and not configured.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testAddNewProduct(AcceptanceTester $I)
 	{
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
-		
+
 		// Navigate to Products > Add New
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
@@ -43,10 +43,10 @@ class AnyErrorsOnBlankInstallCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.8
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

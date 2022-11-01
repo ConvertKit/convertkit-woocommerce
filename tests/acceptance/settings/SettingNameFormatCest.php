@@ -1,17 +1,17 @@
 <?php
 /**
  * Tests various setting combinations for the "Name Format" option.
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SettingNameFormatCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -29,10 +29,10 @@ class SettingNameFormatCest
 	 * Test that the Billing First Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit, and honored
 	 * when submitted to ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNameFormatBillingFirstName(AcceptanceTester $I)
 	{
@@ -73,10 +73,10 @@ class SettingNameFormatCest
 	 * Test that the Billing Last Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit, and honored
 	 * when submitted to ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNameFormatBillingLastName(AcceptanceTester $I)
 	{
@@ -117,10 +117,10 @@ class SettingNameFormatCest
 	 * Test that the Billing First Name + Billing Last Name option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit, and honored
 	 * when submitted to ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNameFormatBillingFirstNameAndLastName(AcceptanceTester $I)
 	{
@@ -161,10 +161,10 @@ class SettingNameFormatCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

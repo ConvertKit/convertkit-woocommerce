@@ -2,17 +2,17 @@
 /**
  * Tests various setting combinations for the "Display Opt-In Checkbox" and associated
  * options.
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SettingAPIKeyAndSecretCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -22,10 +22,10 @@ class SettingAPIKeyAndSecretCest
 	/**
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen when the Save Changes
 	 * button is pressed and no settings are specified at WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSaveBlankSettings(AcceptanceTester $I)
 	{
@@ -46,10 +46,10 @@ class SettingAPIKeyAndSecretCest
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
 	 * and a warning is displayed that the user needs to enter API credentials, when
 	 * enabling the integration at WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSaveBlankSettingsWithIntegrationEnabled(AcceptanceTester $I)
 	{
@@ -77,10 +77,10 @@ class SettingAPIKeyAndSecretCest
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
 	 * and no warning is displayed that the supplied API credentials are invalid, when
 	 * saving valid API credentials at WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSaveValidAPICredentials(AcceptanceTester $I)
 	{
@@ -101,10 +101,10 @@ class SettingAPIKeyAndSecretCest
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
 	 * and a warning is displayed that the supplied API credentials are invalid, when
 	 * saving invalid API credentials at WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSaveInvalidAPICredentials(AcceptanceTester $I)
 	{
@@ -136,10 +136,10 @@ class SettingAPIKeyAndSecretCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

@@ -2,17 +2,17 @@
 /**
  * Tests that Purchase Data does (or does not) get sent to ConvertKit based on the integration
  * settings.
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class PurchaseDataCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -38,10 +38,10 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Order is created via the frontend checkout.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithSimpleProductCheckout(AcceptanceTester $I)
 	{
@@ -68,10 +68,10 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Order is created via the frontend checkout.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductCheckout(AcceptanceTester $I)
 	{
@@ -98,10 +98,10 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Customer purchases a 'Virtual' WooCommerce Product, and
 	 * - The Order is created via the frontend checkout.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithVirtualProductCheckout(AcceptanceTester $I)
 	{
@@ -128,10 +128,10 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is disabled in the integration Settings, and
 	 * - The Customer purchases a 'Virtual' WooCommerce Product, and
 	 * - The Order is created via the frontend checkout.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductCheckout(AcceptanceTester $I)
 	{
@@ -158,10 +158,10 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Customer purchases a WooCommerce Product with zero value, and
 	 * - The Order is created via the frontend checkout.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithZeroValueProductCheckout(AcceptanceTester $I)
 	{
@@ -188,10 +188,10 @@ class PurchaseDataCest
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The Customer purchases a WooCommerce Product with zero value, and
 	 * - The Order is created via the frontend checkout.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductCheckout(AcceptanceTester $I)
 	{
@@ -219,10 +219,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Simple' WooCommerce Product, and
 	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -230,7 +230,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -260,10 +260,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Simple' WooCommerce Product, and
 	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -271,7 +271,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -301,10 +301,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Virtual' WooCommerce Product, and
 	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -312,7 +312,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -342,10 +342,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Virtual' WooCommerce Product, and
 	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -353,7 +353,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -383,10 +383,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Zero Value' WooCommerce Product, and
 	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -394,7 +394,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -424,10 +424,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Zero Value' WooCommerce Product, and
 	 * - The Order's payment method is blank (N/A), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -435,7 +435,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -465,10 +465,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Simple' WooCommerce Product, and
 	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -476,7 +476,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -506,10 +506,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Simple' WooCommerce Product, and
 	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -517,7 +517,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -547,10 +547,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Virtual' WooCommerce Product, and
 	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -558,7 +558,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -588,10 +588,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Virtual' WooCommerce Product, and
 	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -599,7 +599,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -629,10 +629,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Zero Value' WooCommerce Product, and
 	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -640,7 +640,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');	
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -670,10 +670,10 @@ class PurchaseDataCest
 	 * - The Order contains a 'Zero Value' WooCommerce Product, and
 	 * - The Order's payment method is Cash on Delivery (COD), and
 	 * - The Order is created via the WordPress Administration interface.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -681,7 +681,7 @@ class PurchaseDataCest
 		$I->loadConvertKitSettingsScreen($I);
 
 		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');	
+		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
 
 		// Save.
 		$I->click('Save changes');
@@ -712,10 +712,10 @@ class PurchaseDataCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Order is created via the frontend checkout, and
 	 * - The Order's status is changed from processing to completed.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSendPurchaseDataOnOrderCompletedWithSimpleProductCheckout(AcceptanceTester $I)
 	{
@@ -753,10 +753,10 @@ class PurchaseDataCest
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Order is created via the frontend checkout, and
 	 * - The Order's status is changed from processing to cancelled.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testDontSendPurchaseDataOnOrderCancelledWithSimpleProductCheckout(AcceptanceTester $I)
 	{
@@ -791,10 +791,10 @@ class PurchaseDataCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

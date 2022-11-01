@@ -2,17 +2,17 @@
 /**
  * Tests the various settings do (or do not) subscribe the customer to a ConvertKit Form
  * or Tag on the Order Pending payment (i.e. Order created) event when an order is placed through WooCommerce.
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SubscribeOnOrderPendingPaymentEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -32,10 +32,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenCheckedWithFormAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -63,10 +63,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is unchecked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenUncheckedWithFormAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -93,10 +93,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is disabled in the integration Settings, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInDisabledWithFormAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -125,10 +125,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenCheckedWithFormCustomFieldsAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -162,10 +162,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenCheckedWithTagCustomFieldsAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -199,10 +199,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenCheckedWithSequenceCustomFieldsAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -236,10 +236,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenCheckedWithNoFormAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -268,10 +268,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - The opt in checkbox is unchecked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInWhenUncheckedWithNoFormAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -299,10 +299,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * - No Form is selected in the integration Settings, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is created.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testOptInDisabledWithNoFormAndSimpleProduct(AcceptanceTester $I)
 	{
@@ -328,10 +328,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

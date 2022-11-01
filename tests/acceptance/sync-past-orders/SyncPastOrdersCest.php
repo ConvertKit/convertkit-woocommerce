@@ -1,17 +1,17 @@
 <?php
 /**
  * Tests for Sync Past Orders functionality.
- * 
- * @since 	1.4.3
+ *
+ * @since   1.4.3
  */
 class SyncPastOrdersCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -31,15 +31,15 @@ class SyncPastOrdersCest
 	/**
 	 * Test that no button is displayed on the Integration Settings screen
 	 * when the Integration is disabled.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNoButtonDisplayedWhenIntegrationDisabled(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Disable the Integration.
 		$I->loadConvertKitSettingsScreen($I);
@@ -51,7 +51,7 @@ class SyncPastOrdersCest
 
 		// Create Product.
 		$productName = 'Simple Product';
-		$productID = $I->wooCommerceCreateSimpleProduct($I, false);
+		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);
 
 		// Define Email Address for this Test.
 		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
@@ -70,12 +70,12 @@ class SyncPastOrdersCest
 
 		// Wait until JS completes and redirects.
 		$I->waitForElement('.woocommerce-order-received', 10);
-		
+
 		// Get data.
 		$result = [
 			'email_address' => $emailAddress,
-			'product_id' => $productID,
-			'order_id' => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+			'product_id'    => $productID,
+			'order_id'      => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
 		];
 
 		// Login as the Administrator
@@ -91,15 +91,15 @@ class SyncPastOrdersCest
 	/**
 	 * Test that no button is displayed on the Integration Settings screen
 	 * when the Integration is enabled, and no API credentials are specified.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -137,15 +137,15 @@ class SyncPastOrdersCest
 	 * Test that no button is displayed on the Integration Settings screen
 	 * when the Integration is enabled, valid API credentials are specified
 	 * but there are no WooCommerce Orders.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNoButtonDisplayedWhenNoOrders(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -163,15 +163,15 @@ class SyncPastOrdersCest
 	 * - the Integration is enabled,
 	 * - valid API credentials are specified,
 	 * - a WooCommerce Order exists, that has had its Purchase Data sent to ConvertKit.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testNoButtonDisplayedWhenNoPastOrders(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -202,15 +202,15 @@ class SyncPastOrdersCest
 	 * - valid API credentials are specified,
 	 * - a WooCommerce Order exists, that has not had its Purchase Data sent to ConvertKit,
 	 * - clicking the button sends the Order to ConvertKit.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSyncPastOrder(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -248,7 +248,7 @@ class SyncPastOrdersCest
 		// Extract the Post ID from the Order ID, as the Custom Order Numbers Plugin does not prefix
 		// the order ID in the database or log entries.
 		$orderIDParts = explode('-', $result['order_id']);
-		$postID = $orderIDParts[ count($orderIDParts) - 1 ];
+		$postID       = $orderIDParts[ count($orderIDParts) - 1 ];
 
 		// Confirm that the log shows a success message.
 		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
@@ -266,39 +266,43 @@ class SyncPastOrdersCest
 		$I->seeInSource('Enable ConvertKit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->seePostMetaInDatabase([
-			'post_id' => $postID,
-			'meta_key' => 'ckwc_purchase_data_sent'
-		]);
-		$I->seePostMetaInDatabase([
-			'post_id' => $postID,
-			'meta_key' => 'ckwc_purchase_data_id',
-		]);
+		$I->seePostMetaInDatabase(
+			[
+				'post_id'  => $postID,
+				'meta_key' => 'ckwc_purchase_data_sent',
+			]
+		);
+		$I->seePostMetaInDatabase(
+			[
+				'post_id'  => $postID,
+				'meta_key' => 'ckwc_purchase_data_id',
+			]
+		);
 	}
 
 	/**
 	 * Tests that a WooCommerce Order, which has had its Purchase Data sent to ConvertKit
 	 * in Plugin version 1.4.2 or older, will be synced in 1.4.5 and higher, to ensure that
 	 * the ConvertKit Purchase / Transaction ID is stored in the Order's metadata.
-	 * 
+	 *
 	 * 1.4.2 and older would mark a WooCommerce Order as sent to ConvertKit by adding the 'ckwc_purchase_data_sent'
 	 * meta key to the Order, with a value of 'yes' - however did not store the ConvertKit Purchase Data API response's
-	 * Transaction ID in the Order, meaning there is no way to potentially map WooCommerce Orders to ConvertKit API data. 
-	 * 
+	 * Transaction ID in the Order, meaning there is no way to potentially map WooCommerce Orders to ConvertKit API data.
+	 *
 	 * 1.4.3 and later performs the same as 1.4.2, but also storing the ConvertKit Transaction ID in the 'ckwc_purchase_data_id',
 	 * allowing for the possibility of future mapping between WooCommerce and ConvertKit.
-	 * 
+	 *
 	 * This test ensures that a 1.4.2 or older Order, which was already sent to ConvertKit, will be sent again so that
 	 * the ConvertKit Purchase Data is overwritten, and the ConvertKit Transaction ID is stored against the WooCommerce Order.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSyncPastOrderCreatedInPreviousPluginVersion(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -318,14 +322,16 @@ class SyncPastOrdersCest
 		// Extract the Post ID from the Order ID, as the Custom Order Numbers Plugin does not prefix
 		// the order ID in the database .
 		$orderIDParts = explode('-', $result['order_id']);
-		$postID = $orderIDParts[ count($orderIDParts) - 1 ];
+		$postID       = $orderIDParts[ count($orderIDParts) - 1 ];
 
 		// Remove the Transaction ID metadata in the Order, as if it were sent
 		// by 1.4.2 or older.
-		$I->dontHavePostMetaInDatabase([
-			'post_id' => $postID,
-			'meta_key' => 'ckwc_purchase_data_id'
-		]);
+		$I->dontHavePostMetaInDatabase(
+			[
+				'post_id'  => $postID,
+				'meta_key' => 'ckwc_purchase_data_id',
+			]
+		);
 
 		// Login as the Administrator
 		$I->loginAsAdmin();
@@ -355,29 +361,33 @@ class SyncPastOrdersCest
 		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->seePostMetaInDatabase([
-			'post_id' => $postID,
-			'meta_key' => 'ckwc_purchase_data_sent'
-		]);
-		$I->seePostMetaInDatabase([
-			'post_id' => $postID,
-			'meta_key' => 'ckwc_purchase_data_id'
-		]);
+		$I->seePostMetaInDatabase(
+			[
+				'post_id'  => $postID,
+				'meta_key' => 'ckwc_purchase_data_sent',
+			]
+		);
+		$I->seePostMetaInDatabase(
+			[
+				'post_id'  => $postID,
+				'meta_key' => 'ckwc_purchase_data_id',
+			]
+		);
 	}
 
 	/**
 	 * Test that a WooCommerce Order, that has not had its Purchase Data sent to ConvertKit,
 	 * is not sent to ConvertKit when the Sync Past Orders button is clicked and the API
 	 * credentials are invalid.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testSyncPastOrderWithInvalidAPICredentials(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase(['post_type' => 'shop_order']);
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -439,10 +449,10 @@ class SyncPastOrdersCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

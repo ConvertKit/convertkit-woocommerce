@@ -5,17 +5,17 @@
  * - Display Opt-In Checkbox
  * - API Keys
  * - Subscription Form
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SettingCustomFieldsCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -29,10 +29,10 @@ class SettingCustomFieldsCest
 	/**
 	 * Test that Custom Field options are saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.3
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function testCustomFields(AcceptanceTester $I)
 	{
@@ -61,10 +61,10 @@ class SettingCustomFieldsCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

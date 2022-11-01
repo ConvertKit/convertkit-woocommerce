@@ -9,18 +9,22 @@ class ConvertKitAPI extends \Codeception\Module
 {
 	/**
 	 * Check the given email address exists as a subscriber on ConvertKit.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	string 			$emailAddress 	Email Address
-	 * @param 	mixed 			$firstName 		Name (false = don't check name matches)
-	 * @return 	array 							Subscriber
-	 */ 	
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   string           $emailAddress   Email Address
+	 * @param   mixed            $firstName      Name (false = don't check name matches)
+	 * @return  array                           Subscriber
+	 */
 	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
 	{
 		// Run request.
-		$results = $this->apiRequest('subscribers', 'GET', [
-			'email_address' => $emailAddress,
-		]);
+		$results = $this->apiRequest(
+			'subscribers',
+			'GET',
+			[
+				'email_address' => $emailAddress,
+			]
+		);
 
 		// Check at least one subscriber was returned and it matches the email address.
 		$I->assertGreaterThan(0, $results['total_subscribers']);
@@ -36,16 +40,20 @@ class ConvertKitAPI extends \Codeception\Module
 
 	/**
 	 * Check the given email address does not exists as a subscriber.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	string 			$emailAddress 	Email Address
-	 */ 	
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   string           $emailAddress   Email Address
+	 */
 	public function apiCheckSubscriberDoesNotExist($I, $emailAddress)
 	{
 		// Run request.
-		$results = $this->apiRequest('subscribers', 'GET', [
-			'email_address' => $emailAddress,
-		]);
+		$results = $this->apiRequest(
+			'subscribers',
+			'GET',
+			[
+				'email_address' => $emailAddress,
+			]
+		);
 
 		// Check no subscribers are returned by this request.
 		$I->assertEquals(0, $results['total_subscribers']);
@@ -53,17 +61,21 @@ class ConvertKitAPI extends \Codeception\Module
 
 	/**
 	 * Check the given email address and name exists as a subscriber on ConvertKit.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	string 			$emailAddress 	Email Address
-	 * @param 	string 			$name 			Name
-	 */ 	
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   string           $emailAddress   Email Address
+	 * @param   string           $name           Name
+	 */
 	public function apiCheckSubscriberEmailAndNameExists($I, $emailAddress, $name)
 	{
 		// Run request.
-		$results = $this->apiRequest('subscribers', 'GET', [
-			'email_address' => $emailAddress,
-		]);
+		$results = $this->apiRequest(
+			'subscribers',
+			'GET',
+			[
+				'email_address' => $emailAddress,
+			]
+		);
 
 		// Check at least one subscriber was returned and it matches the email address.
 		$I->assertGreaterThan(0, $results['total_subscribers']);
@@ -75,12 +87,12 @@ class ConvertKitAPI extends \Codeception\Module
 
 	/**
 	 * Check the given order ID exists as a purchase on ConvertKit.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	int 			$orderID 		Order ID
-	 * @param 	string 			$emailAddress 	Email Address
-	 * @param 	int 			$productID 		Product ID
-	 */ 
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   int              $orderID        Order ID
+	 * @param   string           $emailAddress   Email Address
+	 * @param   int              $productID      Product ID
+	 */
 	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
 		// Run request.
@@ -106,11 +118,11 @@ class ConvertKitAPI extends \Codeception\Module
 
 	/**
 	 * Check the given order ID does not exist as a purchase on ConvertKit.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	int 			$orderID 		Order ID
-	 * @param 	string 			$emailAddress 	Email Address
-	 */ 
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   int              $orderID        Order ID
+	 * @param   string           $emailAddress   Email Address
+	 */
 	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
 	{
 		// Run request.
@@ -125,21 +137,21 @@ class ConvertKitAPI extends \Codeception\Module
 
 	/**
 	 * Returns a Purchase from the /purchases API endpoint based on the given Order ID (transaction_id).
-	 * 
+	 *
 	 * We cannot use /purchases/{id} as {id} is the ConvertKit ID, not the WooCommerce Order ID (which
 	 * is stored in the transaction_id).
-	 * 
-	 * @param 	array 	$purchases 	Purchases Data
-	 * @param 	int 	$orderID 	Order ID
-	 * @return 	array
+	 *
+	 * @param   array $purchases  Purchases Data
+	 * @param   int   $orderID    Order ID
+	 * @return  array
 	 */
 	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
 	{
 		// Bail if no purchases exist.
-		if (!isset($purchases)) {
+		if ( ! isset($purchases)) {
 			return [
-				'id' => 0,
-				'order_id' => 0,
+				'id'            => 0,
+				'order_id'      => 0,
 				'email_address' => 'no',
 			];
 		}
@@ -156,22 +168,22 @@ class ConvertKitAPI extends \Codeception\Module
 
 		// No purchase exists with the given order ID. Return a blank array.
 		return [
-			'id' => 0,
-			'order_id' => 0,
+			'id'            => 0,
+			'order_id'      => 0,
 			'email_address' => 'no2',
 		];
 	}
 
 	/**
 	 * Returns all purchases from the API.
-	 * 
-	 * @return 	array
+	 *
+	 * @return  array
 	 */
 	public function apiGetPurchases()
 	{
 		// Get first page of purchases.
-		$purchases = $this->apiRequest('purchases', 'GET');
-		$data = $purchases['purchases'];
+		$purchases  = $this->apiRequest('purchases', 'GET');
+		$data       = $purchases['purchases'];
 		$totalPages = $purchases['total_pages'];
 
 		if ($totalPages == 1) {
@@ -180,9 +192,13 @@ class ConvertKitAPI extends \Codeception\Module
 
 		// Get additional pages of purchases.
 		for ($page = 2; $page <= $totalPages; $page++) {
-			$purchases = $this->apiRequest('purchases', 'GET', [
-				'page' => $page,
-			]);
+			$purchases = $this->apiRequest(
+				'purchases',
+				'GET',
+				[
+					'page' => $page,
+				]
+			);
 
 			$data = array_merge($data, $purchases['purchases']);
 		}
@@ -193,23 +209,27 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Unsubscribes the given email address. Useful for clearing the API
 	 * between tests.
-	 * 
-	 * @param 	string 			$emailAddress 	Email Address
-	 */ 	
+	 *
+	 * @param   string $emailAddress   Email Address
+	 */
 	public function apiUnsubscribe($emailAddress)
 	{
 		// Run request.
-		$this->apiRequest('unsubscribe', 'PUT', [
-			'email' => $emailAddress,
-		]);
+		$this->apiRequest(
+			'unsubscribe',
+			'PUT',
+			[
+				'email' => $emailAddress,
+			]
+		);
 	}
 
 	/**
 	 * Check the subscriber array's custom field data is valid.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	array 			$subscriber 	Subscriber from API
-	 */ 	
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   array            $subscriber     Subscriber from API
+	 */
 	public function apiCustomFieldDataIsValid($I, $subscriber)
 	{
 		$I->assertEquals($subscriber['fields']['phone_number'], '123-123-1234');
@@ -221,10 +241,10 @@ class ConvertKitAPI extends \Codeception\Module
 
 	/**
 	 * Check the subscriber array's custom field data is empty.
-	 * 
-	 * @param 	AcceptanceTester $I 			AcceptanceTester
-	 * @param 	array 			$subscriber 	Subscriber from API
-	 */ 	
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester
+	 * @param   array            $subscriber     Subscriber from API
+	 */
 	public function apiCustomFieldDataIsEmpty($I, $subscriber)
 	{
 		$I->assertEquals($subscriber['fields']['phone_number'], '');
@@ -237,32 +257,39 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Sends a request to the ConvertKit API, typically used to read an endpoint to confirm
 	 * that data in an Acceptance Test was added/edited/deleted successfully.
-	 * 
-	 * @param 	string 	$endpoint 	Endpoint
-	 * @param 	string 	$method 	Method (GET|POST|PUT)
-	 * @param 	array 	$params 	Endpoint Parameters
+	 *
+	 * @param   string $endpoint   Endpoint
+	 * @param   string $method     Method (GET|POST|PUT)
+	 * @param   array  $params     Endpoint Parameters
 	 */
 	public function apiRequest($endpoint, $method = 'GET', $params = array())
 	{
 		// Build query parameters.
-		$params = array_merge($params, [
-			'api_key' => $_ENV['CONVERTKIT_API_KEY'],
-			'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
-		]);
+		$params = array_merge(
+			$params,
+			[
+				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
+				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
+			]
+		);
 
 		// Send request.
 		try {
 			$client = new \GuzzleHttp\Client();
-			$result = $client->request($method, 'https://api.convertkit.com/v3/' . $endpoint . '?' . http_build_query($params), [
-				'headers' => [
-					'Accept-Encoding' => 'gzip',
-					'timeout'         => 5,
-				],
-			]);
+			$result = $client->request(
+				$method,
+				'https://api.convertkit.com/v3/' . $endpoint . '?' . http_build_query($params),
+				[
+					'headers' => [
+						'Accept-Encoding' => 'gzip',
+						'timeout'         => 5,
+					],
+				]
+			);
 
 			// Return JSON decoded response.
 			return json_decode($result->getBody()->getContents(), true);
-		} catch(\GuzzleHttp\Exception\ClientException $e) {
+		} catch (\GuzzleHttp\Exception\ClientException $e) {
 			return [];
 		}
 	}

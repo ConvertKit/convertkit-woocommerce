@@ -9,10 +9,10 @@ class WPClassicEditor extends \Codeception\Module
 {
 	/**
 	 * Add a Page, Post or Custom Post Type using the Classic Editor in WordPress.
-	 * 
-	 * @since 	1.9.7.5
-	 * 
-	 * @param 	AcceptanceTester 	$I 						Acceptance Tester.
+	 *
+	 * @since   1.9.7.5
+	 *
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
 	 */
 	public function addClassicEditorPage($I, $postType = 'page', $title)
 	{
@@ -20,7 +20,7 @@ class WPClassicEditor extends \Codeception\Module
 		$I->activateThirdPartyPlugin($I, 'classic-editor');
 
 		// Navigate to Post Type (e.g. Pages / Posts) > Add New
-		$I->amOnAdminPage('post-new.php?post_type='.$postType);
+		$I->amOnAdminPage('post-new.php?post_type=' . $postType);
 
 		// Define the Title.
 		$I->fillField('#title', $title);
@@ -29,16 +29,16 @@ class WPClassicEditor extends \Codeception\Module
 	/**
 	 * Add the given shortcode when adding or editing a Page, Post or Custom Post Type
 	 * in the Visual Editor (TinyMCE).
-	 * 
+	 *
 	 * If a shortcode configuration is specified, applies it to the newly added shortcode.
-	 * 
-	 * @since 	1.9.7.5
-	 * 
-	 * @param 	AcceptanceTester 	$I 							Acceptance Tester.
-	 * @param 	string 				$shortcodeName 				Shortcode Name (e.g. 'ConvertKit Form').
-	 * @param 	string 				$shortcodeProgrammaticName 	Programmatic Shortcode Name (e.g. 'convertkit-form').
-	 * @param 	bool|array 			$shortcodeConfiguration 	Shortcode Configuration (field => value key/value array).
-	 * @param 	bool|string 		$expectedShortcodeOutput 	Expected Shortcode Output (e.g. [convertkit_form form="12345"]).
+	 *
+	 * @since   1.9.7.5
+	 *
+	 * @param   AcceptanceTester $I                          Acceptance Tester.
+	 * @param   string           $shortcodeName              Shortcode Name (e.g. 'ConvertKit Form').
+	 * @param   string           $shortcodeProgrammaticName  Programmatic Shortcode Name (e.g. 'convertkit-form').
+	 * @param   bool|array       $shortcodeConfiguration     Shortcode Configuration (field => value key/value array).
+	 * @param   bool|string      $expectedShortcodeOutput    Expected Shortcode Output (e.g. [convertkit_form form="12345"]).
 	 */
 	public function addVisualEditorShortcode($I, $shortcodeName, $shortcodeProgrammaticName, $shortcodeConfiguration = false, $expectedShortcodeOutput = false)
 	{
@@ -46,24 +46,24 @@ class WPClassicEditor extends \Codeception\Module
 		$I->click('button#content-tmce');
 
 		// Click the TinyMCE Button for this shortcode.
-		$I->click('div.mce-container div[aria-label="'.$shortcodeName.'"] button');
+		$I->click('div.mce-container div[aria-label="' . $shortcodeName . '"] button');
 
 		// Wait for the modal's contents to load.
 		$I->waitForElementVisible('#convertkit-modal-body input.button-primary');
 
 		// If a shortcode configuration is specified, apply it to the shortcode's modal window now.
 		if ($shortcodeConfiguration) {
-			foreach ($shortcodeConfiguration as $field=>$attributes) {
+			foreach ($shortcodeConfiguration as $field => $attributes) {
 				// Field ID will be the attribute name, prefixed with tinymce_modal
 				$fieldID = '#tinymce_modal_' . $field;
 
 				// Depending on the field's type, define its value.
 				switch ($attributes[0]) {
 					case 'select':
-						$I->selectOption('#convertkit-modal-body-body '.$fieldID, $attributes[1]);
+						$I->selectOption('#convertkit-modal-body-body ' . $fieldID, $attributes[1]);
 						break;
 					default:
-						$I->fillField('#convertkit-modal-body-body '.$fieldID, $attributes[1]);
+						$I->fillField('#convertkit-modal-body-body ' . $fieldID, $attributes[1]);
 						break;
 				}
 			}
@@ -83,16 +83,16 @@ class WPClassicEditor extends \Codeception\Module
 	/**
 	 * Add the given shortcode when adding or editing a Page, Post or Custom Post Type
 	 * in the Text Editor.
-	 * 
+	 *
 	 * If a shortcode configuration is specified, applies it to the newly added shortcode.
-	 * 
-	 * @since 	1.9.7.5
-	 * 
-	 * @param 	AcceptanceTester 	$I 							Acceptance Tester.
-	 * @param 	string 				$shortcodeName 				Shortcode Name (e.g. 'ConvertKit Form').
-	 * @param 	string 				$shortcodeProgrammaticName 	Programmatic Shortcode Name (e.g. 'convertkit-form').
-	 * @param 	bool|array 			$shortcodeConfiguration 	Shortcode Configuration (field => value key/value array).
-	 * @param 	bool|string 		$expectedShortcodeOutput 	Expected Shortcode Output (e.g. [convertkit_form form="12345"]).
+	 *
+	 * @since   1.9.7.5
+	 *
+	 * @param   AcceptanceTester $I                          Acceptance Tester.
+	 * @param   string           $shortcodeName              Shortcode Name (e.g. 'ConvertKit Form').
+	 * @param   string           $shortcodeProgrammaticName  Programmatic Shortcode Name (e.g. 'convertkit-form').
+	 * @param   bool|array       $shortcodeConfiguration     Shortcode Configuration (field => value key/value array).
+	 * @param   bool|string      $expectedShortcodeOutput    Expected Shortcode Output (e.g. [convertkit_form form="12345"]).
 	 */
 	public function addTextEditorShortcode($I, $shortcodeName, $shortcodeProgrammaticName, $shortcodeConfiguration = false, $expectedShortcodeOutput = false)
 	{
@@ -100,17 +100,17 @@ class WPClassicEditor extends \Codeception\Module
 		$I->click('button#content-html');
 
 		// Click the QuickTags Button for this shortcode.
-		$I->click('input#qt_content_'.$shortcodeProgrammaticName);
+		$I->click('input#qt_content_' . $shortcodeProgrammaticName);
 
 		// Wait for the modal's contents to load.
 		$I->waitForElementVisible('#convertkit-quicktags-modal input.button-primary');
 
 		// If a shortcode configuration is specified, apply it to the shortcode's modal window now.
 		if ($shortcodeConfiguration) {
-			foreach ($shortcodeConfiguration as $field=>$attributes) {
+			foreach ($shortcodeConfiguration as $field => $attributes) {
 				// Field ID will be the attribute name, prefixed with tinymce_modal
 				$fieldID = '#tinymce_modal_' . $field;
-				
+
 				// Depending on the field's type, define its value.
 				switch ($attributes[0]) {
 					case 'select':
@@ -135,10 +135,10 @@ class WPClassicEditor extends \Codeception\Module
 	/**
 	 * Publish a Page, Post or Custom Post Type initiated by the addClassicEditorPage() function,
 	 * loading it on the frontend web site.
-	 * 
-	 * @since 	1.9.7.5
-	 * 
-	 * @param 	AcceptanceTester 	$I 						Acceptance Tester.
+	 *
+	 * @since   1.9.7.5
+	 *
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
 	 */
 	public function publishAndViewClassicEditorPage($I)
 	{
@@ -147,7 +147,7 @@ class WPClassicEditor extends \Codeception\Module
 
 		// Wait for notice to display.
 		$I->waitForElementVisible('.notice-success');
-		
+
 		// Load the Page on the frontend site.
 		$I->click('.notice-success a');
 
