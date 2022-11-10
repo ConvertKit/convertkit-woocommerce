@@ -5,17 +5,17 @@
  * - Display Opt-In Checkbox
  * - API Keys
  * - Subscription Form
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SettingSubscribeEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -29,10 +29,10 @@ class SettingSubscribeEventCest
 	/**
 	 * Test that the Order Pending payment option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOrderPendingPaymentWithoutOptInCheckbox(AcceptanceTester $I)
 	{
@@ -50,15 +50,15 @@ class SettingSubscribeEventCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Pending payment');
-			
+
 	}
 	/**
 	 * Test that the Order Processing option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOrderProcessing(AcceptanceTester $I)
 	{
@@ -78,10 +78,10 @@ class SettingSubscribeEventCest
 	/**
 	 * Test that the Order Completed option is saved when selected at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOrderCompleted(AcceptanceTester $I)
 	{
@@ -102,10 +102,10 @@ class SettingSubscribeEventCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

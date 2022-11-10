@@ -1,14 +1,18 @@
 <?php
-
+/**
+ * Tests Plugin activation and deactivation.
+ *
+ * @since   1.4.2
+ */
 class ActivateDeactivatePluginCest
 {
 	/**
 	 * Activate the Plugin and confirm a success notification
 	 * is displayed with no errors.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testPluginActivation(AcceptanceTester $I)
 	{
@@ -18,10 +22,10 @@ class ActivateDeactivatePluginCest
 	/**
 	 * Activate the Plugin without the WooCommerce Plugin and confirm a success notification
 	 * is displayed with no errors.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testPluginActivationWithoutWooCommerce(AcceptanceTester $I)
 	{
@@ -31,10 +35,10 @@ class ActivateDeactivatePluginCest
 	/**
 	 * Deactivate the Plugin and confirm a success notification
 	 * is displayed with no errors.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testPluginDeactivation(AcceptanceTester $I)
 	{

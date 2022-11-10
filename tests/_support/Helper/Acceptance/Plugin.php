@@ -1,17 +1,21 @@
 <?php
 namespace Helper\Acceptance;
 
-// Define any custom actions related to the ConvertKit Plugin that
-// would be used across multiple tests.
-// These are then available in $I->{yourFunctionName}
-
+/**
+ * Helper methods and actions related to the ConvertKit Plugin,
+ * which are then available using $I->{yourFunctionName}.
+ *
+ * @since   1.9.6
+ */
 class Plugin extends \Codeception\Module
 {
 	/**
 	 * Helper method to activate the ConvertKit Plugin, checking
 	 * it activated and no errors were output.
-	 * 
-	 * @since 	1.9.6
+	 *
+	 * @since   1.9.6
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function activateConvertKitPlugin($I)
 	{
@@ -21,8 +25,10 @@ class Plugin extends \Codeception\Module
 	/**
 	 * Helper method to deactivate the ConvertKit Plugin, checking
 	 * it activated and no errors were output.
-	 * 
-	 * @since 	1.9.6
+	 *
+	 * @since   1.9.6
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function deactivateConvertKitPlugin($I)
 	{
@@ -34,8 +40,10 @@ class Plugin extends \Codeception\Module
 	 * - WooCommerce
 	 * - WooCommerce Stripe Gateway
 	 * - ConvertKit for WooCommerce
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function activateWooCommerceAndConvertKitPlugins($I)
 	{
@@ -58,8 +66,10 @@ class Plugin extends \Codeception\Module
 	 * - WooCommerce
 	 * - WooCommerce Stripe Gateway
 	 * - ConvertKit for WooCommerce
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function deactivateWooCommerceAndConvertKitPlugins($I)
 	{
@@ -70,17 +80,18 @@ class Plugin extends \Codeception\Module
 
 	/**
 	 * Helper method to setup the Plugin's API Key and Secret.
-	 * 
-	 * @since 	1.9.6
-	 * 
-	 * @param 	mixed 	$apiKey 	API Key (if specified, used instead of CONVERTKIT_API_KEY)
-	 * @param 	mixed 	$apiSecret 	API Secret (if specified, used instead of CONVERTKIT_API_SECRET)
+	 *
+	 * @since   1.9.6
+	 *
+	 * @param   AcceptanceTester $I          Acceptance Tester.
+	 * @param   mixed            $apiKey     API Key (if specified, used instead of CONVERTKIT_API_KEY).
+	 * @param   mixed            $apiSecret  API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
 	 */
 	public function setupConvertKitPlugin($I, $apiKey = false, $apiSecret = false)
 	{
 		// Determine API Key and Secret to use.
-		$convertKitAPIKey = ($apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY']);
-		$convertKitAPISecret = ($apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET']);
+		$convertKitAPIKey    = ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] );
+		$convertKitAPISecret = ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] );
 
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -99,15 +110,17 @@ class Plugin extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Check the value of the fields match the inputs provided.
-		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');	
+		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');
 		$I->seeInField('woocommerce_ckwc_api_key', $convertKitAPIKey);
 		$I->seeInField('woocommerce_ckwc_api_secret', $convertKitAPISecret);
 	}
 
 	/**
 	 * Helper method to reset the ConvertKit Plugin settings, as if it's a clean installation.
-	 * 
-	 * @since 	1.9.6.7
+	 *
+	 * @since   1.9.6.7
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function resetConvertKitPlugin($I)
 	{
@@ -128,8 +141,10 @@ class Plugin extends \Codeception\Module
 	/**
 	 * Helper method to delete option table rows for review requests.
 	 * Useful for resetting the review state between tests.
-	 * 
-	 * @since 	1.4.3
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function deleteConvertKitReviewRequestOptions($I)
 	{
@@ -139,8 +154,10 @@ class Plugin extends \Codeception\Module
 
 	/**
 	 * Helper method to load the WooCommerce > Settings > Integration > ConvertKit screen.
-	 * 
-	 * @since 	1.0.0
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   AcceptanceTester $I Acceptance Tester.
 	 */
 	public function loadConvertKitSettingsScreen($I)
 	{

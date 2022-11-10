@@ -5,17 +5,17 @@
  * - Display Opt-In Checkbox
  * - API Keys
  * - Subscription Form
- * 
- * @since 	1.4.6
+ *
+ * @since   1.4.6
  */
 class SettingImportExportCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.6
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.6
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -28,10 +28,10 @@ class SettingImportExportCest
 
 	/**
 	 * Test that the Export Configuration option works.
-	 * 
-	 * @since 	1.4.6
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.6
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testExportConfiguration(AcceptanceTester $I)
 	{
@@ -45,17 +45,17 @@ class SettingImportExportCest
 		// Check downloaded file exists and contains some expected information.
 		$I->openFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
 		$I->seeInThisFile('{"settings":{"enabled":"yes","api_key":"' . $_ENV['CONVERTKIT_API_KEY'] . '","api_secret":"' . $_ENV['CONVERTKIT_API_SECRET'] . '"');
-	
+
 		// Delete the file.
 		$I->deleteFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
 	}
 
 	/**
 	 * Test that the Import Configuration option works.
-	 * 
-	 * @since 	1.4.6
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.6
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testImportConfiguration(AcceptanceTester $I)
 	{
@@ -79,10 +79,10 @@ class SettingImportExportCest
 	/**
 	 * Test that the Import Configuration option returns the expected error when an invalid file
 	 * is selected.
-	 * 
-	 * @since 	1.4.6
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.6
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testImportConfigurationWithInvalidFile(AcceptanceTester $I)
 	{
@@ -102,10 +102,10 @@ class SettingImportExportCest
 	/**
 	 * Test that the Import Configuration option returns the expected error when a file
 	 * that appears to be JSON is selected, but its content are not JSON.
-	 * 
-	 * @since 	1.4.6
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.6
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testImportConfigurationWithFakeJSONFile(AcceptanceTester $I)
 	{
@@ -126,10 +126,10 @@ class SettingImportExportCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

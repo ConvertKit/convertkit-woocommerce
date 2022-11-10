@@ -2,17 +2,17 @@
 /**
  * Tests the Refresh Resource button, which are displayed next to settings fields
  * when editing a WooCommerce Product.
- * 
- * @since 	1.4.8
+ *
+ * @since   1.4.8
  */
 class RefreshResourcesButtonCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.8
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -23,24 +23,27 @@ class RefreshResourcesButtonCest
 		// Change API keys in database to ones that have ConvertKit Resources.
 		// We do this directly vs. via the settings screen, so that the Plugin's cached resources remain blank
 		// until a refresh button is clicked.
-		$I->haveOptionInDatabase('woocommerce_ckwc_settings', [
-			'enabled'	 => 'yes',
-			'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
-			'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
-			'debug'      => 'yes',
-		]);
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'    => 'yes',
+				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
+				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
+				'debug'      => 'yes',
+			]
+		);
 	}
 
 	/**
 	 * Test that the refresh button for works when adding a new Product.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.8
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesOnProduct(AcceptanceTester $I)
 	{
-		// Navigate to Product > Add New
+		// Navigate to Product > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
 		// Click the refresh button.
@@ -56,23 +59,27 @@ class RefreshResourcesButtonCest
 
 	/**
 	 * Test that the refresh buttons for Forms, Sequences and Tags works when Bulk Editing WooCommerce Products.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.8
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesOnBulkEdit(AcceptanceTester $I)
 	{
 		// Programmatically create two Pages.
 		$productIDs = array(
-			$I->havePostInDatabase([
-				'post_type' 	=> 'product',
-				'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Bulk Edit #1',
-			]),
-			$I->havePostInDatabase([
-				'post_type' 	=> 'product',
-				'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Bulk Edit #2',
-			])
+			$I->havePostInDatabase(
+				[
+					'post_type'  => 'product',
+					'post_title' => 'ConvertKit: Product: Refresh Resources: Bulk Edit #1',
+				]
+			),
+			$I->havePostInDatabase(
+				[
+					'post_type'  => 'product',
+					'post_title' => 'ConvertKit: Product: Refresh Resources: Bulk Edit #2',
+				]
+			),
 		);
 
 		// Open Bulk Edit form for the Products in the WooCommerce Products WP_List_Table.
@@ -93,18 +100,20 @@ class RefreshResourcesButtonCest
 
 	/**
 	 * Test that the refresh buttons for Forms, Sequences and Tags works when Quick Editing a WooCommerce Product.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.8
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesOnQuickEdit(AcceptanceTester $I)
 	{
 		// Programmatically create a Product.
-		$pageID = $I->havePostInDatabase([
-			'post_type' 	=> 'product',
-			'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Quick Edit',
-		]);
+		$pageID = $I->havePostInDatabase(
+			[
+				'post_type'  => 'product',
+				'post_title' => 'ConvertKit: Product: Refresh Resources: Quick Edit',
+			]
+		);
 
 		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
 		$I->openQuickEdit($I, 'product', $pageID);
@@ -124,26 +133,31 @@ class RefreshResourcesButtonCest
 	/**
 	 * Test that the refresh button triggers an error message when the AJAX request fails,
 	 * or the ConvertKit API returns an error.
-	 * 
-	 * @since 	1.4.9
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.9
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testRefreshResourcesErrorNotice(AcceptanceTester $I)
 	{
 		// Specify invalid API credentials, so that the AJAX request returns an error.
-		$I->haveOptionInDatabase('woocommerce_ckwc_settings', [
-			'enabled'	 => 'yes',
-			'api_key'    => 'fakeApiKey',
-			'api_secret' => 'fakeApiSecret',
-			'debug'      => 'yes',
-		]);
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'    => 'yes',
+				'api_key'    => 'fakeApiKey',
+				'api_secret' => 'fakeApiSecret',
+				'debug'      => 'yes',
+			]
+		);
 
 		// Programmatically create a Product.
-		$pageID = $I->havePostInDatabase([
-			'post_type' 	=> 'product',
-			'post_title' 	=> 'ConvertKit: Product: Refresh Resources: Quick Edit',
-		]);
+		$pageID = $I->havePostInDatabase(
+			[
+				'post_type'  => 'product',
+				'post_title' => 'ConvertKit: Product: Refresh Resources: Quick Edit',
+			]
+		);
 
 		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
 		$I->openQuickEdit($I, 'product', $pageID);
@@ -168,10 +182,10 @@ class RefreshResourcesButtonCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.8
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.8
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

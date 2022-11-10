@@ -1,38 +1,40 @@
 <?php
 /**
  * Tests for the CKWC_Resource_Forms class.
- * 
- * @since 	1.4.7
+ *
+ * @since   1.4.7
  */
 class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 {
 	/**
+	 * The testing implementation.
+	 *
 	 * @var \WpunitTester
 	 */
 	protected $tester;
 
 	/**
 	 * Holds the key name that stores settings for this Plugin.
-	 * 
-	 * @since 	1.4.7
-	 * 
-	 * @var 	string
+	 *
+	 * @since   1.4.7
+	 *
+	 * @var     string
 	 */
 	private $settings_key = 'woocommerce_ckwc_settings';
 
 	/**
 	 * Holds the ConvertKit Resource class.
-	 * 
-	 * @since 	1.4.7
-	 * 
-	 * @var 	ConvertKit_Resource_Forms
+	 *
+	 * @since   1.4.7
+	 *
+	 * @var     ConvertKit_Resource_Forms
 	 */
 	private $resource;
 
 	/**
 	 * Performs actions before each test.
-	 * 
-	 * @since 	1.4.7
+	 *
+	 * @since   1.4.7
 	 */
 	public function setUp(): void
 	{
@@ -50,8 +52,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Performs actions after each test.
-	 * 
-	 * @since 	1.9.6.9
+	 *
+	 * @since   1.9.6.9
 	 */
 	public function tearDown(): void
 	{
@@ -69,8 +71,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Test that the refresh() function performs as expected.
-	 * 
-	 * @since 	1.4.7
+	 *
+	 * @since   1.4.7
 	 */
 	public function testRefresh()
 	{
@@ -83,8 +85,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Test that the expiry timestamp is set and returns the expected value.
-	 * 
-	 * @since 	1.4.7
+	 *
+	 * @since   1.4.7
 	 */
 	public function testExpiry()
 	{
@@ -100,8 +102,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Test that the get() function performs as expected.
-	 * 
-	 * @since 	1.4.7
+	 *
+	 * @since   1.4.7
 	 */
 	public function testGet()
 	{
@@ -115,8 +117,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Test that the count() function returns the number of resources.
-	 * 
-	 * @since 	1.4.7
+	 *
+	 * @since   1.4.7
 	 */
 	public function testCount()
 	{
@@ -126,8 +128,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Test that the exist() function performs as expected.
-	 * 
-	 * @since 	1.4.7
+	 *
+	 * @since   1.4.7
 	 */
 	public function testExist()
 	{

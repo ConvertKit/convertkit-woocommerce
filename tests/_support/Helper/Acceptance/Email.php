@@ -1,25 +1,27 @@
 <?php
 namespace Helper\Acceptance;
 
-// Define any custom actions related to Select2 interaction that
-// would be used across multiple tests.
-// These are then available in $I->{yourFunctionName}
-
+/**
+ * Helper methods and actions related to email addresses,
+ * which are then available using $I->{yourFunctionName}.
+ *
+ * @since   1.9.6
+ */
 class Email extends \Codeception\Module
 {
 	/**
 	 * Generates a unique email address for use in a test, comprising of a prefix,
 	 * date + time and PHP version number.
-	 * 
+	 *
 	 * This ensures that if tests are run in parallel, the same email address
 	 * isn't used for two tests across parallel testing runs.
-	 * 
-	 * @since 	1.9.6.7
+	 *
+	 * @since   1.9.6.7
 	 */
 	public function generateEmailAddress()
 	{
 		// Include uniqid() as there's a possibility that tests run in parallel on the same PHP version
 		// could request an email address on the same second.
-		return 'wordpress-'.uniqid().'-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '@convertkit.com';
+		return 'wordpress-' . uniqid() . '-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '@convertkit.com';
 	}
 }

@@ -2,17 +2,17 @@
 /**
  * Tests various setting combinations for the "Display Opt-In Checkbox" and associated
  * options.
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SettingOptInCheckboxCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -29,31 +29,31 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the checkbox doesn't display when the Opt-In Checkbox is disabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDisabled(AcceptanceTester $I)
 	{
 		// Disable the Opt-In Checkbox option.
 		$I->uncheckOption('#woocommerce_ckwc_display_opt_in');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Check the fields honor the changes.
-		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');	
+		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
 
 		// Create Simple Product.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is not displayed on the Checkout screen.
 		$I->dontSeeElementInDOM('#ckwc_opt_in');
 	}
@@ -61,31 +61,31 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the checkbox does display when the Opt-In Checkbox is enabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxEnabled(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Check the fields remain ticked.
-		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');	
+		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
 
 		// Create Simple Product.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
 
@@ -97,10 +97,10 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the Opt-In Checkbox Label honors the value defined at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxLabel(AcceptanceTester $I)
 	{
@@ -113,13 +113,13 @@ class SettingOptInCheckboxCest
 		// Define the Opt-In Checkbox label.
 		$I->fillField('#woocommerce_ckwc_opt_in_label', $customLabel);
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
-		// Check the fields remain ticked.	
+		// Check the fields remain ticked.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
 		$I->seeInField('#woocommerce_ckwc_opt_in_label', $customLabel);
 
@@ -128,7 +128,7 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
 
@@ -139,20 +139,20 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the Opt-In Checkbox is checked by default when this behaviour is enabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDefaultStatusEnabled(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Default Status = Checked
+		// Set the Opt-In Checkbox Default Status = Checked.
 		$I->checkOption('#woocommerce_ckwc_opt_in_status', 'Checked');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -167,7 +167,7 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
 
@@ -178,20 +178,20 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the Opt-In Checkbox is not checked by default when this behaviour is disabled at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDefaultStatusDisabled(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Default Status = Unchecked
+		// Set the Opt-In Checkbox Default Status = Unchecked.
 		$I->selectOption('#woocommerce_ckwc_opt_in_status', 'Unchecked');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -206,7 +206,7 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
 
@@ -217,20 +217,20 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the Opt-In Checkbox is displayed in the Billing section of the Checkout when defined at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDisplayLocationBilling(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Display Location = Billing
+		// Set the Opt-In Checkbox Display Location = Billing.
 		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Billing');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -245,7 +245,7 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is displayed in the Billing section on the Checkout screen.
 		$I->seeElementInDOM('.woocommerce-billing-fields #ckwc_opt_in');
 	}
@@ -253,20 +253,20 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the Opt-In Checkbox is displayed in the Order section of the Checkout when defined at
 	 * WooCommerce > Settings > Integration > ConvertKit.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxDisplayLocationOrder(AcceptanceTester $I)
 	{
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
-		// Set the Opt-In Checkbox Display Location = Order
+		// Set the Opt-In Checkbox Display Location = Order.
 		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Order');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -281,7 +281,7 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Confirm that the Opt-In checkbox is displayed in the Order section on the Checkout screen.
 		$I->seeElementInDOM('.woocommerce-additional-fields #ckwc_opt_in');
 	}
@@ -290,10 +290,10 @@ class SettingOptInCheckboxCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

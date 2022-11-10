@@ -1,17 +1,17 @@
 <?php
 /**
  * Tests for the Enable/Disable option on the WooCommerce Integration.
- * 
- * @since 	1.4.2
+ *
+ * @since   1.4.2
  */
 class SettingEnabledDisabledCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -26,10 +26,10 @@ class SettingEnabledDisabledCest
 	 * Test that the integration doesn't perform any expected actions when disabled at
 	 * WooCommerce > Settings > Integration > ConvertKit, and that WooCommerce Checkout
 	 * works as expected.
-	 * 
-	 * @since 	1.4.2
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testIntegrationWhenDisabled(AcceptanceTester $I)
 	{
@@ -38,7 +38,7 @@ class SettingEnabledDisabledCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
-		
+
 		// Click Place order button.
 		$I->click('Place order');
 
@@ -53,10 +53,10 @@ class SettingEnabledDisabledCest
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
-	 * 
-	 * @since 	1.4.4
-	 * 
-	 * @param 	AcceptanceTester 	$I 	Tester
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
