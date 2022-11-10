@@ -58,8 +58,6 @@ class CKWC_WC_Subscriptions {
 	 */
 	public function __construct() {
 
-		add_action( 'admin_init', array( $this, 'is_plugin_active' ) );
-
 		// Check if the Order should opt in the Customer.
 		add_filter( 'convertkit_for_woocommerce_order_should_opt_in_customer', array( $this, 'order_should_opt_in_customer' ), 10, 2 );
 
