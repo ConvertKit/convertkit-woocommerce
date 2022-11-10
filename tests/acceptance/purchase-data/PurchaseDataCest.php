@@ -12,7 +12,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -41,19 +41,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithSimpleProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			true // Send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			true // Send purchase data to ConvertKit.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -71,19 +71,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -101,19 +101,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithVirtualProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'virtual', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			true // Send purchase data to ConvertKit
+			'virtual', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			true // Send purchase data to ConvertKit.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -131,19 +131,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'virtual', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			false // Don't send purchase data to ConvertKit
+			'virtual', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -161,19 +161,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithZeroValueProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'zero', // Zero value Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			true // Send purchase data to ConvertKit
+			'zero', // Zero value Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			true // Send purchase data to ConvertKit.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -191,19 +191,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'zero', // Zero value Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			false // Don't send purchase data to ConvertKit
+			'zero', // Zero value Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -222,7 +222,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -241,10 +241,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Simple Product', // Product Name
-			'wc-processing', // Order Status
-			'' // Payment Method
+			$productID, // Product ID.
+			'Simple Product', // Product Name.
+			'wc-processing', // Order Status.
+			'' // Payment Method.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -263,7 +263,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -282,10 +282,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Simple Product', // Product Name
-			'wc-processing', // Order Status
-			'' // Payment Method
+			$productID, // Product ID.
+			'Simple Product', // Product Name.
+			'wc-processing', // Order Status.
+			'' // Payment Method.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -304,7 +304,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -323,10 +323,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Virtual Product', // Product Name
-			'wc-processing', // Order Status
-			'' // Payment Method
+			$productID, // Product ID.
+			'Virtual Product', // Product Name.
+			'wc-processing', // Order Status.
+			'' // Payment Method.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -345,7 +345,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -364,10 +364,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Virtual Product', // Product Name
-			'wc-processing', // Order Status
-			'' // Payment Method
+			$productID, // Product ID.
+			'Virtual Product', // Product Name.
+			'wc-processing', // Order Status.
+			'' // Payment Method.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -386,7 +386,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -405,10 +405,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Zero Value Product', // Product Name
-			'wc-processing', // Order Status
-			'' // Payment Method
+			$productID, // Product ID.
+			'Zero Value Product', // Product Name.
+			'wc-processing', // Order Status.
+			'' // Payment Method.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -427,7 +427,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
@@ -446,10 +446,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Zero Value Product', // Product Name
-			'wc-processing', // Order Status
-			'' // Payment Method
+			$productID, // Product ID.
+			'Zero Value Product', // Product Name.
+			'wc-processing', // Order Status.
+			'' // Payment Method.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -468,7 +468,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -487,10 +487,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Simple Product', // Product Name
-			'wc-processing', // Order Status
-			'cod' // Payment Method
+			$productID, // Product ID.
+			'Simple Product', // Product Name.
+			'wc-processing', // Order Status.
+			'cod' // Payment Method.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -509,7 +509,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -528,10 +528,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Simple Product', // Product Name
-			'wc-processing', // Order Status
-			'cod' // Payment Method
+			$productID, // Product ID.
+			'Simple Product', // Product Name.
+			'wc-processing', // Order Status.
+			'cod' // Payment Method.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -550,7 +550,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -569,10 +569,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Virtual Product', // Product Name
-			'wc-processing', // Order Status
-			'cod' // Payment Method
+			$productID, // Product ID.
+			'Virtual Product', // Product Name.
+			'wc-processing', // Order Status.
+			'cod' // Payment Method.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -591,7 +591,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -610,10 +610,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Virtual Product', // Product Name
-			'wc-processing', // Order Status
-			'cod' // Payment Method
+			$productID, // Product ID.
+			'Virtual Product', // Product Name.
+			'wc-processing', // Order Status.
+			'cod' // Payment Method.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -632,7 +632,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -651,10 +651,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Zero Value Product', // Product Name
-			'wc-processing', // Order Status
-			'cod' // Payment Method
+			$productID, // Product ID.
+			'Zero Value Product', // Product Name.
+			'wc-processing', // Order Status.
+			'cod' // Payment Method.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -673,7 +673,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
@@ -692,10 +692,10 @@ class PurchaseDataCest
 		// Create Manual Order.
 		$result = $I->wooCommerceCreateManualOrder(
 			$I,
-			$productID, // Product ID
-			'Zero Value Product', // Product Name
-			'wc-processing', // Order Status
-			'cod' // Payment Method
+			$productID, // Product ID.
+			'Zero Value Product', // Product Name.
+			'wc-processing', // Order Status.
+			'cod' // Payment Method.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -715,19 +715,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSendPurchaseDataOnOrderCompletedWithSimpleProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -756,19 +756,19 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDontSendPurchaseDataOnOrderCancelledWithSimpleProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -794,7 +794,7 @@ class PurchaseDataCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

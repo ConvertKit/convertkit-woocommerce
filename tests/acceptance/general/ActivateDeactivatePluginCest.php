@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Tests Plugin activation and deactivation.
+ *
+ * @since   1.4.2
+ */
 class ActivateDeactivatePluginCest
 {
 	/**
@@ -8,7 +12,7 @@ class ActivateDeactivatePluginCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testPluginActivation(AcceptanceTester $I)
 	{
@@ -21,7 +25,7 @@ class ActivateDeactivatePluginCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testPluginActivationWithoutWooCommerce(AcceptanceTester $I)
 	{
@@ -34,7 +38,7 @@ class ActivateDeactivatePluginCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testPluginDeactivation(AcceptanceTester $I)
 	{

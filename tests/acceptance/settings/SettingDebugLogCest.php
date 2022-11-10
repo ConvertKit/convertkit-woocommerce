@@ -11,7 +11,7 @@ class SettingDebugLogCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -27,14 +27,14 @@ class SettingDebugLogCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testDebugEnabled(AcceptanceTester $I)
 	{
 		// Check "Debug" checkbox.
 		$I->checkOption('#woocommerce_ckwc_debug');
 
-		// Save
+		// Save.
 		$I->click('Save changes');
 
 		// Check that no PHP warnings or notices were output.
@@ -57,7 +57,7 @@ class SettingDebugLogCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

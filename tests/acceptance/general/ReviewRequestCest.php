@@ -11,7 +11,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -31,7 +31,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testReviewRequestOnCheckoutWithOptInEnabled(AcceptanceTester $I)
 	{
@@ -41,12 +41,12 @@ class ReviewRequestCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			true, // Display Opt-In checkbox on Checkout
-			true, // Check Opt-In checkbox on Checkout
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Check that the options table does have a review request set.
@@ -62,7 +62,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testReviewRequestOnCheckoutWithOptInDisabled(AcceptanceTester $I)
 	{
@@ -72,12 +72,12 @@ class ReviewRequestCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			true, // Display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
 		// Check that the options table does not have a review request set.
@@ -93,7 +93,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testReviewRequestOnCheckoutWithPurchaseDataEnabled(AcceptanceTester $I)
 	{
@@ -103,12 +103,12 @@ class ReviewRequestCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Subscribe Event
-			true // Send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Subscribe Event.
+			true // Send purchase data to ConvertKit.
 		);
 
 		// Check that the options table does have a review request set.
@@ -124,7 +124,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testReviewRequestNotificationDisplayed(AcceptanceTester $I)
 	{
@@ -152,7 +152,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testReviewRequestNotificationDismissed(AcceptanceTester $I)
 	{
@@ -186,7 +186,7 @@ class ReviewRequestCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

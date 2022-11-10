@@ -11,7 +11,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -34,7 +34,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testNoButtonDisplayedWhenIntegrationDisabled(AcceptanceTester $I)
 	{
@@ -78,7 +78,7 @@ class SyncPastOrdersCest
 			'order_id'      => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
 		];
 
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Load Settings screen.
@@ -94,7 +94,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
 	{
@@ -107,15 +107,15 @@ class SyncPastOrdersCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Don't define a subscribe Event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Don't define a subscribe Event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Load Settings screen.
@@ -140,7 +140,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testNoButtonDisplayedWhenNoOrders(AcceptanceTester $I)
 	{
@@ -166,7 +166,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testNoButtonDisplayedWhenNoPastOrders(AcceptanceTester $I)
 	{
@@ -180,12 +180,12 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Don't define a subscribe Event
-			true // Send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Don't define a subscribe Event.
+			true // Send purchase data to ConvertKit.
 		);
 
 		// Load Settings screen.
@@ -205,7 +205,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSyncPastOrder(AcceptanceTester $I)
 	{
@@ -219,15 +219,15 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Don't define a subscribe Event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Don't define a subscribe Event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Load Settings screen.
@@ -297,7 +297,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSyncPastOrderCreatedInPreviousPluginVersion(AcceptanceTester $I)
 	{
@@ -311,16 +311,16 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Don't define a subscribe Event
-			true // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Don't define a subscribe Event.
+			true // Don't send purchase data to ConvertKit.
 		);
 
 		// Extract the Post ID from the Order ID, as the Custom Order Numbers Plugin does not prefix
-		// the order ID in the database .
+		// the order ID in the database.
 		$orderIDParts = explode('-', $result['order_id']);
 		$postID       = $orderIDParts[ count($orderIDParts) - 1 ];
 
@@ -333,7 +333,7 @@ class SyncPastOrdersCest
 			]
 		);
 
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Load Settings screen.
@@ -382,7 +382,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSyncPastOrderWithInvalidAPICredentials(AcceptanceTester $I)
 	{
@@ -396,15 +396,15 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product
-			false, // Don't display Opt-In checkbox on Checkout
-			false, // Don't check Opt-In checkbox on Checkout
-			false, // Form to subscribe email address to (not used)
-			false, // Don't define a subscribe Event
-			false // Don't send purchase data to ConvertKit
+			'simple', // Simple Product.
+			false, // Don't display Opt-In checkbox on Checkout.
+			false, // Don't check Opt-In checkbox on Checkout.
+			false, // Form to subscribe email address to (not used).
+			false, // Don't define a subscribe Event.
+			false // Don't send purchase data to ConvertKit.
 		);
 
-		// Login as the Administrator
+		// Login as the Administrator.
 		$I->loginAsAdmin();
 
 		// Load Settings screen.
@@ -452,7 +452,7 @@ class SyncPastOrdersCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

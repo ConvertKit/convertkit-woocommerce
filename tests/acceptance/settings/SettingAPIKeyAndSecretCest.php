@@ -12,7 +12,7 @@ class SettingAPIKeyAndSecretCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -25,7 +25,7 @@ class SettingAPIKeyAndSecretCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSaveBlankSettings(AcceptanceTester $I)
 	{
@@ -49,7 +49,7 @@ class SettingAPIKeyAndSecretCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSaveBlankSettingsWithIntegrationEnabled(AcceptanceTester $I)
 	{
@@ -80,7 +80,7 @@ class SettingAPIKeyAndSecretCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSaveValidAPICredentials(AcceptanceTester $I)
 	{
@@ -104,7 +104,7 @@ class SettingAPIKeyAndSecretCest
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testSaveInvalidAPICredentials(AcceptanceTester $I)
 	{
@@ -139,7 +139,7 @@ class SettingAPIKeyAndSecretCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

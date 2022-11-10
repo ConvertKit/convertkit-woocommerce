@@ -15,7 +15,7 @@ class SettingCustomFieldsCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -32,7 +32,7 @@ class SettingCustomFieldsCest
 	 *
 	 * @since   1.4.3
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testCustomFields(AcceptanceTester $I)
 	{
@@ -64,7 +64,7 @@ class SettingCustomFieldsCest
 	 *
 	 * @since   1.4.4
 	 *
-	 * @param   AcceptanceTester $I  Tester
+	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{

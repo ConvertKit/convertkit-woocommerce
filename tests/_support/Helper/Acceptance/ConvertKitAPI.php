@@ -1,18 +1,20 @@
 <?php
 namespace Helper\Acceptance;
 
-// Define any custom actions related to the ConvertKit API that
-// would be used across multiple tests.
-// These are then available in $I->{yourFunctionName}
-
+/**
+ * Helper methods and actions related to the ConvertKit API,
+ * which are then available using $I->{yourFunctionName}.
+ *
+ * @since   1.4.2
+ */
 class ConvertKitAPI extends \Codeception\Module
 {
 	/**
 	 * Check the given email address exists as a subscriber on ConvertKit.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   string           $emailAddress   Email Address
-	 * @param   mixed            $firstName      Name (false = don't check name matches)
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   string           $emailAddress   Email Address.
+	 * @param   mixed            $firstName      Name (false = don't check name matches).
 	 * @return  array                           Subscriber
 	 */
 	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
@@ -41,8 +43,8 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the given email address does not exists as a subscriber.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   string           $emailAddress   Email Address
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   string           $emailAddress   Email Address.
 	 */
 	public function apiCheckSubscriberDoesNotExist($I, $emailAddress)
 	{
@@ -62,9 +64,9 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the given email address and name exists as a subscriber on ConvertKit.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   string           $emailAddress   Email Address
-	 * @param   string           $name           Name
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   string           $emailAddress   Email Address.
+	 * @param   string           $name           Name.
 	 */
 	public function apiCheckSubscriberEmailAndNameExists($I, $emailAddress, $name)
 	{
@@ -88,10 +90,10 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the given order ID exists as a purchase on ConvertKit.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   int              $orderID        Order ID
-	 * @param   string           $emailAddress   Email Address
-	 * @param   int              $productID      Product ID
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID        Order ID.
+	 * @param   string           $emailAddress   Email Address.
+	 * @param   int              $productID      Product ID.
 	 */
 	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
@@ -106,7 +108,7 @@ class ConvertKitAPI extends \Codeception\Module
 		// Iterate through the array of products, to find a pid matching the Product ID.
 		$productExistsInPurchase = false;
 		foreach ($purchase['products'] as $product) {
-			if ($productID == $product['pid']) {
+			if ($productID === (int) $product['pid']) {
 				$productExistsInPurchase = true;
 				break;
 			}
@@ -119,9 +121,9 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the given order ID does not exist as a purchase on ConvertKit.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   int              $orderID        Order ID
-	 * @param   string           $emailAddress   Email Address
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID        Order ID.
+	 * @param   string           $emailAddress   Email Address.
 	 */
 	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
 	{
@@ -141,8 +143,8 @@ class ConvertKitAPI extends \Codeception\Module
 	 * We cannot use /purchases/{id} as {id} is the ConvertKit ID, not the WooCommerce Order ID (which
 	 * is stored in the transaction_id).
 	 *
-	 * @param   array $purchases  Purchases Data
-	 * @param   int   $orderID    Order ID
+	 * @param   array $purchases  Purchases Data.
+	 * @param   int   $orderID    Order ID.
 	 * @return  array
 	 */
 	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
@@ -158,8 +160,8 @@ class ConvertKitAPI extends \Codeception\Module
 
 		// Iterate through purchases to find one where the transaction ID matches the order ID.
 		foreach ($purchases as $purchase) {
-			// Skip if order ID does not match
-			if ($purchase['transaction_id'] != $orderID) {
+			// Skip if order ID does not match.
+			if ($purchase['transaction_id'] !== $orderID) {
 				continue;
 			}
 
@@ -186,7 +188,7 @@ class ConvertKitAPI extends \Codeception\Module
 		$data       = $purchases['purchases'];
 		$totalPages = $purchases['total_pages'];
 
-		if ($totalPages == 1) {
+		if ($totalPages === 1) {
 			return $data;
 		}
 
@@ -210,7 +212,7 @@ class ConvertKitAPI extends \Codeception\Module
 	 * Unsubscribes the given email address. Useful for clearing the API
 	 * between tests.
 	 *
-	 * @param   string $emailAddress   Email Address
+	 * @param   string $emailAddress   Email Address.
 	 */
 	public function apiUnsubscribe($emailAddress)
 	{
@@ -227,8 +229,8 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the subscriber array's custom field data is valid.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   array            $subscriber     Subscriber from API
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   array            $subscriber     Subscriber from API.
 	 */
 	public function apiCustomFieldDataIsValid($I, $subscriber)
 	{
@@ -242,8 +244,8 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the subscriber array's custom field data is empty.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester
-	 * @param   array            $subscriber     Subscriber from API
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   array            $subscriber     Subscriber from API.
 	 */
 	public function apiCustomFieldDataIsEmpty($I, $subscriber)
 	{
@@ -258,9 +260,9 @@ class ConvertKitAPI extends \Codeception\Module
 	 * Sends a request to the ConvertKit API, typically used to read an endpoint to confirm
 	 * that data in an Acceptance Test was added/edited/deleted successfully.
 	 *
-	 * @param   string $endpoint   Endpoint
-	 * @param   string $method     Method (GET|POST|PUT)
-	 * @param   array  $params     Endpoint Parameters
+	 * @param   string $endpoint   Endpoint.
+	 * @param   string $method     Method (GET|POST|PUT).
+	 * @param   array  $params     Endpoint Parameters.
 	 */
 	public function apiRequest($endpoint, $method = 'GET', $params = array())
 	{
