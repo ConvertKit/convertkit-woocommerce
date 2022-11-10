@@ -25,7 +25,6 @@ modules:
         - \Helper\Acceptance\ThirdPartyPlugin
         - \Helper\Acceptance\WooCommerce
         - \Helper\Acceptance\WPBulkEdit
-        - \Helper\Acceptance\WPClassicEditor
         - \Helper\Acceptance\WPMetabox
         - \Helper\Acceptance\WPGutenberg
         - \Helper\Acceptance\WPQuickEdit

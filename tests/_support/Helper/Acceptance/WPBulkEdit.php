@@ -26,28 +26,28 @@ class WPBulkEdit extends \Codeception\Module
 
 		// Apply configuration.
 		foreach ($configuration as $field => $attributes) {
-			// Field ID will be prefixed with wp-convertkit-bulk-edit-.
-			$fieldID = 'wp-convertkit-bulk-edit-' . $field;
-
 			// Check that the field exists.
-			$I->seeElementInDOM('#convertkit-bulk-edit #' . $fieldID);
+			$I->seeElementInDOM('#ckwc-bulk-edit #' . $field);
 
 			// Depending on the field's type, define its value.
 			switch ($attributes[0]) {
 				case 'select':
-					$I->selectOption('#convertkit-bulk-edit #' . $fieldID, $attributes[1]);
+					$I->selectOption('#ckwc-bulk-edit #' . $field, $attributes[1]);
 					break;
 				default:
-					$I->fillField('#convertkit-bulk-edit #' . $fieldID, $attributes[1]);
+					$I->fillField('#ckwc-bulk-edit #' . $field, $attributes[1]);
 					break;
 			}
 		}
 
 		// Scroll to Update button.
-		$I->scrollTo('#bulk_edit');
+		$I->scrollTo('input#bulk_edit');
 
 		// Click Update.
 		$I->click('Update');
+
+		// Wait for a notification to display.
+		$I->waitForElementVisible('div.updated.notice.is-dismissible');
 
 		// Confirm that Bulk Editing saved with no errors.
 		$I->seeInSource(count($postIDs) . ' ' . $postType . 's updated');
