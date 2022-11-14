@@ -77,7 +77,7 @@ class CKWC_Order {
 
 		// Send Purchase Data.
 		if ( $this->integration->get_option_bool( 'send_purchases' ) ) {
-			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 3 );
+			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 3 ); // @phpstan-ignore-line
 		}
 
 	}
