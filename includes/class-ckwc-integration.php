@@ -88,7 +88,7 @@ class CKWC_Integration extends WC_Integration {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
 			// Takes the form data and saves it to WooCommerce's settings.
-			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
+			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line
 
 			// Sanitizes and tests specific setting fields to ensure they're valid.
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );

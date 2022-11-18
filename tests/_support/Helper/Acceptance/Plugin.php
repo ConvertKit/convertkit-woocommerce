@@ -74,8 +74,10 @@ class Plugin extends \Codeception\Module
 	public function deactivateWooCommerceAndConvertKitPlugins($I)
 	{
 		$I->deactivateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
-		$I->deactivateThirdPartyPlugin($I, 'woocommerce');
+
+		// Deactivate WooCommerce Stripe Gateway before WooCommerce, to prevent WooCommerce throwing a fatal error.
 		$I->deactivateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
+		$I->deactivateThirdPartyPlugin($I, 'woocommerce');
 	}
 
 	/**
