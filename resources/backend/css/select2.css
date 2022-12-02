@@ -2,31 +2,60 @@
  * Additional Select2 styling to override WordPress styling defaults that
  * affect the layout of a Select2 dropdown.
  */
-.select2-container .select2-selection--single {
-	height: 30px;
+.ckwc-select2-container .select2-container,
+.wc-wp-version-gte-53 .ckwc-select2-container .select2-container {
+	font-size: 14px;
 }
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-	line-height: 30px;
+.ckwc-select2-container .select2-container .select2-selection--single,
+.wc-wp-version-gte-53 .ckwc-select2-container .select2-container .select2-selection--single {
+	height: 32px;
 }
-.select2-search--dropdown .select2-search__field {
+.ckwc-select2-container .select2-container--default .select2-selection--single .select2-selection__rendered,
+.wc-wp-version-gte-53 .ckwc-select2-container .select2-container--default .select2-selection--single .select2-selection__rendered {
+	line-height: 32px;
+}
+.ckwc-select2-container .select2-container .select2-selection--single .select2-selection__arrow,
+.wc-wp-version-gte-53 .ckwc-select2-container .select2-container .select2-selection--single .select2-selection__arrow {
+	height: 32px;
+}
+.ckwc-select2-container .select2-search--dropdown .select2-search__field {
 	line-height: 1;
 	min-height: 24px;
 }
-li.select2-results__option {
+.ckwc-select2-container li.select2-results__option {
 	margin: 0;
+}
+
+/* Set size of refresh button */
+.ckwc-select2-container button.ckwc-refresh-resources {
+	width: 36px;
+	height: 32px;
+}
+
+/* Align select and refresh button onto a single row */
+.ckwc-select2-container-grid {
+	display: grid;
+	grid-template-columns: auto 36px;
+	column-gap: 10px;
+	align-items: end;
 }
 
 /**
  * Force width of Select2 dropdowns, as using JS options dropdownAutoWidth=true and width='auto'
  * result in incorrect layout on some older browsers and our tests fail.
  */
-select + .select2-container {
-	min-width: 250px !important;
+.ckwc-select2-container select + .select2-container {
+	width: 50% !important;
+}
+.ckwc-select2-container-grid select + .select2-container {
+	width: 100% !important;
+	height: 32px;
 }
 @media screen and (max-width: 782px) {
-	select + .select2-container {
+	.ckwc-select2-container select + .select2-container {
 		width: 100% !important;
-		font-size: 16px;
-		line-height: 2;
+	}
+	.wc-wp-version-gte-53 .ckwc-select2-container .select2-container .select2-selection--single .select2-selection__arrow {
+		height: 32px;
 	}
 }
