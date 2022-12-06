@@ -54,6 +54,9 @@ class CKWC_Admin_Bulk_Edit {
 		// Enqueue JS.
 		wp_enqueue_script( 'ckwc-bulk-edit', CKWC_PLUGIN_URL . 'resources/backend/js/bulk-edit.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, true );
 
+		// Enqueue CSS.
+		wp_enqueue_style( 'ckwc-bulk-quick-edit', CKWC_PLUGIN_URL . '/resources/backend/css/bulk-quick-edit.css', array(), CKWC_PLUGIN_VERSION );
+
 		// Output Bulk Edit fields in the footer of the Administration screen.
 		add_action( 'in_admin_footer', array( $this, 'bulk_edit_fields' ), 10 );
 
