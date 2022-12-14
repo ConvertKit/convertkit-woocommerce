@@ -13,32 +13,32 @@ $read_actions_filters = new Read_Actions_Filters();
 
 // Read Plugin filters.
 $filter_docs = $read_actions_filters->run(
-    // Define Plugin folders to include in Docs.
-    array(
-        '../admin',
-        '../includes',
-        '../views',
-    ),
-    true, // Extract filters.
-    false, // Extract actions.
-    'html', // Return as HTML compatible with GitHub.
-    '\'convertkit_', // Only build Docs for actions starting with convertkit_.
-    false, // Change prefix.
-    true // Return by file.
+	// Define Plugin folders to include in Docs.
+	array(
+		'../admin',
+		'../includes',
+		'../views',
+	),
+	true, // Extract filters.
+	false, // Extract actions.
+	'html', // Return as HTML compatible with GitHub.
+	'\'convertkit_', // Only build Docs for actions starting with convertkit_.
+	false, // Change prefix.
+	true // Return by file.
 );
 $action_docs = $read_actions_filters->run(
-    // Define Plugin folders to include in Docs.
-    array(
-        '../admin',
-        '../includes',
-        '../views',
-    ),
-    false, // Extract filters.
-    true, // Extract actions.
-    'html', // Return as HTML compatible with GitHub.
-    '\'convertkit_', // Only build Docs for actions starting with convertkit_.
-    false, // Change prefix.
-    true // Return by file.
+	// Define Plugin folders to include in Docs.
+	array(
+		'../admin',
+		'../includes',
+		'../views',
+	),
+	false, // Extract filters.
+	true, // Extract actions.
+	'html', // Return as HTML compatible with GitHub.
+	'\'convertkit_', // Only build Docs for actions starting with convertkit_.
+	false, // Change prefix.
+	true // Return by file.
 );
 
 // Build HTML.
