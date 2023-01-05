@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,9 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.5.5 2023-01-05
+* Fix: PHP Warning: Trying to access array offset on value of type null
 
 ### 1.5.4 2022-12-12
 * Fix: iThemes Sync: Error when attempting to update WordPress Plugins or Themes using iThemes Sync when ConvertKit for WooCommerce active.
