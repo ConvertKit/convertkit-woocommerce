@@ -28,4 +28,13 @@ class CKWC_Resource_Custom_Fields extends CKWC_Resource {
 	 */
 	public $type = 'custom_fields';
 
+	/**
+	 * The key to use when alphabetically sorting resources.
+	 *
+	 * @since   1.5.7
+	 *
+	 * @var     string
+	 */
+	public $order_by = 'label';
+
 }
