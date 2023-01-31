@@ -52,6 +52,9 @@ class RefreshResourcesButtonCest
 		// Wait for button to change its state from disabled.
 		$I->waitForElementVisible('button.ckwc-refresh-resources:not(:disabled)');
 
+		// Check the order of the resource dropdown are alphabetical.
+		$I->checkSelectWithOptionGroupsOptionOrder($I, '#ckwc_subscription');
+
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist in the Select2 field, this will fail the test.
 		$I->fillSelect2Field($I, '#select2-ckwc_subscription-container', $_ENV['CONVERTKIT_API_FORM_NAME']);
@@ -93,6 +96,9 @@ class RefreshResourcesButtonCest
 		// Wait for button to change its state from disabled.
 		$I->waitForElementVisible('#ckwc-bulk-edit button.ckwc-refresh-resources:not(:disabled)');
 
+		// Check the order of the resource dropdown are alphabetical.
+		$I->checkSelectWithOptionGroupsOptionOrder($I, '#ckwc_subscription');
+
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist, this will fail the test.
 		$I->selectOption('#ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
@@ -124,6 +130,9 @@ class RefreshResourcesButtonCest
 
 		// Wait for button to change its state from disabled.
 		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources:not(:disabled)');
+
+		// Check the order of the resource dropdown are alphabetical.
+		$I->checkSelectWithOptionGroupsOptionOrder($I, '#ckwc_subscription');
 
 		// Change resource to value specified in the .env file, which should now be available.
 		// If the expected dropdown value does not exist, this will fail the test.

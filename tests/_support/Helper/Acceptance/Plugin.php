@@ -168,4 +168,107 @@ class Plugin extends \Codeception\Module
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 	}
+
+	/**
+	 * Helper method to determine the order of <option> values for the given select element
+	 * and values when <optgroup> is used within a <select>.
+	 *
+	 * @since   1.5.7
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   string           $selectElement <select> element.
+	 */
+	public function checkSelectWithOptionGroupsOptionOrder($I, $selectElement)
+	{
+		// Define options.
+		$options = [
+			'ckwc-sequences' => [ // <optgroup> ID.
+				'Another Sequence', // First item.
+				'WordPress Sequence', // Last item.
+			],
+			'ckwc-forms'     => [ // <optgroup> ID.
+				'AAA Test', // First item.
+				'WooCommerce Product Form', // Last item.
+			],
+			'ckwc-tags'      => [ // <optgroup> ID.
+				'gravityforms-tag-1', // First item.
+				'wordpress', // Last item.
+			],
+		];
+
+		// Confirm ordering.
+		foreach ( $options as $optgroup => $values ) {
+			foreach ( $values as $i => $value ) {
+				// Define the applicable CSS selector.
+				if ( $i === 0 ) {
+					$nth = 'first-child';
+				} elseif ( $i + 1 === count( $values ) ) {
+					$nth = 'last-child';
+				} else {
+					$nth = 'nth-child(' . ( $i + 1 ) . ')';
+				}
+
+				$I->assertEquals(
+					$I->grabTextFrom('select' . $selectElement . ' optgroup#' . $optgroup . ' option:' . $nth),
+					$value
+				);
+			}
+		}
+	}
+
+	/**
+	 * Helper method to determine that the order of the Form resources in the given
+	 * select element are in the expected alphabetical order.
+	 *
+	 * @since   1.5.7
+	 *
+	 * @param   AcceptanceTester $I                 AcceptanceTester.
+	 * @param   string           $selectElement     <select> element.
+	 * @param   bool|array       $prependOptions    Option elements that should appear before the resources.
+	 */
+	public function checkSelectCustomFieldOptionOrder($I, $selectElement, $prependOptions = false)
+	{
+		// Define options.
+		$options = [
+			'Billing Address', // First item.
+			'Test', // Last item.
+		];
+
+		// Prepend options, such as 'Default' and 'None' to the options, if required.
+		if ( $prependOptions ) {
+			$options = array_merge( $prependOptions, $options );
+		}
+
+		// Check order.
+		$I->checkSelectOptionOrder($I, $selectElement, $options);
+	}
+
+	/**
+	 * Helper method to determine the order of <option> values for the given select element
+	 * and values.
+	 *
+	 * @since   1.5.7
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   string           $selectElement <select> element.
+	 * @param   array            $values        <option> values.
+	 */
+	public function checkSelectOptionOrder($I, $selectElement, $values)
+	{
+		foreach ( $values as $i => $value ) {
+			// Define the applicable CSS selector.
+			if ( $i === 0 ) {
+				$nth = 'first-child';
+			} elseif ( $i + 1 === count( $values ) ) {
+				$nth = 'last-child';
+			} else {
+				$nth = 'nth-child(' . ( $i + 1 ) . ')';
+			}
+
+			$I->assertEquals(
+				$I->grabTextFrom('select' . $selectElement . ' option:' . $nth),
+				$value
+			);
+		}
+	}
 }
