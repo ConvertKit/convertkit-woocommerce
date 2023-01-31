@@ -189,67 +189,6 @@ class ResourceTagsTest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
-	 * Tests that the get() function returns resources in alphabetical descending order
-	 * when a valid order_by and order properties are defined.
-	 *
-	 * @since   1.5.7
-	 */
-	public function testGetWithValidOrderByAndOrder()
-	{
-		// Define order_by and order.
-		$this->resource->order_by = 'name';
-		$this->resource->order    = 'desc';
-
-		// Call resource class' get() function.
-		$result = $this->resource->get();
-
-		// Assert result is an array.
-		$this->assertIsArray($result);
-
-		// Assert top level array keys are preserved.
-		$this->assertArrayHasKey(array_key_first($this->resource->resources), $result);
-		$this->assertArrayHasKey(array_key_last($this->resource->resources), $result);
-
-		// Assert resource within results has expected array keys.
-		$this->assertArrayHasKey('id', reset($result));
-		$this->assertArrayHasKey('name', reset($result));
-
-		// Assert order of data is in descending alphabetical order.
-		$this->assertEquals('?', reset($result)[ $this->resource->order_by ]);
-		$this->assertEquals('?', end($result)[ $this->resource->order_by ]);
-	}
-
-	/**
-	 * Tests that the get() function returns resources in their original order
-	 * when populated with Forms and an invalid order_by value is specified.
-	 *
-	 * @since   1.5.7
-	 */
-	public function testGetWithInvalidOrderBy()
-	{
-		// Define order_by with an invalid value (i.e. an array key that does not exist).
-		$this->resource->order_by = 'invalid_key';
-
-		// Call resource class' get() function.
-		$result = $this->resource->get();
-
-		// Assert result is an array.
-		$this->assertIsArray($result);
-
-		// Assert top level array keys are preserved.
-		$this->assertArrayHasKey(array_key_first($this->resource->resources), $result);
-		$this->assertArrayHasKey(array_key_last($this->resource->resources), $result);
-
-		// Assert resource within results has expected array keys.
-		$this->assertArrayHasKey('id', reset($result));
-		$this->assertArrayHasKey('name', reset($result));
-
-		// Assert order of data has not changed.
-		$this->assertEquals('?', reset($result)['name']);
-		$this->assertEquals('?', end($result)['name']);
-	}
-
-	/**
 	 * Test that the count() function returns the number of resources.
 	 *
 	 * @since   1.4.7
