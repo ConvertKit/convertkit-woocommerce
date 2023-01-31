@@ -36,6 +36,15 @@ class SettingCustomFieldsCest
 	 */
 	public function testCustomFields(AcceptanceTester $I)
 	{
+		// Confirm Custom Fields are in alphabetical ascending order.
+		$I->checkSelectCustomFieldOptionOrder(
+			$I,
+			'#woocommerce_ckwc_custom_field_phone',
+			[
+				'(Don\'t send or map)',
+			]
+		);
+
 		// Set Order to Custom Field mappings.
 		$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');

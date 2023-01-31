@@ -78,6 +78,9 @@ class ProductCest
 		// Check that the dropdown field to select a Form, Tag or Sequence is displayed.
 		$I->seeElementInDOM('#ckwc_subscription');
 
+		// Check the order of the resource dropdown are alphabetical.
+		$I->checkSelectWithOptionGroupsOptionOrder($I, '#ckwc_subscription');
+
 		// Select Form.
 		$I->fillSelect2Field($I, '#select2-ckwc_subscription-container', $_ENV['CONVERTKIT_API_FORM_NAME']);
 

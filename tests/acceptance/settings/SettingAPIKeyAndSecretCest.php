@@ -93,6 +93,9 @@ class SettingAPIKeyAndSecretCest
 		// Confirm that the Subscription dropdown option is displayed.
 		$I->seeElement('#woocommerce_ckwc_subscription');
 
+		// Check the order of the resource dropdown are alphabetical.
+		$I->checkSelectWithOptionGroupsOptionOrder($I, '#woocommerce_ckwc_subscription');
+
 		// Confirm that an expected option can be selected.
 		$I->selectOption('#woocommerce_ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
 	}
