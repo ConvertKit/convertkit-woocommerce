@@ -190,8 +190,8 @@ class ResourceCustomFieldsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('label', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('Billing Address', reset($result)['name']);
-		$this->assertEquals('Test', end($result)['name']);
+		$this->assertEquals('Billing Address', reset($result)['label']);
+		$this->assertEquals('Test', end($result)['label']);
 	}
 
 	/**
