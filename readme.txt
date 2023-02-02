@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,10 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.5.7 2023-02-02
+* Fix: Settings: Subscription: List ConvertKit Sequences, Forms and Tags in alphabetical order
+* Fix: WooCommerce Products: List ConvertKit Sequences, Forms and Tags in alphabetical order
 
 ### 1.5.6 2023-01-16
 * Updated: ConvertKit WordPress Libraries to 1.3.0
