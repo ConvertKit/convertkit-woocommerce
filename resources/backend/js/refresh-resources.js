@@ -93,6 +93,9 @@ jQuery( document ).ready(
 								);
 							}
 
+							// Reload Select2 instances, so that they reflect the changes made.
+							$( '.ckwc-select2' ).select2();
+
 							// Enable button.
 							$( button ).prop( 'disabled', false );
 
