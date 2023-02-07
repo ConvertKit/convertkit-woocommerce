@@ -93,10 +93,6 @@ jQuery( document ).ready(
 								);
 							}
 
-							// Trigger a change event on the select field, to allow Select2 instances to repopulate their options.
-							// Reload Select2 instances, so that they reflect the changes made.
-							$( '.ckwc-select2' ).select2();
-
 							// Enable button.
 							$( button ).prop( 'disabled', false );
 
