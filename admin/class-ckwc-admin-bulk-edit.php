@@ -8,7 +8,7 @@
 
 /**
  * Registers settings fields for output when using WordPress' Bulk Edit functionality
- * in the WooCommerce Product WP_List_Table.
+ * in the WooCommerce Product and Coupon WP_List_Tables.
  *
  * @package CKWC
  * @author ConvertKit
@@ -40,14 +40,14 @@ class CKWC_Admin_Bulk_Edit {
 	}
 
 	/**
-	 * Enqueues scripts and CSS for Bulk Edit functionality in the WooCommerce Product WP_List_Table
+	 * Enqueues scripts and CSS for Bulk Edit functionality in the WooCommerce WP_List_Table
 	 *
 	 * @since   1.4.8
 	 */
 	public function enqueue_assets() {
 
-		// Bail if we're not on the Products WP_List_Table.
-		if ( ! $this->is_product_wp_list_table_screen() ) {
+		// Bail if we're not on a supported WP_List_Table.
+		if ( ! $this->is_supported_wp_list_table_screen() ) {
 			return;
 		}
 
@@ -158,13 +158,13 @@ class CKWC_Admin_Bulk_Edit {
 	}
 
 	/**
-	 * Checks if the request is for viewing the WooCommerce Add / Edit Product screen.
+	 * Checks if the request is for viewing a list of WooCommerce Products or Coupons.
 	 *
 	 * @since   1.4.8
 	 *
 	 * @return  bool
 	 */
-	private function is_product_wp_list_table_screen() {
+	private function is_supported_wp_list_table_screen() {
 
 		// Return false if we cannot reliably determine the current screen that is viewed,
 		// due to WordPress' get_current_screen() function being unavailable.
@@ -180,8 +180,8 @@ class CKWC_Admin_Bulk_Edit {
 			return false;
 		}
 
-		// Return false if we're not on the Product WP_List_Table.
-		if ( $screen->post_type !== 'product' ) {
+		// Return false if we're not on the Product or Coupon WP_List_Table.
+		if ( $screen->post_type !== 'product' && $screen->post_type !== 'shop_coupon' ) {
 			return false;
 		}
 
