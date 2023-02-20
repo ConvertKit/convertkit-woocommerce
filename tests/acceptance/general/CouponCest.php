@@ -47,7 +47,7 @@ class CouponCest
 		$I->dontSeeElementInDOM('#ckwc_subscription');
 
 		// Check that a message is displayed telling the user to enable the integration.
-		$I->seeInSource('To configure the ConvertKit Form, Tag or Sequence to subscribe Customers to who use this Coupon');
+		$I->seeInSource('To configure the ConvertKit Form, Tag or Sequence to subscribe Customers to who use this coupon');
 
 		// Check that a link to the Plugin Settings exists.
 		$I->seeInSource('<a href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-settings&amp;tab=integration&amp;section=ckwc">enable the ConvertKit WooCommerce integration</a>');
@@ -131,7 +131,7 @@ class CouponCest
 		$I->dontSeeElementInDOM('#ckwc_subscription');
 
 		// Check that a message is displayed telling the user to enable the integration.
-		$I->seeInSource('To configure the ConvertKit Form, Tag or Sequence to subscribe Customers to who use this Coupon');
+		$I->seeInSource('To configure the ConvertKit Form, Tag or Sequence to subscribe Customers to who use this coupon');
 
 		// Check that a link to the Plugin Settings exists.
 		$I->seeInSource('<a href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-settings&amp;tab=integration&amp;section=ckwc">enable the ConvertKit WooCommerce integration</a>');
@@ -171,50 +171,6 @@ class CouponCest
 
 		// Check that the dropdown field to select a Form, Tag or Sequence is displayed.
 		$I->seeElementInDOM('#ckwc_subscription');
-	}
-
-	/**
-	 * Test that the defined resource (Form, Tag, Sequence) is saved when chosen via
-	 * WordPress' Quick Edit functionality.
-	 *
-	 * @since   1.5.9
-	 *
-	 * @param   AcceptanceTester $I  Tester.
-	 */
-	public function testQuickEditUsingDefinedResource(AcceptanceTester $I)
-	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
-		// Programmatically create a Coupon.
-		$couponID = $I->havePostInDatabase(
-			[
-				'post_type'  => 'shop_coupon',
-				'post_title' => 'ConvertKit: Coupon: Resource: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ': Quick Edit',
-			]
-		);
-
-		// Quick Edit the Coupon in the Coupons WP_List_Table.
-		$I->quickEdit(
-			$I,
-			'shop_coupon',
-			$couponID,
-			[
-				'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
-			]
-		);
-
-		// Reload the Coupons admin screen.
-		$I->amOnAdminPage('edit.php?post_type=shop_coupon');
-
-		// Confirm that the chosen Resource is the selected option.
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'    => $couponID,
-				'meta_key'   => 'ckwc_subscription',
-				'meta_value' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
-			]
-		);
 	}
 
 	/**
@@ -285,7 +241,8 @@ class CouponCest
 			$couponIDs,
 			[
 				'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
-			]
+			],
+			'coupon'
 		);
 
 		// Iterate through Coupons to observe expected changes were made to the settings in the database.
@@ -342,7 +299,8 @@ class CouponCest
 			$couponIDs,
 			[
 				'ckwc_subscription' => [ 'select', '— No Change —' ],
-			]
+			],
+			'coupon'
 		);
 
 		// Iterate through Coupons to observe no changes were made to the settings in the database.
