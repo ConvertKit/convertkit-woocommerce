@@ -19,7 +19,16 @@
 </div>
 
 <p class="description">
-	<?php esc_html_e( 'The ConvertKit form, tag or sequence to subscribe customers to who purchase this product.', 'woocommerce-convertkit' ); ?>
+	<?php
+	switch ( $post->post_type ) {
+		case 'product':
+			esc_html_e( 'The ConvertKit form, tag or sequence to subscribe customers to who purchase this product.', 'woocommerce-convertkit' );
+			break;
+		case 'shop_coupon':
+			esc_html_e( 'The ConvertKit form, tag or sequence to subscribe customers to who use this coupon.', 'woocommerce-convertkit' );
+			break;
+	}
+	?>
 </p>
 
 <?php

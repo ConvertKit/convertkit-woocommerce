@@ -17,23 +17,11 @@ class CKWC_Admin_Product extends CKWC_Admin_Post_Type {
 
 	/**
 	 * The Post Type to register the metabox and settings against.
-	 * 
-	 * @since 	1.5.9
-	 * 
-	 * @var 	string
+	 *
+	 * @since   1.5.9
+	 *
+	 * @var     string
 	 */
 	public $post_type = 'product';
-
-	/**
-	 * Constructor
-	 *
-	 * @since   1.0.0
-	 */
-	public function __construct() {
-
-		// Call parent class constructor.
-		parent::__construct();
-
-	}
 
 }

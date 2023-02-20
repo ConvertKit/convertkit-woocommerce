@@ -7,7 +7,10 @@
  */
 
 /**
- * Registers a metabox on a WooCommerce Post Type, and handles saving settings.
+ * Registers a metabox on a WooCommerce Post Type, and handles saving its settings.
+ * Used primarily by Post Type classes to register the ConvertKit Integration setting,
+ * allowing a form, tag or sequence to be chosen for assignment to the purchase data
+ * based on the product or coupon used.
  *
  * @package CKWC
  * @author ConvertKit
@@ -16,10 +19,10 @@ class CKWC_Admin_Post_Type {
 
 	/**
 	 * The Post Type to register the metabox and settings against.
-	 * 
-	 * @since 	1.5.9
-	 * 
-	 * @var 	string
+	 *
+	 * @since   1.5.9
+	 *
+	 * @var     string
 	 */
 	public $post_type = '';
 
