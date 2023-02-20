@@ -55,8 +55,10 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-tags.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 
 // Load files that are only used in the WordPress Administration interface.
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-post-type.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-ajax.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-coupon.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';

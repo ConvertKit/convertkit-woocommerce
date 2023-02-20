@@ -126,7 +126,7 @@ class CKWC_Admin_Quick_Edit {
 		);
 
 		// Output view.
-		require_once CKWC_PLUGIN_PATH . '/views/backend/product/quick-edit.php';
+		require_once CKWC_PLUGIN_PATH . '/views/backend/post-type/quick-edit.php';
 
 	}
 

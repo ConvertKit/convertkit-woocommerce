@@ -153,7 +153,7 @@ class CKWC_Admin_Bulk_Edit {
 		);
 
 		// Output view.
-		require_once CKWC_PLUGIN_PATH . '/views/backend/product/bulk-edit.php';
+		require_once CKWC_PLUGIN_PATH . '/views/backend/post-type/bulk-edit.php';
 
 	}
 
