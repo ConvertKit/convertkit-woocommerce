@@ -41,8 +41,8 @@ class WPBulkEdit extends \Codeception\Module
 			}
 		}
 
-		// Scroll to Update button.
-		$I->scrollTo('input#bulk_edit');
+		// Scroll to Bulk Edit label.
+		$I->scrollTo('#bulk-edit-legend');
 
 		// Click Update.
 		$I->click('Update');
