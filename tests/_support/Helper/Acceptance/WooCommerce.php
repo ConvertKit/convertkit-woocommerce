@@ -103,6 +103,7 @@ class WooCommerce extends \Codeception\Module
 	 * @param   bool             $sendPurchaseData           Send WooCommerce Order data to ConvertKit Purchase Data API.
 	 * @param   mixed            $productFormTagSequence     Product Setting for Form, Tag or Sequence to subscribe the Customer to.
 	 * @param   bool             $customFields               Map WooCommerce fields to ConvertKit Custom Fields.
+	 * @param   mixed            $couponFormTagSequence      Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig(
 		$I,
@@ -221,7 +222,7 @@ class WooCommerce extends \Codeception\Module
 		// Apply Coupon Code.
 		if (isset($couponID)) {
 			$I->click('a.showcoupon');
-			$I->waitForElementVisible('input#coupon_code', 5);
+			$I->waitForElementNotVisible('.blockOverlay');
 			$I->fillField('input#coupon_code', '20off');
 			$I->click('Apply coupon');
 			$I->waitForText('Coupon code applied successfully.', 5, '.woocommerce-message');
@@ -239,6 +240,7 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		// Click Place order button.
+		$I->waitForElementNotVisible('.blockOverlay');
 		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.
@@ -483,9 +485,9 @@ class WooCommerce extends \Codeception\Module
 	 * @since   1.5.9
 	 *
 	 * @param   AcceptanceTester $I                      Acceptance Tester.
-	 * @param 	string 			 $couponCode 		     Couponn Code.
+	 * @param   string           $couponCode             Couponn Code.
 	 * @param   mixed            $couponFormTagSequence  Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
-	 * @return  int                                   	 Coupon ID
+	 * @return  int                                      Coupon ID
 	 */
 	public function wooCommerceCreateCoupon($I, $couponCode, $couponFormTagSequence = false)
 	{
@@ -498,19 +500,19 @@ class WooCommerce extends \Codeception\Module
 				'post_content' => $couponCode,
 				'meta_input'   => [
 					// Create a 20% off coupon. The amount doesn't matter for tests.
-					'discount_type' => 'percent',
-					'coupon_amount' => 20,
-					'individual_use' => 'no',
-					'usage_limit' => 0,
-					'usage_limit_per_user' => 0,
+					'discount_type'          => 'percent',
+					'coupon_amount'          => 20,
+					'individual_use'         => 'no',
+					'usage_limit'            => 0,
+					'usage_limit_per_user'   => 0,
 					'limit_usage_to_x_items' => 0,
-					'usage_count' => 0,
-					'date_expires' => NULL,
-					'free_shipping' => 'no',
-					'exclude_sales_items' => 'no',
+					'usage_count'            => 0,
+					'date_expires'           => null,
+					'free_shipping'          => 'no',
+					'exclude_sales_items'    => 'no',
 
 					// ConvertKit Integration Form/Tag/Sequence.
-					'ckwc_subscription'  => ( $couponFormTagSequence ? $couponFormTagSequence : '' ),
+					'ckwc_subscription'      => ( $couponFormTagSequence ? $couponFormTagSequence : '' ),
 				],
 			]
 		);

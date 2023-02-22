@@ -142,7 +142,7 @@ class CKWC_Order {
 			 * @param   int    $order_id        WooCommerce Order ID.
 			 * @param   string $status_old      Order's Old Status.
 			 * @param   string $status_new      Order's New Status.
-			 * @param   int    $product_id 		Product ID.
+			 * @param   int    $product_id      Product ID.
 			 */
 			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new, $item['product_id'] );
 
@@ -158,7 +158,7 @@ class CKWC_Order {
 		// Get coupon-specific subscription settings.
 		foreach ( $order->get_coupon_codes() as $coupon_code ) {
 			// Get the WC_Coupon object.
-    		$coupon = new WC_Coupon( $coupon_code );
+			$coupon = new WC_Coupon( $coupon_code );
 
 			// Get the Form, Tag or Sequence for this Coupon.
 			$resource_id = get_post_meta( $coupon->get_id(), 'ckwc_subscription', true );
@@ -172,7 +172,7 @@ class CKWC_Order {
 			 * @param   int    $order_id        WooCommerce Order ID.
 			 * @param   string $status_old      Order's Old Status.
 			 * @param   string $status_new      Order's New Status.
-			 * @param   int    $coupon_id 		Coupon ID.
+			 * @param   int    $coupon_id       Coupon ID.
 			 */
 			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id_coupon', $resource_id, $order_id, $status_old, $status_new, $coupon->get_id() );
 
