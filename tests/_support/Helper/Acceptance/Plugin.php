@@ -85,15 +85,118 @@ class Plugin extends \Codeception\Module
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   AcceptanceTester $I          Acceptance Tester.
-	 * @param   mixed            $apiKey     API Key (if specified, used instead of CONVERTKIT_API_KEY).
-	 * @param   mixed            $apiSecret  API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
+	 * @param   AcceptanceTester $I          			Acceptance Tester.
+	 * @param   bool|string      $apiKey     			API Key (if specified, used instead of CONVERTKIT_API_KEY).
+	 * @param   bool|string      $apiSecret  			API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
+	 * @param 	string 			 $subscriptionEvent 	Subscribe Event.
+	 * @param 	bool|string 	 $subscription 			Form, Tag or Sequence to subscribe customer to.
+	 * @param 	string 			 $nameFormat 			Name Format.
+	 * @param 	bool 			 $mapCustomFields 		Map Order data to Custom Fields.
+	 * @param 	bool 			 $displayOptIn 		 	Display Opt-In Checkbox.
+	 * @param 	bool 			 $sendPurchaseDataEvent Send Purchase Data to ConvertKit on Order Event.
 	 */
-	public function setupConvertKitPlugin($I, $apiKey = false, $apiSecret = false)
+	public function setupConvertKitPlugin(
+		$I,
+		$apiKey = false,
+		$apiSecret = false,
+		$subscriptionEvent = 'pending',
+		$subscription = false,
+		$nameFormat = 'first',
+		$mapCustomFields = false,
+		$displayOptIn = false,
+		$sendPurchaseDataEvent = false
+	)
 	{
-		// Determine API Key and Secret to use.
-		$convertKitAPIKey    = ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] );
-		$convertKitAPISecret = ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] );
+		// Define Plugin's settings.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'	   					=> 'yes',
+				'api_key'      					=> ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] ),
+				'api_secret'   					=> ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] ),
+				'event' 	   					=> $subscriptionEvent,
+				'subscription' 	   				=> ( $subscription ? $subscription : '' ),
+				'name_format' 	   				=> $nameFormat,
+
+				// Custom Field mappings.
+				'custom_field_phone' 	   		=> ( $mapCustomFields ? 'phone_number' : '' ),
+				'custom_field_billing_address' 	=> ( $mapCustomFields ? 'billing_address' : '' ),
+				'custom_field_shipping_address' => ( $mapCustomFields ? 'shipping_address' : '' ),
+				'custom_field_payment_method' 	=> ( $mapCustomFields ? 'payment_method' : '' ),
+				'custom_field_customer_note' 	=> ( $mapCustomFields ? 'notes' : '' ),
+
+				// Opt-In Checkbox.
+				'display_opt_in' 	   			=> ( $displayOptIn ? 'yes' : 'no' ),
+				'opt_in_label' 	   				=> 'Opt In to Newsletter',
+				'opt_in_status' 	   			=> 'checked',
+				'opt_in_location' 	   			=> $optInLocation,
+
+				// Purchase Data.
+				'send_purchases'				=> ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
+				'send_purchases_event'			=> ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
+
+				// Debug.
+				'debug' 						=> 'yes',
+			]
+		);
+
+		/*
+		// Define Opt In setting.
+		if ($displayOptIn) {
+			$I->checkOption('#woocommerce_ckwc_display_opt_in');
+		} else {
+			$I->uncheckOption('#woocommerce_ckwc_display_opt_in');
+		}
+
+		// Define Subscription Event setting.
+		if ($subscriptionEvent) {
+			$I->selectOption('#woocommerce_ckwc_event', $subscriptionEvent);
+		}
+
+		// Define Send Purchase Data setting.
+		if ($sendPurchaseData) {
+			$I->checkOption('#woocommerce_ckwc_send_purchases');
+
+			// If sendPurchaseData is true, set send purchase data event to processing.
+			// Otherwise set to the string value of sendPurchaseData i.e. completed.
+			$sendPurchaseDataEvent = ( ( $sendPurchaseData === true ) ? 'processing' : $sendPurchaseData );
+			$I->selectOption('#woocommerce_ckwc_send_purchases_event', $sendPurchaseDataEvent);
+		} else {
+			$I->uncheckOption('#woocommerce_ckwc_send_purchases');
+		}
+
+		// Save.
+		$I->click('Save changes');
+
+		// Define Form, Tag or Sequence to subscribe the Customer to, now that the API credentials are
+		// saved and the Forms, Tags and Sequences are listed.
+		if ($pluginFormTagSequence) {
+			$I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', $pluginFormTagSequence);
+		} else {
+			$I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', 'Select a subscription option...');
+		}
+
+		// Define Order to Custom Field mappings, now that the API credentials are
+		// saved and the Forms, Tags and Sequences are listed.
+		if ($customFields) {
+			$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
+			$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
+			$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
+			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
+		} else {
+			$I->selectOption('#woocommerce_ckwc_custom_field_phone', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', '(Don\'t send or map)');
+			$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', '(Don\'t send or map)');
+		}
+
+		// Save.
+		$I->click('Save changes');
+
+		// Wait until the settings page reloads, to avoid a browser alert later that navigating away will lose unsaved changes.
+		$I->waitForElement('#woocommerce_ckwc_enabled');
 
 		// Go to the Plugin's Settings Screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -115,6 +218,7 @@ class Plugin extends \Codeception\Module
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');
 		$I->seeInField('woocommerce_ckwc_api_key', $convertKitAPIKey);
 		$I->seeInField('woocommerce_ckwc_api_secret', $convertKitAPISecret);
+		*/
 	}
 
 	/**
