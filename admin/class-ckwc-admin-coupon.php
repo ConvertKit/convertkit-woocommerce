@@ -1,19 +1,19 @@
 <?php
 /**
- * ConvertKit Admin Product class.
+ * ConvertKit Admin Coupon class.
  *
  * @package CKWC
  * @author ConvertKit
  */
 
 /**
- * Registers a metabox on WooCommerce Products and saves its settings when the
+ * Registers a metabox on WooCommerce Coupons and saves its settings when the
  * Product is saved in the WordPress Administration interface.
  *
  * @package CKWC
  * @author ConvertKit
  */
-class CKWC_Admin_Product extends CKWC_Admin_Post_Type {
+class CKWC_Admin_Coupon extends CKWC_Admin_Post_Type {
 
 	/**
 	 * The Post Type to register the metabox and settings against.
@@ -22,6 +22,6 @@ class CKWC_Admin_Product extends CKWC_Admin_Post_Type {
 	 *
 	 * @var     string
 	 */
-	public $post_type = 'product';
+	public $post_type = 'shop_coupon';
 
 }

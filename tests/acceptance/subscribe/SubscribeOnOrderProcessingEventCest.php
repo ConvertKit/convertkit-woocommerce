@@ -482,6 +482,141 @@ class SubscribeOnOrderProcessingEventCest
 	}
 
 	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The WooCommerce Coupon used defines a Form (separate to the Plugin settings), and
+	 * - The Customer purchases a 'Simple' WooCommerce Product with the WooCommerce Coupon, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProductWithCouponForm(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			false, // Don't send purchase data to ConvertKit.
+			false, // No Product level Form, Tag or Sequence.
+			false, // No Custom Field mapping.
+			'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] // Coupon level Form to subscribe email address to.
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
+		// in the integration's settings.
+		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The WooCommerce Coupon used defines a Tag (separate to the Plugin settings), and
+	 * - The Customer purchases a 'Simple' WooCommerce Product with the WooCommerce Coupon, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 *
+	 * @since   1.4.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProductWithCouponTag(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			false, // Don't send purchase data to ConvertKit.
+			false, // No Product level Form, Tag or Sequence.
+			false, // No Custom Field mapping.
+			'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'] // Coupon level Tag to subscribe email address to.
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
+		// in the integration's settings.
+		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Tag.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']');
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The WooCommerce Coupon used defines a Sequence (separate to the Plugin settings), and
+	 * - The Customer purchases a 'Simple' WooCommerce Product with the WooCommerce Coupon, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 *
+	 * @since   1.5.9
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProductWithCouponSequence(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			false, // Don't send purchase data to ConvertKit.
+			false, // No Product level Form, Tag or Sequence.
+			false, // No Custom Field mapping.
+			'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] // Coupon level Sequence to subscribe email address to.
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
+		// in the integration's settings.
+		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']');
+	}
+
+	/**
 	 * Test that the Customer is not resubscribed ConvertKit when:
 	 * - The opt in checkbox is enabled in the integration Settings, and
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and

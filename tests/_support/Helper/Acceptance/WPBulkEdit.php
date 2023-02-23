@@ -18,8 +18,9 @@ class WPBulkEdit extends \Codeception\Module
 	 * @param   string           $postType       Programmatic Post Type.
 	 * @param   array            $postIDs        Post IDs.
 	 * @param   array            $configuration  Configuration (field => value key/value array).
+	 * @param   bool             $noticePostType The post type name expected in the notice (false = use $postType).
 	 */
-	public function bulkEdit($I, $postType, $postIDs, $configuration)
+	public function bulkEdit($I, $postType, $postIDs, $configuration, $noticePostType = false)
 	{
 		// Open Bulk Edit form for the Posts.
 		$I->openBulkEdit($I, $postType, $postIDs);
@@ -40,8 +41,8 @@ class WPBulkEdit extends \Codeception\Module
 			}
 		}
 
-		// Scroll to Update button.
-		$I->scrollTo('input#bulk_edit');
+		// Scroll to Bulk Edit label.
+		$I->scrollTo('#bulk-edit-legend');
 
 		// Click Update.
 		$I->click('Update');
@@ -50,7 +51,7 @@ class WPBulkEdit extends \Codeception\Module
 		$I->waitForElementVisible('div.updated.notice.is-dismissible');
 
 		// Confirm that Bulk Editing saved with no errors.
-		$I->seeInSource(count($postIDs) . ' ' . $postType . 's updated');
+		$I->seeInSource(count($postIDs) . ' ' . ( $noticePostType ? $noticePostType : $postType ) . 's updated');
 	}
 
 	/**

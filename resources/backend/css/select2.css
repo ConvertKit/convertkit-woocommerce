@@ -59,3 +59,8 @@
 		height: 32px;
 	}
 }
+
+/**
+ * Add margins / spacing to layout in ConvertKit Integration meta box on WooCommerce Add / Edit Product
+ */
+#ckwc .ckwc-select2-container { margin: 10px 0; }
