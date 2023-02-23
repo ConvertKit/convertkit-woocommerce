@@ -101,9 +101,6 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
@@ -173,9 +170,6 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Create Product and Checkout for this test, sending the Order
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
@@ -211,9 +205,6 @@ class SyncPastOrdersCest
 	{
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
-
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
@@ -304,9 +295,6 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
@@ -388,9 +376,6 @@ class SyncPastOrdersCest
 	{
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
-
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
