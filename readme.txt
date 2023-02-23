@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,9 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.5.9 2023-02-23
+* Added: WooCommerce Coupons: Option to specify Form, Tag or Sequence to subscribe customer to if a specific coupon is applied at checkout
 
 ### 1.5.8 2023-02-14
 * Fix: WooCommerce Products: Refresh Sequences, Forms and Tags when refresh button clicked

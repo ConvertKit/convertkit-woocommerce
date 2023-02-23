@@ -2,21 +2,21 @@
 # This file is distributed under the same license as the ConvertKit for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: ConvertKit for WooCommerce 1.5.8\n"
+"Project-Id-Version: ConvertKit for WooCommerce 1.5.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-02-14T13:10:06+00:00\n"
+"POT-Creation-Date: 2023-02-23T15:59:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: woocommerce-convertkit\n"
 
 #. Plugin Name of the plugin
-#: views/backend/product/bulk-edit.php:11
-#: views/backend/product/quick-edit.php:11
+#: views/backend/post-type/bulk-edit.php:11
+#: views/backend/post-type/quick-edit.php:11
 msgid "ConvertKit for WooCommerce"
 msgstr ""
 
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: admin/class-ckwc-admin-product.php:89
+#: admin/class-ckwc-admin-post-type.php:100
 msgid "ConvertKit Integration"
 msgstr ""
 
@@ -436,54 +436,54 @@ msgid "Your ConvertKit API Key appears to be invalid. Please double check the va
 msgstr ""
 
 #. translators: Resource Type
-#: includes/class-ckwc-order.php:232
+#: includes/class-ckwc-order.php:267
 msgid "Resource type %s is not supported in CKWC_Order::subscribe_customer()"
 msgstr ""
 
 #. translators: %1$s: Form Name, %2$s: Form ID
-#: includes/class-ckwc-order.php:265
+#: includes/class-ckwc-order.php:300
 msgid "[ConvertKit] Customer subscribed to the Form: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Tag Name, %2$s: Tag ID
-#: includes/class-ckwc-order.php:282
+#: includes/class-ckwc-order.php:317
 msgid "[ConvertKit] Customer subscribed to the Tag: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Sequence Name, %2$s: Sequence ID
-#: includes/class-ckwc-order.php:300
+#: includes/class-ckwc-order.php:335
 msgid "[ConvertKit] Customer subscribed to the Sequence: %1$s [%2$s]"
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:344
+#: includes/class-ckwc-order.php:379
 msgid "Order ID %s could not be found in WooCommerce."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:358
+#: includes/class-ckwc-order.php:393
 msgid "Order ID %s has already been sent to ConvertKit."
 msgstr ""
 
-#: includes/class-ckwc-order.php:389
+#: includes/class-ckwc-order.php:424
 msgid "[ConvertKit] Purchase Data skipped, as this Order has no Products"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:440
+#: includes/class-ckwc-order.php:475
 msgid "[ConvertKit] Send Purchase Data Error: %1$s %2$s"
 msgstr ""
 
-#: includes/class-ckwc-order.php:453
+#: includes/class-ckwc-order.php:488
 msgid "[ConvertKit] Purchase Data sent successfully"
 msgstr ""
 
 #. translators: %1$s: PHP class name
-#: includes/class-wp-ckwc.php:191
+#: includes/class-wp-ckwc.php:192
 msgid "ConvertKit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>"
 msgstr ""
 
-#: includes/class-wp-ckwc.php:201
+#: includes/class-wp-ckwc.php:202
 msgid "ConvertKit for WooCommerce Error"
 msgstr ""
 
@@ -491,23 +491,27 @@ msgstr ""
 msgid "(Don't send or map)"
 msgstr ""
 
-#: views/backend/product/bulk-edit.php:18
-#: views/backend/product/meta-box.php:16
-#: views/backend/product/quick-edit.php:18
+#: views/backend/post-type/bulk-edit.php:18
+#: views/backend/post-type/meta-box.php:16
+#: views/backend/post-type/quick-edit.php:18
 msgid "Refresh sequences, forms and tags from ConvertKit account"
 msgstr ""
 
 #. translators: %1$s: Post Type Singular Name, %2$s: Link to Integration Settings
-#: views/backend/product/disabled.php:15
-msgid "To configure the ConvertKit form, tag or sequence to subscribe customers to who purchase this %1$s, %2$s and enter a valid API Key and API Secret."
+#: views/backend/post-type/disabled.php:15
+msgid "To configure the ConvertKit form, tag or sequence to subscribe customers to who use this %1$s, %2$s and enter a valid API Key and API Secret."
 msgstr ""
 
-#: views/backend/product/disabled.php:17
+#: views/backend/post-type/disabled.php:17
 msgid "enable the ConvertKit WooCommerce integration"
 msgstr ""
 
-#: views/backend/product/meta-box.php:22
+#: views/backend/post-type/meta-box.php:25
 msgid "The ConvertKit form, tag or sequence to subscribe customers to who purchase this product."
+msgstr ""
+
+#: views/backend/post-type/meta-box.php:28
+msgid "The ConvertKit form, tag or sequence to subscribe customers to who use this coupon."
 msgstr ""
 
 #. translators: Plugin Name
