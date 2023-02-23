@@ -122,9 +122,13 @@ class CKWC_Order {
 		// Custom Fields now.
 		$fields = $this->custom_field_data( $order );
 
-		// Build an array of Forms, Tags and Sequences to subscribe the Customer to, based on
-		// the global integration settings and any Product-specific settings.
+		// Build an array of Forms, Tags and Sequences to subscribe the Customer to, based on:
+		// - the global integration's setting,
+		// - any product-specific settings,
+		// - any coupon-specific settings.
 		$subscriptions = array( $this->integration->get_option( 'subscription' ) );
+
+		// Get product-specific subscription settings.
 		foreach ( $order->get_items() as $item ) {
 			// Get the Form, Tag or Sequence for this Product.
 			$resource_id = get_post_meta( $item['product_id'], 'ckwc_subscription', true );
@@ -134,14 +138,45 @@ class CKWC_Order {
 			 *
 			 * @since   1.4.2
 			 *
-			 * @param   mixed   $resource_id    Form, Tag or Sequence ID | empty string.
+			 * @param   mixed  $resource_id     Form, Tag or Sequence ID | empty string.
 			 * @param   int    $order_id        WooCommerce Order ID.
 			 * @param   string $status_old      Order's Old Status.
 			 * @param   string $status_new      Order's New Status.
+			 * @param   int    $product_id      Product ID.
 			 */
-			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new );
+			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new, $item['product_id'] );
 
 			// If no resource is specified for this Product, don't add it to the array.
+			if ( empty( $resource_id ) ) {
+				continue;
+			}
+
+			// Add to array of resources to subscribe the Customer to.
+			$subscriptions[] = $resource_id;
+		}
+
+		// Get coupon-specific subscription settings.
+		foreach ( $order->get_coupon_codes() as $coupon_code ) {
+			// Get the WC_Coupon object.
+			$coupon = new WC_Coupon( $coupon_code );
+
+			// Get the Form, Tag or Sequence for this Coupon.
+			$resource_id = get_post_meta( $coupon->get_id(), 'ckwc_subscription', true );
+
+			/**
+			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Coupon.
+			 *
+			 * @since   1.5.9
+			 *
+			 * @param   mixed  $resource_id     Form, Tag or Sequence ID | empty string.
+			 * @param   int    $order_id        WooCommerce Order ID.
+			 * @param   string $status_old      Order's Old Status.
+			 * @param   string $status_new      Order's New Status.
+			 * @param   int    $coupon_id       Coupon ID.
+			 */
+			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id_coupon', $resource_id, $order_id, $status_old, $status_new, $coupon->get_id() );
+
+			// If no resource is specified for this Coupon, don't add it to the array.
 			if ( empty( $resource_id ) ) {
 				continue;
 			}

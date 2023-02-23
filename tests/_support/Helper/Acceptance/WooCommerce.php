@@ -103,6 +103,7 @@ class WooCommerce extends \Codeception\Module
 	 * @param   bool             $sendPurchaseData           Send WooCommerce Order data to ConvertKit Purchase Data API.
 	 * @param   mixed            $productFormTagSequence     Product Setting for Form, Tag or Sequence to subscribe the Customer to.
 	 * @param   bool             $customFields               Map WooCommerce fields to ConvertKit Custom Fields.
+	 * @param   mixed            $couponFormTagSequence      Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig(
 		$I,
@@ -113,7 +114,8 @@ class WooCommerce extends \Codeception\Module
 		$subscriptionEvent = false,
 		$sendPurchaseData = false,
 		$productFormTagSequence = false,
-		$customFields = false
+		$customFields = false,
+		$couponFormTagSequence = false
 	)
 	{
 		// Define Opt In setting.
@@ -200,6 +202,11 @@ class WooCommerce extends \Codeception\Module
 				break;
 		}
 
+		// Create Coupon.
+		if ($couponFormTagSequence) {
+			$couponID = $I->wooCommerceCreateCoupon($I, '20off', $couponFormTagSequence);
+		}
+
 		// Define Email Address for this Test.
 		$emailAddress = $I->generateEmailAddress();
 
@@ -211,6 +218,16 @@ class WooCommerce extends \Codeception\Module
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod);
+
+		// Apply Coupon Code.
+		if (isset($couponID)) {
+			$I->click('a.showcoupon');
+			$I->waitForElementNotVisible('.blockOverlay');
+			$I->waitForElementVisible('input#coupon_code');
+			$I->fillField('input#coupon_code', '20off');
+			$I->click('Apply coupon');
+			$I->waitForText('Coupon code applied successfully.', 5, '.woocommerce-message');
+		}
 
 		// Handle Opt-In Checkbox.
 		if ($displayOptIn) {
@@ -224,6 +241,7 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		// Click Place order button.
+		$I->waitForElementNotVisible('.blockOverlay');
 		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.
@@ -463,6 +481,45 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Creates a Coupon in WooCommerce that can be used for tests.
+	 *
+	 * @since   1.5.9
+	 *
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
+	 * @param   string           $couponCode             Couponn Code.
+	 * @param   mixed            $couponFormTagSequence  Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @return  int                                      Coupon ID
+	 */
+	public function wooCommerceCreateCoupon($I, $couponCode, $couponFormTagSequence = false)
+	{
+		return $I->havePostInDatabase(
+			[
+				'post_type'    => 'shop_coupon',
+				'post_status'  => 'publish',
+				'post_name'    => $couponCode,
+				'post_title'   => $couponCode,
+				'post_content' => $couponCode,
+				'meta_input'   => [
+					// Create a 20% off coupon. The amount doesn't matter for tests.
+					'discount_type'          => 'percent',
+					'coupon_amount'          => 20,
+					'individual_use'         => 'no',
+					'usage_limit'            => 0,
+					'usage_limit_per_user'   => 0,
+					'limit_usage_to_x_items' => 0,
+					'usage_count'            => 0,
+					'date_expires'           => null,
+					'free_shipping'          => 'no',
+					'exclude_sales_items'    => 'no',
+
+					// ConvertKit Integration Form/Tag/Sequence.
+					'ckwc_subscription'      => ( $couponFormTagSequence ? $couponFormTagSequence : '' ),
+				],
+			]
+		);
+	}
+
+	/**
 	 * Adds the given Product ID to the Cart, loading the Checkout screen
 	 * and prefilling the standard WooCommerce Billing Fields.
 	 *
@@ -477,7 +534,7 @@ class WooCommerce extends \Codeception\Module
 	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod')
 	{
 		// Load the Product on the frontend site.
-		$I->amOnPage('/?p=' . $productID );
+		$I->amOnPage('/?p=' . $productID);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
