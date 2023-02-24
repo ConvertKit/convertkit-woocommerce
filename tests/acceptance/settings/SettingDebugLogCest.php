@@ -19,6 +19,9 @@ class SettingDebugLogCest
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
@@ -48,6 +51,29 @@ class SettingDebugLogCest
 
 		// Confirm that a ConvertKit Log File exists in the dropdown selection of logs.
 		$I->seeInSource('<option value="convertkit-' . date('Y-m-d'));
+	}
+
+	/**
+	 * Test that debug logging setting is honored when disabled at
+	 * WooCommerce > Settings > Integration > ConvertKit.
+	 *
+	 * @since   1.6.0
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testDebugDisabled(AcceptanceTester $I)
+	{
+		// Uncheck "Debug" checkbox.
+		$I->uncheckOption('#woocommerce_ckwc_debug');
+
+		// Save.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the setting saved.
+		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_debug');
 	}
 
 	/**

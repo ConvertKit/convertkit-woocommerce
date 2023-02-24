@@ -24,6 +24,9 @@ class SettingCustomFieldsCest
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
@@ -36,9 +39,6 @@ class SettingCustomFieldsCest
 	 */
 	public function testCustomFields(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Confirm Custom Fields are in alphabetical ascending order.
 		$I->checkSelectCustomFieldOptionOrder(
 			$I,

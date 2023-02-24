@@ -24,6 +24,9 @@ class SettingSubscribeEventCest
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
@@ -36,9 +39,6 @@ class SettingSubscribeEventCest
 	 */
 	public function testOrderPendingPaymentWithoutOptInCheckbox(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
-
 		// Set Subscribe Event = Order Order Pending payment.
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Pending payment');
 

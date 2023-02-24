@@ -17,6 +17,9 @@ class SettingAPIKeyAndSecretCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
@@ -29,9 +32,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveBlankSettings(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Click the Save Changes button.
 		$I->click('Save changes');
 
@@ -53,9 +53,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveBlankSettingsWithIntegrationEnabled(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
@@ -84,9 +81,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveValidAPICredentials(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
@@ -124,9 +118,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveInvalidAPICredentials(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 

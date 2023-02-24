@@ -23,6 +23,9 @@ class SettingNameFormatCest
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
