@@ -21,9 +21,6 @@ class SubscribeOnOrderCompletedEventCest
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
-
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
 	}
 
 	/**

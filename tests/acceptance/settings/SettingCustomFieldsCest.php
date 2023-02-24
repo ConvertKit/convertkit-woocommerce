@@ -36,6 +36,9 @@ class SettingCustomFieldsCest
 	 */
 	public function testCustomFields(AcceptanceTester $I)
 	{
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
 		// Confirm Custom Fields are in alphabetical ascending order.
 		$I->checkSelectCustomFieldOptionOrder(
 			$I,
