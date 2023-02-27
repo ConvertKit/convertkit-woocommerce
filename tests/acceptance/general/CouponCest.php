@@ -66,6 +66,9 @@ class CouponCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Navigate to Marketing > Coupons > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=shop_coupon');
 
@@ -218,6 +221,9 @@ class CouponCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Programmatically create two Coupons.
 		$couponIDs = array(
 			$I->havePostInDatabase(
@@ -269,6 +275,9 @@ class CouponCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Programmatically create two Coupons with a defined form.
 		$couponIDs = array(
@@ -327,6 +336,9 @@ class CouponCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Emulate the user searching for Coupons with a query string that yields no results.
 		$I->amOnAdminPage('edit.php?post_type=shop_coupon&s=nothing');

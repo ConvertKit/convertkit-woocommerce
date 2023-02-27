@@ -104,12 +104,7 @@ class SyncPastOrdersCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Don't define a subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Login as the Administrator.
@@ -210,12 +205,7 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Don't define a subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Login as the Administrator.
@@ -381,12 +371,7 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Don't define a subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Login as the Administrator.

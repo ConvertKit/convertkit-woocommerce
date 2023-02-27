@@ -75,12 +75,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -135,12 +130,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'virtual', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'virtual' // Simple Product.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -195,12 +185,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'zero', // Zero value Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'zero' // Zero value Simple Product.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -541,12 +526,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Create Product for this test.
@@ -629,12 +609,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Create Product for this test.
@@ -717,12 +692,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Create Product for this test.
@@ -766,7 +736,7 @@ class PurchaseDataCest
 			false, // Don't check Opt-In checkbox on Checkout.
 			false, // Form to subscribe email address to (not used).
 			false, // Subscribe Event.
-			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
+			'completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -807,7 +777,7 @@ class PurchaseDataCest
 			false, // Don't check Opt-In checkbox on Checkout.
 			false, // Form to subscribe email address to (not used).
 			false, // Subscribe Event.
-			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
+			'completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.

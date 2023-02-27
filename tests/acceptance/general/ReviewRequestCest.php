@@ -20,6 +20,9 @@ class ReviewRequestCest
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -41,9 +44,8 @@ class ReviewRequestCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Check that the options table does have a review request set.
@@ -73,8 +75,7 @@ class ReviewRequestCest
 			true, // Display Opt-In checkbox on Checkout.
 			false, // Don't check Opt-In checkbox on Checkout.
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Check that the options table does not have a review request set.

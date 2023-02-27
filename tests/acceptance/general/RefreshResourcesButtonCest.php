@@ -18,20 +18,7 @@ class RefreshResourcesButtonCest
 	{
 		// Activate and Setup ConvertKit plugin using API keys that have no resources (forms, sequences, tags).
 		$I->activateWooCommerceAndConvertKitPlugins($I);
-		$I->setupConvertKitPlugin($I, $_ENV['CONVERTKIT_API_KEY_NO_DATA'], $_ENV['CONVERTKIT_API_SECRET_NO_DATA']);
-
-		// Change API keys in database to ones that have ConvertKit Resources.
-		// We do this directly vs. via the settings screen, so that the Plugin's cached resources remain blank
-		// until a refresh button is clicked.
-		$I->haveOptionInDatabase(
-			'woocommerce_ckwc_settings',
-			[
-				'enabled'    => 'yes',
-				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
-				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
-				'debug'      => 'yes',
-			]
-		);
+		$I->setupConvertKitPlugin($I);
 	}
 
 	/**

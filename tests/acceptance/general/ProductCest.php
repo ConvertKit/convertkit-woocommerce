@@ -66,6 +66,9 @@ class ProductCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Navigate to Products > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
@@ -186,6 +189,9 @@ class ProductCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Programmatically create a Product.
 		$productID = $I->havePostInDatabase(
 			[
@@ -262,6 +268,9 @@ class ProductCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Programmatically create two PRoducts.
 		$productIDs = array(
 			$I->havePostInDatabase(
@@ -312,6 +321,9 @@ class ProductCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Programmatically create two Products with a defined form.
 		$productIDs = array(
@@ -369,6 +381,9 @@ class ProductCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Emulate the user searching for Products with a query string that yields no results.
 		$I->amOnAdminPage('edit.php?post_type=product&s=nothing');
