@@ -183,7 +183,7 @@ class ConvertKitAPI extends \Codeception\Module
 	 */
 	public function apiGetPurchases()
 	{
-		$purchases  = $this->apiRequest('purchases', 'GET');
+		$purchases = $this->apiRequest('purchases', 'GET');
 		return $purchases['purchases'];
 	}
 

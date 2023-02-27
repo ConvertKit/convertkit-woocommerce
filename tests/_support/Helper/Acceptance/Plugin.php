@@ -85,15 +85,15 @@ class Plugin extends \Codeception\Module
 	 *
 	 * @since   1.6.0
 	 *
-	 * @param   AcceptanceTester $I          			Acceptance Tester.
-	 * @param   bool|string      $apiKey     			API Key (if specified, used instead of CONVERTKIT_API_KEY).
-	 * @param   bool|string      $apiSecret  			API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
-	 * @param 	string 			 $subscriptionEvent 	Subscribe Event.
-	 * @param 	bool|string 	 $subscription 			Form, Tag or Sequence to subscribe customer to.
-	 * @param 	string 			 $nameFormat 			Name Format.
-	 * @param 	bool 			 $mapCustomFields 		Map Order data to Custom Fields.
-	 * @param 	bool 			 $displayOptIn 		 	Display Opt-In Checkbox.
-	 * @param 	bool 			 $sendPurchaseDataEvent Send Purchase Data to ConvertKit on Order Event.
+	 * @param   AcceptanceTester $I                     Acceptance Tester.
+	 * @param   bool|string      $apiKey                API Key (if specified, used instead of CONVERTKIT_API_KEY).
+	 * @param   bool|string      $apiSecret             API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
+	 * @param   string           $subscriptionEvent     Subscribe Event.
+	 * @param   bool|string      $subscription          Form, Tag or Sequence to subscribe customer to.
+	 * @param   string           $nameFormat            Name Format.
+	 * @param   bool             $mapCustomFields       Map Order data to Custom Fields.
+	 * @param   bool             $displayOptIn          Display Opt-In Checkbox.
+	 * @param   bool             $sendPurchaseDataEvent Send Purchase Data to ConvertKit on Order Event.
 	 */
 	public function setupConvertKitPlugin(
 		$I,
@@ -111,32 +111,32 @@ class Plugin extends \Codeception\Module
 		$I->haveOptionInDatabase(
 			'woocommerce_ckwc_settings',
 			[
-				'enabled'	   					=> 'yes',
-				'api_key'      					=> ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] ),
-				'api_secret'   					=> ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] ),
-				'event' 	   					=> $subscriptionEvent,
-				'subscription' 	   				=> ( $subscription ? $subscription : '' ),
-				'name_format' 	   				=> $nameFormat,
+				'enabled'                       => 'yes',
+				'api_key'                       => ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] ),
+				'api_secret'                    => ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] ),
+				'event'                         => $subscriptionEvent,
+				'subscription'                  => ( $subscription ? $subscription : '' ),
+				'name_format'                   => $nameFormat,
 
 				// Custom Field mappings.
-				'custom_field_phone' 	   		=> ( $mapCustomFields ? 'phone_number' : '' ),
-				'custom_field_billing_address' 	=> ( $mapCustomFields ? 'billing_address' : '' ),
+				'custom_field_phone'            => ( $mapCustomFields ? 'phone_number' : '' ),
+				'custom_field_billing_address'  => ( $mapCustomFields ? 'billing_address' : '' ),
 				'custom_field_shipping_address' => ( $mapCustomFields ? 'shipping_address' : '' ),
-				'custom_field_payment_method' 	=> ( $mapCustomFields ? 'payment_method' : '' ),
-				'custom_field_customer_note' 	=> ( $mapCustomFields ? 'notes' : '' ),
+				'custom_field_payment_method'   => ( $mapCustomFields ? 'payment_method' : '' ),
+				'custom_field_customer_note'    => ( $mapCustomFields ? 'notes' : '' ),
 
 				// Opt-In Checkbox.
-				'display_opt_in' 	   			=> ( $displayOptIn ? 'yes' : 'no' ),
-				'opt_in_label' 	   				=> 'I want to subscribe to the newsletter',
-				'opt_in_status' 	   			=> 'checked',
-				'opt_in_location' 	   			=> 'billing',
+				'display_opt_in'                => ( $displayOptIn ? 'yes' : 'no' ),
+				'opt_in_label'                  => 'I want to subscribe to the newsletter',
+				'opt_in_status'                 => 'checked',
+				'opt_in_location'               => 'billing',
 
 				// Purchase Data.
-				'send_purchases'				=> ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
-				'send_purchases_event'			=> ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
+				'send_purchases'                => ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
+				'send_purchases_event'          => ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
 
 				// Debug.
-				'debug' 						=> 'yes',
+				'debug'                         => 'yes',
 			]
 		);
 	}
@@ -166,46 +166,46 @@ class Plugin extends \Codeception\Module
 			'ckwc_custom_fields',
 			[
 				276271 => [
-				    'id' =>  276271,
-				    'name' =>  'ck_field_276271_phone_number',
-				    'key' =>  'phone_number',
-				    'label' =>  'Phone Number'
+					'id'    => 276271,
+					'name'  => 'ck_field_276271_phone_number',
+					'key'   => 'phone_number',
+					'label' => 'Phone Number',
 				],
 				276273 => [
-				    'id' =>  276273,
-				    'name' =>  'ck_field_276273_billing_address',
-				    'key' =>  'billing_address',
-				    'label' =>  'Billing Address'
+					'id'    => 276273,
+					'name'  => 'ck_field_276273_billing_address',
+					'key'   => 'billing_address',
+					'label' => 'Billing Address',
 				],
 				276295 => [
-				    'id' =>  276295,
-				    'name' =>  'ck_field_276295_payment_method',
-				    'key' =>  'payment_method',
-				    'label' =>  'Payment Method'
+					'id'    => 276295,
+					'name'  => 'ck_field_276295_payment_method',
+					'key'   => 'payment_method',
+					'label' => 'Payment Method',
 				],
 				264073 => [
-				    'id' =>  264073,
-				    'name' =>  'ck_field_264073_last_name',
-				    'key' =>  'last_name',
-				    'label' =>  'Last Name'
+					'id'    => 264073,
+					'name'  => 'ck_field_264073_last_name',
+					'key'   => 'last_name',
+					'label' => 'Last Name',
 				],
 				321150 => [
-				    'id' =>  321150,
-				    'name' =>  'ck_field_321150_test',
-				    'key' =>  'test',
-				    'label' =>  'Test'
+					'id'    => 321150,
+					'name'  => 'ck_field_321150_test',
+					'key'   => 'test',
+					'label' => 'Test',
 				],
 				276272 => [
-				    'id' =>  276272,
-				    'name' =>  'ck_field_276272_shipping_address',
-				    'key' =>  'shipping_address',
-				    'label' =>  'Shipping Address'
+					'id'    => 276272,
+					'name'  => 'ck_field_276272_shipping_address',
+					'key'   => 'shipping_address',
+					'label' => 'Shipping Address',
 				],
 				258240 => [
-				    'id' =>  258240,
-				    'name' =>  'ck_field_258240_notes',
-				    'key' =>  'notes',
-				    'label' =>  'Notes'
+					'id'    => 258240,
+					'name'  => 'ck_field_258240_notes',
+					'key'   => 'notes',
+					'label' => 'Notes',
 				],
 			]
 		);
@@ -313,18 +313,18 @@ class Plugin extends \Codeception\Module
 			'ckwc_sequences',
 			[
 				1030824 => [
-				    'id' => 1030824,
-				    'name' => 'WordPress Sequence',
-				    'hold' => false,
-				    'repeat' => false,
-				    'created_at' => '2022-01-04T13:00:15.000Z'
+					'id'         => 1030824,
+					'name'       => 'WordPress Sequence',
+					'hold'       => false,
+					'repeat'     => false,
+					'created_at' => '2022-01-04T13:00:15.000Z',
 				],
 				1341993 => [
-				    'id' => 1341993,
-				    'name' => 'Another Sequence',
-				    'hold' => false,
-				    'repeat' => false,
-				    'created_at' => '2023-01-30T17:25:54.000Z'
+					'id'         => 1341993,
+					'name'       => 'Another Sequence',
+					'hold'       => false,
+					'repeat'     => false,
+					'created_at' => '2023-01-30T17:25:54.000Z',
 				],
 			]
 		);
