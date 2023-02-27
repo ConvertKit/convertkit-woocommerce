@@ -103,6 +103,7 @@ class WooCommerce extends \Codeception\Module
 	 * @param   bool             $sendPurchaseData           Send WooCommerce Order data to ConvertKit Purchase Data API.
 	 * @param   mixed            $productFormTagSequence     Product Setting for Form, Tag or Sequence to subscribe the Customer to.
 	 * @param   bool             $customFields               Map WooCommerce fields to ConvertKit Custom Fields.
+	 * @param   string           $nameFormat                 Name format.
 	 * @param   mixed            $couponFormTagSequence      Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig(
