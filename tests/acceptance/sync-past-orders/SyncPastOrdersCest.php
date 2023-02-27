@@ -41,14 +41,6 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
-		// Disable the Integration.
-		$I->loadConvertKitSettingsScreen($I);
-		$I->checkOption('#woocommerce_ckwc_enabled');
-		$I->fillField('woocommerce_ckwc_api_key', '');
-		$I->fillField('woocommerce_ckwc_api_secret', '');
-		$I->uncheckOption('#woocommerce_ckwc_enabled');
-		$I->click('Save changes');
-
 		// Create Product.
 		$productName = 'Simple Product';
 		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);

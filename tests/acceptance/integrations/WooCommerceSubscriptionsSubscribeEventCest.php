@@ -25,6 +25,9 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -48,7 +51,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 			'subscription', // Subscription Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
 			'completed' // Subscribe on WooCommerce "Order Completed" event.
 		);
 
@@ -99,7 +102,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
 			'completed' // Subscribe on WooCommerce "Order Completed" event.
 		);
 

@@ -28,6 +28,9 @@ class PurchaseDataCest
 
 		// Setup Custom Order Numbers Plugin.
 		$I->setupCustomOrderNumbersPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**

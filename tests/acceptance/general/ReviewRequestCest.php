@@ -44,7 +44,7 @@ class ReviewRequestCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
 			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 

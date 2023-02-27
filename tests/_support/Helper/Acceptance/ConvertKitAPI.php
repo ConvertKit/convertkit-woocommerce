@@ -177,35 +177,14 @@ class ConvertKitAPI extends \Codeception\Module
 	}
 
 	/**
-	 * Returns all purchases from the API.
+	 * Returns the first 50 purchases from the API.
 	 *
 	 * @return  array
 	 */
 	public function apiGetPurchases()
 	{
-		// Get first page of purchases.
 		$purchases  = $this->apiRequest('purchases', 'GET');
-		$data       = $purchases['purchases'];
-		$totalPages = $purchases['total_pages'];
-
-		if ($totalPages === 1) {
-			return $data;
-		}
-
-		// Get additional pages of purchases.
-		for ($page = 2; $page <= $totalPages; $page++) {
-			$purchases = $this->apiRequest(
-				'purchases',
-				'GET',
-				[
-					'page' => $page,
-				]
-			);
-
-			$data = array_merge($data, $purchases['purchases']);
-		}
-
-		return $data;
+		return $purchases['purchases'];
 	}
 
 	/**

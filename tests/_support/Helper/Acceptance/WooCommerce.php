@@ -119,20 +119,6 @@ class WooCommerce extends \Codeception\Module
 		$couponFormTagSequence = false
 	)
 	{
-		/*
-		var_dump( 'productType=' . $productType );
-		var_dump( 'displayOptIn=' . $displayOptIn );
-		var_dump( 'checkOptIn=' . $checkOptIn );
-		var_dump( 'pluginFormTagSequence=' . $pluginFormTagSequence );
-		var_dump( 'subscriptionEvent=' . $subscriptionEvent );
-		var_dump( 'sendPurchaseData=' . $sendPurchaseData );
-		var_dump( 'productFormTagSequence=' . $productFormTagSequence );
-		var_dump( 'customFields=' . $customFields );
-		var_dump( 'nameFormat=' . $nameFormat );
-		var_dump( 'couponFormTagSequence=' . $couponFormTagSequence );
-		die();
-		*/
-
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
