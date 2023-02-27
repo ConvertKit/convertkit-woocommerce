@@ -127,9 +127,9 @@ class Plugin extends \Codeception\Module
 
 				// Opt-In Checkbox.
 				'display_opt_in' 	   			=> ( $displayOptIn ? 'yes' : 'no' ),
-				'opt_in_label' 	   				=> 'Opt In to Newsletter',
+				'opt_in_label' 	   				=> 'I want to subscribe to the newsletter',
 				'opt_in_status' 	   			=> 'checked',
-				'opt_in_location' 	   			=> ( $displayOptIn ? $displayOptIn : '' ),
+				'opt_in_location' 	   			=> 'billing',
 
 				// Purchase Data.
 				'send_purchases'				=> ( $sendPurchaseDataEvent ? 'yes' : 'no' ),

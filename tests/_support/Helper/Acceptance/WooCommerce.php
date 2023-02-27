@@ -115,9 +115,24 @@ class WooCommerce extends \Codeception\Module
 		$sendPurchaseData = false,
 		$productFormTagSequence = false,
 		$customFields = false,
+		$nameFormat = 'first',
 		$couponFormTagSequence = false
 	)
 	{
+		/*
+		var_dump( 'productType=' . $productType );
+		var_dump( 'displayOptIn=' . $displayOptIn );
+		var_dump( 'checkOptIn=' . $checkOptIn );
+		var_dump( 'pluginFormTagSequence=' . $pluginFormTagSequence );
+		var_dump( 'subscriptionEvent=' . $subscriptionEvent );
+		var_dump( 'sendPurchaseData=' . $sendPurchaseData );
+		var_dump( 'productFormTagSequence=' . $productFormTagSequence );
+		var_dump( 'customFields=' . $customFields );
+		var_dump( 'nameFormat=' . $nameFormat );
+		var_dump( 'couponFormTagSequence=' . $couponFormTagSequence );
+		die();
+		*/
+
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
@@ -125,7 +140,7 @@ class WooCommerce extends \Codeception\Module
 			$_ENV['CONVERTKIT_API_SECRET'],
 			$subscriptionEvent,
 			$pluginFormTagSequence,
-			'first',
+			$nameFormat,
 			$customFields,
 			$displayOptIn,
 			( ( $sendPurchaseData === true ) ? 'processing' : $sendPurchaseData )

@@ -57,9 +57,13 @@ class SettingNameFormatCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
+			false, // Don't send purchase data to ConvertKit.
+			false, // Don't define product level form, tag or sequence to subscribe to.
+			false, // Don't map custom fields.
+			'first', // Name format.
+			false // Don't define coupon level form, tag or sequence to subscribe to.
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -101,9 +105,13 @@ class SettingNameFormatCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
+			false, // Don't send purchase data to ConvertKit.
+			false, // Don't define product level form, tag or sequence to subscribe to.
+			false, // Don't map custom fields.
+			'last', // Name format.
+			false // Don't define coupon level form, tag or sequence to subscribe to.
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -145,9 +153,13 @@ class SettingNameFormatCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Pending payment', // Subscribe on WooCommerce "Order Pending payment" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
+			false, // Don't send purchase data to ConvertKit.
+			false, // Don't define product level form, tag or sequence to subscribe to.
+			false, // Don't map custom fields.
+			'both', // Name format.
+			false // Don't define coupon level form, tag or sequence to subscribe to.
 		);
 
 		// Confirm that the email address was now added to ConvertKit.

@@ -30,6 +30,9 @@ class SettingEnabledDisabledCest
 	 */
 	public function testIntegrationWhenDisabled(AcceptanceTester $I)
 	{
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
+
 		// Create Simple Product.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
