@@ -83,38 +83,321 @@ class Plugin extends \Codeception\Module
 	/**
 	 * Helper method to setup the Plugin's API Key and Secret.
 	 *
-	 * @since   1.9.6
+	 * @since   1.6.0
 	 *
-	 * @param   AcceptanceTester $I          Acceptance Tester.
-	 * @param   mixed            $apiKey     API Key (if specified, used instead of CONVERTKIT_API_KEY).
-	 * @param   mixed            $apiSecret  API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
+	 * @param   AcceptanceTester $I                     Acceptance Tester.
+	 * @param   bool|string      $apiKey                API Key (if specified, used instead of CONVERTKIT_API_KEY).
+	 * @param   bool|string      $apiSecret             API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
+	 * @param   string           $subscriptionEvent     Subscribe Event.
+	 * @param   bool|string      $subscription          Form, Tag or Sequence to subscribe customer to.
+	 * @param   string           $nameFormat            Name Format.
+	 * @param   bool             $mapCustomFields       Map Order data to Custom Fields.
+	 * @param   bool             $displayOptIn          Display Opt-In Checkbox.
+	 * @param   bool             $sendPurchaseDataEvent Send Purchase Data to ConvertKit on Order Event.
 	 */
-	public function setupConvertKitPlugin($I, $apiKey = false, $apiSecret = false)
+	public function setupConvertKitPlugin(
+		$I,
+		$apiKey = false,
+		$apiSecret = false,
+		$subscriptionEvent = 'pending',
+		$subscription = false,
+		$nameFormat = 'first',
+		$mapCustomFields = false,
+		$displayOptIn = false,
+		$sendPurchaseDataEvent = false
+	)
 	{
-		// Determine API Key and Secret to use.
-		$convertKitAPIKey    = ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] );
-		$convertKitAPISecret = ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] );
+		// Define Plugin's settings.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'                       => 'yes',
+				'api_key'                       => ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] ),
+				'api_secret'                    => ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] ),
+				'event'                         => $subscriptionEvent,
+				'subscription'                  => ( $subscription ? $subscription : '' ),
+				'name_format'                   => $nameFormat,
 
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
+				// Custom Field mappings.
+				'custom_field_phone'            => ( $mapCustomFields ? 'phone_number' : '' ),
+				'custom_field_billing_address'  => ( $mapCustomFields ? 'billing_address' : '' ),
+				'custom_field_shipping_address' => ( $mapCustomFields ? 'shipping_address' : '' ),
+				'custom_field_payment_method'   => ( $mapCustomFields ? 'payment_method' : '' ),
+				'custom_field_customer_note'    => ( $mapCustomFields ? 'notes' : '' ),
 
-		// Enable the Integration.
-		$I->checkOption('#woocommerce_ckwc_enabled');
+				// Opt-In Checkbox.
+				'display_opt_in'                => ( $displayOptIn ? 'yes' : 'no' ),
+				'opt_in_label'                  => 'I want to subscribe to the newsletter',
+				'opt_in_status'                 => 'checked',
+				'opt_in_location'               => 'billing',
 
-		// Complete API Fields.
-		$I->fillField('woocommerce_ckwc_api_key', $convertKitAPIKey);
-		$I->fillField('woocommerce_ckwc_api_secret', $convertKitAPISecret);
+				// Purchase Data.
+				'send_purchases'                => ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
+				'send_purchases_event'          => ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
 
-		// Click the Save Changes button.
-		$I->click('Save changes');
+				// Debug.
+				'debug'                         => 'yes',
+			]
+		);
+	}
 
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+	/**
+	 * Helper method to define cached Resources (Forms, Sequences and Tags),
+	 * directly into the database, instead of querying the API for them via the Resource classes.
+	 *
+	 * This can safely be done for Acceptance tests, as WPUnit tests ensure that
+	 * caching Resources from calls made to the API work and store data in the expected
+	 * structure.
+	 *
+	 * Defining cached Resources here reduces the number of API calls made for each test,
+	 * reducing the likelihood of hitting a rate limit due to running tests in parallel.
+	 *
+	 * Resources are deliberately not in order, to emulate how the data might not always
+	 * be in alphabetical / published order from the API.
+	 *
+	 * @since   1.6.0
+	 *
+	 * @param   AcceptanceTester $I              AcceptanceTester.
+	 */
+	public function setupConvertKitPluginResources($I)
+	{
+		// Define Custom Fields.
+		$I->haveOptionInDatabase(
+			'ckwc_custom_fields',
+			[
+				276271 => [
+					'id'    => 276271,
+					'name'  => 'ck_field_276271_phone_number',
+					'key'   => 'phone_number',
+					'label' => 'Phone Number',
+				],
+				276273 => [
+					'id'    => 276273,
+					'name'  => 'ck_field_276273_billing_address',
+					'key'   => 'billing_address',
+					'label' => 'Billing Address',
+				],
+				276295 => [
+					'id'    => 276295,
+					'name'  => 'ck_field_276295_payment_method',
+					'key'   => 'payment_method',
+					'label' => 'Payment Method',
+				],
+				264073 => [
+					'id'    => 264073,
+					'name'  => 'ck_field_264073_last_name',
+					'key'   => 'last_name',
+					'label' => 'Last Name',
+				],
+				321150 => [
+					'id'    => 321150,
+					'name'  => 'ck_field_321150_test',
+					'key'   => 'test',
+					'label' => 'Test',
+				],
+				276272 => [
+					'id'    => 276272,
+					'name'  => 'ck_field_276272_shipping_address',
+					'key'   => 'shipping_address',
+					'label' => 'Shipping Address',
+				],
+				258240 => [
+					'id'    => 258240,
+					'name'  => 'ck_field_258240_notes',
+					'key'   => 'notes',
+					'label' => 'Notes',
+				],
+			]
+		);
 
-		// Check the value of the fields match the inputs provided.
-		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');
-		$I->seeInField('woocommerce_ckwc_api_key', $convertKitAPIKey);
-		$I->seeInField('woocommerce_ckwc_api_secret', $convertKitAPISecret);
+		// Define Forms.
+		$I->haveOptionInDatabase(
+			'ckwc_forms',
+			[
+				3003590 => [
+					'id'         => 3003590,
+					'name'       => 'Third Party Integrations Form',
+					'created_at' => '2022-02-17T15:05:31.000Z',
+					'type'       => 'embed',
+					'format'     => 'inline',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/71cbcc4042/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/71cbcc4042',
+					'archived'   => false,
+					'uid'        => '71cbcc4042',
+				],
+				2780977 => [
+					'id'         => 2780977,
+					'name'       => 'Modal Form',
+					'created_at' => '2021-11-17T04:22:06.000Z',
+					'type'       => 'embed',
+					'format'     => 'modal',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/397e876257/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/397e876257',
+					'archived'   => false,
+					'uid'        => '397e876257',
+				],
+				2780979 => [
+					'id'         => 2780979,
+					'name'       => 'Slide In Form',
+					'created_at' => '2021-11-17T04:22:24.000Z',
+					'type'       => 'embed',
+					'format'     => 'slide in',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/e0d65bed9d/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/e0d65bed9d',
+					'archived'   => false,
+					'uid'        => 'e0d65bed9d',
+				],
+				2765139 => [
+					'id'         => 2765139,
+					'name'       => 'Page Form',
+					'created_at' => '2021-11-11T15:30:40.000Z',
+					'type'       => 'embed',
+					'format'     => 'inline',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/85629c512d/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/85629c512d',
+					'archived'   => false,
+					'uid'        => '85629c512d',
+				],
+				470099  => [
+					'id'                  => 470099,
+					'name'                => 'Legacy Form',
+					'created_at'          => null,
+					'type'                => 'embed',
+					'url'                 => 'https://app.convertkit.com/landing_pages/470099',
+					'embed_js'            => 'https://api.convertkit.com/api/v3/forms/470099.js?api_key=' . $_ENV['CONVERTKIT_API_KEY'],
+					'embed_url'           => 'https://api.convertkit.com/api/v3/forms/470099.html?api_key=' . $_ENV['CONVERTKIT_API_KEY'],
+					'title'               => 'Join the newsletter',
+					'description'         => '<p>Subscribe to get our latest content by email.</p>',
+					'sign_up_button_text' => 'Subscribe',
+					'success_message'     => 'Success! Now check your email to confirm your subscription.',
+					'archived'            => false,
+				],
+				2780980 => [
+					'id'         => 2780980,
+					'name'       => 'Sticky Bar Form',
+					'created_at' => '2021-11-17T04:22:42.000Z',
+					'type'       => 'embed',
+					'format'     => 'sticky bar',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/9f5c601482/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/9f5c601482',
+					'archived'   => false,
+					'uid'        => '9f5c601482',
+				],
+				3437554 => [
+					'id'         => 3437554,
+					'name'       => 'AAA Test',
+					'created_at' => '2022-07-15T15:06:32.000Z',
+					'type'       => 'embed',
+					'format'     => 'inline',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/3bb15822a2/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/3bb15822a2',
+					'archived'   => false,
+					'uid'        => '3bb15822a2',
+				],
+				2765149 => [
+					'id'         => 2765149,
+					'name'       => 'WooCommerce Product Form',
+					'created_at' => '2021-11-11T15:32:54.000Z',
+					'type'       => 'embed',
+					'format'     => 'inline',
+					'embed_js'   => 'https://cheerful-architect-3237.ck.page/7e238f3920/index.js',
+					'embed_url'  => 'https://cheerful-architect-3237.ck.page/7e238f3920',
+					'archived'   => false,
+					'uid'        => '7e238f3920',
+				],
+			]
+		);
+
+		// Define Sequences.
+		$I->haveOptionInDatabase(
+			'ckwc_sequences',
+			[
+				1030824 => [
+					'id'         => 1030824,
+					'name'       => 'WordPress Sequence',
+					'hold'       => false,
+					'repeat'     => false,
+					'created_at' => '2022-01-04T13:00:15.000Z',
+				],
+				1341993 => [
+					'id'         => 1341993,
+					'name'       => 'Another Sequence',
+					'hold'       => false,
+					'repeat'     => false,
+					'created_at' => '2023-01-30T17:25:54.000Z',
+				],
+			]
+		);
+
+		// Define Tags.
+		$I->haveOptionInDatabase(
+			'ckwc_tags',
+			[
+				2744672 => [
+					'id'         => 2744672,
+					'name'       => 'wordpress',
+					'created_at' => '2021-11-11T19:30:06.000Z',
+				],
+				2907192 => [
+					'id'         => 2907192,
+					'name'       => 'gravityforms-tag-1',
+					'created_at' => '2022-02-02T14:06:32.000Z',
+				],
+				2907193 => [
+					'id'         => 2907193,
+					'name'       => 'gravityforms-tag-2',
+					'created_at' => '2022-02-02T14:06:38.000Z',
+				],
+			]
+		);
+
+		// Define last queried to now for all resources, so they're not automatically immediately refreshed by the Plugin's logic.
+		$I->haveOptionInDatabase( 'ckwc_custom_fields_last_queried', strtotime( 'now' ) );
+		$I->haveOptionInDatabase( 'ckwc_forms_last_queried', strtotime( 'now' ) );
+		$I->haveOptionInDatabase( 'ckwc_sequences_last_queried', strtotime( 'now' ) );
+		$I->haveOptionInDatabase( 'ckwc_tags_last_queried', strtotime( 'now' ) );
+	}
+
+	/**
+	 * Helper method to define cached Resources (Forms, Landing Pages, Posts, Products and Tags),
+	 * directly into the database, instead of querying the API for them via the Resource classes
+	 * as if the ConvertKit account is new and has no resources defined in ConvertKit.
+	 *
+	 * @since   2.0.7
+	 *
+	 * @param   AcceptanceTester $I              AcceptanceTester.
+	 */
+	public function setupConvertKitPluginResourcesNoData($I)
+	{
+		// Define Custom Fields.
+		$I->haveOptionInDatabase(
+			'ckwc_custom_fields',
+			[]
+		);
+
+		// Define Forms.
+		$I->haveOptionInDatabase(
+			'ckwc_forms',
+			[]
+		);
+
+		// Define Sequences.
+		$I->haveOptionInDatabase(
+			'ckwc_sequences',
+			[]
+		);
+
+		// Define Tags.
+		$I->haveOptionInDatabase(
+			'ckwc_tags',
+			[]
+		);
+
+		// Define last queried to now for all resources, so they're not automatically immediately refreshed by the Plugin's logic.
+		$I->haveOptionInDatabase( 'ckwc_custom_fields_last_queried', strtotime( 'now' ) );
+		$I->haveOptionInDatabase( 'ckwc_forms_last_queried', strtotime( 'now' ) );
+		$I->haveOptionInDatabase( 'ckwc_sequences_last_queried', strtotime( 'now' ) );
+		$I->haveOptionInDatabase( 'ckwc_tags_last_queried', strtotime( 'now' ) );
 	}
 
 	/**

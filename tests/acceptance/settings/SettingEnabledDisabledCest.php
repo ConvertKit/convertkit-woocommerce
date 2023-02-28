@@ -17,9 +17,6 @@ class SettingEnabledDisabledCest
 	{
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
-
-		// Setup WooCommerce Plugin.
-		$I->setupWooCommercePlugin($I);
 	}
 
 	/**
@@ -33,6 +30,9 @@ class SettingEnabledDisabledCest
 	 */
 	public function testIntegrationWhenDisabled(AcceptanceTester $I)
 	{
+		// Setup WooCommerce Plugin.
+		$I->setupWooCommercePlugin($I);
+
 		// Create Simple Product.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
@@ -47,6 +47,58 @@ class SettingEnabledDisabledCest
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
+	}
+
+	/**
+	 * Test that the enabled setting is honored when checked at
+	 * WooCommerce > Settings > Integration > ConvertKit.
+	 *
+	 * @since   1.6.0
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testEnabled(AcceptanceTester $I)
+	{
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Check "Enabled" checkbox.
+		$I->checkOption('#woocommerce_ckwc_enabled');
+
+		// Save.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the setting saved.
+		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');
+	}
+
+	/**
+	 * Test that the enabled setting is honored when unchecked at
+	 * WooCommerce > Settings > Integration > ConvertKit.
+	 *
+	 * @since   1.6.0
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testDisabled(AcceptanceTester $I)
+	{
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Uncheck "Enabled" checkbox.
+		$I->uncheckOption('#woocommerce_ckwc_enabled');
+
+		// Save.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the setting saved.
+		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_enabled');
 	}
 
 	/**

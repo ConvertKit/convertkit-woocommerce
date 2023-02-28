@@ -17,6 +17,9 @@ class SettingAPIKeyAndSecretCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
@@ -29,9 +32,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveBlankSettings(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Click the Save Changes button.
 		$I->click('Save changes');
 
@@ -53,9 +53,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveBlankSettingsWithIntegrationEnabled(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
@@ -84,8 +81,18 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveValidAPICredentials(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
+		// Enable the Integration.
+		$I->checkOption('#woocommerce_ckwc_enabled');
+
+		// Complete API Fields.
+		$I->fillField('woocommerce_ckwc_api_key', $_ENV['CONVERTKIT_API_KEY']);
+		$I->fillField('woocommerce_ckwc_api_secret', $_ENV['CONVERTKIT_API_SECRET']);
+
+		// Click the Save Changes button.
+		$I->click('Save changes');
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Confirm that no message is displayed telling the user that the API Credentials are invalid.
 		$I->dontSeeInSource('Your ConvertKit API Key appears to be invalid. Please double check the value.');
@@ -111,9 +118,6 @@ class SettingAPIKeyAndSecretCest
 	 */
 	public function testSaveInvalidAPICredentials(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 

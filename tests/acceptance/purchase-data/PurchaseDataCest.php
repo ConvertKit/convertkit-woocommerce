@@ -29,8 +29,8 @@ class PurchaseDataCest
 		// Setup Custom Order Numbers Plugin.
 		$I->setupCustomOrderNumbersPlugin($I);
 
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -78,12 +78,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'simple' // Simple Product.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -138,12 +133,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'virtual', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'virtual' // Simple Product.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -198,12 +188,7 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'zero', // Zero value Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			false // Don't send purchase data to ConvertKit.
+			'zero' // Zero value Simple Product.
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -226,14 +211,18 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
@@ -267,14 +256,18 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			false // Don't send purchase data.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
@@ -308,14 +301,18 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateVirtualProduct($I);
@@ -349,14 +346,18 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			false // Don't send purchase data.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateVirtualProduct($I);
@@ -390,14 +391,18 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateZeroValueProduct($I);
@@ -431,14 +436,18 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			false // Don't send purchase data.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateZeroValueProduct($I);
@@ -472,14 +481,18 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
@@ -513,14 +526,11 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple' // Simple Product.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
@@ -554,14 +564,18 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateVirtualProduct($I);
@@ -595,14 +609,11 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple' // Simple Product.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateVirtualProduct($I);
@@ -636,14 +647,18 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable Sending Purchase Data.
-		$I->checkOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateZeroValueProduct($I);
@@ -677,14 +692,11 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Disable Sending Purchase Data.
-		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
-
-		// Save.
-		$I->click('Save changes');
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple' // Simple Product.
+		);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateZeroValueProduct($I);
@@ -727,7 +739,7 @@ class PurchaseDataCest
 			false, // Don't check Opt-In checkbox on Checkout.
 			false, // Form to subscribe email address to (not used).
 			false, // Subscribe Event.
-			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
+			'completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -768,7 +780,7 @@ class PurchaseDataCest
 			false, // Don't check Opt-In checkbox on Checkout.
 			false, // Form to subscribe email address to (not used).
 			false, // Subscribe Event.
-			'Order Completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
+			'completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.

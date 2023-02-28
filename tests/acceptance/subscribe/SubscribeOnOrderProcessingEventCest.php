@@ -23,8 +23,8 @@ class SubscribeOnOrderProcessingEventCest
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -46,9 +46,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -84,9 +83,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			false, // Don't check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was not added to ConvertKit.
@@ -117,9 +115,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			false, // Don't display Opt-In checkbox on Checkout.
 			false, // Don't check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was added to ConvertKit.
@@ -156,8 +153,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			false, // Don't define a Product level Form, Tag or Sequence.
 			true // Map Order data to Custom Fields.
@@ -193,8 +190,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_TAG_NAME'], // Tag to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'], // Tag to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			false, // Don't define a Product level Form, Tag or Sequence.
 			true // Map Order data to Custom Fields.
@@ -230,8 +227,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_SEQUENCE_NAME'], // Tag to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'], // Tag to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			false, // Don't define a Product level Form, Tag or Sequence.
 			true // Map Order data to Custom Fields.
@@ -267,9 +264,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			'Select a subscription option...', // Don't select a Form to subscribe the email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			false, // Don't select a Form to subscribe the email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was still not added to ConvertKit.
@@ -302,9 +298,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			false, // Don't check Opt-In checkbox on Checkout.
-			'Select a subscription option...', // Don't select a Form to subscribe the email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			false, // Don't select a Form to subscribe the email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was still not added to ConvertKit.
@@ -336,9 +331,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			false, // Don't display Opt-In checkbox on Checkout.
 			false, // Don't check Opt-In checkbox on Checkout.
-			'Select a subscription option...', // Don't select a Form to subscribe the email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			false, // Don't select a Form to subscribe the email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was still not added to ConvertKit.
@@ -372,8 +366,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] // Product level Form to subscribe email address to.
 		);
@@ -415,8 +409,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'] // Product level Tag to subscribe email address to.
 		);
@@ -458,8 +452,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] // Product level Sequence to subscribe email address to.
 		);
@@ -501,11 +495,12 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			false, // No Product level Form, Tag or Sequence.
 			false, // No Custom Field mapping.
+			'first', // Name format.
 			'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] // Coupon level Form to subscribe email address to.
 		);
 
@@ -546,11 +541,12 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			false, // No Product level Form, Tag or Sequence.
 			false, // No Custom Field mapping.
+			'first', // Name format.
 			'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'] // Coupon level Tag to subscribe email address to.
 		);
 
@@ -591,11 +587,12 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing', // Subscribe on WooCommerce "Order Processing" event.
 			false, // Don't send purchase data to ConvertKit.
 			false, // No Product level Form, Tag or Sequence.
 			false, // No Custom Field mapping.
+			'first', // Name format.
 			'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] // Coupon level Sequence to subscribe email address to.
 		);
 
@@ -638,9 +635,8 @@ class SubscribeOnOrderProcessingEventCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Confirm that the email address was now added to ConvertKit.

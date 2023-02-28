@@ -66,6 +66,9 @@ class ProductCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Navigate to Products > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
@@ -105,18 +108,18 @@ class ProductCest
 	 */
 	public function testProductFieldsWithIntegrationEnabledAndNoAPIKey(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable the Integration.
-		$I->checkOption('#woocommerce_ckwc_enabled');
-
-		// Blank the API Fields.
-		$I->fillField('woocommerce_ckwc_api_key', '');
-		$I->fillField('woocommerce_ckwc_api_secret', '');
-
-		// Click the Save Changes button.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			'', // No API Key.
+			'', // No API Secret.
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Navigate to Products > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
@@ -147,18 +150,18 @@ class ProductCest
 	 */
 	public function testProductFieldsWithIntegrationEnabledAndInvalidAPIKey(AcceptanceTester $I)
 	{
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable the Integration.
-		$I->checkOption('#woocommerce_ckwc_enabled');
-
-		// Complete API Fields.
-		$I->fillField('woocommerce_ckwc_api_key', 'fakeApiKey');
-		$I->fillField('woocommerce_ckwc_api_secret', 'fakeApiSecret');
-
-		// Click the Save Changes button.
-		$I->click('Save changes');
+		// Enable Integration and define its API Keys.
+		$I->setupConvertKitPlugin(
+			$I,
+			'fakeApiKey',
+			'fakeApiSecret',
+			false, // Don't define a subscribe event.
+			false, // Don't subscribe the customer to anything.
+			'first', // Name format.
+			false, // Don't map custom fields.
+			false, // Don't display an opt in.
+			'processing' // Send purchase data on 'processing' event.
+		);
 
 		// Navigate to Products > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
@@ -185,6 +188,9 @@ class ProductCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Programmatically create a Product.
 		$productID = $I->havePostInDatabase(
@@ -262,6 +268,9 @@ class ProductCest
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
+
 		// Programmatically create two PRoducts.
 		$productIDs = array(
 			$I->havePostInDatabase(
@@ -312,6 +321,9 @@ class ProductCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Programmatically create two Products with a defined form.
 		$productIDs = array(
@@ -369,6 +381,9 @@ class ProductCest
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
+
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 
 		// Emulate the user searching for Products with a query string that yields no results.
 		$I->amOnAdminPage('edit.php?post_type=product&s=nothing');

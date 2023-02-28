@@ -21,8 +21,8 @@ class ReviewRequestCest
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
-		// Enable Integration and define its API Keys.
-		$I->setupConvertKitPlugin($I);
+		// Populate resoruces.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -44,9 +44,8 @@ class ReviewRequestCest
 			'simple', // Simple Product.
 			true, // Display Opt-In checkbox on Checkout.
 			true, // Check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Check that the options table does have a review request set.
@@ -76,8 +75,7 @@ class ReviewRequestCest
 			true, // Display Opt-In checkbox on Checkout.
 			false, // Don't check Opt-In checkbox on Checkout.
 			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'Order Processing', // Subscribe on WooCommerce "Order Processing" event.
-			false // Don't send purchase data to ConvertKit.
+			'processing' // Subscribe on WooCommerce "Order Processing" event.
 		);
 
 		// Check that the options table does not have a review request set.
@@ -120,13 +118,14 @@ class ReviewRequestCest
 
 	/**
 	 * Test that the review request is displayed when the options table entries
-	 * have the required values to display the review request notification.
+	 * have the required values to display the review request notification,
+	 * and that when dismissed, it no longer displays on subsequent requests.
 	 *
 	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testReviewRequestNotificationDisplayed(AcceptanceTester $I)
+	public function testReviewRequestNotificationDisplaysAndDismisses(AcceptanceTester $I)
 	{
 		// Clear options table settings for review request.
 		$I->deleteConvertKitReviewRequestOptions($I);
@@ -144,30 +143,6 @@ class ReviewRequestCest
 		// Confirm links are correct.
 		$I->seeInSource('<a href="https://wordpress.org/support/plugin/convertkit-for-woocommerce/reviews/?filter=5#new-post" class="button button-primary" rel="noopener" target="_blank">');
 		$I->seeInSource('<a href="https://convertkit.com/support" class="button" rel="noopener" target="_blank">');
-	}
-
-	/**
-	 * Test that the review request is dismissed and does not reappear
-	 * on a subsequent page load.
-	 *
-	 * @since   1.4.3
-	 *
-	 * @param   AcceptanceTester $I  Tester.
-	 */
-	public function testReviewRequestNotificationDismissed(AcceptanceTester $I)
-	{
-		// Clear options table settings for review request.
-		$I->deleteConvertKitReviewRequestOptions($I);
-
-		// Set review request option with a timestamp in the past, to emulate
-		// the Plugin having set this a few days ago.
-		$I->haveOptionInDatabase('convertkit-for-woocommerce-review-request', time() - 3600 );
-
-		// Navigate to a screen in the WordPress Administration.
-		$I->amOnAdminPage('index.php');
-
-		// Confirm the review displays.
-		$I->seeElementInDOM('div.review-convertkit-for-woocommerce');
 
 		// Dismiss the review request.
 		$I->click('div.review-convertkit-for-woocommerce button.notice-dismiss');
