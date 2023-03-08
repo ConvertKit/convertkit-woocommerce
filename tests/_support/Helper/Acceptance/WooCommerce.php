@@ -202,13 +202,10 @@ class WooCommerce extends \Codeception\Module
 		$I->waitForElementNotVisible('.blockOverlay');
 		$I->click('#place_order');
 
-		// Wait until JS completes and redirects.
-		$I->waitForElement('.woocommerce-order-received', 30);
-
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
 		// a few checks to be certain.
-		$I->seeElementInDOM('body.woocommerce-order-received');
+		$I->waitForElement('body.woocommerce-order-received');
 		$I->seeInSource('Order');
 		$I->seeInSource('received');
 		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
