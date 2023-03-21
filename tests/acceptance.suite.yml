@@ -62,6 +62,10 @@ modules:
             window_size: 1920x1080
             capabilities:
                 chromeOptions:
-                    args: ["--headless=new", "--disable-gpu"]
+                    args: [
+                        "--headless=new",
+                        "--disable-gpu",
+                        "--user-agent=HeadlessChrome"
+                    ]
                     prefs:
                         download.default_directory: '%WP_ROOT_FOLDER%'
