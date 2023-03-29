@@ -15,7 +15,7 @@
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 7.4.0
+ * WC tested up to: 7.5.1
  */
 
 // Bail if Plugin is already loaded.
