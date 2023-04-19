@@ -800,6 +800,47 @@ class PurchaseDataCest
 	}
 
 	/**
+	 * Test that the name format setting is honored for the created subscriber in ConvertKit when
+	 * they opt in to subscribe and purchase data is also sent.
+	 *
+	 * @since   1.6.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testSendPurchaseDataNameFormatHonoredWhenSubscribed(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			'simple', // Simple Product.
+			true, // Display Opt-In checkbox on Checkout.
+			true, // Check Opt-In checkbox on Checkout.
+			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
+			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
+			true, // Send purchase data to ConvertKit.
+			false, // Don't define product level form, tag or sequence to subscribe to.
+			false, // Don't map custom fields.
+			'both', // Name format.
+			false // Don't define coupon level form, tag or sequence to subscribe to.
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Confirm that the subscriber's name = First Last.
+		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'First Last');
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($result['email_address']);
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.

@@ -431,7 +431,12 @@ class CKWC_Order {
 		$purchase = array(
 			'transaction_id'   => $order->get_order_number(),
 			'email_address'    => $order->get_billing_email(),
-			'first_name'       => $order->get_billing_first_name(),
+
+			// This is deliberate; if the customer has checked the opt in box to subscribe,
+			// their name is overwritten by this first_name parameter when purchase data is
+			// subsequently sent.  Therefore, we use this classes' name() function to ensure
+			// we honor the integration's "Name Format" setting.
+			'first_name'       => $this->name( $order ),
 			'currency'         => $order->get_currency(),
 			'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
 			'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
@@ -702,7 +707,7 @@ class CKWC_Order {
 	 * Returns the customer's name for the given WooCommerce Order, based on the Plugin's
 	 * Name Format setting (First Name, Last Name or First + Last Name),
 	 * immediately before it is sent to ConvertKit when subscribing the Customer
-	 * to a Form, Tag or Sequence.
+	 * to a Form, Tag or Sequence, or sending Purchase Data.
 	 *
 	 * @since   1.0.0
 	 *
@@ -739,7 +744,7 @@ class CKWC_Order {
 		/**
 		 * Returns the customer's name for the given WooCommerce Order,
 		 * immediately before it is sent to ConvertKit when subscribing the Customer
-		 * to a Form, Tag or Sequence.
+		 * to a Form, Tag or Sequence, or sending Purchase Data.
 		 *
 		 * @since   1.0.0
 		 *
