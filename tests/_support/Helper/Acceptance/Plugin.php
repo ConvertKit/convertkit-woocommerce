@@ -119,6 +119,7 @@ class Plugin extends \Codeception\Module
 				'name_format'                   => $nameFormat,
 
 				// Custom Field mappings.
+				'custom_field_last_name'        => ( $mapCustomFields ? 'last_name' : '' ),
 				'custom_field_phone'            => ( $mapCustomFields ? 'phone_number' : '' ),
 				'custom_field_billing_address'  => ( $mapCustomFields ? 'billing_address' : '' ),
 				'custom_field_shipping_address' => ( $mapCustomFields ? 'shipping_address' : '' ),
