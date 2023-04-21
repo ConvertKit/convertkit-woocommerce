@@ -838,6 +838,9 @@ class CKWC_Order {
 
 		$fields = array();
 
+		if ( $this->integration->get_option( 'custom_field_last_name' ) ) {
+			$fields[ $this->integration->get_option( 'custom_field_last_name' ) ] = $order->get_billing_last_name();
+		}
 		if ( $this->integration->get_option( 'custom_field_phone' ) ) {
 			$fields[ $this->integration->get_option( 'custom_field_phone' ) ] = $order->get_billing_phone();
 		}
