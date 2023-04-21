@@ -393,7 +393,7 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Custom Field Mappings.
-			'custom_field_last_name'            => array(
+			'custom_field_last_name'        => array(
 				'title'       => __( 'Send Last Name', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
