@@ -49,6 +49,7 @@ class SettingCustomFieldsCest
 		);
 
 		// Set Order to Custom Field mappings.
+		$I->selectOption('#woocommerce_ckwc_custom_field_last_name', 'Last Name');
 		$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
 		$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
@@ -62,6 +63,7 @@ class SettingCustomFieldsCest
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Confirm the settings saved.
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_last_name', 'Last Name');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');

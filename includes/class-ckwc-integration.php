@@ -393,6 +393,15 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// Custom Field Mappings.
+			'custom_field_last_name'        => array(
+				'title'       => __( 'Send Last Name', 'woocommerce-convertkit' ),
+				'type'        => 'custom_field',
+				'default'     => '',
+				'description' => __( 'The ConvertKit custom field to store the order\'s last name.', 'woocommerce-convertkit' ),
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled subscribe',
+			),
 			'custom_field_phone'            => array(
 				'title'       => __( 'Send Phone Number', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
