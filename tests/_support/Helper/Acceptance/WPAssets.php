@@ -14,13 +14,12 @@ class WPAssets extends \Codeception\Module
 	 *
 	 * @since   1.6.4
 	 *
-	 * @param   AcceptanceHelper $I     Acceptance Helper.
-	 * @param   string           $url 	Script URL, relative to Plugin root folder.
-	 * @param 	string 			 $id 	Script ID.
+	 * @param   AcceptanceHelper $I     	Acceptance Helper.
+	 * @param   string           $url 		Script URL, relative to Plugin root folder.
 	 */
-	public function seeJSEnqueued($I, $url, $id)
+	public function seeJSEnqueued($I, $url)
 	{
-		$I->seeInSource('<script src=\'' . $_ENV['TEST_SITE_WP_URL'] . '/wp-content/plugins/' . $url );
+		$I->seeInSource('<script src="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-content/plugins/' . $url );
 	}
 
 	/**
@@ -28,9 +27,8 @@ class WPAssets extends \Codeception\Module
 	 *
 	 * @since   1.6.4
 	 *
-	 * @param   AcceptanceHelper $I     Acceptance Helper.
-	 * @param   string           $url 	Script URL, relative to WordPress Plugins folder.
-	 * @param 	string 			 $id 	Script ID.
+	 * @param   AcceptanceHelper $I     	Acceptance Helper.
+	 * @param   string           $url 		CSS URL, relative to Plugin root folder.
 	 */
 	public function seeCSSEnqueued($I, $url, $id)
 	{

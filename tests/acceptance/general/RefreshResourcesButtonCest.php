@@ -33,6 +33,9 @@ class RefreshResourcesButtonCest
 		// Navigate to Product > Add New.
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
+		// Confirm JS is output by the Plugin.
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
+
 		// Click the refresh button.
 		$I->click('button.ckwc-refresh-resources');
 
@@ -75,6 +78,9 @@ class RefreshResourcesButtonCest
 		// Open Bulk Edit form for the Products in the WooCommerce Products WP_List_Table.
 		$I->openBulkEdit($I, 'product', $productIDs);
 
+		// Confirm JS is output by the Plugin.
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
+
 		// Click the refresh button.
 		$I->wait(2);
 		$I->scrollTo('select[name="comment_status"]');
@@ -110,6 +116,9 @@ class RefreshResourcesButtonCest
 
 		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
 		$I->openQuickEdit($I, 'product', $pageID);
+
+		// Confirm JS is output by the Plugin.
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
 
 		// Click the refresh button.
 		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources');
