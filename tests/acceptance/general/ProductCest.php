@@ -78,7 +78,7 @@ class ProductCest
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/select2.css', 'ckwc-admin-select2-css' );
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/select2.js' );
-	
+
 		// Check that the ConvertKit meta box exists.
 		$I->seeElementInDOM('#ckwc');
 

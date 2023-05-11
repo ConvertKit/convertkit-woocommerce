@@ -14,8 +14,8 @@ class WPAssets extends \Codeception\Module
 	 *
 	 * @since   1.6.4
 	 *
-	 * @param   AcceptanceHelper $I     	Acceptance Helper.
-	 * @param   string           $url 		Script URL, relative to Plugin root folder.
+	 * @param   AcceptanceHelper $I         Acceptance Helper.
+	 * @param   string           $url       Script URL, relative to Plugin root folder.
 	 */
 	public function seeJSEnqueued($I, $url)
 	{
@@ -27,8 +27,9 @@ class WPAssets extends \Codeception\Module
 	 *
 	 * @since   1.6.4
 	 *
-	 * @param   AcceptanceHelper $I     	Acceptance Helper.
-	 * @param   string           $url 		CSS URL, relative to Plugin root folder.
+	 * @param   AcceptanceHelper $I         Acceptance Helper.
+	 * @param   string           $url       CSS URL, relative to Plugin root folder.
+	 * @param   string           $id        CSS ID.
 	 */
 	public function seeCSSEnqueued($I, $url, $id)
 	{
