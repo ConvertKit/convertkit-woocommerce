@@ -679,7 +679,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// CSS to always enqueue.
-		wp_enqueue_style( 'ckwc-settings', CKWC_PLUGIN_URL . '/resources/backend/css/settings.css', array(), CKWC_PLUGIN_VERSION );
+		wp_enqueue_style( 'ckwc-settings', CKWC_PLUGIN_URL . 'resources/backend/css/settings.css', array(), CKWC_PLUGIN_VERSION );
 
 		// Depending on the screen name, enqueue scripts now.
 		switch ( $screen_name ) {
@@ -688,7 +688,7 @@ class CKWC_Integration extends WC_Integration {
 			 * Sync Past Orders Screen.
 			 */
 			case 'sync_past_orders':
-				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . '/resources/backend/css/sync-past-orders.css', array(), CKWC_PLUGIN_VERSION );
+				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/css/sync-past-orders.css', array(), CKWC_PLUGIN_VERSION );
 				break;
 
 			/**
