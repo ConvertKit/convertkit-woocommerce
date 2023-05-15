@@ -75,6 +75,10 @@ class ProductCest
 		// Check that no PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
+		// Confirm CSS and JS is output by the Plugin.
+		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/select2.css', 'ckwc-admin-select2-css' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/select2.js' );
+
 		// Check that the ConvertKit meta box exists.
 		$I->seeElementInDOM('#ckwc');
 
@@ -213,6 +217,10 @@ class ProductCest
 		// Reload the Products admin screen.
 		$I->amOnAdminPage('edit.php?post_type=product');
 
+		// Confirm CSS and JS is output by the Plugin.
+		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/bulk-quick-edit.css', 'ckwc-bulk-quick-edit-css' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/quick-edit.js' );
+
 		// Confirm that the chosen Resource is the selected option.
 		$I->seePostMetaInDatabase(
 			[
@@ -256,14 +264,14 @@ class ProductCest
 	}
 
 	/**
-	 * Test that the defined form displays when chosen via
+	 * Test that the defined resource (Form, Tag, Sequence) is saved when chosen via
 	 * WordPress' Bulk Edit functionality.
 	 *
 	 * @since   1.4.8
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testBulkEditUsingDefinedForm(AcceptanceTester $I)
+	public function testBulkEditUsingDefinedResource(AcceptanceTester $I)
 	{
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -296,6 +304,13 @@ class ProductCest
 				'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
 			]
 		);
+
+		// Reload the Products admin screen.
+		$I->amOnAdminPage('edit.php?post_type=product');
+
+		// Confirm CSS and JS is output by the Plugin.
+		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/bulk-quick-edit.css', 'ckwc-bulk-quick-edit-css' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/bulk-edit.js' );
 
 		// Iterate through Products to observe expected changes were made to the settings in the database.
 		foreach ($productIDs as $productID) {

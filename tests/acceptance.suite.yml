@@ -24,6 +24,7 @@ modules:
         - \Helper\Acceptance\Select2
         - \Helper\Acceptance\ThirdPartyPlugin
         - \Helper\Acceptance\WooCommerce
+        - \Helper\Acceptance\WPAssets
         - \Helper\Acceptance\WPBulkEdit
         - \Helper\Acceptance\WPMetabox
         - \Helper\Acceptance\WPGutenberg
