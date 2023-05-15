@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 5.6.20
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,9 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.6.4 2023-05-15
+* Fix: Remove double forwardslash on JS and CSS assets
 
 ### 1.6.3 2023-05-04
 * Added: Settings: Options to Map WooCommerce Order Data's Last Name to ConvertKit Custom Field
