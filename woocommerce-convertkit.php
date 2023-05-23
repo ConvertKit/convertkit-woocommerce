@@ -79,7 +79,7 @@ function WP_CKWC() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionNa
  * Main function to return the WooCommerce Integration class.
  *
  * @since   1.0.0
- * 
+ *
  * @return  bool|CKWC_Integration
  */
 function WP_CKWC_Integration() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName

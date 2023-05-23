@@ -89,7 +89,7 @@ class CKWC_Integration extends WC_Integration {
 
 			// Takes the form data and saves it to WooCommerce's settings.
 			// PHPStan: WooCommerce's process_admin_options() returns a value, which PHPStan rightly flags, so we need to ignore this line.
-			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line 
+			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line
 
 			// Sanitizes and tests specific setting fields to ensure they're valid.
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
@@ -744,7 +744,7 @@ class CKWC_Integration extends WC_Integration {
 			$this->forms = new CKWC_Resource_Forms();
 			$this->forms->refresh();
 		}
-		if ( ! $this->sequences ) { 
+		if ( ! $this->sequences ) {
 			$this->sequences = new CKWC_Resource_Sequences();
 			$this->sequences->refresh();
 		}
