@@ -29,3 +29,4 @@ parameters:
     # so they're false positives.
     ignoreErrors:
         - '#Constant WP_PLUGIN_DIR not found.#'
+        - '#Call to an undefined method WC_Order_Item::get_product\(\).#'
