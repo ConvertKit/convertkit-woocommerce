@@ -77,7 +77,7 @@ class CKWC_Order {
 
 		// Send Purchase Data.
 		if ( $this->integration->get_option_bool( 'send_purchases' ) ) {
-			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data' ), 99999, 3 ); // @phpstan-ignore-line
+			add_action( 'woocommerce_order_status_changed', array( $this, 'send_purchase_data_action' ), 99999, 3 );
 		}
 
 	}
@@ -346,6 +346,22 @@ class CKWC_Order {
 	}
 
 	/**
+	 * Action called when a WooCommerce Order's status is changed, to send purchase
+	 * data to ConvertKit for the given WooCommerce Order ID.
+	 *
+	 * @since   1.6.5
+	 *
+	 * @param   int    $order_id   WooCommerce Order ID.
+	 * @param   string $status_old Order's Old Status.
+	 * @param   string $status_new Order's New Status.
+	 */
+	public function send_purchase_data_action( $order_id, $status_old = 'new', $status_new = 'pending' ) {
+
+		$this->send_purchase_data( $order_id, $status_old, $status_new );
+
+	}
+
+	/**
 	 * Send purchase data to ConvertKit for the given WooCommerce Order ID.
 	 *
 	 * @since   1.4.2
@@ -400,17 +416,17 @@ class CKWC_Order {
 		$products = array();
 		foreach ( $order->get_items() as $item_key => $item ) {
 			// If this Order Item's Product could not be found, skip it.
-			if ( ! $item->get_product() ) { // @phpstan-ignore-line
+			if ( ! $item->get_product() ) {
 				continue;
 			}
 
 			// Add Product to array of Products.
 			$products[] = array(
-				'pid'        => $item->get_product()->get_id(), // @phpstan-ignore-line
+				'pid'        => $item->get_product()->get_id(),
 				'lid'        => $item_key,
 				'name'       => $item->get_name(),
-				'sku'        => $item->get_product()->get_sku(), // @phpstan-ignore-line
-				'unit_price' => $item->get_product()->get_price(), // @phpstan-ignore-line
+				'sku'        => $item->get_product()->get_sku(),
+				'unit_price' => $item->get_product()->get_price(),
 				'quantity'   => $item->get_quantity(),
 			);
 		}
