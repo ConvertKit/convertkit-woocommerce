@@ -30,36 +30,36 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Forms
+	 * @var     bool|CKWC_Resource_Forms
 	 */
-	private $forms;
+	private $forms = false;
 
 	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Tags
+	 * @var     bool|CKWC_Resource_Tags
 	 */
-	private $tags;
+	private $tags = false;
 
 	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Sequences
+	 * @var     bool|CKWC_Resource_Sequences
 	 */
-	private $sequences;
+	private $sequences = false;
 
 	/**
 	 * Holds the Form resources instance.
 	 *
 	 * @since   1.4.3
 	 *
-	 * @var     CKWC_Resource_Custom_Fields
+	 * @var     bool|CKWC_Resource_Custom_Fields
 	 */
-	private $custom_fields;
+	private $custom_fields = false;
 
 	/**
 	 * Constructor
@@ -88,7 +88,8 @@ class CKWC_Integration extends WC_Integration {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
 			// Takes the form data and saves it to WooCommerce's settings.
-			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line
+			// PHPStan: WooCommerce's process_admin_options() returns a value, which PHPStan rightly flags, so we need to ignore this line.
+			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line 
 
 			// Sanitizes and tests specific setting fields to ensure they're valid.
 			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
@@ -739,15 +740,15 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
-		if ( ! $this->forms ) { // @phpstan-ignore-line
+		if ( ! $this->forms ) {
 			$this->forms = new CKWC_Resource_Forms();
 			$this->forms->refresh();
 		}
-		if ( ! $this->sequences ) { // @phpstan-ignore-line
+		if ( ! $this->sequences ) { 
 			$this->sequences = new CKWC_Resource_Sequences();
 			$this->sequences->refresh();
 		}
-		if ( ! $this->tags ) { // @phpstan-ignore-line
+		if ( ! $this->tags ) {
 			$this->tags = new CKWC_Resource_Tags();
 			$this->tags->refresh();
 		}
@@ -807,7 +808,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get Custom Fields, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
-		if ( ! $this->custom_fields ) { // @phpstan-ignore-line
+		if ( ! $this->custom_fields ) {
 			$this->custom_fields = new CKWC_Resource_Custom_Fields();
 			$this->custom_fields->refresh();
 		}
