@@ -22,7 +22,7 @@ class WP_CKWC {
 	 *
 	 * @var     object
 	 */
-	public static $instance;
+	private static $instance;
 
 	/**
 	 * Holds singleton initialized classes that include
@@ -167,7 +167,10 @@ class WP_CKWC {
 	 */
 	public function load_language_files() {
 
-		load_plugin_textdomain( 'woocommerce-convertkit', false, basename( dirname( CKWC_PLUGIN_FILE ) ) . '/languages/' ); // @phpstan-ignore-line
+		// If the .mo file for a given language is available in WP_LANG_DIR/convertkit
+		// i.e. it's available as a translation at https://translate.wordpress.org/projects/wp-plugins/convertkit-for-woocommerce/,
+		// it will be used instead of the .mo file in convertkit-for-woocommerce/languages.
+		load_plugin_textdomain( 'woocommerce-convertkit', false, 'convertkit-for-woocommerce/languages' );
 
 	}
 
@@ -224,7 +227,7 @@ class WP_CKWC {
 	 */
 	public static function get_instance() {
 
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof self ) ) { // @phpstan-ignore-line
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 

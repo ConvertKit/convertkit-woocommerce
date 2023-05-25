@@ -17,9 +17,9 @@ class CKWC_API extends ConvertKit_API {
 	/**
 	 * Holds the log class for writing to the log file
 	 *
-	 * @var bool|WC_Logger
+	 * @var bool|ConvertKit_Log|WC_Logger
 	 */
-	public $log = false; // @phpstan-ignore-line
+	public $log = false;
 
 	/**
 	 * Holds an array of error messages, localized to the plugin
