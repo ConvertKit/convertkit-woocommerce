@@ -71,9 +71,12 @@ class CKWC_Admin_Quick_Edit {
 			return;
 		}
 
+		// Get Product.
+		$product = wc_get_product( $post->ID );
+
 		// Fetch Product's Settings.
 		$settings = array(
-			'ckwc_subscription' => get_post_meta( $post->ID, 'ckwc_subscription', true ),
+			'ckwc_subscription' => $product->get_meta( 'ckwc_subscription', true ),
 		);
 
 		// Output the Product's ConvertKit settings as hidden data- attributes, which

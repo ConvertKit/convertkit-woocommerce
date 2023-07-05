@@ -115,6 +115,7 @@ class CKWC_Admin_Bulk_Edit {
 
 		// Iterate through each Post, updating its settings.
 		foreach ( $post_ids as $post_id ) {
+			// @TODO.
 			update_post_meta( $post_id, 'ckwc_subscription', sanitize_text_field( wp_unslash( $_REQUEST['ckwc_subscription'] ) ) );
 		}
 
