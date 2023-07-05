@@ -130,11 +130,8 @@ class CKWC_Order {
 
 		// Get product-specific subscription settings.
 		foreach ( $order->get_items() as $item ) {
-			// Get product.
-			$product = wc_get_product( absint( $item['product_id'] ) );
-
 			// Get the Form, Tag or Sequence for this Product.
-			$resource_id = $product->get_meta( 'ckwc_subscription', true );
+			$resource_id = get_post_meta( $item['product_id'], 'ckwc_subscription', true );
 
 			/**
 			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.

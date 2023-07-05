@@ -128,7 +128,7 @@ class CKWC_Admin_Post_Type {
 			'id'        => 'ckwc_subscription',
 			'class'     => 'ckwc-select2 widefat',
 			'name'      => 'ckwc_subscription',
-			'value'     => get_post_meta( $post->ID, 'ckwc_subscription', true ),.
+			'value'     => get_post_meta( $post->ID, 'ckwc_subscription', true ),
 			'forms'     => $forms,
 			'tags'      => $tags,
 			'sequences' => $sequences,
