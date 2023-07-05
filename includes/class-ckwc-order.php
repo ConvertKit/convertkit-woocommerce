@@ -130,8 +130,11 @@ class CKWC_Order {
 
 		// Get product-specific subscription settings.
 		foreach ( $order->get_items() as $item ) {
+			// Get the WC_Product object.
+			$product = wc_get_product( $item['product_id'] );
+
 			// Get the Form, Tag or Sequence for this Product.
-			$resource_id = get_post_meta( $item['product_id'], 'ckwc_subscription', true );
+			$resource_id = $product->get_meta( 'ckwc_subscription', true );
 
 			/**
 			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.
@@ -144,7 +147,7 @@ class CKWC_Order {
 			 * @param   string $status_new      Order's New Status.
 			 * @param   int    $product_id      Product ID.
 			 */
-			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new, $item['product_id'] );
+			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new, $product->get_id() );
 
 			// If no resource is specified for this Product, don't add it to the array.
 			if ( empty( $resource_id ) ) {
