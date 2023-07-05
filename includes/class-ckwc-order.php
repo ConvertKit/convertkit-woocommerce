@@ -596,8 +596,8 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   WP_Order $order                     	WooCommerce Order.
-	 * @param   int 	 $convertkit_purchase_data_id   ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
+	 * @param   WP_Order $order                         WooCommerce Order.
+	 * @param   int      $convertkit_purchase_data_id   ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
 	 */
 	private function mark_purchase_data_sent( $order, $convertkit_purchase_data_id ) {
 
@@ -661,7 +661,7 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   WC_Order 	$order   WooCommerce Order.
+	 * @param   WC_Order $order   WooCommerce Order.
 	 * @return  bool                 Customer can be opted in
 	 */
 	private function should_opt_in_customer( $order ) {

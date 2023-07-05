@@ -1,12 +1,12 @@
 <?php
-use Automattic\WooCommerce\Utilities\OrderUtil;
-
 /**
  * ConvertKit Checkout class.
  *
  * @package CKWC
  * @author ConvertKit
  */
+
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 /**
  * Determines whether to display an opt in checkout on the WooCommerce Checkout,
