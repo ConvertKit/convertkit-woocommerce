@@ -123,6 +123,7 @@ class CKWC_Checkout {
 
 		// Update Order Post Meta.
 		$order->update_meta_data( 'ckwc_opt_in', $opt_in );
+		$order->save();
 
 	}
 
