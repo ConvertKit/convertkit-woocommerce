@@ -596,13 +596,13 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   WP_Order $order                         WooCommerce Order.
-	 * @param   int      $convertkit_purchase_data_id   ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
+	 * @param   WC_Order|WC_Order_Refund $order                         WooCommerce Order.
+	 * @param   int      				 $convertkit_purchase_data_id   ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
 	 */
 	private function mark_purchase_data_sent( $order, $convertkit_purchase_data_id ) {
 
 		$order->update_meta_data( $this->purchase_data_sent_meta_key, 'yes' );
-		$order->update_meta_data( $this->purchase_data_id_meta_key, $convertkit_purchase_data_id );
+		$order->update_meta_data( $this->purchase_data_id_meta_key, (string) $convertkit_purchase_data_id );
 
 	}
 
