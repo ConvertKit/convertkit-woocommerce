@@ -57,9 +57,7 @@ class Plugin extends \Codeception\Module
 		$I->activateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
 
 		// Enable HPOS.
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=features');
-		$I->checkOption('woocommerce_feature_custom_order_tables_enabled');
-		$I->click('Save changes');
+		$I->setupWooCommerceHPOS($I);
 
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
