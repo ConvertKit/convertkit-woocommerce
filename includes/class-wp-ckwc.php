@@ -90,7 +90,7 @@ class WP_CKWC {
 		}
 
 		// Declare compatibility with HPOS.
-		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CKWC_PLUGIN_FILE, true );
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CKWC_PLUGIN_FILE, true ); // @phpstan-ignore-line
 
 	}
 
