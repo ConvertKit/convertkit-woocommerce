@@ -556,38 +556,34 @@ class CKWC_Order {
 		}
 
 		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
-		$query = new WP_Query(
+		$query = new WC_Order_Query(
 			array(
-				'post_type'              => 'shop_order',
-				'posts_per_page'         => -1,
+				'limit' 		=> -1,
 
 				// Only include Orders that do not match the Purchase Data Event integration setting.
-				'post_status'            => $post_statuses,
+				'status'        => $post_statuses,
 
 				// Only include Orders that do not have a ConvertKit Purchase Data ID.
-				'meta_query'             => array(
+				'meta_query'    => array(
 					array(
 						'key'     => $this->purchase_data_id_meta_key,
 						'compare' => 'NOT EXISTS',
 					),
 				),
 
-				// For performance, don't update caches and just return Order IDs, not complete objects.
-				'fields'                 => 'ids',
-				'cache_results'          => false,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
+				// Only return Order IDs.
+				'return' 		=> 'ids',
 			)
 		);
 
 		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
 		// return false.
-		if ( ! $query->post_count ) {
+		if ( empty( $query->get_orders() ) ) {
 			return false;
 		}
 
 		// Return the array of Order IDs.
-		return $query->posts;
+		return $query->get_orders();
 
 	}
 
