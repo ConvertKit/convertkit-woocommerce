@@ -558,13 +558,13 @@ class CKWC_Order {
 		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
 		$query = new WC_Order_Query(
 			array(
-				'limit' 		=> -1,
+				'limit'      => -1,
 
 				// Only include Orders that do not match the Purchase Data Event integration setting.
-				'status'        => $post_statuses,
+				'status'     => $post_statuses,
 
 				// Only include Orders that do not have a ConvertKit Purchase Data ID.
-				'meta_query'    => array(
+				'meta_query' => array(
 					array(
 						'key'     => $this->purchase_data_id_meta_key,
 						'compare' => 'NOT EXISTS',
@@ -572,7 +572,7 @@ class CKWC_Order {
 				),
 
 				// Only return Order IDs.
-				'return' 		=> 'ids',
+				'return'     => 'ids',
 			)
 		);
 

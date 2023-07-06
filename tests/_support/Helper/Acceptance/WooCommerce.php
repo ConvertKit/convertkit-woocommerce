@@ -70,20 +70,15 @@ class WooCommerce extends \Codeception\Module
 
 	/**
 	 * Helper method to setup HPOS in WooCommerce.
-	 * 
-	 * @since 	1.6.6
+	 *
+	 * @since   1.6.6
 	 *
 	 * @param   AcceptanceTester $I     AcceptanceTester.
 	 */
 	public function setupWooCommerceHPOS($I)
 	{
-		// @TODO Speed this up.
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=features');
-		$I->checkOption('woocommerce_feature_custom_order_tables_enabled');
-		$I->click('Save changes');
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=custom_data_stores');
-		$I->selectOption('input[name="woocommerce_custom_orders_table_enabled"]', 'yes');
-		$I->click('Save changes');
+		$I->haveOptionInDatabase('woocommerce_feature_custom_order_tables_enabled', 'yes');
+		$I->haveOptionInDatabase('woocommerce_custom_orders_table_enabled', 'yes');
 	}
 
 	/**
