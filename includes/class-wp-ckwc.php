@@ -44,6 +44,9 @@ class WP_CKWC {
 		// Register integration.
 		add_filter( 'woocommerce_integrations', array( $this, 'woocommerce_integrations_register' ) );
 
+		// Declare HPOS compatibility.
+		add_action( 'before_woocommerce_init', array( $this, 'woocommerce_hpos_compatibility' ) );
+
 		// Initialize.
 		add_action( 'woocommerce_init', array( $this, 'woocommerce_init' ) );
 
@@ -69,6 +72,25 @@ class WP_CKWC {
 		$integrations[] = 'CKWC_Integration';
 
 		return $integrations;
+
+	}
+
+	/**
+	 * Tells WooCommerce that this integration is compatible with HPOS.
+	 *
+	 * @see https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
+	 *
+	 * @since   1.6.6
+	 */
+	public function woocommerce_hpos_compatibility() {
+
+		// Don't declare compatibility if the applicable class doesn't exist.
+		if ( ! class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			return;
+		}
+
+		// Declare compatibility with HPOS.
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CKWC_PLUGIN_FILE, true );
 
 	}
 
