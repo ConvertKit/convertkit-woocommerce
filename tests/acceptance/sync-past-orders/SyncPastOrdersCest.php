@@ -39,7 +39,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenIntegrationDisabled(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product.
 		$productName = 'Simple Product';
@@ -91,7 +91,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
@@ -129,7 +129,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenNoOrders(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -155,7 +155,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenNoPastOrders(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, sending the Order
 		// to ConvertKit.
@@ -191,7 +191,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrder(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
@@ -281,7 +281,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrderCreatedInPreviousPluginVersion(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
@@ -363,7 +363,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrderWithInvalidAPICredentials(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.

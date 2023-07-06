@@ -77,8 +77,12 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function setupWooCommerceHPOS($I)
 	{
-		$I->haveOptionInDatabase('woocommerce_feature_custom_order_tables_enabled', 'yes');
-		$I->haveOptionInDatabase('woocommerce_custom_orders_table_enabled', 'yes');
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=features');
+		$I->checkOption('woocommerce_feature_custom_order_tables_enabled');
+		$I->click('Save changes');
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=custom_data_stores');
+		$I->selectOption('input[name="woocommerce_custom_orders_table_enabled"]', 'yes');
+		$I->click('Save changes');
 	}
 
 	/**
@@ -684,5 +688,22 @@ class WooCommerce extends \Codeception\Module
 
 		// Confirm note text does not exist.
 		$I->dontSeeInSource($noteText);
+	}
+
+	/**
+	 * Helper method to delete all orders from the wp_posts and wp_wc_orders tables,
+	 * 
+	 * @since 	1.6.6
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 */
+	public function wooCommerceDeleteAllOrders($I)
+	{
+		// Delete from wp_posts.
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+
+		// Delete from wp_wc_orders and wp_wc_orders_meta HPOS tables.
+		$I->dontHaveInDatabase('wp_wc_orders');
+		$I->dontHaveInDatabase('wp_wc_orders_meta');
 	}
 }
