@@ -692,8 +692,8 @@ class WooCommerce extends \Codeception\Module
 
 	/**
 	 * Helper method to delete all orders from the wp_posts and wp_wc_orders tables,
-	 * 
-	 * @since 	1.6.6
+	 *
+	 * @since   1.6.6
 	 *
 	 * @param   AcceptanceTester $I             AcceptanceTester.
 	 */
@@ -703,7 +703,7 @@ class WooCommerce extends \Codeception\Module
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Delete from wp_wc_orders and wp_wc_orders_meta HPOS tables.
-		$I->dontHaveInDatabase('wp_wc_orders');
-		$I->dontHaveInDatabase('wp_wc_orders_meta');
+		$I->dontHaveInDatabase('wp_wc_orders', [ 'parent_order_id' => 0 ]);
+		$I->dontHaveInDatabase('wp_wc_orders_meta', [ 'id >=', '0' ]);
 	}
 }

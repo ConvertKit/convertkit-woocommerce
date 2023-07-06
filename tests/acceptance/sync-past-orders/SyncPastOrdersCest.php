@@ -58,7 +58,8 @@ class SyncPastOrdersCest
 		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress);
 
 		// Click Place order button.
-		$I->click('Place order');
+		$I->waitForElementNotVisible('.blockOverlay');
+		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.
 		$I->waitForElement('.woocommerce-order-received', 10);
