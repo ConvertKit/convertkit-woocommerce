@@ -259,7 +259,7 @@ class WooCommerce extends \Codeception\Module
 
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
 		$I->submitForm(
-			'form#order',
+			'div.wrap > form',
 			[
 				'order_status' => $orderStatus,
 			]
