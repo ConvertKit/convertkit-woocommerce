@@ -56,9 +56,6 @@ class Plugin extends \Codeception\Module
 		// Activate WooCommerce Stripe Gateway Plugin.
 		$I->activateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
 
-		// Enable HPOS.
-		$I->setupWooCommerceHPOS($I);
-
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
 		$I->amOnAdminPage('options-permalink.php');
