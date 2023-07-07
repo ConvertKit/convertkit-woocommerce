@@ -249,18 +249,8 @@ class SyncPastOrdersCest
 		$I->seeInSource('Enable ConvertKit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_sent',
-			]
-		);
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_id',
-			]
-		);
+		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_sent', true);
+		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_id', true);
 	}
 
 	/**
@@ -341,18 +331,8 @@ class SyncPastOrdersCest
 		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_sent',
-			]
-		);
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_id',
-			]
-		);
+		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_sent', true);
+		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_id', true);
 	}
 
 	/**
