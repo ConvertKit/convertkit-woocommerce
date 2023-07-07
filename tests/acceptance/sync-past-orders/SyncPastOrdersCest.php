@@ -249,8 +249,8 @@ class SyncPastOrdersCest
 		$I->seeInSource('Enable ConvertKit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_sent', true);
-		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_id', true);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
 	}
 
 	/**
@@ -296,12 +296,7 @@ class SyncPastOrdersCest
 
 		// Remove the Transaction ID metadata in the Order, as if it were sent
 		// by 1.4.2 or older.
-		$I->dontHavePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_id',
-			]
-		);
+		$I->wooCommerceOrderDeleteMeta($I, $postID, 'ckwc_purchase_data_id', true);
 
 		// Login as the Administrator.
 		$I->loginAsAdmin();
@@ -331,8 +326,8 @@ class SyncPastOrdersCest
 		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_sent', true);
-		$I->wooCommerceOrderMetaKeyExists($postID, 'ckwc_purchase_data_id', true);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
 	}
 
 	/**

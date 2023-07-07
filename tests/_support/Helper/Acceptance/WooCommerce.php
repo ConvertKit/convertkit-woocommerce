@@ -715,7 +715,7 @@ class WooCommerce extends \Codeception\Module
 			$I->seeInDatabase(
 				'wp_wc_orders_meta',
 				[
-					'post_id'  => $orderID,
+					'order_id' => $orderID,
 					'meta_key' => $metaKey,
 				]
 			);
@@ -723,7 +723,40 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to delete all orders from the wp_posts and wp_wc_orders tables,
+	 * Helper method to delete the given meta key from the wp_posts and wp_wc_orders tables
+	 * for a given WooComemrce Order.
+	 *
+	 * @since   1.6.6
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID       Order ID.
+	 * @param   string           $metaKey       Meta Key.
+	 * @param   bool             $hposEnabled   If HPOS is enabled.
+	 */
+	public function wooCommerceOrderDeleteMeta($I, $orderID, $metaKey, $hposEnabled = false)
+	{
+		// If HPOS is enabled, check the wp_wc_orders_meta table instead, as the Post
+		// Meta isn't used.
+		if ( ! $hposEnabled) {
+			$I->dontHavePostMetaInDatabase(
+				[
+					'post_id'  => $orderID,
+					'meta_key' => $metaKey,
+				]
+			);
+		} else {
+			$I->dontHaveInDatabase(
+				'wp_wc_orders_meta',
+				[
+					'order_id' => $orderID,
+					'meta_key' => $metaKey,
+				]
+			);
+		}
+	}
+
+	/**
+	 * Helper method to delete all orders from the wp_posts and wp_wc_orders tables.
 	 *
 	 * @since   1.6.6
 	 *
