@@ -104,14 +104,14 @@ class CKWC_Order {
 			return;
 		}
 
-		// Bail if the Order does not require that we subscribe the Customer,
-		// or the Customer was already subscribed.
-		if ( ! $this->should_opt_in_customer( $order_id ) ) {
-			return;
-		}
-
 		// Get WooCommerce Order.
 		$order = wc_get_order( $order_id );
+
+		// Bail if the Order does not require that we subscribe the Customer,
+		// or the Customer was already subscribed.
+		if ( ! $this->should_opt_in_customer( $order ) ) {
+			return;
+		}
 
 		// If no Order could be fetched, bail.
 		if ( ! $order ) {
@@ -130,8 +130,11 @@ class CKWC_Order {
 
 		// Get product-specific subscription settings.
 		foreach ( $order->get_items() as $item ) {
+			// Get the WC_Product object.
+			$product = wc_get_product( $item['product_id'] );
+
 			// Get the Form, Tag or Sequence for this Product.
-			$resource_id = get_post_meta( $item['product_id'], 'ckwc_subscription', true );
+			$resource_id = $product->get_meta( 'ckwc_subscription', true );
 
 			/**
 			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.
@@ -144,7 +147,7 @@ class CKWC_Order {
 			 * @param   string $status_new      Order's New Status.
 			 * @param   int    $product_id      Product ID.
 			 */
-			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new, $item['product_id'] );
+			$resource_id = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', $resource_id, $order_id, $status_old, $status_new, $product->get_id() );
 
 			// If no resource is specified for this Product, don't add it to the array.
 			if ( empty( $resource_id ) ) {
@@ -161,7 +164,7 @@ class CKWC_Order {
 			$coupon = new WC_Coupon( $coupon_code );
 
 			// Get the Form, Tag or Sequence for this Coupon.
-			$resource_id = get_post_meta( $coupon->get_id(), 'ckwc_subscription', true );
+			$resource_id = $coupon->get_meta( 'ckwc_subscription', true );
 
 			/**
 			 * Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Coupon.
@@ -434,7 +437,7 @@ class CKWC_Order {
 		// If no Products exist, mark purchase data as sent and return.
 		if ( ! count( $products ) ) {
 			// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-			$this->mark_purchase_data_sent( $order_id, 0 );
+			$this->mark_purchase_data_sent( $order, 0 );
 
 			// Add a note to the WooCommerce Order that no purchase data was sent.
 			$order->add_order_note( __( '[ConvertKit] Purchase Data skipped, as this Order has no Products', 'woocommerce-convertkit' ) );
@@ -503,7 +506,7 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		$this->mark_purchase_data_sent( $order_id, $response['id'] );
+		$this->mark_purchase_data_sent( $order, $response['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
 		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
@@ -553,38 +556,34 @@ class CKWC_Order {
 		}
 
 		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
-		$query = new WP_Query(
+		$query = new WC_Order_Query(
 			array(
-				'post_type'              => 'shop_order',
-				'posts_per_page'         => -1,
+				'limit'      => -1,
 
 				// Only include Orders that do not match the Purchase Data Event integration setting.
-				'post_status'            => $post_statuses,
+				'status'     => $post_statuses,
 
 				// Only include Orders that do not have a ConvertKit Purchase Data ID.
-				'meta_query'             => array(
+				'meta_query' => array(
 					array(
 						'key'     => $this->purchase_data_id_meta_key,
 						'compare' => 'NOT EXISTS',
 					),
 				),
 
-				// For performance, don't update caches and just return Order IDs, not complete objects.
-				'fields'                 => 'ids',
-				'cache_results'          => false,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
+				// Only return Order IDs.
+				'return'     => 'ids',
 			)
 		);
 
 		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
 		// return false.
-		if ( ! $query->post_count ) {
+		if ( empty( $query->get_orders() ) ) {
 			return false;
 		}
 
 		// Return the array of Order IDs.
-		return $query->posts;
+		return $query->get_orders();
 
 	}
 
@@ -593,13 +592,14 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   int $order_id                       Order ID.
-	 * @param   int $convertkit_purchase_data_id    ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
+	 * @param   WC_Order|WC_Order_Refund $order                         WooCommerce Order.
+	 * @param   int                      $convertkit_purchase_data_id   ConvertKit Purchase ID (different from the WooCommerce Order ID, and set by ConvertKit).
 	 */
-	private function mark_purchase_data_sent( $order_id, $convertkit_purchase_data_id ) {
+	private function mark_purchase_data_sent( $order, $convertkit_purchase_data_id ) {
 
-		update_post_meta( $order_id, $this->purchase_data_sent_meta_key, 'yes' );
-		update_post_meta( $order_id, $this->purchase_data_id_meta_key, $convertkit_purchase_data_id );
+		$order->update_meta_data( $this->purchase_data_sent_meta_key, 'yes' );
+		$order->update_meta_data( $this->purchase_data_id_meta_key, (string) $convertkit_purchase_data_id );
+		$order->save();
 
 	}
 
@@ -613,15 +613,18 @@ class CKWC_Order {
 	 */
 	private function purchase_data_sent( $order_id ) {
 
+		// Get order.
+		$order = wc_get_order( $order_id );
+
 		// Return false if Purchase Data Sent Meta Key isn't yes.
-		if ( 'yes' !== get_post_meta( $order_id, $this->purchase_data_sent_meta_key, true ) ) {
+		if ( 'yes' !== $order->get_meta( $this->purchase_data_sent_meta_key, true ) ) {
 			return false;
 		}
 
 		// Return false if Purchase Data ID Meta Key doesn't exist in this Order.
 		// This is stored in 1.4.3 and higher, ensuring we have a mapping
 		// stored for the WooCommerce Order ID --> ConvertKit Purchase / Transaction ID.
-		if ( ! metadata_exists( 'post', $order_id, $this->purchase_data_id_meta_key ) ) {
+		if ( ! $order->meta_exists( $this->purchase_data_id_meta_key ) ) {
 			return false;
 		}
 
@@ -641,7 +644,12 @@ class CKWC_Order {
 	 */
 	private function mark_customer_opted_in( $order_id ) {
 
-		update_post_meta( $order_id, 'ckwc_opted_in', 'yes' );
+		// Get order.
+		$order = wc_get_order( $order_id );
+
+		// Update metadata.
+		$order->update_meta_data( 'ckwc_opted_in', 'yes' );
+		$order->save();
 
 	}
 
@@ -651,18 +659,18 @@ class CKWC_Order {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   int $order_id   Order ID.
-	 * @return  bool                Customer can be opted in
+	 * @param   WC_Order $order   WooCommerce Order.
+	 * @return  bool                 Customer can be opted in
 	 */
-	private function should_opt_in_customer( $order_id ) {
+	private function should_opt_in_customer( $order ) {
 
 		// If the Order already opted in the Customer, do not opt them in again.
-		if ( 'yes' === get_post_meta( $order_id, 'ckwc_opted_in', true ) ) {
+		if ( 'yes' === $order->get_meta( 'ckwc_opted_in', true ) ) {
 			return false;
 		}
 
 		// If opt in is anything other than 'yes', do not opt in.
-		if ( 'yes' !== get_post_meta( $order_id, 'ckwc_opt_in', true ) ) {
+		if ( 'yes' !== $order->get_meta( 'ckwc_opt_in', true ) ) {
 			return false;
 		}
 
@@ -680,7 +688,7 @@ class CKWC_Order {
 		 * @param   bool    $should_opt_in_customer     Should opt in Customer.
 		 * @param   int     $order_id                   Order ID.
 		 */
-		$should_opt_in_customer = apply_filters( 'convertkit_for_woocommerce_order_should_opt_in_customer', $should_opt_in_customer, $order_id );
+		$should_opt_in_customer = apply_filters( 'convertkit_for_woocommerce_order_should_opt_in_customer', $should_opt_in_customer, $order->get_id() );
 
 		// Return.
 		return $should_opt_in_customer;

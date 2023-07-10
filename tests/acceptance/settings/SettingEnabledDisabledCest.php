@@ -40,7 +40,8 @@ class SettingEnabledDisabledCest
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
 
 		// Click Place order button.
-		$I->click('Place order');
+		$I->waitForElementNotVisible('.blockOverlay');
+		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.
 		$I->waitForElement('.woocommerce-order-received', 10);

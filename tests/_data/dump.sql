@@ -36,6 +36,8 @@ DROP TABLE IF EXISTS `wp_wc_order_coupon_lookup`;
 DROP TABLE IF EXISTS `wp_wc_order_product_lookup`;
 DROP TABLE IF EXISTS `wp_wc_order_stats`;
 DROP TABLE IF EXISTS `wp_wc_order_tax_lookup`;
+DROP TABLE IF EXISTS `wp_wc_orders`;
+DROP TABLE IF EXISTS `wp_wc_orders_meta`;
 DROP TABLE IF EXISTS `wp_wc_product_attributes_lookup`;
 DROP TABLE IF EXISTS `wp_wc_product_meta_lookup`;
 DROP TABLE IF EXISTS `wp_wc_rate_limits`;

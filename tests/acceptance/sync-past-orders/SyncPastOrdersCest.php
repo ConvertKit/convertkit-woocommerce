@@ -18,6 +18,9 @@ class SyncPastOrdersCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
+		// Enable HPOS.
+		$I->setupWooCommerceHPOS($I);
+
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
@@ -39,7 +42,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenIntegrationDisabled(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product.
 		$productName = 'Simple Product';
@@ -58,7 +61,8 @@ class SyncPastOrdersCest
 		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress);
 
 		// Click Place order button.
-		$I->click('Place order');
+		$I->waitForElementNotVisible('.blockOverlay');
+		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.
 		$I->waitForElement('.woocommerce-order-received', 10);
@@ -91,7 +95,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
@@ -129,7 +133,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenNoOrders(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
@@ -155,7 +159,7 @@ class SyncPastOrdersCest
 	public function testNoButtonDisplayedWhenNoPastOrders(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, sending the Order
 		// to ConvertKit.
@@ -191,7 +195,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrder(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
@@ -245,18 +249,8 @@ class SyncPastOrdersCest
 		$I->seeInSource('Enable ConvertKit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_sent',
-			]
-		);
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_id',
-			]
-		);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
 	}
 
 	/**
@@ -281,7 +275,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrderCreatedInPreviousPluginVersion(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
@@ -302,12 +296,7 @@ class SyncPastOrdersCest
 
 		// Remove the Transaction ID metadata in the Order, as if it were sent
 		// by 1.4.2 or older.
-		$I->dontHavePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_id',
-			]
-		);
+		$I->wooCommerceOrderDeleteMeta($I, $postID, 'ckwc_purchase_data_id', true);
 
 		// Login as the Administrator.
 		$I->loginAsAdmin();
@@ -337,18 +326,8 @@ class SyncPastOrdersCest
 		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_sent',
-			]
-		);
-		$I->seePostMetaInDatabase(
-			[
-				'post_id'  => $postID,
-				'meta_key' => 'ckwc_purchase_data_id',
-			]
-		);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
+		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
 	}
 
 	/**
@@ -363,7 +342,7 @@ class SyncPastOrdersCest
 	public function testSyncPastOrderWithInvalidAPICredentials(AcceptanceTester $I)
 	{
 		// Delete all existing WooCommerce Orders from the database.
-		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.

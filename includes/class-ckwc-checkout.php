@@ -6,6 +6,8 @@
  * @author ConvertKit
  */
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 /**
  * Determines whether to display an opt in checkout on the WooCommerce Checkout,
  * based on the integration's settings, and stores whether the WooCommerce Order
@@ -98,9 +100,12 @@ class CKWC_Checkout {
 		// Bail if the given Order ID isn't for a WooCommerce Order.
 		// Third party Plugins e.g. WooCommerce Subscriptions may call the `woocommerce_checkout_update_order_meta`
 		// action with a non-Order ID, resulting in inadvertent opt ins.
-		if ( get_post_type( $order_id ) !== 'shop_order' ) {
+		if ( OrderUtil::get_order_type( $order_id ) !== 'shop_order' ) {
 			return;
 		}
+
+		// Get order.
+		$order = wc_get_order( $order_id );
 
 		// Don't opt in by default.
 		$opt_in = 'no';
@@ -117,7 +122,8 @@ class CKWC_Checkout {
 		}
 
 		// Update Order Post Meta.
-		update_post_meta( $order_id, 'ckwc_opt_in', $opt_in );
+		$order->update_meta_data( 'ckwc_opt_in', $opt_in );
+		$order->save();
 
 	}
 

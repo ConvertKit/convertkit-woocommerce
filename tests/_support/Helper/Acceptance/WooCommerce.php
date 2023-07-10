@@ -69,6 +69,23 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to setup HPOS in WooCommerce.
+	 *
+	 * @since   1.6.6
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
+	public function setupWooCommerceHPOS($I)
+	{
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=features');
+		$I->checkOption('woocommerce_feature_custom_order_tables_enabled');
+		$I->click('Save changes');
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=custom_data_stores');
+		$I->selectOption('input[name="woocommerce_custom_orders_table_enabled"]', 'yes');
+		$I->click('Save changes');
+	}
+
+	/**
 	 * Helper method to setup the Custom Order Numbers Plugin.
 	 *
 	 * @since   1.0.0
@@ -242,7 +259,7 @@ class WooCommerce extends \Codeception\Module
 
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
 		$I->submitForm(
-			'form#post',
+			'div.wrap > form',
 			[
 				'order_status' => $orderStatus,
 			]
@@ -671,5 +688,87 @@ class WooCommerce extends \Codeception\Module
 
 		// Confirm note text does not exist.
 		$I->dontSeeInSource($noteText);
+	}
+
+	/**
+	 * Check the given Order ID has the given meta key.
+	 *
+	 * @since   1.6.6
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID       Order ID.
+	 * @param   string           $metaKey       Meta Key.
+	 * @param   bool             $hposEnabled   If HPOS is enabled.
+	 */
+	public function wooCommerceOrderMetaKeyExists($I, $orderID, $metaKey, $hposEnabled = false)
+	{
+		// If HPOS is enabled, check the wp_wc_orders_meta table instead, as the Post
+		// Meta isn't used.
+		if ( ! $hposEnabled) {
+			$I->seePostMetaInDatabase(
+				[
+					'post_id'  => $orderID,
+					'meta_key' => $metaKey,
+				]
+			);
+		} else {
+			$I->seeInDatabase(
+				'wp_wc_orders_meta',
+				[
+					'order_id' => $orderID,
+					'meta_key' => $metaKey,
+				]
+			);
+		}
+	}
+
+	/**
+	 * Helper method to delete the given meta key from the wp_posts and wp_wc_orders tables
+	 * for a given WooComemrce Order.
+	 *
+	 * @since   1.6.6
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $orderID       Order ID.
+	 * @param   string           $metaKey       Meta Key.
+	 * @param   bool             $hposEnabled   If HPOS is enabled.
+	 */
+	public function wooCommerceOrderDeleteMeta($I, $orderID, $metaKey, $hposEnabled = false)
+	{
+		// If HPOS is enabled, check the wp_wc_orders_meta table instead, as the Post
+		// Meta isn't used.
+		if ( ! $hposEnabled) {
+			$I->dontHavePostMetaInDatabase(
+				[
+					'post_id'  => $orderID,
+					'meta_key' => $metaKey,
+				]
+			);
+		} else {
+			$I->dontHaveInDatabase(
+				'wp_wc_orders_meta',
+				[
+					'order_id' => $orderID,
+					'meta_key' => $metaKey,
+				]
+			);
+		}
+	}
+
+	/**
+	 * Helper method to delete all orders from the wp_posts and wp_wc_orders tables.
+	 *
+	 * @since   1.6.6
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 */
+	public function wooCommerceDeleteAllOrders($I)
+	{
+		// Delete from wp_posts.
+		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
+
+		// Delete from wp_wc_orders and wp_wc_orders_meta HPOS tables.
+		$I->dontHaveInDatabase('wp_wc_orders', [ 'parent_order_id' => 0 ]);
+		$I->dontHaveInDatabase('wp_wc_orders_meta', [ 'id >=', '0' ]);
 	}
 }
