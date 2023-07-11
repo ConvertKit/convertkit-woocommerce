@@ -58,7 +58,7 @@
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_checkout_add_opt_in_checkbox">
 						convertkit_for_woocommerce_checkout_add_opt_in_checkbox
-						<code>includes/class-ckwc-checkout.php::78</code>
+						<code>includes/class-ckwc-checkout.php::80</code>
 					</h3><h4>Overview</h4>
 						<p>Adds the opt-in checkbox to the checkout's billing or order section, based on the Plugin's settings.</p><h4>Parameters</h4>
 					<table>
@@ -85,7 +85,7 @@ add_filter( 'convertkit_for_woocommerce_checkout_add_opt_in_checkbox', function(
 </pre>
 <h3 id="convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id">
 						convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id
-						<code>includes/class-ckwc-order.php::146</code>
+						<code>includes/class-ckwc-order.php::149</code>
 					</h3><h4>Overview</h4>
 						<p>Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Product.</p><h4>Parameters</h4>
 					<table>
@@ -116,7 +116,7 @@ add_filter( 'convertkit_for_woocommerce_checkout_add_opt_in_checkbox', function(
 						</tbody>
 					</table><h4>Usage</h4>
 <pre>
-add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', function( $resource_id, $order_id, $status_old, $status_new, $item['product_id'] ) {
+add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id', function( $resource_id, $order_id, $status_old, $status_new, $product->get_id( ) {
 	// ... your code here
 	// Return value
 	return $resource_id;
@@ -124,7 +124,7 @@ add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_
 </pre>
 <h3 id="convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id_coupon">
 						convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_id_coupon
-						<code>includes/class-ckwc-order.php::176</code>
+						<code>includes/class-ckwc-order.php::179</code>
 					</h3><h4>Overview</h4>
 						<p>Define the Form, Tag or Sequence ID to subscribe the Customer to for the given Coupon.</p><h4>Parameters</h4>
 					<table>
@@ -163,7 +163,7 @@ add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_resource_
 </pre>
 <h3 id="convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions">
 						convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions
-						<code>includes/class-ckwc-order.php::200</code>
+						<code>includes/class-ckwc-order.php::203</code>
 					</h3><h4>Overview</h4>
 						<p>Define the Forms, Tags and/or Sequences to subscribe the Customer to for this Order.</p><h4>Parameters</h4>
 					<table>
@@ -198,7 +198,7 @@ add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscript
 </pre>
 <h3 id="convertkit_for_woocommerce_order_send_purchase_data">
 						convertkit_for_woocommerce_order_send_purchase_data
-						<code>includes/class-ckwc-order.php::478</code>
+						<code>includes/class-ckwc-order.php::481</code>
 					</h3><h4>Overview</h4>
 						<p>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.convertkit.com/#create-a-purchase</p><h4>Parameters</h4>
 					<table>
@@ -233,7 +233,7 @@ add_filter( 'convertkit_for_woocommerce_order_send_purchase_data', function( $pu
 </pre>
 <h3 id="convertkit_for_woocommerce_order_should_opt_in_customer">
 						convertkit_for_woocommerce_order_should_opt_in_customer
-						<code>includes/class-ckwc-order.php::682</code>
+						<code>includes/class-ckwc-order.php::690</code>
 					</h3><h4>Overview</h4>
 						<p>Determine if the Customer should be opted in to ConvertKit. If the Order already opted in the Customer, this filter will not be fired. If the Order does not permit the Customer be opted in (i.e. they declined at checkout), this filter will not be fired.</p><h4>Parameters</h4>
 					<table>
@@ -256,7 +256,7 @@ add_filter( 'convertkit_for_woocommerce_order_send_purchase_data', function( $pu
 						</tbody>
 					</table><h4>Usage</h4>
 <pre>
-add_filter( 'convertkit_for_woocommerce_order_should_opt_in_customer', function( $should_opt_in_customer, $order_id ) {
+add_filter( 'convertkit_for_woocommerce_order_should_opt_in_customer', function( $should_opt_in_customer, $order->get_id( ) {
 	// ... your code here
 	// Return value
 	return $should_opt_in_customer;
@@ -264,7 +264,7 @@ add_filter( 'convertkit_for_woocommerce_order_should_opt_in_customer', function(
 </pre>
 <h3 id="convertkit_for_woocommerce_email">
 						convertkit_for_woocommerce_email
-						<code>includes/class-ckwc-order.php::714</code>
+						<code>includes/class-ckwc-order.php::722</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's email address for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -295,7 +295,7 @@ add_filter( 'convertkit_for_woocommerce_email', function( $email, $order ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_order_name">
 						convertkit_for_woocommerce_order_name
-						<code>includes/class-ckwc-order.php::769</code>
+						<code>includes/class-ckwc-order.php::777</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence, or sending Purchase Data.</p><h4>Parameters</h4>
 					<table>
@@ -326,7 +326,7 @@ add_filter( 'convertkit_for_woocommerce_order_name', function( $name, $order ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_first_name">
 						convertkit_for_woocommerce_first_name
-						<code>includes/class-ckwc-order.php::801</code>
+						<code>includes/class-ckwc-order.php::809</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's first name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -357,7 +357,7 @@ add_filter( 'convertkit_for_woocommerce_first_name', function( $first_name, $ord
 </pre>
 <h3 id="convertkit_for_woocommerce_last_name">
 						convertkit_for_woocommerce_last_name
-						<code>includes/class-ckwc-order.php::833</code>
+						<code>includes/class-ckwc-order.php::841</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's last name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -388,7 +388,7 @@ add_filter( 'convertkit_for_woocommerce_last_name', function( $last_name, $order
 </pre>
 <h3 id="convertkit_for_woocommerce_custom_field_data">
 						convertkit_for_woocommerce_custom_field_data
-						<code>includes/class-ckwc-order.php::887</code>
+						<code>includes/class-ckwc-order.php::895</code>
 					</h3><h4>Overview</h4>
 						<p>Returns an array of ConvertKit Custom Field Key/Value pairs, with values comprising of Order data based, to be sent to ConvertKit when an Order's Customer is subscribed via a Form, Tag or Sequence. Returns false if no Order data should be stored in ConvertKit Custom Fields.</p><h4>Parameters</h4>
 					<table>
@@ -443,7 +443,7 @@ add_filter( 'convertkit_for_woocommerce_custom_field_data', function( $fields, $
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_initialize_admin">
 						convertkit_for_woocommerce_initialize_admin
-						<code>includes/class-wp-ckwc.php::114</code>
+						<code>includes/class-wp-ckwc.php::136</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -463,7 +463,7 @@ do_action( 'convertkit_for_woocommerce_initialize_admin', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_frontend">
 						convertkit_for_woocommerce_initialize_frontend
-						<code>includes/class-wp-ckwc.php::137</code>
+						<code>includes/class-wp-ckwc.php::159</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -483,7 +483,7 @@ do_action( 'convertkit_for_woocommerce_initialize_frontend', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_global">
 						convertkit_for_woocommerce_initialize_global
-						<code>includes/class-wp-ckwc.php::158</code>
+						<code>includes/class-wp-ckwc.php::180</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
