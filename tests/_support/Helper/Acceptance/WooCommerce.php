@@ -78,7 +78,7 @@ class WooCommerce extends \Codeception\Module
 	public function setupWooCommerceHPOS($I)
 	{
 		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=features');
-		$I->checkOption('woocommerce_feature_custom_order_tables_enabled');
+		$I->checkOption('woocommerce_custom_orders_table_enabled');
 		$I->click('Save changes');
 		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=custom_data_stores');
 		$I->selectOption('input[name="woocommerce_custom_orders_table_enabled"]', 'yes');
