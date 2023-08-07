@@ -81,9 +81,6 @@ class WooCommerce extends \Codeception\Module
 		$I->waitForElementVisible('input[name="woocommerce_custom_orders_table_enabled"]');
 		$I->checkOption('woocommerce_custom_orders_table_enabled');
 		$I->click('Save changes');
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=custom_data_stores');
-		$I->selectOption('input[name="woocommerce_custom_orders_table_enabled"]', 'yes');
-		$I->click('Save changes');
 	}
 
 	/**
