@@ -62,6 +62,7 @@ class SyncPastOrdersCest
 
 		// Click Place order button.
 		$I->waitForElementNotVisible('.blockOverlay');
+		$I->scrollTo('#order_review_heading');
 		$I->click('#place_order');
 
 		// Wait until JS completes and redirects.

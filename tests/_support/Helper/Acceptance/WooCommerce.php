@@ -215,6 +215,7 @@ class WooCommerce extends \Codeception\Module
 
 		// Click Place order button.
 		$I->waitForElementNotVisible('.blockOverlay');
+		$I->scrollTo('#order_review_heading');
 		$I->click('#place_order');
 
 		// Confirm order received is displayed.
