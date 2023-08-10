@@ -78,9 +78,7 @@ class WooCommerce extends \Codeception\Module
 	public function setupWooCommerceHPOS($I)
 	{
 		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=features');
-		$I->checkOption('woocommerce_feature_custom_order_tables_enabled');
-		$I->click('Save changes');
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=advanced&section=custom_data_stores');
+		$I->waitForElementVisible('input[name="woocommerce_custom_orders_table_enabled"]');
 		$I->selectOption('input[name="woocommerce_custom_orders_table_enabled"]', 'yes');
 		$I->click('Save changes');
 	}
@@ -217,6 +215,7 @@ class WooCommerce extends \Codeception\Module
 
 		// Click Place order button.
 		$I->waitForElementNotVisible('.blockOverlay');
+		$I->scrollTo('#order_review_heading');
 		$I->click('#place_order');
 
 		// Confirm order received is displayed.
