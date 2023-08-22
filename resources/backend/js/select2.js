@@ -14,7 +14,7 @@
  */
 function ckwcSelect2Init() {
 
-	( function( $ ) {
+	( function ( $ ) {
 
 		$( '.ckwc-select2' ).select2();
 
@@ -23,7 +23,7 @@ function ckwcSelect2Init() {
 }
 
 jQuery( document ).ready(
-	function( $ ) {
+	function ( $ ) {
 
 		ckwcSelect2Init();
 

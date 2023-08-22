@@ -105,8 +105,7 @@ class Plugin extends \Codeception\Module
 		$mapCustomFields = false,
 		$displayOptIn = false,
 		$sendPurchaseDataEvent = false
-	)
-	{
+	) {
 		// Define Plugin's settings.
 		$I->haveOptionInDatabase(
 			'woocommerce_ckwc_settings',

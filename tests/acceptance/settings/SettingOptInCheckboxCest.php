@@ -94,7 +94,6 @@ class SettingOptInCheckboxCest
 
 		// Confirm that the label is the default value.
 		$I->seeInSource('I want to subscribe to the newsletter');
-
 	}
 
 	/**

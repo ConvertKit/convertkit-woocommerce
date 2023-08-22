@@ -19,7 +19,7 @@ var ckwcSettings = {
  * @since 	1.4.2
  */
 jQuery( document ).ready(
-	function( $ ) {
+	function ( $ ) {
 
 		// Bail if we're not viewing the Integration Settings,
 		// which can be determined by WooCommerce's hidden input field 'section'.
@@ -40,7 +40,7 @@ jQuery( document ).ready(
 		// Update settings and refresh UI when a setting is changed.
 		$( 'input[type=checkbox]' ).on(
 			'change',
-			function() {
+			function () {
 
 				ckwcSettings[ $( this ).attr( 'id' ).replace( 'woocommerce_ckwc_', '' ) ] = $( this ).prop( 'checked' );
 
@@ -77,11 +77,11 @@ jQuery( document ).ready(
  */
 function ckwcRefreshUI() {
 
-	( function( $ ) {
+	( function ( $ ) {
 
 		// Show all rows.
 		$( 'table.form-table tr' ).each(
-			function() {
+			function () {
 				$( this ).show();
 			}
 		);
@@ -90,7 +90,7 @@ function ckwcRefreshUI() {
 		for ( let setting in ckwcSettings ) {
 			if ( ! ckwcSettings[ setting ] ) {
 				$( 'table.form-table tr' ).each(
-					function() {
+					function () {
 						// Skip if this table row is for the setting we've just checked/unchecked.
 						if ( $( '[id="woocommerce_ckwc_' + setting + '"]', $( this ) ).length > 0 ) {
 							return;

@@ -133,8 +133,7 @@ class WooCommerce extends \Codeception\Module
 		$customFields = false,
 		$nameFormat = 'first',
 		$couponFormTagSequence = false
-	)
-	{
+	) {
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,

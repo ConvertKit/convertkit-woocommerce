@@ -10,7 +10,7 @@
 
 <p>
 	<?php
-	echo sprintf(
+	printf(
 		/* translators: %1$s: Post Type Singular Name, %2$s: Link to Integration Settings */
 		esc_html__( 'To configure the ConvertKit form, tag or sequence to subscribe customers to who use this %1$s, %2$s and enter a valid API Key and API Secret.', 'woocommerce-convertkit' ),
 		esc_attr( $post_type->labels->singular_name ),

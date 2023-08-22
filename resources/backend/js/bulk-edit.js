@@ -14,7 +14,7 @@
  * @since 	1.4.8
  */
 jQuery( document ).ready(
-	function( $ ) {
+	function ( $ ) {
 
 		// Move Bulk Edit fields from footer into the hidden bulk-edit table row,
 		// if a bulk-edit table row exists (it won't exist if searching returns no pages).
