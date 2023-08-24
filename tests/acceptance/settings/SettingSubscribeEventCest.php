@@ -50,7 +50,6 @@ class SettingSubscribeEventCest
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Pending payment');
-
 	}
 	/**
 	 * Test that the Order Processing option is saved when selected at

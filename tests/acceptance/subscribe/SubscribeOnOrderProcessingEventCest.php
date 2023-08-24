@@ -346,7 +346,6 @@ class SubscribeOnOrderProcessingEventCest
 
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
 		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
-
 	}
 
 	/**

@@ -13,7 +13,7 @@
  */
 function ckwcSyncPastOrders() {
 
-	( function( $ ) {
+	( function ( $ ) {
 
 		$( '#progress-bar' ).synchronous_request(
 			{

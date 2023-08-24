@@ -16,12 +16,12 @@
  * @since 	1.4.8
  */
 jQuery( document ).ready(
-	function( $ ) {
+	function ( $ ) {
 
 		var ckwcInlineEditPost = inlineEditPost.edit;
 
 		// Extend WordPress' quick edit function.
-		inlineEditPost.edit = function( id ) {
+		inlineEditPost.edit = function ( id ) {
 
 			// Merge arguments from original function.
 			ckwcInlineEditPost.apply( this, arguments );
@@ -39,7 +39,7 @@ jQuery( document ).ready(
 
 			// Iterate through any ConvertKit inline data, assigning values to Quick Edit fields.
 			$( '.ckwc', $( '#inline_' + id ) ).each(
-				function() {
+				function () {
 
 					// Assign the setting's value to the setting's Quick Edit field.
 					$( '#ckwc-quick-edit select[name="' + $( this ).data( 'setting' ) + '"]' ).val( $( this ).data( 'value' ) );

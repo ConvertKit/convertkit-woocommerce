@@ -11,11 +11,11 @@
  * @since 	1.4.8
  */
 jQuery( document ).ready(
-	function( $ ) {
+	function ( $ ) {
 
 		$( 'button.ckwc-refresh-resources' ).on(
 			'click',
-			function( e ) {
+			function ( e ) {
 
 				e.preventDefault();
 
@@ -61,7 +61,7 @@ jQuery( document ).ready(
 
 							// Remove existing select options.
 							$( 'option', $( field ) ).each(
-								function() {
+								function () {
 									// Skip if data-preserve-on-refresh is specified, as this means we want to keep this specific option.
 									// This will be present on the 'None' and 'Default' options.
 									if ( typeof $( this ).data( 'preserve-on-refresh' ) !== 'undefined' ) {
@@ -79,7 +79,7 @@ jQuery( document ).ready(
 								// resource = forms, sequences, tags.
 								// resoruces = array of resources.
 								resources.forEach(
-									function( item ) {
+									function ( item ) {
 										var value = $( 'optgroup#ckwc-' + resource, $( field ) ).data( 'option-value-prefix' ) + item.id;
 										$( 'optgroup#ckwc-' + resource, $( field ) ).append(
 											new Option(
@@ -131,7 +131,7 @@ jQuery( document ).ready(
  */
 function ckwcRefreshResourcesRemoveNotices() {
 
-	( function( $ ) {
+	( function ( $ ) {
 
 		$( 'div.ckwc-error' ).remove();
 
@@ -149,7 +149,7 @@ function ckwcRefreshResourcesRemoveNotices() {
  */
 function ckwcRefreshResourcesOutputErrorNotice( message ) {
 
-	( function( $ ) {
+	( function ( $ ) {
 
 		// Show a WordPress style error notice.
 		$( 'hr.wp-header-end' ).after( '<div id="message" class="error ckwc-error notice is-dismissible"><p>' + message + '</p></div>' );
