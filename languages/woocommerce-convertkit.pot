@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the ConvertKit for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: ConvertKit for WooCommerce 1.6.8\n"
+"Project-Id-Version: ConvertKit for WooCommerce 1.6.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-31T13:07:48+00:00\n"
+"POT-Creation-Date: 2023-10-05T12:52:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -102,43 +102,79 @@ msgid "unsubscribe(): the email parameter is empty."
 msgstr ""
 
 #: includes/class-ckwc-api.php:80
+msgid "broadcast_delete(): the broadcast_id parameter is empty."
+msgstr ""
+
+#: includes/class-ckwc-api.php:82
 msgid "get_all_posts(): the posts_per_request parameter must be equal to or greater than 1."
 msgstr ""
 
-#: includes/class-ckwc-api.php:81
+#: includes/class-ckwc-api.php:83
 msgid "get_all_posts(): the posts_per_request parameter must be equal to or less than 50."
 msgstr ""
 
-#: includes/class-ckwc-api.php:83
+#: includes/class-ckwc-api.php:85
 msgid "get_posts(): the page parameter must be equal to or greater than 1."
 msgstr ""
 
-#: includes/class-ckwc-api.php:84
+#: includes/class-ckwc-api.php:86
 msgid "get_posts(): the per_page parameter must be equal to or greater than 1."
 msgstr ""
 
-#: includes/class-ckwc-api.php:85
+#: includes/class-ckwc-api.php:87
 msgid "get_posts(): the per_page parameter must be equal to or less than 50."
 msgstr ""
 
-#. translators: HTTP method
-#: includes/class-ckwc-api.php:88
-msgid "API request method %s is not supported in ConvertKit_API class."
-msgstr ""
-
 #: includes/class-ckwc-api.php:89
-msgid "ConvertKit API Error: Rate limit hit."
+msgid "subscriber_authentication_send_code(): the email parameter is empty."
 msgstr ""
 
 #: includes/class-ckwc-api.php:90
-msgid "ConvertKit API Error: Internal server error."
+msgid "subscriber_authentication_send_code(): the redirect_url parameter is empty."
 msgstr ""
 
 #: includes/class-ckwc-api.php:91
-msgid "ConvertKit API Error: Bad gateway."
+msgid "subscriber_authentication_send_code(): the redirect_url parameter is not a valid URL."
 msgstr ""
 
 #: includes/class-ckwc-api.php:92
+msgid "subscriber_authentication_send_code(): the token parameter is missing from the API response."
+msgstr ""
+
+#: includes/class-ckwc-api.php:94
+msgid "subscriber_authentication_verify(): the token parameter is empty."
+msgstr ""
+
+#: includes/class-ckwc-api.php:95
+msgid "subscriber_authentication_verify(): the subscriber_code parameter is empty."
+msgstr ""
+
+#: includes/class-ckwc-api.php:96
+msgid "The entered code is invalid. Please try again, or click the link sent in the email."
+msgstr ""
+
+#: includes/class-ckwc-api.php:98
+msgid "profiles(): the signed_subscriber_id parameter is empty."
+msgstr ""
+
+#. translators: HTTP method
+#: includes/class-ckwc-api.php:101
+msgid "API request method %s is not supported in ConvertKit_API class."
+msgstr ""
+
+#: includes/class-ckwc-api.php:102
+msgid "ConvertKit API Error: Rate limit hit."
+msgstr ""
+
+#: includes/class-ckwc-api.php:103
+msgid "ConvertKit API Error: Internal server error."
+msgstr ""
+
+#: includes/class-ckwc-api.php:104
+msgid "ConvertKit API Error: Bad gateway."
+msgstr ""
+
+#: includes/class-ckwc-api.php:105
 msgid "ConvertKit API Error: The response is not of the expected type array."
 msgstr ""
 
