@@ -44,7 +44,7 @@ jobs:
     # For PHP, make sure that an nginx configuration file exists for the required PHP version in this repository at tests/nginx/php-x.x.conf
     strategy:
       matrix:
-        wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
+        wp-versions: [ '6.4-beta3' ] #[ '6.1.1', 'latest' ]
         php-versions: [ '7.4', '8.0', '8.1', '8.2' ] #[ '7.4', '8.0', '8.1' ]
         
         # Folder names within the 'tests' folder to run tests in parallel.
@@ -85,14 +85,6 @@ jobs:
         with:
           path: ${{ env.PLUGIN_DIR }}
 
-      # This step is deliberate, to force PHP 7.4 for WP-CLI to work.
-      # PHP 8.x results in the workflow failing due to incompatibilities between WP-CLI and PHP 8.x.
-      - name: Install PHP 7.4.26
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4.26
-          coverage: xdebug
-
       # We install WP-CLI, as it provides useful commands to setup and install WordPress through the command line.
       - name: Install WP-CLI
         run: |
@@ -126,7 +118,6 @@ jobs:
       # WP_DEBUG = true is required so all PHP errors are output and caught by tests (E_ALL).
       # WP_DEBUG = false for PHP 8.1, 8.2, otherwise errors are output due to WooCommerce. 
       - name: Enable WP_DEBUG
-        if: ${{ matrix.php-versions != '8.1' && matrix.php-versions != '8.2' }}
         working-directory: ${{ env.ROOT_DIR }}
         run: |
           wp-cli config set WP_DEBUG true --raw

@@ -52,6 +52,8 @@ modules:
             headers:
                 X_TEST_REQUEST: 1
                 X_WPBROWSER_REQUEST: 1
+        WPFilesystem:
+            wpRootFolder: '%WP_ROOT_FOLDER%'
         WPWebDriver:
             url: '%TEST_SITE_WP_URL%'
             adminUsername: '%TEST_SITE_ADMIN_USERNAME%'
