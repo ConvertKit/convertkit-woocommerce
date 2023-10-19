@@ -28,5 +28,4 @@ parameters:
     # Ignore the following errors, as PHPStan and PHPStan for WordPress haven't registered symbols for them yet,
     # so they're false positives.
     ignoreErrors:
-        - '#Constant WP_PLUGIN_DIR not found.#'
         - '#Call to an undefined method WC_Order_Item::get_product\(\).#'
