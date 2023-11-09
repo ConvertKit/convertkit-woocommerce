@@ -43,6 +43,7 @@ jobs:
     # If testing older WordPress versions, ensure they are e.g. 5.7.4, 5.6.6 that have the X3 SSL fix: https://core.trac.wordpress.org/ticket/54207
     # For PHP, make sure that an nginx configuration file exists for the required PHP version in this repository at tests/nginx/php-x.x.conf
     strategy:
+      fail-fast: false
       matrix:
         wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
         php-versions: [ '7.4', '8.0', '8.1', '8.2' ] #[ '7.4', '8.0', '8.1' ]
@@ -85,14 +86,6 @@ jobs:
         with:
           path: ${{ env.PLUGIN_DIR }}
 
-      # This step is deliberate, to force PHP 7.4 for WP-CLI to work.
-      # PHP 8.x results in the workflow failing due to incompatibilities between WP-CLI and PHP 8.x.
-      - name: Install PHP 7.4.26
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4.26
-          coverage: xdebug
-
       # We install WP-CLI, as it provides useful commands to setup and install WordPress through the command line.
       - name: Install WP-CLI
         run: |
@@ -124,7 +117,7 @@ jobs:
         run: wp-cli plugin install ${{ secrets.CONVERTKIT_PAID_PLUGIN_URLS }}
       
       # WP_DEBUG = true is required so all PHP errors are output and caught by tests (E_ALL).
-      # WP_DEBUG = false for PHP 8.1, 8.2, otherwise errors are output due to WooCommerce. 
+      # WP_DEBUG = false for PHP 8.2, otherwise E_DEPRECATED is output due to WooCommerce.
       - name: Enable WP_DEBUG
         if: ${{ matrix.php-versions != '8.1' && matrix.php-versions != '8.2' }}
         working-directory: ${{ env.ROOT_DIR }}
