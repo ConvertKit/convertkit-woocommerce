@@ -513,7 +513,7 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button[name=add-to-cart]');
 
 		// View Cart.
-		$I->click('.woocommerce-message a.button.wc-forward');
+		$I->click('a.wc-forward');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -522,7 +522,7 @@ class WooCommerce extends \Codeception\Module
 		$I->seeInSource($productName);
 
 		// Proceed to Checkout.
-		$I->click('a.checkout-button');
+		$I->click('Proceed to Checkout');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
