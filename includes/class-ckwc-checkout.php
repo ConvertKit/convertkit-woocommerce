@@ -49,7 +49,7 @@ class CKWC_Checkout {
 
 		// Store whether the customer should be opted in, in the Order's metadata.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
-		
+
 	}
 
 	/**

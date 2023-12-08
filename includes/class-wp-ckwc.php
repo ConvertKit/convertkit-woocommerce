@@ -103,7 +103,7 @@ class WP_CKWC {
 	 * The opt-in checkbox uses the `woocommerce_checkout_fields` filter, which the Checkout block doesn't use,
 	 * resulting in no opt-in checkbox displaying.  WooCommerce plan to introduce a `register_checkout_field` method
 	 * that we can use in a later update.
-	 * 
+	 *
 	 * @see https://github.com/woocommerce/woocommerce-blocks/discussions/11173#discussioncomment-7403117
 	 *
 	 * @since   1.7.1
@@ -116,7 +116,7 @@ class WP_CKWC {
 		}
 
 		// Declare incompatibility.
-        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', CKWC_PLUGIN_FILE, false ); // @phpstan-ignore-line
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', CKWC_PLUGIN_FILE, false ); // @phpstan-ignore-line
 
 	}
 

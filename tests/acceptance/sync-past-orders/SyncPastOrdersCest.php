@@ -72,7 +72,7 @@ class SyncPastOrdersCest
 		$result = [
 			'email_address' => $emailAddress,
 			'product_id'    => $productID,
-			'order_id'      => (int) $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+			'order_id'      => (int) $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
 		];
 
 		// Login as the Administrator.

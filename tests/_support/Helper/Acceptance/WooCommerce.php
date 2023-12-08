@@ -223,13 +223,13 @@ class WooCommerce extends \Codeception\Module
 		$I->waitForElement('body.woocommerce-order-received');
 		$I->seeInSource('Order');
 		$I->seeInSource('received');
-		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
+		$I->seeInSource('Order details</h3>');
 
 		// Return data.
 		return [
 			'email_address'   => $emailAddress,
 			'product_id'      => $productID,
-			'order_id'        => $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+			'order_id'        => (int) $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
 			'subscription_id' => ( ( $productType === 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
@@ -528,15 +528,14 @@ class WooCommerce extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Complete Billing Details.
-		$I->fillField('#billing-first_name', 'First');
-		$I->fillField('#billing-last_name', 'Last');
-		$I->fillField('#billing-address_1', 'Address Line 1');
-		$I->fillField('#billing-city', 'City');
-		$I->fillField('#billing-postcode', '12345');
-		$I->fillField('#billing-phone', '123-123-1234');
-		$I->fillField('#email', $emailAddress);
-		$I->checkOption('#checkbox-control-0');
-		$I->fillField('.wc-block-checkout__order-notes textarea', 'Notes');
+		$I->fillField('#billing_first_name', 'First');
+		$I->fillField('#billing_last_name', 'Last');
+		$I->fillField('#billing_address_1', 'Address Line 1');
+		$I->fillField('#billing_city', 'City');
+		$I->fillField('#billing_postcode', '12345');
+		$I->fillField('#billing_phone', '123-123-1234');
+		$I->fillField('#billing_email', $emailAddress);
+		$I->fillField('#order_comments', 'Notes');
 
 		// Depending on the payment method required, complete some fields.
 		switch ($paymentMethod) {
@@ -545,7 +544,7 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				// $I->click('label[for="payment_method_stripe"]');
+				$I->click('label[for="payment_method_stripe"]');
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
 				$I->fillField('cardnumber', '4242424242424242');
 				$I->fillfield('exp-date', '01/26');
