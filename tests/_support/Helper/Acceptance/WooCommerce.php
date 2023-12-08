@@ -198,7 +198,7 @@ class WooCommerce extends \Codeception\Module
 			$I->waitForElementVisible('input#coupon_code');
 			$I->fillField('input#coupon_code', '20off');
 			$I->click('Apply coupon');
-			
+
 			$I->waitForText('Coupon code applied successfully.', 5, '.is-success');
 		}
 
