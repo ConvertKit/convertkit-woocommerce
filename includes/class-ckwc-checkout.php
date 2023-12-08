@@ -49,7 +49,7 @@ class CKWC_Checkout {
 
 		// Store whether the customer should be opted in, in the Order's metadata.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
-
+		
 	}
 
 	/**
@@ -86,7 +86,8 @@ class CKWC_Checkout {
 	}
 
 	/**
-	 * Saves whether the customer should be subscribed to ConvertKit for this order.
+	 * Saves whether the customer should be subscribed to ConvertKit for this order
+	 * when using the checkout.
 	 *
 	 * This function is not called if the 'Subscribe Customers' option is disabled
 	 * in the Plugin settings.
