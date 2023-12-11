@@ -44,11 +44,14 @@ class WP_CKWC {
 		// Register integration.
 		add_filter( 'woocommerce_integrations', array( $this, 'woocommerce_integrations_register' ) );
 
+		// Register blocks.
+		add_action( 'woocommerce_blocks_loaded', array( $this, 'woocommerce_blocks_register' ) );
+
 		// Declare HPOS compatibility.
 		add_action( 'before_woocommerce_init', array( $this, 'woocommerce_hpos_compatibility' ) );
 
 		// Declare Checkout block incompatibility.
-		add_action( 'before_woocommerce_init', array( $this, 'woocommerce_checkout_block_incompatibility' ) );
+		// add_action( 'before_woocommerce_init', array( $this, 'woocommerce_checkout_block_incompatibility' ) );
 
 		// Initialize.
 		add_action( 'woocommerce_init', array( $this, 'woocommerce_init' ) );
@@ -75,6 +78,20 @@ class WP_CKWC {
 		$integrations[] = 'CKWC_Integration';
 
 		return $integrations;
+
+	}
+
+	public function woocommerce_blocks_register() {
+
+		// Load blocks.
+		require_once CKWC_PLUGIN_PATH . '/includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php';
+
+		// Register blocks.
+		add_action( 'woocommerce_blocks_checkout_block_registration', function( $integration_registry ) {
+
+			$integration_registry->register( new CKWC_Opt_In_Block_Integration() );
+
+		} );
 
 	}
 
