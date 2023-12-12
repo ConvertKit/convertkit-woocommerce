@@ -55,6 +55,11 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 	}
 
+	/**
+	 * Register JS to register the block in the block editor.
+	 * 
+	 * @since 	1.7.1
+	 */
 	public function register_editor_scripts() {
 	
 		wp_register_script(
@@ -64,9 +69,22 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 			CKWC_PLUGIN_VERSION,
 			true
 		);
+
+		// Include settings from CKWC_Integration as an object for the script,
+		// as these determine if the checkbox should be available, and if so its
+		// default checked state and label.
+		// Typically these would be presented as options to the user in the block
+		// editor, however this plugin has historically stored the settings
+		// at WooCommerce > Settings > Integrations > ConvertKit, so we need
+		// to honor those settings.
+		wp_localize_script( 'ckwc-opt-in-block', 'ckwc_integration', array(
+			'enabled' => $this->integration->is_enabled(),
+			'display_opt_in' => $this->integration->get_option_bool( 'display_opt_in' ), 
+			'opt_in_label' => $this->integration->get_option( 'opt_in_label' ),
+			'opt_in_status' => $this->integration->get_option( 'opt_in_status' ),
+		) );
 		
 	}
-
 
 	/**
 	 * Registers the block.
@@ -117,6 +135,13 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 	}
 
+	/**
+	 * Defines the data schema for the opt in block.
+	 * 
+	 * @since 	1.7.1
+	 * 
+	 * @return 	array
+	 */
 	public function schema() {
 
 		return array(

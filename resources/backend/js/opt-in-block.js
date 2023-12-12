@@ -17,45 +17,82 @@
 
 	// Define some constants for the various items we'll use.
 	const el                    = element.createElement;
-	const { registerBlockType } = blocks;
-	const { InspectorControls } = editor;
+	const { 
+		registerBlockType
+	} 							= blocks;
 	const {
-		Fragment,
-		useState
-	}                           = element;
-	const {
-		Button,
-		Dashicon,
-		TextControl,
-		SelectControl,
-		ToggleControl,
-		Panel,
-		PanelBody,
-		PanelRow
+		CheckboxControl
 	}                           = components;
 
 	// Register Block.
 	registerBlockType(
 		'ckwc/opt-in',
 		{
-			title:      'ckwc opt in',
-			description:'Adds a ConvertKit opt in checkbox to the checkout.',
-			category:   'woocommerce',
-			icon:       getIcon,
-			keywords: 	block.keywords,
-			attributes: block.attributes,
-			supports: 	block.supports,
-			example: 	{
-				attributes: {
-					is_gutenberg_example: true,
-				}
+		    title: 'ConvertKit Opt In',
+		   	category: 'woocommerce',
+			description: 'Displays a ConvertKit opt in checkbox at Checkout.',
+			//icon:       getIcon,
+			keywords: [
+			    'subscriber',
+			    'newsletter',
+			    'email',
+			    'convertkit',
+			    'opt in',
+			    'checkout'
+			],
+			supports: {
+			    'html': false,
+			    'align': false,
+			    'multiple': false,
+			    'reusable': false
+			},
+			parent: [
+			    'woocommerce/checkout-fields-block'  
+			],
+			attributes: {
+			    'lock': {
+			        'type': 'object',
+			        'default': {
+			            'remove': true,
+			            'move': true
+			        }
+			    },
+			    'ckwc_opt_in': {
+			        'type': 'boolean'
+			    }
 			},
 
 			// Editor.
 			edit: function ( props ) {
 
-				// Deliberate; opt in label and default status is defined in Plugin's settings.
-				return null;
+				// If the integration is disabled or set not to display the opt in checkbox at checkout,
+				// don't render anything.
+				if ( ! ckwc_integration.enabled ) {
+					return null;
+				}
+				if ( ! ckwc_integration.display_opt_in ) {
+					return null;
+				}
+
+				// Return a render of the checkbox in the block editor as it would look
+				// on the frontend checkout, based on the integration settings for the
+				// checkbox checked state and its label.
+				return (
+					el(
+						'div',
+						{},
+						[
+							el(
+								CheckboxControl,
+								{
+									id: 'ckwc-opt-in',
+									checked: ( ckwc_integration.opt_in_status === 'checked' ? true : false ),
+									label: ckwc_integration.opt_in_label,
+								}
+							)
+						]
+					)
+				);
 
 			},
 
@@ -63,8 +100,7 @@
 			save: function ( props ) {
 
 				// Deliberate; preview in the editor is determined by the return statement in `edit` above.
-				// On the frontend site, the block's render() PHP class is always called, so we dynamically
-				// fetch the content.
+				// On the frontend site, the block's render() PHP class is always called.
 				return null;
 
 			},
