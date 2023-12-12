@@ -48,10 +48,36 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 		// Fetch integration.
 		$this->integration = WP_CKWC_Integration();
 
-		//$this->register_frontend_scripts();
+		$this->register_frontend_scripts();
 		$this->register_editor_scripts();
 		$this->register();
 		$this->extend_store_api();
+
+	}
+
+	public function register_frontend_scripts() {
+
+		wp_register_script(
+			'ckwc-opt-in-block-frontend',
+			CKWC_PLUGIN_URL . 'resources/frontend/js/opt-in-block.js',
+			array( 'jquery' ),
+			CKWC_PLUGIN_VERSION,
+			true
+		);
+
+		// Include settings from CKWC_Integration as an object for the script,
+		// as these determine if the checkbox should be available, and if so its
+		// default checked state and label.
+		// Typically these would be presented as options to the user in the block
+		// editor, however this plugin has historically stored the settings
+		// at WooCommerce > Settings > Integrations > ConvertKit, so we need
+		// to honor those settings.
+		wp_localize_script( 'ckwc-opt-in-block-frontend', 'ckwc_integration', array(
+			'enabled' => $this->integration->is_enabled(),
+			'display_opt_in' => $this->integration->get_option_bool( 'display_opt_in' ), 
+			'opt_in_label' => $this->integration->get_option( 'opt_in_label' ),
+			'opt_in_status' => $this->integration->get_option( 'opt_in_status' ),
+		) );
 
 	}
 
@@ -95,35 +121,7 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 		register_block_type( CKWC_PLUGIN_PATH . '/includes/blocks/opt-in', array(
 			'editor_script' => 'ckwc-opt-in-block',
-			'render_callback' => array( $this, 'render' ),
 		) );
-
-	}
-
-	/**
-	 * Renders the block on the frontend site.
-	 * 
-	 * @since 	1.7.1
-	 * 
-	 * @param 	array 	$atts 	Block attributes.
-	 * @return 	string
-	 */
-	public function render( $atts ) {
-
-		// Don't render anything if the integration is disabled.
-		if ( ! $this->integration->is_enabled() ) {
-			return '';
-		}
-
-		// Don't render anything if the check box is disabled in the integration settings.
-		if ( ! $this->integration->get_option_bool( 'display_opt_in' ) ) {
-			return '';
-		}
-
-		// Return a checkbox.
-		ob_start();
-		require CKWC_PLUGIN_PATH . '/views/frontend/blocks/opt-in.php';
-		return ob_get_clean();
 
 	}
 
@@ -179,7 +177,7 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	 */
 	public function get_script_handles() {
 
-		return array();
+		return array( 'ckwc-opt-in-block-frontend' );
 
 	}
 

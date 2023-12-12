@@ -5,6 +5,8 @@
  * @author ConvertKit
  */
 
+console.log( 'backend' );
+
 /**
  * Registers the opt-in block in the Gutenberg editor.
  *
@@ -20,8 +22,12 @@
 	const { 
 		registerBlockType
 	} 							= blocks;
+	const { InspectorControls } = editor;
 	const {
-		CheckboxControl
+		CheckboxControl,
+		Panel,
+		PanelBody,
+		PanelRow
 	}                           = components;
 
 	// Register Block.
@@ -83,6 +89,17 @@
 						{},
 						[
 							el(
+								InspectorControls,
+								{},
+								el(
+									PanelBody,
+									{
+										title: 'title',
+										key: 'ckwc-opt-in-panel'
+									}
+								)
+							),
+							el(
 								CheckboxControl,
 								{
 									id: 'ckwc-opt-in',
@@ -99,8 +116,8 @@
 			// Output.
 			save: function ( props ) {
 
-				// Deliberate; preview in the editor is determined by the return statement in `edit` above.
-				// On the frontend site, the block's render() PHP class is always called.
+				// This isn't used on the frontend, as WooCommerce blocks operate a bit differently from typical blocks.
+				// See resources/frontend/opt-in-block.js to define the checkout output.
 				return null;
 
 			},
