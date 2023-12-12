@@ -79,6 +79,25 @@ class WP_CKWC {
 	}
 
 	/**
+	 * Tells WooCommerce that this integration is compatible with HPOS.
+	 *
+	 * @see https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
+	 *
+	 * @since   1.6.6
+	 */
+	public function woocommerce_hpos_compatibility() {
+
+		// Don't declare compatibility if the applicable class doesn't exist.
+		if ( ! class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			return;
+		}
+
+		// Declare compatibility with HPOS.
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CKWC_PLUGIN_FILE, true ); // @phpstan-ignore-line
+
+	}
+
+	/**
 	 * Registers the opt in checkbox block for the WooCommerce Checkout Block.
 	 *
 	 * @since   1.7.1
@@ -97,25 +116,6 @@ class WP_CKWC {
 
 			}
 		);
-
-	}
-
-	/**
-	 * Tells WooCommerce that this integration is compatible with HPOS.
-	 *
-	 * @see https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#declaring-extension-incompatibility
-	 *
-	 * @since   1.6.6
-	 */
-	public function woocommerce_hpos_compatibility() {
-
-		// Don't declare compatibility if the applicable class doesn't exist.
-		if ( ! class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			return;
-		}
-
-		// Declare compatibility with HPOS.
-		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CKWC_PLUGIN_FILE, true ); // @phpstan-ignore-line
 
 	}
 

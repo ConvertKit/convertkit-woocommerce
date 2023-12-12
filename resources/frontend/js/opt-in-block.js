@@ -5,8 +5,6 @@
  * @author ConvertKit
  */
 
-console.log( 'frontend' );
-
 /**
  * Registers the opt-in block within the WooCommerce Checkout, and defines
  * its output on the frontend site.
@@ -28,6 +26,7 @@ console.log( 'frontend' );
 
 	registerCheckoutBlock(
 		{
+			// @TODO read this from block.json to avoid repetition.
 			metadata: {
 				name: 'ckwc/opt-in',
 				title: 'ConvertKit Opt In',

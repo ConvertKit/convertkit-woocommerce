@@ -5,8 +5,6 @@
  * @author ConvertKit
  */
 
-console.log( 'backend' );
-
 /**
  * Registers the opt-in block in the Gutenberg editor.
  *
@@ -34,6 +32,7 @@ console.log( 'backend' );
 	registerBlockType(
 		'ckwc/opt-in',
 		{
+			// @TODO read this from block.json to avoid repetition.
 			title: 'ConvertKit Opt In',
 			category: 'woocommerce',
 			description: 'Displays a ConvertKit opt in checkbox at Checkout.',
