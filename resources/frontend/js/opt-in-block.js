@@ -20,6 +20,10 @@ console.log( 'frontend' );
 
 	// Define some constants for the various items we'll use.
 	const el                    = element.createElement;
+	const {
+		useEffect,
+		useState
+	} = element;
 	const { registerCheckoutBlock, CheckboxControl } = checkout;
 
 	registerCheckoutBlock( {
@@ -65,7 +69,7 @@ console.log( 'frontend' );
 		 * 
 		 * @since 	1.7.1
 		 */
-		component: function( children, checkoutExtensionData ) {
+		component: function( props ) {
 
 			// If the integration is disabled or set not to display the opt in checkbox at checkout,
 			// don't render anything.
@@ -76,6 +80,22 @@ console.log( 'frontend' );
 				return null;
 			}
 
+			const [ checked, setChecked ] = useState( ( ckwc_integration.opt_in_status === 'checked' ? true : false ) );
+			const { checkoutExtensionData } = props;
+			const { setExtensionData } = checkoutExtensionData;
+
+			useEffect(
+				function() {
+					console.log( checked );
+					setExtensionData( 'ckwc-opt-in', 'ckwc_opt_in', checked );
+				},
+				[
+					checked,
+					setExtensionData
+				]
+			);
+
+			// Return the opt-in checkbox component to render on the frontend checkout.
 			return (
 				el(
 					'div',
@@ -84,8 +104,9 @@ console.log( 'frontend' );
 						CheckboxControl,
 						{
 							id: 'ckwc-opt-in',
-							checked: ( ckwc_integration.opt_in_status === 'checked' ? true : false ),
 							label: ckwc_integration.opt_in_label,
+							checked: checked,
+							onChange: setChecked
 						}
 					)
 				)

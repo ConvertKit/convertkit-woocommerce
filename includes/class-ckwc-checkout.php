@@ -51,10 +51,9 @@ class CKWC_Checkout {
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
 
 		add_action(
-			'woocommerce_blocks_checkout_update_order_from_request',
+			'woocommerce_store_api_checkout_update_order_from_request',
 			function( $order, $request ) {
 				error_log( print_r( $request['extensions'], true ) );
-				
 			},
 			10,
 			2
