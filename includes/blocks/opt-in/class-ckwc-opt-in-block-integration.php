@@ -101,13 +101,29 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	}
 
 	/**
-	 * Renders the block.
+	 * Renders the block on the frontend site.
 	 * 
 	 * @since 	1.7.1
+	 * 
+	 * @param 	array 	$atts 	Block attributes.
+	 * @return 	string
 	 */
 	public function render( $atts ) {
 
-		return 'ckwc opt in checkbox';
+		// Don't render anything if the integration is disabled.
+		if ( ! $this->integration->is_enabled() ) {
+			return '';
+		}
+
+		// Don't render anything if the check box is disabled in the integration settings.
+		if ( ! $this->integration->get_option_bool( 'display_opt_in' ) ) {
+			return '';
+		}
+
+		// Return a checkbox.
+		ob_start();
+		require CKWC_PLUGIN_PATH . '/views/frontend/blocks/opt-in.php';
+		return ob_get_clean();
 
 	}
 
