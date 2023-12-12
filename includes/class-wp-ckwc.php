@@ -80,8 +80,8 @@ class WP_CKWC {
 
 	/**
 	 * Registers the opt in checkbox block for the WooCommerce Checkout Block.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 */
 	public function woocommerce_blocks_register() {
 
@@ -89,11 +89,14 @@ class WP_CKWC {
 		require_once CKWC_PLUGIN_PATH . '/includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php';
 
 		// Register opt in checkbox block.
-		add_action( 'woocommerce_blocks_checkout_block_registration', function( $integration_registry ) {
+		add_action(
+			'woocommerce_blocks_checkout_block_registration',
+			function ( $integration_registry ) {
 
-			$integration_registry->register( new CKWC_Opt_In_Block_Integration() );
+				$integration_registry->register( new CKWC_Opt_In_Block_Integration() );
 
-		} );
+			}
+		);
 
 	}
 

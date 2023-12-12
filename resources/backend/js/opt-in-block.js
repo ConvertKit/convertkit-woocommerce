@@ -19,7 +19,7 @@ console.log( 'backend' );
 
 	// Define some constants for the various items we'll use.
 	const el                    = element.createElement;
-	const { 
+	const {
 		registerBlockType
 	} 							= blocks;
 	const { InspectorControls } = editor;
@@ -34,38 +34,38 @@ console.log( 'backend' );
 	registerBlockType(
 		'ckwc/opt-in',
 		{
-		    title: 'ConvertKit Opt In',
-		   	category: 'woocommerce',
+			title: 'ConvertKit Opt In',
+			category: 'woocommerce',
 			description: 'Displays a ConvertKit opt in checkbox at Checkout.',
 			//icon:       getIcon,
 			keywords: [
-			    'subscriber',
-			    'newsletter',
-			    'email',
-			    'convertkit',
-			    'opt in',
-			    'checkout'
+				'subscriber',
+				'newsletter',
+				'email',
+				'convertkit',
+				'opt in',
+				'checkout'
 			],
 			supports: {
-			    'html': false,
-			    'align': false,
-			    'multiple': false,
-			    'reusable': false
+				'html': false,
+				'align': false,
+				'multiple': false,
+				'reusable': false
 			},
 			parent: [
-			    'woocommerce/checkout-fields-block'  
+				'woocommerce/checkout-fields-block'
 			],
 			attributes: {
-			    'lock': {
-			        'type': 'object',
-			        'default': {
-			            'remove': true,
-			            'move': true
-			        }
-			    },
-			    'ckwc_opt_in': {
-			        'type': 'boolean'
-			    }
+				'lock': {
+					'type': 'object',
+					'default': {
+						'remove': true,
+						'move': true
+					}
+				},
+				'ckwc_opt_in': {
+					'type': 'boolean'
+				}
 			},
 
 			// Editor.
@@ -130,4 +130,3 @@ console.log( 'backend' );
 	window.wp.element,
 	window.wp.components
 ) );
-

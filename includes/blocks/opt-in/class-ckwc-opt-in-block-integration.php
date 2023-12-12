@@ -25,24 +25,23 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	 */
 	private $integration;
 
-    /**
+	/**
 	 * The name of the integration.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 *
 	 * @return string
 	 */
 	public function get_name() {
 
-		// @TODO Check this is correct re: block.json
 		return 'ckwc_opt_in';
 
 	}
 
 	/**
 	 * Register frontend and backend scripts on block registration.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 */
 	public function initialize() {
 
@@ -57,8 +56,8 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 	/**
 	 * Registers block editor and frontend checkout scripts.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 */
 	public function register_scripts() {
 
@@ -66,7 +65,7 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 		wp_register_script(
 			'ckwc-opt-in-block-frontend',
 			CKWC_PLUGIN_URL . 'resources/frontend/js/opt-in-block.js',
-			array( 'jquery' ), // @TODO Check.
+			array(),
 			CKWC_PLUGIN_VERSION,
 			true
 		);
@@ -75,7 +74,7 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 		wp_register_script(
 			'ckwc-opt-in-block',
 			CKWC_PLUGIN_URL . 'resources/backend/js/opt-in-block.js',
-			array( 'jquery' ), // @TODO Check.
+			array(),
 			CKWC_PLUGIN_VERSION,
 			true
 		);
@@ -91,17 +90,17 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	 * editor, however this plugin has historically stored the settings
 	 * at WooCommerce > Settings > Integrations > ConvertKit, prior to WooCommerce
 	 * introducing the concept of a Checkout Block - so we need to honor those settings.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 */
 	public function localize_scripts() {
 
 		// Fetch settings.
 		$settings = array(
-			'enabled' => $this->integration->is_enabled(),
-			'display_opt_in' => $this->integration->get_option_bool( 'display_opt_in' ), 
-			'opt_in_label' => $this->integration->get_option( 'opt_in_label' ),
-			'opt_in_status' => $this->integration->get_option( 'opt_in_status' ),
+			'enabled'        => $this->integration->is_enabled(),
+			'display_opt_in' => $this->integration->get_option_bool( 'display_opt_in' ),
+			'opt_in_label'   => $this->integration->get_option( 'opt_in_label' ),
+			'opt_in_status'  => $this->integration->get_option( 'opt_in_status' ),
 		);
 
 		// Make settings available to editor and frontend scripts.
@@ -112,21 +111,24 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 	/**
 	 * Registers the block with WordPress.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 */
 	public function register() {
 
-		register_block_type( CKWC_PLUGIN_PATH . '/includes/blocks/opt-in', array(
-			'editor_script' => 'ckwc-opt-in-block',
-		) );
+		register_block_type(
+			CKWC_PLUGIN_PATH . '/includes/blocks/opt-in',
+			array(
+				'editor_script' => 'ckwc-opt-in-block',
+			)
+		);
 
 	}
-	
+
 	/**
 	 * Returns scripts to enqueue in the frontend site.
 	 *
-	 * @since 	1.7.1
+	 * @since   1.7.1
 	 *
 	 * @return  array
 	 */
@@ -138,8 +140,8 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 	/**
 	 * Returns scripts to enqueue in the block editor.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 *
 	 * @return  array
 	 */
@@ -151,13 +153,13 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 	/**
 	 * An array of key, value pairs of data made available to the block on the client side.
-	 * 
-	 * @since 	1.7.1
 	 *
-	 * @return 	array
+	 * @since   1.7.1
+	 *
+	 * @return  array
 	 */
 	public function get_script_data() {
-		
+
 		return array();
 
 	}
