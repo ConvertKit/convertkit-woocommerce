@@ -50,9 +50,6 @@ class WP_CKWC {
 		// Declare HPOS compatibility.
 		add_action( 'before_woocommerce_init', array( $this, 'woocommerce_hpos_compatibility' ) );
 
-		// Declare Checkout block incompatibility.
-		// add_action( 'before_woocommerce_init', array( $this, 'woocommerce_checkout_block_incompatibility' ) );
-
 		// Initialize.
 		add_action( 'woocommerce_init', array( $this, 'woocommerce_init' ) );
 
@@ -81,12 +78,17 @@ class WP_CKWC {
 
 	}
 
+	/**
+	 * Registers the opt in checkbox block for the WooCommerce Checkout Block.
+	 * 
+	 * @since 	1.7.1
+	 */
 	public function woocommerce_blocks_register() {
 
-		// Load blocks.
+		// Load opt in checkbox block.
 		require_once CKWC_PLUGIN_PATH . '/includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php';
 
-		// Register blocks.
+		// Register opt in checkbox block.
 		add_action( 'woocommerce_blocks_checkout_block_registration', function( $integration_registry ) {
 
 			$integration_registry->register( new CKWC_Opt_In_Block_Integration() );
@@ -111,29 +113,6 @@ class WP_CKWC {
 
 		// Declare compatibility with HPOS.
 		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CKWC_PLUGIN_FILE, true ); // @phpstan-ignore-line
-
-	}
-
-	/**
-	 * Tells WooCommerce that this integration is not compatible with the checkout block.
-	 *
-	 * The opt-in checkbox uses the `woocommerce_checkout_fields` filter, which the Checkout block doesn't use,
-	 * resulting in no opt-in checkbox displaying.  WooCommerce plan to introduce a `register_checkout_field` method
-	 * that we can use in a later update.
-	 *
-	 * @see https://github.com/woocommerce/woocommerce-blocks/discussions/11173#discussioncomment-7403117
-	 *
-	 * @since   1.7.1
-	 */
-	public function woocommerce_checkout_block_incompatibility() {
-
-		// Don't declare incompatibility if the applicable class doesn't exist.
-		if ( ! class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			return;
-		}
-
-		// Declare incompatibility.
-		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', CKWC_PLUGIN_FILE, false ); // @phpstan-ignore-line
 
 	}
 

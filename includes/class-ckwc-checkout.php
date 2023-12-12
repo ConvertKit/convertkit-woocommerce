@@ -45,18 +45,49 @@ class CKWC_Checkout {
 		// If Display Opt In is enabled, show the Opt In checkbox at Checkout.
 		if ( $this->integration->get_option_bool( 'display_opt_in' ) ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_opt_in_checkbox' ) );
+
+			// Extend Store API endpoint to support storing the value of the opt in checkbox block.
+	        woocommerce_store_api_register_endpoint_data(
+	            array(
+	                'endpoint'        => \Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema::IDENTIFIER,
+	                'namespace'       => 'ckwc-opt-in',
+	                'schema_callback' => array( $this, 'schema' ),
+	                'schema_type'     => ARRAY_A,
+	            )
+	        );
 		}
 
-		// Store whether the customer should be opted in, in the Order's metadata.
+		// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout shortcode.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
 
-		add_action(
-			'woocommerce_store_api_checkout_update_order_from_request',
-			function( $order, $request ) {
-				error_log( print_r( $request['extensions'], true ) );
-			},
-			10,
-			2
+		// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout block.
+		add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_opt_in_checkbox_block' ), 10, 2 );
+
+	}
+
+	/**
+	 * Defines the data schema for the opt in block.
+	 * 
+	 * @since 	1.7.1
+	 * 
+	 * @TODO This needs to be moved, really.
+	 * 
+	 * @return 	array
+	 */
+	public function schema() {
+
+		return array(
+			'ckwc_opt_in' => array(
+				'description' => 'foo',
+				'type' => 'boolean',
+				'context' => array( 'view', 'edit' ),
+				'optional' => true,
+				'arg_options' => array(
+					'validate_callback' => function( $value ) {
+						return true;
+					},
+				),
+			),
 		);
 
 	}
@@ -107,15 +138,30 @@ class CKWC_Checkout {
 	 */
 	public function save_opt_in_checkbox( $order_id ) {
 
+		$this->save_opt_in_for_order( 
+			wc_get_order( $order_id ),
+			isset( $_POST['ckwc_opt_in'] )
+		);
+
+	}
+
+	public function save_opt_in_checkbox_block( $order, $request ) {
+
+		$this->save_opt_in_for_order(
+			$order,
+			(bool) $request['extensions']['ckwc-opt-in']['ckwc_opt_in']
+		);
+
+	}
+
+	private function save_opt_in_for_order( $order, $checkbox_checked = false ) {
+
 		// Bail if the given Order ID isn't for a WooCommerce Order.
 		// Third party Plugins e.g. WooCommerce Subscriptions may call the `woocommerce_checkout_update_order_meta`
 		// action with a non-Order ID, resulting in inadvertent opt ins.
-		if ( OrderUtil::get_order_type( $order_id ) !== 'shop_order' ) {
+		if ( OrderUtil::get_order_type( $order->get_id() ) !== 'shop_order' ) {
 			return;
 		}
-
-		// Get order.
-		$order = wc_get_order( $order_id );
 
 		// Don't opt in by default.
 		$opt_in = 'no';
@@ -123,9 +169,8 @@ class CKWC_Checkout {
 		// If no opt in checkbox is displayed, opt in.
 		if ( ! $this->integration->get_option_bool( 'display_opt_in' ) ) {
 			$opt_in = 'yes';
-		} elseif ( isset( $_POST['ckwc_opt_in'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			// Opt in checkbox is displayed at checkout.
-			// Opt in if it is checked.
+		} elseif ( $checkbox_checked ) {
+			// Opt in checkbox is displayed at checkout and was checked.
 			$opt_in = 'yes';
 		}
 

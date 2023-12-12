@@ -52,7 +52,6 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 		$this->register_scripts();
 		$this->localize_scripts();
 		$this->register();
-		$this->extend_store_api();
 
 	}
 
@@ -121,55 +120,6 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 		register_block_type( CKWC_PLUGIN_PATH . '/includes/blocks/opt-in', array(
 			'editor_script' => 'ckwc-opt-in-block',
 		) );
-
-	}
-
-	/**
-	 * Registers this block's data in the Store API, so posted data
-	 * is saved when the frontend script's useEffect() is called.
-	 * 
-	 * @since 	1.7.1
-	 */
-	public function extend_store_api() {
-
-		// Bail if function not available.
-		if ( ! function_exists( 'woocommerce_store_api_register_endpoint_data' ) ) {
-			return;
-		}
-
-        woocommerce_store_api_register_endpoint_data(
-            array(
-                'endpoint'        => \Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema::IDENTIFIER,
-                'namespace'       => $this->get_name(),
-                'schema_callback' => array( $this, 'schema' ),
-                'schema_type'     => ARRAY_A,
-            )
-        );
-
-	}
-
-	/**
-	 * Defines the data schema for the opt in block.
-	 * 
-	 * @since 	1.7.1
-	 * 
-	 * @return 	array
-	 */
-	public function schema() {
-
-		return array(
-			'ckwc_opt_in' => array(
-				'description' => $this->integration->get_option( 'opt_in_label' ),
-				'type' => 'boolean',
-				'context' => array( 'view', 'edit' ),
-				'optional' => true,
-				'arg_options' => array(
-					'validate_callback' => function( $value ) {
-						return true;
-					},
-				),
-			),
-		);
 
 	}
 	
