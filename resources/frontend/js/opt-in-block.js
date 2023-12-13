@@ -72,22 +72,23 @@
 					]
 				);
 
-					// Return the opt-in checkbox component to render on the frontend checkout.
-					return (
+				// Return the opt-in checkbox component to render on the frontend checkout.
+				return (
+					el(
+						'div',
+						{},
 						el(
-							'div',
-							{},
-							el(
-								CheckboxControl,
-								{
-									id: 'ckwc-opt-in',
-									label: optInLabel,
-									checked: checked,
-									onChange: setChecked
-								}
-							)
+							CheckboxControl,
+							{
+								id: 'ckwc-opt-in',
+								label: optInLabel,
+								checked: checked,
+								onChange: setChecked
+							}
 						)
-					);
+					)
+				);
+
 			}
 		}
 	);
