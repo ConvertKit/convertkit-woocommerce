@@ -13,7 +13,7 @@
  * @package CKWC
  * @author ConvertKit
  */
-( function ( blocks, editor, element, components ) {
+( function ( blocks, editor, element, components, settings ) {
 
 	// Define some constants for the various items we'll use.
 	const el                    = element.createElement;
@@ -28,54 +28,31 @@
 		PanelRow
 	}                           = components;
 
+	// Get settings from WooCommerce; this calls the get_script_data()
+	// PHP method.
+	const {
+		getSetting
+	} 							= settings;
+	const {
+		enabled,
+		displayOptIn,
+		optInLabel,
+		optInStatus
+	} = getSetting( 'ckwc_opt_in_data' );
+
 	// Register Block.
 	registerBlockType(
 		'ckwc/opt-in',
 		{
-			// @TODO read this from block.json to avoid repetition.
-			title: 'ConvertKit Opt In',
-			category: 'woocommerce',
-			description: 'Displays a ConvertKit opt in checkbox at Checkout.',
-			//icon:       getIcon,
-			keywords: [
-				'subscriber',
-				'newsletter',
-				'email',
-				'convertkit',
-				'opt in',
-				'checkout'
-			],
-			supports: {
-				'html': false,
-				'align': false,
-				'multiple': false,
-				'reusable': false
-			},
-			parent: [
-				'woocommerce/checkout-fields-block'
-			],
-			attributes: {
-				'lock': {
-					'type': 'object',
-					'default': {
-						'remove': true,
-						'move': true
-					}
-				},
-				'ckwc_opt_in': {
-					'type': 'boolean'
-				}
-			},
-
 			// Editor.
 			edit: function ( props ) {
 
 				// If the integration is disabled or set not to display the opt in checkbox at checkout,
 				// don't render anything.
-				if ( ! ckwc_integration.enabled ) {
+				if ( ! enabled ) {
 					return null;
 				}
-				if ( ! ckwc_integration.display_opt_in ) {
+				if ( ! displayOptIn ) {
 					return null;
 				}
 
@@ -89,21 +66,14 @@
 						[
 							el(
 								InspectorControls,
-								{},
-								el(
-									PanelBody,
-									{
-										title: 'title',
-										key: 'ckwc-opt-in-panel'
-									}
-								)
 							),
 							el(
 								CheckboxControl,
 								{
 									id: 'ckwc-opt-in',
-									checked: ( ckwc_integration.opt_in_status === 'checked' ? true : false ),
-									label: ckwc_integration.opt_in_label,
+									checked: ( optInStatus === 'checked' ? true : false ),
+									label: optInLabel,
+									disabled: true // Required so it cannot be interacted with in the editor.
 								}
 							)
 						]
@@ -115,7 +85,7 @@
 			// Output.
 			save: function ( props ) {
 
-				// This isn't used on the frontend, as WooCommerce blocks operate a bit differently from typical blocks.
+				// This isn't used on the frontend, as WooCommerce Checkout blocks operate a bit differently from typical blocks.
 				// See resources/frontend/opt-in-block.js to define the checkout output.
 				return null;
 
@@ -127,5 +97,6 @@
 	window.wp.blocks,
 	window.wp.blockEditor,
 	window.wp.element,
-	window.wp.components
+	window.wp.components,
+	window.wc.wcSettings
 ) );

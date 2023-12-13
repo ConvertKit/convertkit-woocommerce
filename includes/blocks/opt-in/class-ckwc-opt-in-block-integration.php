@@ -39,6 +39,66 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	}
 
 	/**
+	 * The block metadata and attributes.
+	 * 
+	 * @since 	1.7.1
+	 * 
+	 * @return 	array
+	 */
+	public function get_metadata() {
+
+		return array(
+			'name' => 'ckwc/opt-in',
+			'title' => __( 'ConvertKit Opt In', 'convertkit' ),
+			'category' => 'woocommerce',
+			'description' => __( 'Displays a ConvertKit opt in checkbox at Checkout.', 'convertkit' ),
+			'keywords' => array(
+				'subscriber',
+				'newsletter',
+				'email',
+				'convertkit',
+				'opt in',
+				'checkout'
+			),
+
+			// Don't support common block properties, and only permit this block once within the Checkout Block.
+			'supports' => array(
+				'html' => false,
+				'align' => false,
+				'multiple' => false,
+				'reusable' => false
+			),
+
+			// Where to display the block within the WooCommerce Checkout Block.
+			'parent' => array(
+				'woocommerce/checkout-contact-information-block',
+			),
+
+			// Attributes.
+			'attributes' => array(
+				// Lock the block so it cannot be deleted; the integration's settings will determine whether
+				// to display or hide the block.
+				'lock' => array(
+					'type' => 'object',
+					'default' => array(
+						'remove' => true,
+						'move' => true
+					),
+				),
+
+				// The checkbox property.
+				'ckwc_opt_in' => array(
+					'type' => 'boolean',
+				),
+			),
+
+			// Editor script for this block.
+			'editor_script' => 'ckwc-opt-in-block',
+		);
+
+	}
+
+	/**
 	 * Register frontend and backend scripts on block registration.
 	 *
 	 * @since   1.7.1
@@ -116,11 +176,12 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	 */
 	public function register() {
 
+		// Get metadata.
+		$metadata = $this->get_metadata();
+
 		register_block_type(
-			CKWC_PLUGIN_PATH . '/includes/blocks/opt-in',
-			array(
-				'editor_script' => 'ckwc-opt-in-block',
-			)
+			$metadata['name'],
+			$metadata
 		);
 
 	}
@@ -160,7 +221,13 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	 */
 	public function get_script_data() {
 
-		return array();
+		return array(
+			'enabled'      => $this->integration->is_enabled(),
+			'displayOptIn' => $this->integration->get_option_bool( 'display_opt_in' ),
+			'optInLabel'   => $this->integration->get_option( 'opt_in_label' ),
+			'optInStatus'  => $this->integration->get_option( 'opt_in_status' ),
+			'metadata' 	   => $this->get_metadata(),
+		);
 
 	}
 
