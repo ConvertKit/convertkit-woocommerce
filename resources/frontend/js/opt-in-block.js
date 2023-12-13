@@ -21,17 +21,17 @@
 	const {
 		useEffect,
 		useState
-	} = element;
+	}        = element;
 	const {
 		registerCheckoutBlock,
 		CheckboxControl
-	} = checkout;
+	}        = checkout;
 
 	// Get settings from WooCommerce; this calls the get_script_data()
 	// PHP method.
 	const {
 		getSetting
-	} 							= settings;
+	} = settings;
 	const {
 		enabled,
 		displayOptIn,
@@ -41,54 +41,56 @@
 	} = getSetting( 'ckwc_opt_in_data' );
 
 	// Register the block with the WooCommerce Checkout Block.
-	registerCheckoutBlock( {
-		metadata: metadata,
-		component: function ( props ) {
+	registerCheckoutBlock(
+		{
+			metadata: metadata,
+			component: function ( props ) {
 
-			// If the integration is disabled or set not to display the opt in checkbox at checkout,
-			// don't render anything.
-			if ( ! enabled ) {
-				return null;
+				// If the integration is disabled or set not to display the opt in checkbox at checkout,
+				// don't render anything.
+				if ( ! enabled ) {
+					return null;
+				}
+				if ( ! displayOptIn ) {
+					return null;
+				}
+
+				// Store the checkbox checked state in WooCommerce's extension data.
+				// See register_opt_in_checkbox_store_api_endpoint() PHP method that registers expected data.
+				const [ checked, setChecked ]   = useState( ( optInStatus === 'checked' ? true : false ) );
+				const { checkoutExtensionData } = props;
+				const { setExtensionData }      = checkoutExtensionData;
+
+				useEffect(
+					function () {
+						console.log( checked );
+						setExtensionData( 'ckwc-opt-in', 'ckwc_opt_in', checked );
+					},
+					[
+						checked,
+						setExtensionData
+					]
+				);
+
+					// Return the opt-in checkbox component to render on the frontend checkout.
+					return (
+						el(
+							'div',
+							{},
+							el(
+								CheckboxControl,
+								{
+									id: 'ckwc-opt-in',
+									label: optInLabel,
+									checked: checked,
+									onChange: setChecked
+								}
+							)
+						)
+					);
 			}
-			if ( ! displayOptIn ) {
-				return null;
-			}
-
-			// Store the checkbox checked state in WooCommerce's extension data.
-			// See register_opt_in_checkbox_store_api_endpoint() PHP method that registers expected data.
-			const [ checked, setChecked ]   = useState( ( optInStatus === 'checked' ? true : false ) );
-			const { checkoutExtensionData } = props;
-			const { setExtensionData }      = checkoutExtensionData;
-
-			useEffect(
-				function () {
-					console.log( checked );
-					setExtensionData( 'ckwc-opt-in', 'ckwc_opt_in', checked );
-				},
-				[
-					checked,
-					setExtensionData
-				]
-			);
-
-			// Return the opt-in checkbox component to render on the frontend checkout.
-			return (
-				el(
-					'div',
-					{},
-					el(
-						CheckboxControl,
-						{
-							id: 'ckwc-opt-in',
-							label: optInLabel,
-							checked: checked,
-							onChange: setChecked
-						}
-					)
-				)
-			);
 		}
-	} );
+	);
 
 } (
 	window.wp.element,

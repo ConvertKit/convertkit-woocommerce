@@ -32,7 +32,7 @@
 	// PHP method.
 	const {
 		getSetting
-	} 							= settings;
+	} = settings;
 	const {
 		enabled,
 		displayOptIn,
