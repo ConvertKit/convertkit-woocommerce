@@ -63,7 +63,6 @@
 
 				useEffect(
 					function () {
-						console.log( checked );
 						setExtensionData( 'ckwc-opt-in', 'ckwc_opt_in', checked );
 					},
 					[

@@ -168,8 +168,8 @@ class CKWC_Checkout {
 	 *
 	 * @since   1.7.1
 	 *
-	 * @param   WC_Order $order   WooCommerce Order.
-	 * @param   Request  $request    WordPress REST API request.
+	 * @param   WC_Order        $order      WooCommerce Order.
+	 * @param   WP_REST_Request $request    WordPress REST API request.
 	 */
 	public function save_opt_in_checkbox_block( $order, $request ) {
 
