@@ -246,8 +246,8 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		// Handle Opt-In Checkbox.
-		if ($displayOptIn) {
-			if ($checkOptIn) {
+		if ($options['display_opt_in']) {
+			if ($options['check_opt_in']) {
 				$I->checkOption('#ckwc_opt_in');
 			} else {
 				$I->uncheckOption('#ckwc_opt_in');
