@@ -49,6 +49,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
+				'product_type'             => 'subscription',
 				'display_opt_in'           => true,
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],

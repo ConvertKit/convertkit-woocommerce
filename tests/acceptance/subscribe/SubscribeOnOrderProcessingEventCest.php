@@ -295,11 +295,10 @@ class SubscribeOnOrderProcessingEventCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Don't select a Form to subscribe the email address to.
-			'processing' // Subscribe on WooCommerce "Order Processing" event.
+			[
+				'display_opt_in'     => true,
+				'subscription_event' => 'processing',
+			]
 		);
 
 		// Confirm that the email address was still not added to ConvertKit.
@@ -620,11 +619,12 @@ class SubscribeOnOrderProcessingEventCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
-			'processing' // Subscribe on WooCommerce "Order Processing" event.
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'processing',
+			]
 		);
 
 		// Confirm that the email address was now added to ConvertKit.

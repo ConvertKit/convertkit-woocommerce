@@ -243,11 +243,11 @@ class SubscribeOnOrderPendingPaymentEventCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			false, // Don't select a Form to subscribe the email address to.
-			'pending' // Subscribe on WooCommerce "Order Pending payment" event.
+			[
+				'display_opt_in'     => true,
+				'check_opt_in'       => true,
+				'subscription_event' => 'pending',
+			]
 		);
 
 		// Confirm that the email address was still not added to ConvertKit.
