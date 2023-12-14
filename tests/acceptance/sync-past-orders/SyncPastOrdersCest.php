@@ -99,10 +99,7 @@ class SyncPastOrdersCest
 		$I->wooCommerceDeleteAllOrders($I);
 
 		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Login as the Administrator.
 		$I->loginAsAdmin();
@@ -166,12 +163,9 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Don't define a subscribe Event.
-			true // Send purchase data to ConvertKit.
+			[
+				'send_purchase_data' => true,
+			]
 		);
 
 		// Load Settings screen.
@@ -200,10 +194,7 @@ class SyncPastOrdersCest
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Login as the Administrator.
 		$I->loginAsAdmin();
@@ -282,12 +273,9 @@ class SyncPastOrdersCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Don't define a subscribe Event.
-			true // Don't send purchase data to ConvertKit.
+			[
+				'send_purchase_data' => true,
+			]
 		);
 
 		// Extract the Post ID from the Order ID, as the Custom Order Numbers Plugin does not prefix
@@ -347,10 +335,7 @@ class SyncPastOrdersCest
 
 		// Create Product and Checkout for this test, not sending the Order
 		// to ConvertKit.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Login as the Administrator.
 		$I->loginAsAdmin();

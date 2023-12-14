@@ -54,16 +54,12 @@ class SettingNameFormatCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
-			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
-			false, // Don't send purchase data to ConvertKit.
-			false, // Don't define product level form, tag or sequence to subscribe to.
-			false, // Don't map custom fields.
-			'first', // Name format.
-			false // Don't define coupon level form, tag or sequence to subscribe to.
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'pending',
+			]
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -102,16 +98,13 @@ class SettingNameFormatCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
-			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
-			false, // Don't send purchase data to ConvertKit.
-			false, // Don't define product level form, tag or sequence to subscribe to.
-			false, // Don't map custom fields.
-			'last', // Name format.
-			false // Don't define coupon level form, tag or sequence to subscribe to.
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'pending',
+				'name_format'              => 'last',
+			]
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -150,16 +143,13 @@ class SettingNameFormatCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
-			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
-			false, // Don't send purchase data to ConvertKit.
-			false, // Don't define product level form, tag or sequence to subscribe to.
-			false, // Don't map custom fields.
-			'both', // Name format.
-			false // Don't define coupon level form, tag or sequence to subscribe to.
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'pending',
+				'name_format'              => 'both',
+			]
 		);
 
 		// Confirm that the email address was now added to ConvertKit.

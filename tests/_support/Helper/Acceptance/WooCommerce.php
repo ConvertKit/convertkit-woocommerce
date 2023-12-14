@@ -97,6 +97,29 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to enable the legacy WooCommerce Checkout method
+	 * that uses the [woocommerce_checkout] shortcode.
+	 *
+	 * @since   1.7.1
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
+	public function enableWooCommerceLegacyCheckoutShortcode($I)
+	{
+		// Create Checkout Page using checkout shortcode, not block.
+		$pageID = $I->havePageInDatabase(
+			[
+				'post_title'   => 'Checkout',
+				'post_content' => '[woocommerce_checkout]',
+			]
+		);
+
+		// Configure WooCommerce to use this Page as the Checkout Page.
+		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
+		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
+	}
+
+	/**
 	 * Helper method to:
 	 * - configure the Plugin's opt in, subscribe event and purchase options,
 	 * - create a WooCommerce Product (simple|virtual|zero|subscription)
@@ -110,73 +133,94 @@ class WooCommerce extends \Codeception\Module
 	 * @since   1.9.6
 	 *
 	 * @param   AcceptanceTester $I                          AcceptanceTester.
-	 * @param   string           $productType                WooCommerce Product Type (simple|virtual|zero|subscription).
-	 * @param   bool             $displayOptIn               Display Opt In on Checkout.
-	 * @param   bool             $checkOptIn                 Check Opt In checkbox on Checkout.
-	 * @param   mixed            $pluginFormTagSequence      Plugin Setting for Form, Tag or Sequence to subscribe the Customer to.
-	 * @param   mixed            $subscriptionEvent          Subscription event setting.
-	 * @param   bool             $sendPurchaseData           Send WooCommerce Order data to ConvertKit Purchase Data API.
-	 * @param   mixed            $productFormTagSequence     Product Setting for Form, Tag or Sequence to subscribe the Customer to.
-	 * @param   bool             $customFields               Map WooCommerce fields to ConvertKit Custom Fields.
-	 * @param   string           $nameFormat                 Name format.
-	 * @param   mixed            $couponFormTagSequence      Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 * @param   bool|array       $options {
+	 *           Optional. An array of settings.
+	 *
+	 *     @type string $product_type               WooCommerce Product Type (simple|virtual|zero|subscription).
+	 *     @type string $display_opt_in             Display Opt In on Checkout.
+	 *     @type string $check_opt_in               Check Opt In checkbox on Checkout.
+	 *     @type string $plugin_form_tag_sequence   Plugin Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 *     @type string $subscription_event         Subscription event setting.
+	 *     @type string $send_purchase_data         Send WooCommerce Order data to ConvertKit Purchase Data API.
+	 *     @type string $product_form_tag_sequence  Product Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 *     @type string $custom_fields              Map WooCommerce fields to ConvertKit Custom Fields.
+	 *     @type string $name_format                Name format.
+	 *     @type string $coupon_form_tag_sequence   Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 *     @type string $use_legacy_checkout        Use the legacy WooCommerce Checkout Shortcode.
+	 * }
 	 */
-	public function wooCommerceCreateProductAndCheckoutWithConfig(
-		$I,
-		$productType = 'simple',
-		$displayOptIn = false,
-		$checkOptIn = false,
-		$pluginFormTagSequence = false,
-		$subscriptionEvent = false,
-		$sendPurchaseData = false,
-		$productFormTagSequence = false,
-		$customFields = false,
-		$nameFormat = 'first',
-		$couponFormTagSequence = false
-	) {
+	public function wooCommerceCreateProductAndCheckoutWithConfig($I, $options = false)
+	{
+		// Define default options.
+		$defaults = [
+			'product_type'              => 'simple',
+			'display_opt_in'            => false,
+			'check_opt_in'              => false,
+			'plugin_form_tag_sequence'  => false,
+			'subscription_event'        => false,
+			'send_purchase_data'        => false,
+			'product_form_tag_sequence' => false,
+			'custom_fields'             => false,
+			'name_format'               => 'first',
+			'coupon_form_tag_sequence'  => false,
+			'use_legacy_checkout'       => true,
+		];
+
+		// If supplied options are an array, merge them with the defaults.
+		if (is_array($options)) {
+			$options = array_merge($defaults, $options);
+		} else {
+			$options = $defaults;
+		}
+
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
 			$_ENV['CONVERTKIT_API_KEY'],
 			$_ENV['CONVERTKIT_API_SECRET'],
-			$subscriptionEvent,
-			$pluginFormTagSequence,
-			$nameFormat,
-			$customFields,
-			$displayOptIn,
-			( ( $sendPurchaseData === true ) ? 'processing' : $sendPurchaseData )
+			$options['subscription_Event'],
+			$options['plugin_form_tag_sequence'],
+			$options['name_format'],
+			$options['custom_fields'],
+			$options['display_opt_in'],
+			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] )
 		);
 
+		// If the test needs to run against the legacy Checkout shortcode, enable it now.
+		if ($options['use_legacy_checkout']) {
+			$I->enableWooCommerceLegacyCheckoutShortcode($I);
+		}
+
 		// Create Product.
-		switch ($productType) {
+		switch ($options['product_type']) {
 			case 'zero':
 				$productName   = 'Zero Value Product';
 				$paymentMethod = 'cod';
-				$productID     = $I->wooCommerceCreateZeroValueProduct($I, $productFormTagSequence);
+				$productID     = $I->wooCommerceCreateZeroValueProduct($I, $options['product_form_tag_sequence']);
 				break;
 
 			case 'virtual':
 				$productName   = 'Virtual Product';
 				$paymentMethod = 'cod';
-				$productID     = $I->wooCommerceCreateVirtualProduct($I, $productFormTagSequence);
+				$productID     = $I->wooCommerceCreateVirtualProduct($I, $options['product_form_tag_sequence']);
 				break;
 
 			case 'subscription':
 				$productName   = 'Subscription Product';
 				$paymentMethod = 'stripe';
-				$productID     = $I->wooCommerceCreateSubscriptionProduct($I, $productFormTagSequence);
+				$productID     = $I->wooCommerceCreateSubscriptionProduct($I, $options['product_form_tag_sequence']);
 				break;
 
 			case 'simple':
 				$productName   = 'Simple Product';
 				$paymentMethod = 'cod';
-				$productID     = $I->wooCommerceCreateSimpleProduct($I, $productFormTagSequence);
+				$productID     = $I->wooCommerceCreateSimpleProduct($I, $options['product_form_tag_sequence']);
 				break;
 		}
 
 		// Create Coupon.
-		if ($couponFormTagSequence) {
-			$couponID = $I->wooCommerceCreateCoupon($I, '20off', $couponFormTagSequence);
+		if ($options['coupon_form_tag_sequence']) {
+			$couponID = $I->wooCommerceCreateCoupon($I, '20off', $options['coupon_form_tag_sequence']);
 		}
 
 		// Define Email Address for this Test.
@@ -198,8 +242,7 @@ class WooCommerce extends \Codeception\Module
 			$I->waitForElementVisible('input#coupon_code');
 			$I->fillField('input#coupon_code', '20off');
 			$I->click('Apply coupon');
-
-			$I->waitForText('Coupon code applied successfully.', 5, '.is-success');
+			$I->waitForText('Coupon code applied successfully.', 5, '.woocommerce-message');
 		}
 
 		// Handle Opt-In Checkbox.
@@ -224,13 +267,13 @@ class WooCommerce extends \Codeception\Module
 		$I->waitForElement('body.woocommerce-order-received');
 		$I->seeInSource('Order');
 		$I->seeInSource('received');
-		$I->seeInSource('Order details</h3>');
+		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
 
 		// Return data.
 		return [
 			'email_address'   => $emailAddress,
 			'product_id'      => $productID,
-			'order_id'        => $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
+			'order_id'        => $I->grabTextFrom('.woocommerce-order-overview__order strong'),
 			'subscription_id' => ( ( $productType === 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
@@ -514,7 +557,7 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button[name=add-to-cart]');
 
 		// View Cart.
-		$I->click('a.wc-forward');
+		$I->click('.woocommerce-message a.button.wc-forward');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -523,7 +566,7 @@ class WooCommerce extends \Codeception\Module
 		$I->seeInSource($productName);
 
 		// Proceed to Checkout.
-		$I->click('Proceed to Checkout');
+		$I->click('a.checkout-button');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
