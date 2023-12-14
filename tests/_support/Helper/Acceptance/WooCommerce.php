@@ -84,6 +84,29 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to setup WooCommerce's checkout page to use the
+	 * legacy [woocommerce_shortcode].
+	 * 
+	 * @since 	1.7.1
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
+	public function setupWooCommerceCheckoutShortcode($I)
+	{
+		// Create Checkout Page using checkout shortcode, not block.
+		$pageID = $I->havePageInDatabase(
+			[
+				'post_title'   => 'Checkout',
+				'post_content' => '[woocommerce_checkout]',
+			]
+		);
+
+		// Configure WooCommerce to use this Page as the Checkout Page.
+		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
+		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
+	}
+
+	/**
 	 * Helper method to setup the Custom Order Numbers Plugin.
 	 *
 	 * @since   1.0.0
