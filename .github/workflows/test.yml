@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
-        php-versions: [ '7.4', '8.0', '8.1', '8.2' ] #[ '7.4', '8.0', '8.1' ]
+        php-versions: [ '7.4', '8.0', '8.1', '8.2', '8.3' ] #[ '7.4', '8.0', '8.1' ]
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
@@ -117,9 +117,9 @@ jobs:
         run: wp-cli plugin install ${{ secrets.CONVERTKIT_PAID_PLUGIN_URLS }}
       
       # WP_DEBUG = true is required so all PHP errors are output and caught by tests (E_ALL).
-      # WP_DEBUG = false for PHP 8.2, otherwise E_DEPRECATED is output due to WooCommerce.
+      # WP_DEBUG = false for PHP 8.1+, otherwise E_DEPRECATED is output due to WooCommerce.
       - name: Enable WP_DEBUG
-        if: ${{ matrix.php-versions != '8.1' && matrix.php-versions != '8.2' }}
+        if: ${{ matrix.php-versions != '8.1' && matrix.php-versions != '8.2' && matrix.php-versions != '8.3' }}
         working-directory: ${{ env.ROOT_DIR }}
         run: |
           wp-cli config set WP_DEBUG true --raw
@@ -203,7 +203,7 @@ jobs:
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept build
 
-      # Run Codeception WPUnit Tests on the PHP 7.2 instance before the acceptance/general acceptance tests.
+      # Run Codeception WPUnit Tests on the PHP 7.4 instance before the acceptance/general acceptance tests.
       # We run these once to avoid hitting API rate limits.
       - name: Run tests/wpunit
         if: ${{ matrix.php-versions == '7.4' && matrix.test-groups == 'acceptance/general' }}

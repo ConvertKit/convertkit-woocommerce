@@ -86,7 +86,8 @@ class CKWC_Checkout {
 	}
 
 	/**
-	 * Saves whether the customer should be subscribed to ConvertKit for this order.
+	 * Saves whether the customer should be subscribed to ConvertKit for this order
+	 * when using the checkout.
 	 *
 	 * This function is not called if the 'Subscribe Customers' option is disabled
 	 * in the Plugin settings.

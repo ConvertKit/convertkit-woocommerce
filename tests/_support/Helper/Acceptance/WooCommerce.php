@@ -198,7 +198,8 @@ class WooCommerce extends \Codeception\Module
 			$I->waitForElementVisible('input#coupon_code');
 			$I->fillField('input#coupon_code', '20off');
 			$I->click('Apply coupon');
-			$I->waitForText('Coupon code applied successfully.', 5, '.woocommerce-message');
+
+			$I->waitForText('Coupon code applied successfully.', 5, '.is-success');
 		}
 
 		// Handle Opt-In Checkbox.
@@ -223,13 +224,13 @@ class WooCommerce extends \Codeception\Module
 		$I->waitForElement('body.woocommerce-order-received');
 		$I->seeInSource('Order');
 		$I->seeInSource('received');
-		$I->seeInSource('<h2 class="woocommerce-order-details__title">Order details</h2>');
+		$I->seeInSource('Order details</h3>');
 
 		// Return data.
 		return [
 			'email_address'   => $emailAddress,
 			'product_id'      => $productID,
-			'order_id'        => $I->grabTextFrom('.woocommerce-order-overview__order strong'),
+			'order_id'        => $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
 			'subscription_id' => ( ( $productType === 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
@@ -513,7 +514,7 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button[name=add-to-cart]');
 
 		// View Cart.
-		$I->click('.woocommerce-message a.button.wc-forward');
+		$I->click('a.wc-forward');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -522,7 +523,7 @@ class WooCommerce extends \Codeception\Module
 		$I->seeInSource($productName);
 
 		// Proceed to Checkout.
-		$I->click('a.checkout-button');
+		$I->click('Proceed to Checkout');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
