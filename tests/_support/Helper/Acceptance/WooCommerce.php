@@ -275,7 +275,7 @@ class WooCommerce extends \Codeception\Module
 			'email_address'   => $emailAddress,
 			'product_id'      => $productID,
 			'order_id'        => $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
-			'subscription_id' => ( ( $productType === 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
+			'subscription_id' => ( ( $options['product_type'] === 'subscription' ) ? (int) filter_var($I->grabTextFrom('.woocommerce-orders-table__cell-order-number a'), FILTER_SANITIZE_NUMBER_INT) : 0 ),
 		];
 	}
 
