@@ -178,7 +178,7 @@ class WooCommerce extends \Codeception\Module
 			$I,
 			$_ENV['CONVERTKIT_API_KEY'],
 			$_ENV['CONVERTKIT_API_SECRET'],
-			$options['subscription_Event'],
+			$options['subscription_event'],
 			$options['plugin_form_tag_sequence'],
 			$options['name_format'],
 			$options['custom_fields'],
