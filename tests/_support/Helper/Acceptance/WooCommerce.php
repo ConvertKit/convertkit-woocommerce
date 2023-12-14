@@ -146,7 +146,6 @@ class WooCommerce extends \Codeception\Module
 	 *     @type string $custom_fields              Map WooCommerce fields to ConvertKit Custom Fields.
 	 *     @type string $name_format                Name format.
 	 *     @type string $coupon_form_tag_sequence   Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
-	 *     @type string $use_legacy_checkout        Use the legacy WooCommerce Checkout Shortcode.
 	 * }
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig($I, $options = false)
@@ -163,7 +162,6 @@ class WooCommerce extends \Codeception\Module
 			'custom_fields'             => false,
 			'name_format'               => 'first',
 			'coupon_form_tag_sequence'  => false,
-			'use_legacy_checkout'       => true,
 		];
 
 		// If supplied options are an array, merge them with the defaults.
@@ -185,11 +183,6 @@ class WooCommerce extends \Codeception\Module
 			$options['display_opt_in'],
 			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] )
 		);
-
-		// If the test needs to run against the legacy Checkout shortcode, enable it now.
-		if ($options['use_legacy_checkout']) {
-			$I->enableWooCommerceLegacyCheckoutShortcode($I);
-		}
 
 		// Create Product.
 		switch ($options['product_type']) {
