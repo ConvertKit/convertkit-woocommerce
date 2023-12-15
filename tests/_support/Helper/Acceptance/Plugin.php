@@ -61,16 +61,7 @@ class Plugin extends \Codeception\Module
 		$I->amOnAdminPage('options-permalink.php');
 
 		// Create Checkout Page using checkout shortcode, not block.
-		$pageID = $I->havePageInDatabase(
-			[
-				'post_title'   => 'Checkout',
-				'post_content' => '[woocommerce_checkout]',
-			]
-		);
-
-		// Configure WooCommerce to use this Page as the Checkout Page.
-		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
-		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
+		$I->enableWooCommerceLegacyCheckoutShortcode($I);
 	}
 
 	/**
