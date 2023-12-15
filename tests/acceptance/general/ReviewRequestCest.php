@@ -41,11 +41,12 @@ class ReviewRequestCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
-			'processing' // Subscribe on WooCommerce "Order Processing" event.
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'processing',
+			]
 		);
 
 		// Check that the options table does have a review request set.
@@ -71,11 +72,11 @@ class ReviewRequestCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			$_ENV['CONVERTKIT_API_FORM_NAME'], // Form to subscribe email address to.
-			'processing' // Subscribe on WooCommerce "Order Processing" event.
+			[
+				'display_opt_in'           => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'processing',
+			]
 		);
 
 		// Check that the options table does not have a review request set.
@@ -101,12 +102,9 @@ class ReviewRequestCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			true // Send purchase data to ConvertKit.
+			[
+				'send_purchase_data' => true,
+			]
 		);
 
 		// Check that the options table does have a review request set.
