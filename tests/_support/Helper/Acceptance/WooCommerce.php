@@ -280,7 +280,7 @@ class WooCommerce extends \Codeception\Module
 			case true:
 				$I->waitForElementNotVisible('.blockOverlay');
 				$I->scrollTo('#order_review_heading');
-				$I->click('Place Order');
+				$I->click('#place_order');
 				break;
 
 			case false:
