@@ -276,9 +276,21 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		// Click Place order button.
-		$I->waitForElementNotVisible('.blockOverlay');
-		$I->scrollTo('#order_review_heading');
-		$I->click('#place_order');
+		switch ($options['use_legacy_checkout']) {
+			case true:
+				$I->waitForElementNotVisible('.blockOverlay');
+				$I->scrollTo('#order_review_heading');
+				$I->click('Place Order');
+				break;
+
+			case false:
+				// WooCommerce has a bug where clicking the Place Order button the first time doesn't do anything.
+				// This can be reproduced without the ConvertKit for WooCommerce Plugin active, so it's not a conflict.
+				$I->click('button.wc-block-components-checkout-place-order-button');
+				$I->wait(5);
+				$I->click('button.wc-block-components-checkout-place-order-button');
+				break;
+		}
 
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
@@ -612,15 +624,15 @@ class WooCommerce extends \Codeception\Module
 
 			// Checkout Block.
 			case false:
-				// @TODO.
-				$I->fillField('#billing_first_name', 'First');
-				$I->fillField('#billing_last_name', 'Last');
-				$I->fillField('#billing_address_1', 'Address Line 1');
-				$I->fillField('#billing_city', 'City');
-				$I->fillField('#billing_postcode', '12345');
-				$I->fillField('#billing_phone', '123-123-1234');
-				$I->fillField('#billing_email', $emailAddress);
-				$I->fillField('#order_comments', 'Notes');
+				$I->fillField('#billing-first_name', 'First');
+				$I->fillField('#billing-last_name', 'Last');
+				$I->fillField('#billing-address_1', 'Address Line 1');
+				$I->fillField('#billing-city', 'City');
+				$I->fillField('#billing-postcode', '12345');
+				$I->fillField('#billing-phone', '123-123-1234');
+				$I->fillField('#email', $emailAddress);
+				$I->checkOption('.wc-block-checkout__add-note input.wc-block-components-checkbox__input');
+				$I->fillField('.wc-block-components-textarea', 'Notes');
 				break;
 		}
 
