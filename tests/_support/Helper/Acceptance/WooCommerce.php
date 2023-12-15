@@ -86,8 +86,8 @@ class WooCommerce extends \Codeception\Module
 	/**
 	 * Helper method to setup WooCommerce's checkout page to use the
 	 * legacy [woocommerce_shortcode].
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 *
 	 * @param   AcceptanceTester $I     AcceptanceTester.
 	 */
@@ -186,7 +186,7 @@ class WooCommerce extends \Codeception\Module
 			'custom_fields'             => false,
 			'name_format'               => 'first',
 			'coupon_form_tag_sequence'  => false,
-			'use_legacy_checkout'		=> true,
+			'use_legacy_checkout'       => true,
 		];
 
 		// If supplied options are an array, merge them with the defaults.
@@ -575,7 +575,7 @@ class WooCommerce extends \Codeception\Module
 	 * @param   string           $productName    Product Name.
 	 * @param   string           $emailAddress   Email Address (wordpress@convertkit.com).
 	 * @param   string           $paymentMethod  Payment Method (cod|stripe).
-	 * @param   bool             $useLegacyCheckout Use Legacy Checkout Shortcode
+	 * @param   bool             $useLegacyCheckout Use Legacy Checkout Shortcode.
 	 */
 	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod', $useLegacyCheckout = true)
 	{

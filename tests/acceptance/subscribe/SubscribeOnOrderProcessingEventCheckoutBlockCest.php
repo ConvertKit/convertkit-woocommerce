@@ -51,7 +51,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'processing',
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -89,7 +89,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'display_opt_in'           => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'processing',
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -121,7 +121,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 			[
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'processing',
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -162,7 +162,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'processing',
 				'custom_fields'            => true,
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -199,7 +199,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence' => 'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'],
 				'subscription_event'       => 'processing',
 				'custom_fields'            => true,
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -236,7 +236,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence' => 'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'],
 				'subscription_event'       => 'processing',
 				'custom_fields'            => true,
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -268,10 +268,10 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'display_opt_in'     => true,
-				'check_opt_in'       => true,
-				'subscription_event' => 'processing',
-				'use_legacy_checkout'	   => false,
+				'display_opt_in'      => true,
+				'check_opt_in'        => true,
+				'subscription_event'  => 'processing',
+				'use_legacy_checkout' => false,
 			]
 		);
 
@@ -303,9 +303,9 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'display_opt_in'     => true,
-				'subscription_event' => 'processing',
-				'use_legacy_checkout'	   => false,
+				'display_opt_in'      => true,
+				'subscription_event'  => 'processing',
+				'use_legacy_checkout' => false,
 			]
 		);
 
@@ -336,8 +336,8 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'subscription_event' => 'processing',
-				'use_legacy_checkout'	   => false,
+				'subscription_event'  => 'processing',
+				'use_legacy_checkout' => false,
 			]
 		);
 
@@ -374,7 +374,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
 				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'],
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'       => false,
 			]
 		);
 
@@ -418,7 +418,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
 				'product_form_tag_sequence' => 'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'],
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'       => false,
 			]
 		);
 
@@ -462,7 +462,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
 				'product_form_tag_sequence' => 'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'],
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'       => false,
 			]
 		);
 
@@ -506,7 +506,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
 				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'],
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'       => false,
 			]
 		);
 
@@ -550,7 +550,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
 				'product_form_tag_sequence' => 'tag:' . $_ENV['CONVERTKIT_API_TAG_ID'],
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'       => false,
 			]
 		);
 
@@ -594,7 +594,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
 				'product_form_tag_sequence' => 'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'],
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'       => false,
 			]
 		);
 
@@ -639,7 +639,7 @@ class SubscribeOnOrderProcessingEventCheckoutBlockCest
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'processing',
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 

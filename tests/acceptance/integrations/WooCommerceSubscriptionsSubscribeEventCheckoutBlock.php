@@ -54,7 +54,7 @@ class WooCommerceSubscriptionsSubscribeEventCheckoutBlockCest
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'completed',
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
@@ -107,7 +107,7 @@ class WooCommerceSubscriptionsSubscribeEventCheckoutBlockCest
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'       => 'completed',
-				'use_legacy_checkout'	   => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 

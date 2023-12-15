@@ -52,7 +52,7 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'send_purchase_data' => true,
+				'send_purchase_data'  => true,
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -107,8 +107,8 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'product_type'       => 'virtual',
-				'send_purchase_data' => true,
+				'product_type'        => 'virtual',
+				'send_purchase_data'  => true,
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -136,7 +136,7 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'product_type' => 'virtual',
+				'product_type'        => 'virtual',
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -164,8 +164,8 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'product_type'       => 'zero',
-				'send_purchase_data' => true,
+				'product_type'        => 'zero',
+				'send_purchase_data'  => true,
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -193,7 +193,7 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'product_type' => 'zero',
+				'product_type'        => 'zero',
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -223,7 +223,7 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'send_purchase_data' => 'completed',
+				'send_purchase_data'  => 'completed',
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -262,7 +262,7 @@ class PurchaseDataCheckoutBlockCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'send_purchase_data' => 'completed',
+				'send_purchase_data'  => 'completed',
 				'use_legacy_checkout' => false,
 			]
 		);
@@ -301,7 +301,7 @@ class PurchaseDataCheckoutBlockCest
 				'subscription_event'       => 'pending',
 				'send_purchase_data'       => true,
 				'name_format'              => 'both',
-				'use_legacy_checkout' => false,
+				'use_legacy_checkout'      => false,
 			]
 		);
 
