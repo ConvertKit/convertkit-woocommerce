@@ -185,6 +185,7 @@ class WooCommerce extends \Codeception\Module
 			'custom_fields'             => false,
 			'name_format'               => 'first',
 			'coupon_form_tag_sequence'  => false,
+			'use_legacy_checkout'		=> true,
 		];
 
 		// If supplied options are an array, merge them with the defaults.
@@ -192,6 +193,11 @@ class WooCommerce extends \Codeception\Module
 			$options = array_merge($defaults, $options);
 		} else {
 			$options = $defaults;
+		}
+
+		// If using the legacy Checkout Shortcode, enable it now.
+		if ($options['use_legacy_checkout']) {
+			$I->setupWooCommerceCheckoutShortcode($I);
 		}
 
 		// Setup ConvertKit for WooCommerce Plugin.
