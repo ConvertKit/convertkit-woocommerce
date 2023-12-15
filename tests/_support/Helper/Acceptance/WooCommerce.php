@@ -169,6 +169,7 @@ class WooCommerce extends \Codeception\Module
 	 *     @type string $custom_fields              Map WooCommerce fields to ConvertKit Custom Fields.
 	 *     @type string $name_format                Name format.
 	 *     @type string $coupon_form_tag_sequence   Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 *     @type string $use_legacy_checkout        Use Legacy Checkout Shortcode.
 	 * }
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig($I, $options = false)
@@ -193,11 +194,6 @@ class WooCommerce extends \Codeception\Module
 			$options = array_merge($defaults, $options);
 		} else {
 			$options = $defaults;
-		}
-
-		// If using the legacy Checkout Shortcode, enable it now.
-		if ($options['use_legacy_checkout']) {
-			$I->setupWooCommerceCheckoutShortcode($I);
 		}
 
 		// Setup ConvertKit for WooCommerce Plugin.
@@ -255,7 +251,7 @@ class WooCommerce extends \Codeception\Module
 		$I->logOut();
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod);
+		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod, $options['use_legacy_checkout']);
 
 		// Apply Coupon Code.
 		if (isset($couponID)) {
@@ -567,9 +563,15 @@ class WooCommerce extends \Codeception\Module
 	 * @param   string           $productName    Product Name.
 	 * @param   string           $emailAddress   Email Address (wordpress@convertkit.com).
 	 * @param   string           $paymentMethod  Payment Method (cod|stripe).
+	 * @param   bool             $useLegacyCheckout Use Legacy Checkout Shortcode
 	 */
-	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod')
+	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod', $useLegacyCheckout = true)
 	{
+		// If using the legacy Checkout Shortcode, enable it now.
+		if ($useLegacyCheckout) {
+			$I->setupWooCommerceCheckoutShortcode($I);
+		}
+
 		// Load the Product on the frontend site.
 		$I->amOnPage('/?p=' . $productID);
 
@@ -595,14 +597,32 @@ class WooCommerce extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Complete Billing Details.
-		$I->fillField('#billing_first_name', 'First');
-		$I->fillField('#billing_last_name', 'Last');
-		$I->fillField('#billing_address_1', 'Address Line 1');
-		$I->fillField('#billing_city', 'City');
-		$I->fillField('#billing_postcode', '12345');
-		$I->fillField('#billing_phone', '123-123-1234');
-		$I->fillField('#billing_email', $emailAddress);
-		$I->fillField('#order_comments', 'Notes');
+		switch ($useLegacyCheckout) {
+			// Legacy Checkout Shortcode.
+			case true:
+				$I->fillField('#billing_first_name', 'First');
+				$I->fillField('#billing_last_name', 'Last');
+				$I->fillField('#billing_address_1', 'Address Line 1');
+				$I->fillField('#billing_city', 'City');
+				$I->fillField('#billing_postcode', '12345');
+				$I->fillField('#billing_phone', '123-123-1234');
+				$I->fillField('#billing_email', $emailAddress);
+				$I->fillField('#order_comments', 'Notes');
+				break;
+
+			// Checkout Block.
+			case false:
+				// @TODO.
+				$I->fillField('#billing_first_name', 'First');
+				$I->fillField('#billing_last_name', 'Last');
+				$I->fillField('#billing_address_1', 'Address Line 1');
+				$I->fillField('#billing_city', 'City');
+				$I->fillField('#billing_postcode', '12345');
+				$I->fillField('#billing_phone', '123-123-1234');
+				$I->fillField('#billing_email', $emailAddress);
+				$I->fillField('#order_comments', 'Notes');
+				break;
+		}
 
 		// Depending on the payment method required, complete some fields.
 		switch ($paymentMethod) {
@@ -611,7 +631,10 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				$I->click('label[for="payment_method_stripe"]');
+				// Only need to click the label in the legacy checkout.
+				if ($useLegacyCheckout) {
+					$I->click('label[for="payment_method_stripe"]');
+				}
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
 				$I->fillField('cardnumber', '4242424242424242');
 				$I->fillfield('exp-date', '01/26');
