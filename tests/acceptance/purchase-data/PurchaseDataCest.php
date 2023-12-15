@@ -51,12 +51,9 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			true // Send purchase data to ConvertKit.
+			[
+				'send_purchase_data' => true,
+			]
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -79,10 +76,7 @@ class PurchaseDataCest
 	public function testDontSendPurchaseDataWithSimpleProductCheckout(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address']);
@@ -106,12 +100,10 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'virtual', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			true // Send purchase data to ConvertKit.
+			[
+				'product_type'       => 'virtual',
+				'send_purchase_data' => true,
+			]
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -136,7 +128,9 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'virtual' // Simple Product.
+			[
+				'product_type' => 'virtual',
+			]
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -161,12 +155,10 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'zero', // Zero value Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			true // Send purchase data to ConvertKit.
+			[
+				'product_type'       => 'zero',
+				'send_purchase_data' => true,
+			]
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -191,7 +183,9 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'zero' // Zero value Simple Product.
+			[
+				'product_type' => 'zero',
+			]
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
@@ -530,10 +524,7 @@ class PurchaseDataCest
 	public function testDontSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
@@ -613,10 +604,7 @@ class PurchaseDataCest
 	public function testDontSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateVirtualProduct($I);
@@ -696,10 +684,7 @@ class PurchaseDataCest
 	public function testDontSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
 		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			'simple' // Simple Product.
-		);
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
 		// Create Product for this test.
 		$productID = $I->wooCommerceCreateZeroValueProduct($I);
@@ -737,12 +722,9 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			'completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
+			[
+				'send_purchase_data' => 'completed',
+			]
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -778,12 +760,9 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			false, // Don't display Opt-In checkbox on Checkout.
-			false, // Don't check Opt-In checkbox on Checkout.
-			false, // Form to subscribe email address to (not used).
-			false, // Subscribe Event.
-			'completed' // Send purchase data to ConvertKit when the Order status = Order Completed.
+			[
+				'send_purchase_data' => 'completed',
+			]
 		);
 
 		// Confirm that the purchase was not added to ConvertKit.
@@ -815,16 +794,12 @@ class PurchaseDataCest
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
-			'simple', // Simple Product.
-			true, // Display Opt-In checkbox on Checkout.
-			true, // Check Opt-In checkbox on Checkout.
-			'form:' . $_ENV['CONVERTKIT_API_FORM_ID'], // Form to subscribe email address to.
-			'pending', // Subscribe on WooCommerce "Order Pending payment" event.
-			true, // Send purchase data to ConvertKit.
-			false, // Don't define product level form, tag or sequence to subscribe to.
-			false, // Don't map custom fields.
-			'both', // Name format.
-			false // Don't define coupon level form, tag or sequence to subscribe to.
+			[
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'pending',
+				'send_purchase_data'       => true,
+				'name_format'              => 'both',
+			]
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
