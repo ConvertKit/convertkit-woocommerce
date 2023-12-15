@@ -79,7 +79,7 @@
 						el(
 							CheckboxControl,
 							{
-								id: 'ckwc-opt-in',
+								id: 'ckwc_opt_in',
 								label: optInLabel,
 								checked: checked,
 								onChange: setChecked

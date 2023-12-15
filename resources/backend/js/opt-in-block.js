@@ -70,7 +70,7 @@
 							el(
 								CheckboxControl,
 								{
-									id: 'ckwc-opt-in',
+									id: 'ckwc_opt_in',
 									checked: ( optInStatus === 'checked' ? true : false ),
 									label: optInLabel,
 									disabled: true // Required so it cannot be interacted with in the editor.
