@@ -59,6 +59,12 @@ class SettingOptInCheckboxCest
 
 		// Confirm that the Opt-In checkbox is not displayed on the Checkout screen.
 		$I->dontSeeElementInDOM('#ckwc_opt_in');
+
+		// Add Product to Cart and load Checkout Block.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product', 'wordpress@convertkit.com', 'cod', false);
+
+		// Confirm that the Opt-In checkbox is not displayed on the Checkout screen.
+		$I->dontSeeElementInDOM('#ckwc_opt_in');
 	}
 
 	/**
@@ -88,6 +94,15 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+
+		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
+		$I->seeElementInDOM('#ckwc_opt_in');
+
+		// Confirm that the label is the default value.
+		$I->seeInSource('I want to subscribe to the newsletter');
+
+		// Add Product to Cart and load Checkout Block.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product', 'wordpress@convertkit.com', 'cod', false);
 
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
@@ -136,6 +151,15 @@ class SettingOptInCheckboxCest
 
 		// Confirm that the label is the custom value.
 		$I->seeInSource($customLabel);
+
+		// Add Product to Cart and load Checkout Block.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product', 'wordpress@convertkit.com', 'cod', false);
+
+		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
+		$I->seeElementInDOM('#ckwc_opt_in');
+
+		// Confirm that the label is the custom value.
+		$I->seeInSource($customLabel);
 	}
 
 	/**
@@ -175,6 +199,15 @@ class SettingOptInCheckboxCest
 
 		// Confirm that the Opt-In checkbox is checked on the Checkout screen.
 		$I->seeCheckboxIsChecked('#ckwc_opt_in');
+
+		// Add Product to Cart and load Checkout Block.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product', 'wordpress@convertkit.com', 'cod', false);
+
+		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
+		$I->seeElementInDOM('#ckwc_opt_in');
+
+		// Confirm that the Opt-In checkbox is checked on the Checkout screen.
+		$I->seeCheckboxIsChecked('#ckwc_opt_in');
 	}
 
 	/**
@@ -208,6 +241,15 @@ class SettingOptInCheckboxCest
 
 		// Add Product to Cart and load Checkout.
 		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+
+		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
+		$I->seeElementInDOM('#ckwc_opt_in');
+
+		// Confirm that the Opt-In checkbox is not checked on the Checkout screen.
+		$I->dontSeeCheckboxIsChecked('#ckwc_opt_in');
+
+		// Add Product to Cart and load Checkout Block.
+		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product', 'wordpress@convertkit.com', 'cod', false);
 
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
