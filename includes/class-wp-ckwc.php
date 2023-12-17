@@ -130,6 +130,7 @@ class WP_CKWC {
 
 		// Initialize class(es) to register hooks.
 		$this->initialize_admin();
+		$this->initialize_cli();
 		$this->initialize_frontend();
 		$this->initialize_global();
 
@@ -161,6 +162,51 @@ class WP_CKWC {
 		 * @since   1.4.2
 		 */
 		do_action( 'convertkit_for_woocommerce_initialize_admin' );
+
+	}
+
+	/**
+	 * Register WP-CLI commands for this Plugin.
+	 *
+	 * @since   1.7.1
+	 */
+	private function initialize_cli() {
+
+		// Bail if this isn't a CLI request.
+		if ( ! defined( 'WP_CLI' ) ) {
+			return;
+		}
+		if ( ! WP_CLI ) {
+			return;
+		}
+		if ( ! class_exists( 'WP_CLI' ) ) {
+			return;
+		}
+
+		// Register CLI commands.
+		WP_CLI::add_command(
+			'ckwc-sync-past-orders',
+			'CKWC_CLI_Sync_Past_Orders',
+			array(
+				'shortdesc' => __( 'Sync past orders with ConvertKit Purchase Data.', 'page-generator-pro' ),
+				'synopsis'  => array(
+					array(
+						'type'     => 'assoc',
+						'name'     => 'limit',
+						'optional' => true,
+						'multiple' => false,
+					),
+				),
+				'when'      => 'before_wp_load',
+			)
+		);
+
+		/**
+		 * Register CLI commands.
+		 *
+		 * @since   1.7.1
+		 */
+		do_action( 'convertkit_for_woocommerce_initialize_cli' );
 
 	}
 
