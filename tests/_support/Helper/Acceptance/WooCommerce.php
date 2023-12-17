@@ -97,11 +97,22 @@ class WooCommerce extends \Codeception\Module
 		$pageID = $I->havePageInDatabase(
 			[
 				'post_title'   => 'Checkout',
+				'post_name'	   => 'checkout-shortcode',
 				'post_content' => '[woocommerce_checkout]',
 			]
 		);
 
 		// Configure WooCommerce to use this Page as the Checkout Page.
+		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
+		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
+	}
+
+	public function setupWooCommerceCheckoutBlock($I)
+	{
+		// @TODO Get.
+		
+		// Configure WooCommerce to use the default Checkout Page as this will have the
+		// Checkout Block.
 		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
 		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
 	}
@@ -582,6 +593,8 @@ class WooCommerce extends \Codeception\Module
 		// If using the legacy Checkout Shortcode, enable it now.
 		if ($useLegacyCheckout) {
 			$I->setupWooCommerceCheckoutShortcode($I);
+		} else {
+			$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
 		}
 
 		// Load the Product on the frontend site.
@@ -604,6 +617,9 @@ class WooCommerce extends \Codeception\Module
 
 		// Proceed to Checkout.
 		$I->click('Proceed to Checkout');
+
+		// Wait for the Checkout to load.
+		$I->waitForElementVisible('body.woocommerce-checkout');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
