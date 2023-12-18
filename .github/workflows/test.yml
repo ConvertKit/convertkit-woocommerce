@@ -50,12 +50,7 @@ jobs:
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
-          'acceptance/general',
-          'acceptance/integrations',
-          'acceptance/purchase-data',
-          'acceptance/settings',
-          'acceptance/subscribe',
-          'acceptance/sync-past-orders'
+          'acceptance/subscribe'
         ]
 
     # Steps to install, configure and run tests

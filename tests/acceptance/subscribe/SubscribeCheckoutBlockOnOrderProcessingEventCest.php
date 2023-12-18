@@ -6,7 +6,7 @@
  *
  * @since   1.4.2
  */
-class SubscribeOnOrderProcessingEventCheckoutBlockCest
+class SubscribeCheckoutBlockOnOrderProcessingEventCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
