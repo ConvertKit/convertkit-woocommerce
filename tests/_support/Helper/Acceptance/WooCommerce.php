@@ -93,7 +93,7 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function setupWooCommerceCheckoutShortcode($I)
 	{
-		// Create Checkout Page using checkout shortcode, not block.
+		// Create Checkout Page using checkout shortcode.
 		$pageID = $I->havePageInDatabase(
 			[
 				'post_title'   => 'Checkout',
@@ -107,10 +107,21 @@ class WooCommerce extends \Codeception\Module
 		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
 	}
 
+	/**
+	 * Helper method to setup WooCommerce's checkout page to use the
+	 * newer Checkout block.
+	 *
+	 * @since   1.7.1
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
 	public function setupWooCommerceCheckoutBlock($I)
 	{
-		// @TODO Get.
-		
+		// Find Checkout Page that contains checkout block.
+		$pageID = $I->grabFromDatabase( 'wp_posts', 'ID', [
+			'post_name' => 'checkout',
+		] );
+
 		// Configure WooCommerce to use the default Checkout Page as this will have the
 		// Checkout Block.
 		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
@@ -590,12 +601,15 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod', $useLegacyCheckout = true)
 	{
-		// If using the legacy Checkout Shortcode, enable it now.
+		// Enable legacy or block Checkout Page.
 		if ($useLegacyCheckout) {
 			$I->setupWooCommerceCheckoutShortcode($I);
 		} else {
-			$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
+			$I->setupWooCommerceCheckoutBlock($I);
 		}
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
 
 		// Load the Product on the frontend site.
 		$I->amOnPage('/?p=' . $productID);
