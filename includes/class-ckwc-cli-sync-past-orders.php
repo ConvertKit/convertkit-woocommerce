@@ -28,8 +28,8 @@ class CKWC_CLI_Sync_Past_Orders {
 	 *
 	 * @since   1.7.1
 	 *
-	 * @param   array $args           @TODO.
-	 * @param   array $arguments      @TODO.
+	 * @param   array $args           Non-named arguments.
+	 * @param   array $arguments      Named arguments.
 	 */
 	public function __invoke( $args, $arguments ) {
 

@@ -188,7 +188,7 @@ class WP_CKWC {
 			'ckwc-sync-past-orders',
 			'CKWC_CLI_Sync_Past_Orders',
 			array(
-				'shortdesc' => __( 'Sync past orders with ConvertKit Purchase Data.', 'page-generator-pro' ),
+				'shortdesc' => __( 'Sync past orders with ConvertKit Purchase Data.', 'woocommerce-convertkit' ),
 				'synopsis'  => array(
 					array(
 						'type'     => 'assoc',
