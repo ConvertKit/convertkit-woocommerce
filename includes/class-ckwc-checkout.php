@@ -175,7 +175,7 @@ class CKWC_Checkout {
 
 		$this->save_opt_in_for_order(
 			$order,
-			(bool) $request['extensions']['ckwc-opt-in']['ckwc_opt_in']
+			(bool) ( array_key_exists( 'ckwc-opt-in', $request['extensions'] ) ? $request['extensions']['ckwc-opt-in']['ckwc_opt_in'] : false )
 		);
 
 	}
