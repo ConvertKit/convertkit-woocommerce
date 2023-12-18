@@ -58,9 +58,9 @@ class CKWC_CLI_Sync_Past_Orders {
 				$this->integration->get_option( 'send_purchases_event' ) // new status.
 			);
 
-			// Return a JSON error if the result is a WP_Error.
+			// Output a warning and continue to the next Order, if the result is a WP_Error.
 			if ( is_wp_error( $result ) ) {
-				WP_CLI::error(
+				WP_CLI::warning(
 					sprintf(
 						/* translators: %1$s: WooCommerce Order ID, %2$s: Error message */
 						__( 'WooCommerce Order ID #%1$s: %2$s', 'woocommerce-convertkit' ),
@@ -71,7 +71,8 @@ class CKWC_CLI_Sync_Past_Orders {
 				continue;
 			}
 
-			WP_CLI::log(
+			// Output a success message.
+			WP_CLI::success(
 				sprintf(
 					/* translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID */
 					__( 'WooCommerce Order ID #%1$s added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
@@ -79,9 +80,6 @@ class CKWC_CLI_Sync_Past_Orders {
 					$result['id']
 				)
 			);
-
-			// Don't do anything else for now @TODO remove.
-			break;
 		}
 
 		WP_CLI::log( 'ConvertKit for WooCommerce: Sync Past Orders: Finished' );
