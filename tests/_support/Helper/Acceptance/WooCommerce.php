@@ -97,7 +97,7 @@ class WooCommerce extends \Codeception\Module
 		$pageID = $I->havePageInDatabase(
 			[
 				'post_title'   => 'Checkout',
-				'post_name'	   => 'checkout-shortcode',
+				'post_name'    => 'checkout-shortcode',
 				'post_content' => '[woocommerce_checkout]',
 			]
 		);
@@ -118,9 +118,13 @@ class WooCommerce extends \Codeception\Module
 	public function setupWooCommerceCheckoutBlock($I)
 	{
 		// Find Checkout Page that contains checkout block.
-		$pageID = $I->grabFromDatabase( 'wp_posts', 'ID', [
-			'post_name' => 'checkout',
-		] );
+		$pageID = $I->grabFromDatabase(
+			'wp_posts',
+			'ID',
+			[
+				'post_name' => 'checkout',
+			]
+		);
 
 		// Configure WooCommerce to use the default Checkout Page as this will have the
 		// Checkout Block.
