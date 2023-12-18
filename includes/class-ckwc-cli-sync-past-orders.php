@@ -36,19 +36,33 @@ class CKWC_CLI_Sync_Past_Orders {
 		// Fetch integration.
 		$this->integration = WP_CKWC_Integration();
 
-		WP_CLI::log( 'ConvertKit for WooCommerce: Sync Past Orders: Started' );
+		WP_CLI::log( __( 'ConvertKit for WooCommerce: Sync Past Orders: Started', 'woocommerce-convertkit' ) );
 
 		// Fetch all WooCommerce Orders not sent to ConvertKit.
 		$order_ids = WP_CKWC()->get_class( 'order' )->get_orders_not_sent_to_convertkit();
-		
+
 		// Bail if no Orders exist, or all Orders sent to ConvertKit.
 		if ( ! $order_ids ) {
-			WP_CLI::log( 'No outstanding Orders to send to ConvertKit' );
+			WP_CLI::log( __( 'No outstanding Orders to send to ConvertKit', 'woocommerce-convertkit' ) );
 			return;
 		}
 
+		// Log number of orders found.
+		WP_CLI::log(
+			sprintf(
+				/* translators: Number of WooCommerce Orders found not synchronised to ConvertKit */
+				__( 'ConvertKit for WooCommerce: Sync Past Orders: %s orders found not synchronised to ConvertKit.', 'woocommerce-convertkit' ),
+				count( $order_ids )
+			)
+		);
+
 		// Iterate through Orders.
-		foreach ( $order_ids as $id ) {
+		foreach ( $order_ids as $index => $id ) {
+			// If a limit argument was specified and has been hit, don't process further orders.
+			if ( array_key_exists( 'limit', $arguments ) && $index >= $arguments['limit'] ) {
+				break;
+			}
+
 			// Send purchase data for this Order to ConvertKit.
 			// We deliberately set the old status and new status to be different, and the new status to match
 			// the integration's Purchase Data Event setting, otherwise the Order won't be sent to ConvertKit's Purchase Data.
