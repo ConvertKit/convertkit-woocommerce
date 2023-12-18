@@ -313,8 +313,6 @@ class WooCommerce extends \Codeception\Module
 				// WooCommerce has a bug where clicking the Place Order button the first time doesn't do anything.
 				// This can be reproduced without the ConvertKit for WooCommerce Plugin active, so it's not a conflict.
 				$I->click('button.wc-block-components-checkout-place-order-button');
-				$I->wait(5);
-				$I->click('button.wc-block-components-checkout-place-order-button');
 				break;
 		}
 
