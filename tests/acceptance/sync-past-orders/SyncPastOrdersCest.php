@@ -4,7 +4,7 @@
  *
  * @since   1.4.3
  */
-class SyncPastOrdersWPAdminCest
+class SyncPastOrdersCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
