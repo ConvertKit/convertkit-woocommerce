@@ -98,7 +98,7 @@ class SyncPastOrdersCLICest
 		];
 
 		// Run CLI command with --limit=1 to send each Order individually.
-		foreach ($results as $result) {
+		foreach (array_reverse($results) as $result) {
 			// Remove prefix from Order ID, as CLI will not show the Custom Order Number Prefix.
 			$orderIDParts = explode( '-', $result['order_id'] );
 			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
