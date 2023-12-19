@@ -759,6 +759,52 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to programmatically create an Order based on a Product.
+	 *
+	 * @since   1.7.1
+	 *
+	 * @param   AcceptanceTester $I             AcceptanceTester.
+	 * @param   int              $productID     Product ID.
+	 * @param   int              $userID        User ID.
+	 * @return  int              $orderID
+	 */
+	public function wooCommerceOrderCreate($I, $productID, $userID)
+	{
+		// Create Order.
+		$orderID = rand(1, 5000); // phpcs:ignore WordPress.WP.AlternativeFunctions
+
+		$I->haveInDatabase(
+			'wp_wc_orders',
+			[
+				'id'                   => $orderID,
+				'status'               => 'wc-processing',
+				'currency'             => 'USD',
+				'type'                 => 'shop_order',
+				'total_amount'         => '10.00000000',
+				'customer_id'          => 1,
+				'billing_email'        => '',
+				'date_created_gmt'     => date('Y-m-d H:i:s'),
+				'date_updated_gmt'     => date('Y-m-d H:i:s'),
+				'payment_method'       => 'cod',
+				'payment_method_title' => 'Cash on delivery',
+			]
+		);
+		$I->haveInDatabase(
+			'wp_wc_order_product_lookup',
+			[
+				'order_item_id'         => rand(1, 5000), // phpcs:ignore WordPress.WP.AlternativeFunctions
+				'order_id'              => $orderID,
+				'product_id'            => $productID,
+				'customer_id'           => $userID,
+				'product_net_revenue'   => 10,
+				'product_gross_revenue' => 10,
+			]
+		);
+
+		return $orderID;
+	}
+
+	/**
 	 * Helper method to delete the given meta key from the wp_posts and wp_wc_orders tables
 	 * for a given WooComemrce Order.
 	 *
