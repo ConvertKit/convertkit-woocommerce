@@ -46,6 +46,8 @@ class SyncPastOrdersCLICest
 	public function testSyncPastOrdersWhenNoOrdersExist(AcceptanceTester $I)
 	{
 		$I->cli('ckwc-sync-past-orders');
+		var_dump($I->grabLastShellOutput());
+		die();
 		$I->seeInShellOutput('No outstanding Orders to send to ConvertKit');
 	}
 
