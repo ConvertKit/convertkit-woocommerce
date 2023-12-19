@@ -183,10 +183,12 @@ class WP_CKWC {
 			return;
 		}
 
+		$this->classes['cli_sync_past_orders'] = new CKWC_CLI_Sync_Past_Orders();
+
 		// Register CLI commands.
 		WP_CLI::add_command(
 			'ckwc-sync-past-orders',
-			'CKWC_CLI_Sync_Past_Orders',
+			$this->classes['cli_sync_past_orders'],
 			array(
 				'shortdesc' => __( 'Sync past orders with ConvertKit Purchase Data.', 'woocommerce-convertkit' ),
 				'synopsis'  => array(
