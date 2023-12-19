@@ -24,6 +24,9 @@ class SyncPastOrdersCLICest
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
+		// Setup ConvertKit for WooCommerce Plugin.
+		$I->setupConvertKitPlugin($I);
+
 		// Activate Custom Order Numbers Plugin.
 		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
 
@@ -45,9 +48,7 @@ class SyncPastOrdersCLICest
 	 */
 	public function testSyncPastOrdersWhenNoOrdersExist(AcceptanceTester $I)
 	{
-		$I->cli('ckwc-sync-past-orders');
-		var_dump($I->grabLastShellOutput());
-		die();
+		$I->cli([ 'ckwc-sync-past-orders' ]);
 		$I->seeInShellOutput('No outstanding Orders to send to ConvertKit');
 	}
 
@@ -62,26 +63,20 @@ class SyncPastOrdersCLICest
 	 */
 	public function testSyncPastOrders(AcceptanceTester $I)
 	{
-		// Create Product and Customer.
-		$productID = $I->wooCommerceCreateSimpleProduct($I);
-		$email     = $I->generateEmailAddress();
-		$userID    = $I->haveUserInDatabase(
-			'sync-past-orders',
-			'subscriber',
-			[
-				'user_email' => $email,
-			]
-		);
+		// Create Product and Checkout for this test, not sending the Order
+		// to ConvertKit.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
-		// Create Order using this Product.
-		$orderID = $I->wooCommerceOrderCreate($I, $productID, $userID);
+		// Remove prefix from Order ID, as CLI will not show the Custom Order Number Prefix.
+		$orderIDParts = explode( '-', $result['order_id'] );
+		$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
 
 		// Run CLI command.
-		$I->cli('ckwc-sync-past-orders');
-		$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . 'added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #');
+		$I->cli([ 'ckwc-sync-past-orders' ]);
+		$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . ' added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #');
 
-		// Confirm that the last Order was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $orderID, $email, $productID);
+		// Confirm that the Order was added to ConvertKit.
+		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 	}
 
 	/**
@@ -95,31 +90,25 @@ class SyncPastOrdersCLICest
 	 */
 	public function testSyncPastOrdersWithLimitArgument(AcceptanceTester $I)
 	{
-		// Create Product and Customer.
-		$productID = $I->wooCommerceCreateSimpleProduct($I);
-		$email     = $I->generateEmailAddress();
-		$userID    = $I->haveUserInDatabase(
-			'sync-past-orders',
-			'subscriber',
-			[
-				'user_email' => $email,
-			]
-		);
-
-		// Create Orders using this Product.
-		$orderIDs = [
-			$I->wooCommerceOrderCreate($I, $productID, $userID),
-			$I->wooCommerceOrderCreate($I, $productID, $userID),
+		// Create Product and Checkout for this test, not sending the Order
+		// to ConvertKit.
+		$results = [
+			$I->wooCommerceCreateProductAndCheckoutWithConfig($I),
+			$I->wooCommerceCreateProductAndCheckoutWithConfig($I),
 		];
 
 		// Run CLI command with --limit=1 to send each Order individually.
-		foreach ($orderIDs as $orderID) {
-			// Run command.
-			$I->cli('ckwc-sync-past-orders --limit=1');
-			$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . 'added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #');
+		foreach ($results as $result) {
+			// Remove prefix from Order ID, as CLI will not show the Custom Order Number Prefix.
+			$orderIDParts = explode( '-', $result['order_id'] );
+			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
+
+			// Run CLI command.
+			$I->cli([ 'ckwc-sync-past-orders', '--limit=1' ]);
+			$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . ' added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #');
 
 			// Confirm that the Order was added to ConvertKit.
-			$I->apiCheckPurchaseExists($I, $orderID, $email, $productID);
+			$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 		}
 	}
 

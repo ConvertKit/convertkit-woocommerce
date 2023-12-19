@@ -34,6 +34,9 @@ modules:
     config:
         WPCLI:
             path: '%WP_ROOT_FOLDER%'
+            throw: true
+            timeout: 60
+            allow-root: true
         WPDb:
             dsn: '%TEST_SITE_DB_DSN%'
             user: '%TEST_SITE_DB_USER%'
