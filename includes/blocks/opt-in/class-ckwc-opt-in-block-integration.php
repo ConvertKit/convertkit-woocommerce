@@ -67,6 +67,10 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 				'align'    => false,
 				'multiple' => false,
 				'reusable' => false,
+
+				// Remove support for locking/unlocking this block in the block editor UI, as
+				// the block's visibility is controlled by the integration's settings. 
+				'lock'	   => false,
 			),
 
 			// Where to display the block within the WooCommerce Checkout Block.
