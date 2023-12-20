@@ -63,7 +63,8 @@
 	);
 
 	// Define checkbox to display, if the integration is enabled and set to display
-	// the opt in checkbox.
+	// the opt in checkbox, based on the integration settings for the
+	// checkbox checked state and its label.
 	let checkbox = null;
 	if ( enabled && displayOptIn ) {
 		checkbox = el(
@@ -78,6 +79,26 @@
 			}
 		);
 	}
+
+	// Define Inspector Controls, which displays a sidebar in the editor with a button
+	// linking to the integration's settings.
+	const blockInspectorControls = el(
+		InspectorControls,
+		{},
+		el(
+			CardBody,
+			{},
+			el(
+				Button,
+				{
+					href: integrationSettingsURL,
+					text: integrationSettingsButtonLabel,
+					target: '_new',
+					isSecondary: true
+				}
+			)
+		)
+	);
 
 	// Register Block.
 	registerBlockType(
@@ -97,23 +118,7 @@
 						'div',
 						{},
 						[
-							el(
-								InspectorControls,
-								{},
-								el(
-									CardBody,
-									{},
-									el(
-										Button,
-										{
-											href: integrationSettingsURL,
-											text: integrationSettingsButtonLabel,
-											target: '_new',
-											isSecondary: true
-										}
-									)
-								)
-							),
+							blockInspectorControls,
 							checkbox
 						]
 					)
