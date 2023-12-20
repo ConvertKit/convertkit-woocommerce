@@ -9,6 +9,7 @@ actor: AcceptanceTester
 modules:
     enabled:
         # wp-browser supplied classes, which provide WordPress specific functions
+        - WPCLI
         - WPDb
         - WPWebDriver
 
@@ -31,6 +32,11 @@ modules:
         - \Helper\Acceptance\WPQuickEdit
         - \Helper\Acceptance\Xdebug
     config:
+        WPCLI:
+            path: '%WP_ROOT_FOLDER%'
+            throw: true
+            timeout: 60
+            allow-root: true
         WPDb:
             dsn: '%TEST_SITE_DB_DSN%'
             user: '%TEST_SITE_DB_USER%'

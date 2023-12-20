@@ -46,6 +46,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-cli-sync-past-orders.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-order.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-custom-fields.php';
