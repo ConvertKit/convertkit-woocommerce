@@ -59,9 +59,6 @@ class Plugin extends \Codeception\Module
 		// Flush Permalinks by visiting Settings > Permalinks, so that newly registered Post Types e.g.
 		// WooCommerce Products work.
 		$I->amOnAdminPage('options-permalink.php');
-
-		// Create Checkout Page using checkout shortcode, not block.
-		$I->enableWooCommerceLegacyCheckoutShortcode($I);
 	}
 
 	/**
