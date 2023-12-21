@@ -84,6 +84,55 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to setup WooCommerce's checkout page to use the
+	 * legacy [woocommerce_shortcode].
+	 *
+	 * @since   1.7.1
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
+	public function setupWooCommerceCheckoutShortcode($I)
+	{
+		// Create Checkout Page using checkout shortcode.
+		$pageID = $I->havePageInDatabase(
+			[
+				'post_title'   => 'Checkout',
+				'post_name'    => 'checkout-shortcode',
+				'post_content' => '[woocommerce_checkout]',
+			]
+		);
+
+		// Configure WooCommerce to use this Page as the Checkout Page.
+		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
+		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
+	}
+
+	/**
+	 * Helper method to setup WooCommerce's checkout page to use the
+	 * newer Checkout block.
+	 *
+	 * @since   1.7.1
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
+	public function setupWooCommerceCheckoutBlock($I)
+	{
+		// Find Checkout Page that contains checkout block.
+		$pageID = $I->grabFromDatabase(
+			'wp_posts',
+			'ID',
+			[
+				'post_name' => 'checkout',
+			]
+		);
+
+		// Configure WooCommerce to use the default Checkout Page as this will have the
+		// Checkout Block.
+		$I->dontHaveOptionInDatabase('woocommerce_checkout_page_id');
+		$I->haveOptionInDatabase('woocommerce_checkout_page_id', $pageID);
+	}
+
+	/**
 	 * Helper method to setup the Custom Order Numbers Plugin.
 	 *
 	 * @since   1.0.0
@@ -146,6 +195,7 @@ class WooCommerce extends \Codeception\Module
 	 *     @type string $custom_fields              Map WooCommerce fields to ConvertKit Custom Fields.
 	 *     @type string $name_format                Name format.
 	 *     @type string $coupon_form_tag_sequence   Coupon Setting for Form, Tag or Sequence to subscribe the Customer to.
+	 *     @type string $use_legacy_checkout        Use Legacy Checkout Shortcode.
 	 * }
 	 */
 	public function wooCommerceCreateProductAndCheckoutWithConfig($I, $options = false)
@@ -162,6 +212,7 @@ class WooCommerce extends \Codeception\Module
 			'custom_fields'             => false,
 			'name_format'               => 'first',
 			'coupon_form_tag_sequence'  => false,
+			'use_legacy_checkout'       => true,
 		];
 
 		// If supplied options are an array, merge them with the defaults.
@@ -226,7 +277,7 @@ class WooCommerce extends \Codeception\Module
 		$I->logOut();
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod);
+		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod, $options['use_legacy_checkout']);
 
 		// Apply Coupon Code.
 		if (isset($couponID)) {
@@ -251,9 +302,21 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		// Click Place order button.
-		$I->waitForElementNotVisible('.blockOverlay');
-		$I->scrollTo('#order_review_heading');
-		$I->click('#place_order');
+		switch ($options['use_legacy_checkout']) {
+			case true:
+				$I->waitForElementNotVisible('.blockOverlay');
+				$I->scrollTo('#order_review_heading');
+				$I->click('#place_order');
+				break;
+
+			case false:
+				// WooCommerce has a bug where clicking the Place Order button the first time doesn't do anything.
+				// This can be reproduced without the ConvertKit for WooCommerce Plugin active, so it's not a conflict.
+				$I->click('button.wc-block-components-checkout-place-order-button');
+				$I->wait(2);
+				$I->click('button.wc-block-components-checkout-place-order-button');
+				break;
+		}
 
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
@@ -538,9 +601,20 @@ class WooCommerce extends \Codeception\Module
 	 * @param   string           $productName    Product Name.
 	 * @param   string           $emailAddress   Email Address (wordpress@convertkit.com).
 	 * @param   string           $paymentMethod  Payment Method (cod|stripe).
+	 * @param   bool             $useLegacyCheckout Use Legacy Checkout Shortcode.
 	 */
-	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod')
+	public function wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress = 'wordpress@convertkit.com', $paymentMethod = 'cod', $useLegacyCheckout = true)
 	{
+		// Enable legacy or block Checkout Page.
+		if ($useLegacyCheckout) {
+			$I->setupWooCommerceCheckoutShortcode($I);
+		} else {
+			$I->setupWooCommerceCheckoutBlock($I);
+		}
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+
 		// Load the Product on the frontend site.
 		$I->amOnPage('/?p=' . $productID);
 
@@ -562,18 +636,39 @@ class WooCommerce extends \Codeception\Module
 		// Proceed to Checkout.
 		$I->click('Proceed to Checkout');
 
+		// Wait for the Checkout to load.
+		$I->waitForElementVisible('body.woocommerce-checkout');
+
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Complete Billing Details.
-		$I->fillField('#billing_first_name', 'First');
-		$I->fillField('#billing_last_name', 'Last');
-		$I->fillField('#billing_address_1', 'Address Line 1');
-		$I->fillField('#billing_city', 'City');
-		$I->fillField('#billing_postcode', '12345');
-		$I->fillField('#billing_phone', '123-123-1234');
-		$I->fillField('#billing_email', $emailAddress);
-		$I->fillField('#order_comments', 'Notes');
+		switch ($useLegacyCheckout) {
+			// Legacy Checkout Shortcode.
+			case true:
+				$I->fillField('#billing_first_name', 'First');
+				$I->fillField('#billing_last_name', 'Last');
+				$I->fillField('#billing_address_1', 'Address Line 1');
+				$I->fillField('#billing_city', 'City');
+				$I->fillField('#billing_postcode', '12345');
+				$I->fillField('#billing_phone', '123-123-1234');
+				$I->fillField('#billing_email', $emailAddress);
+				$I->fillField('#order_comments', 'Notes');
+				break;
+
+			// Checkout Block.
+			case false:
+				$I->fillField('#billing-first_name', 'First');
+				$I->fillField('#billing-last_name', 'Last');
+				$I->fillField('#billing-address_1', 'Address Line 1');
+				$I->fillField('#billing-city', 'City');
+				$I->fillField('#billing-postcode', '12345');
+				$I->fillField('#billing-phone', '123-123-1234');
+				$I->fillField('#email', $emailAddress);
+				$I->checkOption('.wc-block-checkout__add-note input.wc-block-components-checkbox__input');
+				$I->fillField('.wc-block-components-textarea', 'Notes');
+				break;
+		}
 
 		// Depending on the payment method required, complete some fields.
 		switch ($paymentMethod) {
@@ -582,7 +677,10 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				$I->click('label[for="payment_method_stripe"]');
+				// Only need to click the label in the legacy checkout.
+				if ($useLegacyCheckout) {
+					$I->click('label[for="payment_method_stripe"]');
+				}
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
 				$I->fillField('cardnumber', '4242424242424242');
 				$I->fillfield('exp-date', '01/26');
