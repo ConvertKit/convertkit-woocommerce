@@ -291,14 +291,13 @@ class SettingOptInCheckboxCest
 	/**
 	 * Test that the opt in checkbox block is automatically added to the WooCommerce Checkout
 	 * block, cannot be removed and links to the integration settings screen.
-	 * 
-	 * @since 	1.7.1
+	 *
+	 * @since   1.7.1
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function testOptInCheckboxBlockInEditor(AcceptanceTester $I)
 	{
-		
 	}
 
 	/**
