@@ -67,6 +67,10 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 				'align'    => false,
 				'multiple' => false,
 				'reusable' => false,
+
+				// Remove support for locking/unlocking this block in the block editor UI, as
+				// the block's visibility is controlled by the integration's settings.
+				'lock'     => false,
 			),
 
 			// Where to display the block within the WooCommerce Checkout Block.
@@ -199,11 +203,13 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	public function get_script_data() {
 
 		return array(
-			'enabled'      => $this->integration->is_enabled(),
-			'displayOptIn' => $this->integration->get_option_bool( 'display_opt_in' ),
-			'optInLabel'   => $this->integration->get_option( 'opt_in_label' ),
-			'optInStatus'  => $this->integration->get_option( 'opt_in_status' ),
-			'metadata'     => $this->get_metadata(),
+			'enabled'                        => $this->integration->is_enabled(),
+			'displayOptIn'                   => $this->integration->get_option_bool( 'display_opt_in' ),
+			'optInLabel'                     => $this->integration->get_option( 'opt_in_label' ),
+			'optInStatus'                    => $this->integration->get_option( 'opt_in_status' ),
+			'metadata'                       => $this->get_metadata(),
+			'integrationSettingsURL'         => ckwc_get_settings_link(),
+			'integrationSettingsButtonLabel' => __( 'Configure Opt In', 'woocommerce-convertkit' ),
 		);
 
 	}
