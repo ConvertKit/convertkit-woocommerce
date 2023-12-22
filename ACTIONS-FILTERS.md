@@ -58,7 +58,7 @@
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_checkout_add_opt_in_checkbox">
 						convertkit_for_woocommerce_checkout_add_opt_in_checkbox
-						<code>includes/class-ckwc-checkout.php::80</code>
+						<code>includes/class-ckwc-checkout.php::137</code>
 					</h3><h4>Overview</h4>
 						<p>Adds the opt-in checkbox to the checkout's billing or order section, based on the Plugin's settings.</p><h4>Parameters</h4>
 					<table>
@@ -433,6 +433,10 @@ add_filter( 'convertkit_for_woocommerce_custom_field_data', function( $fields, $
 						<td></td>
 					</tr><tr>
 						<td>&nbsp;</td>
+						<td><a href="#convertkit_for_woocommerce_initialize_cli"><code>convertkit_for_woocommerce_initialize_cli</code></a></td>
+						<td></td>
+					</tr><tr>
+						<td>&nbsp;</td>
 						<td><a href="#convertkit_for_woocommerce_initialize_frontend"><code>convertkit_for_woocommerce_initialize_frontend</code></a></td>
 						<td></td>
 					</tr><tr>
@@ -443,7 +447,7 @@ add_filter( 'convertkit_for_woocommerce_custom_field_data', function( $fields, $
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_initialize_admin">
 						convertkit_for_woocommerce_initialize_admin
-						<code>includes/class-wp-ckwc.php::136</code>
+						<code>includes/class-wp-ckwc.php::162</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -461,9 +465,29 @@ do_action( 'convertkit_for_woocommerce_initialize_admin', function(  ) {
 	// ... your code here
 }, 10, 0 );
 </pre>
+<h3 id="convertkit_for_woocommerce_initialize_cli">
+						convertkit_for_woocommerce_initialize_cli
+						<code>includes/class-wp-ckwc.php::209</code>
+					</h3><h4>Parameters</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table><h4>Usage</h4>
+<pre>
+do_action( 'convertkit_for_woocommerce_initialize_cli', function(  ) {
+	// ... your code here
+}, 10, 0 );
+</pre>
 <h3 id="convertkit_for_woocommerce_initialize_frontend">
 						convertkit_for_woocommerce_initialize_frontend
-						<code>includes/class-wp-ckwc.php::159</code>
+						<code>includes/class-wp-ckwc.php::232</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -483,7 +507,7 @@ do_action( 'convertkit_for_woocommerce_initialize_frontend', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_global">
 						convertkit_for_woocommerce_initialize_global
-						<code>includes/class-wp-ckwc.php::180</code>
+						<code>includes/class-wp-ckwc.php::253</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>

@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
-Tested up to: 6.4.1
+Tested up to: 6.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,10 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.7.1 2023-12-22
+* Added: Checkout: Opt in checkbox block is automatically added when WooCommerce Checkout Block is used, honoring settings at `WooCommerce > Settings > Integration > ConvertKit`
+* Added: Purchase Data: CLI: `wp ckwc-sync-past-orders` command can be used to send past WooCommerce Orders to ConvertKit.  Use `wp ckwc-sync-past-orders --limit=100` to send a specific number of WooCommerce Orders 
 
 ### 1.7.0 2023-11-09
 * Updated: ConvertKit WordPress Libraries to 1.4.0

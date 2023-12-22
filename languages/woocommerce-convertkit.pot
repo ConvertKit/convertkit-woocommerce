@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the ConvertKit for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: ConvertKit for WooCommerce 1.6.9\n"
+"Project-Id-Version: ConvertKit for WooCommerce 1.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-09T15:36:06+00:00\n"
+"POT-Creation-Date: 2023-12-22T12:18:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: woocommerce-convertkit\n"
 
 #. Plugin Name of the plugin
@@ -40,6 +40,7 @@ msgstr ""
 
 #. translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID
 #: admin/class-ckwc-admin-ajax.php:77
+#: includes/class-ckwc-cli-sync-past-orders.php:97
 msgid "WooCommerce Order ID #%1$s added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #%2$s"
 msgstr ""
 
@@ -54,6 +55,18 @@ msgstr ""
 
 #: admin/class-ckwc-admin-post-type.php:100
 msgid "ConvertKit Integration"
+msgstr ""
+
+#: includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php:52
+msgid "ConvertKit Opt In"
+msgstr ""
+
+#: includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php:54
+msgid "Displays a ConvertKit opt in checkbox at Checkout."
+msgstr ""
+
+#: includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php:212
+msgid "Configure Opt In"
 msgstr ""
 
 #: includes/class-ckwc-api.php:61
@@ -176,6 +189,28 @@ msgstr ""
 
 #: includes/class-ckwc-api.php:105
 msgid "ConvertKit API Error: The response is not of the expected type array."
+msgstr ""
+
+#: includes/class-ckwc-cli-sync-past-orders.php:39
+msgid "ConvertKit for WooCommerce: Sync Past Orders: Started"
+msgstr ""
+
+#: includes/class-ckwc-cli-sync-past-orders.php:43
+msgid "Please enable the integration at WooCommerce > Settings > Integration > ConvertKit, entering an API Key and Secret."
+msgstr ""
+
+#: includes/class-ckwc-cli-sync-past-orders.php:51
+msgid "No outstanding Orders to send to ConvertKit"
+msgstr ""
+
+#. translators: Number of WooCommerce Orders found not synchronised to ConvertKit
+#: includes/class-ckwc-cli-sync-past-orders.php:59
+msgid "ConvertKit for WooCommerce: Sync Past Orders: %s orders found not synchronised to ConvertKit."
+msgstr ""
+
+#. translators: %1$s: WooCommerce Order ID, %2$s: Error message
+#: includes/class-ckwc-cli-sync-past-orders.php:85
+msgid "WooCommerce Order ID #%1$s: %2$s"
 msgstr ""
 
 #: includes/class-ckwc-integration.php:74
@@ -522,12 +557,16 @@ msgstr ""
 msgid "[ConvertKit] Purchase Data sent successfully"
 msgstr ""
 
+#: includes/class-wp-ckwc.php:192
+msgid "Sync past orders with ConvertKit Purchase Data."
+msgstr ""
+
 #. translators: %1$s: PHP class name
-#: includes/class-wp-ckwc.php:217
+#: includes/class-wp-ckwc.php:290
 msgid "ConvertKit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>"
 msgstr ""
 
-#: includes/class-wp-ckwc.php:227
+#: includes/class-wp-ckwc.php:300
 msgid "ConvertKit for WooCommerce Error"
 msgstr ""
 
