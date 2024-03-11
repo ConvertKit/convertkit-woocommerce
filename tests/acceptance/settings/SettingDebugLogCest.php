@@ -49,8 +49,8 @@ class SettingDebugLogCest
 		// Load WooCommerce's Logs screen.
 		$I->amOnAdminPage('admin.php?page=wc-status&tab=logs');
 
-		// Confirm that a ConvertKit Log File exists in the dropdown selection of logs.
-		$I->seeInSource('<option value="convertkit-' . date('Y-m-d'));
+		// Confirm that a ConvertKit Log File exists in the table of logs for today's date.
+		$I->seeInSource('<a class="row-title" href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-status&amp;tab=logs&amp;view=single_file&amp;file_id=convertkit-' . date('Y-m-d') . '">convertkit</a>');
 	}
 
 	/**
