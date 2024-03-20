@@ -17,8 +17,6 @@ DROP TABLE IF EXISTS `wp_wc_order_coupon_lookup`;
 DROP TABLE IF EXISTS `wp_wc_order_product_lookup`;
 DROP TABLE IF EXISTS `wp_wc_order_stats`;
 DROP TABLE IF EXISTS `wp_wc_order_tax_lookup`;
-DROP TABLE IF EXISTS `wp_wc_orders`;
-DROP TABLE IF EXISTS `wp_wc_orders_meta`;
 DROP TABLE IF EXISTS `wp_wc_product_attributes_lookup`;
 DROP TABLE IF EXISTS `wp_wc_product_meta_lookup`;
 DROP TABLE IF EXISTS `wp_wc_rate_limits`;
@@ -157,7 +155,7 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (43,  'html_type',  'text/html',  'yes'),
 (44,  'use_trackback',  '0',  'yes'),
 (45,  'default_role', 'subscriber', 'yes'),
-(46,  'db_version', '56657',  'yes'),
+(46,  'db_version', '57155',  'yes'),
 (47,  'uploads_use_yearmonth_folders',  '1',  'yes'),
 (48,  'upload_path',  '', 'yes'),
 (49,  'blog_public',  '1',  'yes'),
@@ -210,7 +208,7 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (96,  'auto_update_core_minor', 'enabled',  'yes'),
 (97,  'auto_update_core_major', 'enabled',  'yes'),
 (98,  'wp_force_deactivated_plugins', 'a:0:{}', 'yes'),
-(99,  'initial_db_version', '55853',  'yes'),
+(99,  'initial_db_version', '57155',  'yes'),
 (100, 'wp_user_roles',  'a:5:{s:13:\"administrator\";a:2:{s:4:\"name\";s:13:\"Administrator\";s:12:\"capabilities\";a:61:{s:13:\"switch_themes\";b:1;s:11:\"edit_themes\";b:1;s:16:\"activate_plugins\";b:1;s:12:\"edit_plugins\";b:1;s:10:\"edit_users\";b:1;s:10:\"edit_files\";b:1;s:14:\"manage_options\";b:1;s:17:\"moderate_comments\";b:1;s:17:\"manage_categories\";b:1;s:12:\"manage_links\";b:1;s:12:\"upload_files\";b:1;s:6:\"import\";b:1;s:15:\"unfiltered_html\";b:1;s:10:\"edit_posts\";b:1;s:17:\"edit_others_posts\";b:1;s:20:\"edit_published_posts\";b:1;s:13:\"publish_posts\";b:1;s:10:\"edit_pages\";b:1;s:4:\"read\";b:1;s:8:\"level_10\";b:1;s:7:\"level_9\";b:1;s:7:\"level_8\";b:1;s:7:\"level_7\";b:1;s:7:\"level_6\";b:1;s:7:\"level_5\";b:1;s:7:\"level_4\";b:1;s:7:\"level_3\";b:1;s:7:\"level_2\";b:1;s:7:\"level_1\";b:1;s:7:\"level_0\";b:1;s:17:\"edit_others_pages\";b:1;s:20:\"edit_published_pages\";b:1;s:13:\"publish_pages\";b:1;s:12:\"delete_pages\";b:1;s:19:\"delete_others_pages\";b:1;s:22:\"delete_published_pages\";b:1;s:12:\"delete_posts\";b:1;s:19:\"delete_others_posts\";b:1;s:22:\"delete_published_posts\";b:1;s:20:\"delete_private_posts\";b:1;s:18:\"edit_private_posts\";b:1;s:18:\"read_private_posts\";b:1;s:20:\"delete_private_pages\";b:1;s:18:\"edit_private_pages\";b:1;s:18:\"read_private_pages\";b:1;s:12:\"delete_users\";b:1;s:12:\"create_users\";b:1;s:17:\"unfiltered_upload\";b:1;s:14:\"edit_dashboard\";b:1;s:14:\"update_plugins\";b:1;s:14:\"delete_plugins\";b:1;s:15:\"install_plugins\";b:1;s:13:\"update_themes\";b:1;s:14:\"install_themes\";b:1;s:11:\"update_core\";b:1;s:10:\"list_users\";b:1;s:12:\"remove_users\";b:1;s:13:\"promote_users\";b:1;s:18:\"edit_theme_options\";b:1;s:13:\"delete_themes\";b:1;s:6:\"export\";b:1;}}s:6:\"editor\";a:2:{s:4:\"name\";s:6:\"Editor\";s:12:\"capabilities\";a:34:{s:17:\"moderate_comments\";b:1;s:17:\"manage_categories\";b:1;s:12:\"manage_links\";b:1;s:12:\"upload_files\";b:1;s:15:\"unfiltered_html\";b:1;s:10:\"edit_posts\";b:1;s:17:\"edit_others_posts\";b:1;s:20:\"edit_published_posts\";b:1;s:13:\"publish_posts\";b:1;s:10:\"edit_pages\";b:1;s:4:\"read\";b:1;s:7:\"level_7\";b:1;s:7:\"level_6\";b:1;s:7:\"level_5\";b:1;s:7:\"level_4\";b:1;s:7:\"level_3\";b:1;s:7:\"level_2\";b:1;s:7:\"level_1\";b:1;s:7:\"level_0\";b:1;s:17:\"edit_others_pages\";b:1;s:20:\"edit_published_pages\";b:1;s:13:\"publish_pages\";b:1;s:12:\"delete_pages\";b:1;s:19:\"delete_others_pages\";b:1;s:22:\"delete_published_pages\";b:1;s:12:\"delete_posts\";b:1;s:19:\"delete_others_posts\";b:1;s:22:\"delete_published_posts\";b:1;s:20:\"delete_private_posts\";b:1;s:18:\"edit_private_posts\";b:1;s:18:\"read_private_posts\";b:1;s:20:\"delete_private_pages\";b:1;s:18:\"edit_private_pages\";b:1;s:18:\"read_private_pages\";b:1;}}s:6:\"author\";a:2:{s:4:\"name\";s:6:\"Author\";s:12:\"capabilities\";a:10:{s:12:\"upload_files\";b:1;s:10:\"edit_posts\";b:1;s:20:\"edit_published_posts\";b:1;s:13:\"publish_posts\";b:1;s:4:\"read\";b:1;s:7:\"level_2\";b:1;s:7:\"level_1\";b:1;s:7:\"level_0\";b:1;s:12:\"delete_posts\";b:1;s:22:\"delete_published_posts\";b:1;}}s:11:\"contributor\";a:2:{s:4:\"name\";s:11:\"Contributor\";s:12:\"capabilities\";a:5:{s:10:\"edit_posts\";b:1;s:4:\"read\";b:1;s:7:\"level_1\";b:1;s:7:\"level_0\";b:1;s:12:\"delete_posts\";b:1;}}s:10:\"subscriber\";a:2:{s:4:\"name\";s:10:\"Subscriber\";s:12:\"capabilities\";a:2:{s:4:\"read\";b:1;s:7:\"level_0\";b:1;}}}',  'yes'),
 (101, 'fresh_site', '1',  'yes'),
 (102, 'user_count', '1',  'no'),
@@ -226,17 +224,21 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (112, 'widget_media_video', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
 (113, 'widget_meta',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
 (114, 'widget_search',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(115, 'nonce_key',  ':@mS9DsY,vFI=iAKiwy;g$hm^l d4nE(_%Bd+>v2K`d;Km2Me;mO9[f_-Q Zh=[Q', 'no'),
-(116, 'nonce_salt', '/?#2ig*c_e_}-[mel-$?%U;;@}oC9TF%|l /Df%)V@kV~|$Lo[bKcL,W{y-]4%S>', 'no'),
-(117, 'widget_recent-posts',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(118, 'widget_recent-comments', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(119, 'widget_tag_cloud', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(120, 'widget_nav_menu',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(121, 'widget_custom_html', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(123, 'recovery_keys',  'a:0:{}', 'yes'),
-(124, 'theme_mods_twentytwentythree', 'a:1:{s:18:\"custom_css_post_id\";i:-1;}',  'yes'),
-(126, 'db_upgraded',  '', 'yes'),
-(127, 'can_compress_scripts', '1',  'yes');
+(115, 'widget_recent-posts',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
+(116, 'widget_recent-comments', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
+(117, 'widget_tag_cloud', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
+(118, 'widget_nav_menu',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
+(119, 'widget_custom_html', 'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
+(120, 'nonce_key',  ':@mS9DsY,vFI=iAKiwy;g$hm^l d4nE(_%Bd+>v2K`d;Km2Me;mO9[f_-Q Zh=[Q', 'no'),
+(121, 'nonce_salt', '/?#2ig*c_e_}-[mel-$?%U;;@}oC9TF%|l /Df%)V@kV~|$Lo[bKcL,W{y-]4%S>', 'no'),
+(122, 'recovery_keys',  'a:0:{}', 'yes'),
+(123, 'theme_mods_twentytwentythree', 'a:1:{s:18:\"custom_css_post_id\";i:-1;}',  'yes'),
+(124, 'db_upgraded',  '', 'yes'),
+(125, 'can_compress_scripts', '1',  'yes'),
+(126, 'WishListMemberOptions_Migrated', '1',  'yes'),
+(127, 'widget_wishlistwidget',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
+(128, 'WishListMemberOptions_MigrateLevelData', '1',  'yes'),
+(129, 'WishListMemberOptions_MigrateContentLevelData',  '1',  'yes');
 
 DROP TABLE IF EXISTS `wp_postmeta`;
 CREATE TABLE `wp_postmeta` (
@@ -248,10 +250,6 @@ CREATE TABLE `wp_postmeta` (
   KEY `post_id` (`post_id`),
   KEY `meta_key` (`meta_key`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
-INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUES
-(1, 2,  '_wp_page_template',  'default'),
-(2, 3,  '_wp_page_template',  'default');
 
 DROP TABLE IF EXISTS `wp_posts`;
 CREATE TABLE `wp_posts` (
@@ -311,7 +309,7 @@ CREATE TABLE `wp_term_taxonomy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 INSERT INTO `wp_term_taxonomy` (`term_taxonomy_id`, `term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES
-(1, 1,  'category', '', 0,  0);
+(1, 1,  'category', '', 0,  1);
 
 DROP TABLE IF EXISTS `wp_termmeta`;
 CREATE TABLE `wp_termmeta` (
