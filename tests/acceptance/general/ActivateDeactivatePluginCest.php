@@ -14,9 +14,10 @@ class ActivateDeactivatePluginCest
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testPluginActivation(AcceptanceTester $I)
+	public function testPluginActivationAndDeactivation(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 	}
 
 	/**
@@ -27,21 +28,9 @@ class ActivateDeactivatePluginCest
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testPluginActivationWithoutWooCommerce(AcceptanceTester $I)
+	public function testPluginActivationAndDeactivationWithoutWooCommerce(AcceptanceTester $I)
 	{
 		$I->activateConvertKitPlugin($I);
-	}
-
-	/**
-	 * Deactivate the Plugin and confirm a success notification
-	 * is displayed with no errors.
-	 *
-	 * @since   1.4.2
-	 *
-	 * @param   AcceptanceTester $I  Tester.
-	 */
-	public function testPluginDeactivation(AcceptanceTester $I)
-	{
 		$I->deactivateConvertKitPlugin($I);
 	}
 }
