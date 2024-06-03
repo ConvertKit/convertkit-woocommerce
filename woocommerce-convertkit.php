@@ -9,7 +9,7 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.7.3
+ * Version: 1.8.0
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
  * Text Domain: woocommerce-convertkit
@@ -28,14 +28,19 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '1.7.3' );
+define( 'CKWC_PLUGIN_VERSION', '1.8.0' );
+define( 'CKWC_OAUTH_CLIENT_ID', 'HXZlOCj-K5r0ufuWCtyoyo3f688VmMAYSsKg1eGvw0Y' );
+define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://cktestplugins.wpengine.com/' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
-if ( ! class_exists( 'ConvertKit_API' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api.php';
+if ( ! trait_exists( 'ConvertKit_API_Traits' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-traits.php';
 }
-if ( ! class_exists( 'ConvertKit_Resource' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource.php';
+if ( ! class_exists( 'ConvertKit_API_V4' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-v4.php';
+}
+if ( ! class_exists( 'ConvertKit_Resource_V4' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource-v4.php';
 }
 if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
 	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php';

@@ -12,7 +12,7 @@
  *
  * @since   1.4.2
  */
-class CKWC_Resource extends ConvertKit_Resource {
+class CKWC_Resource extends ConvertKit_Resource_V4 {
 
 	/**
 	 * Constructor.
@@ -24,8 +24,10 @@ class CKWC_Resource extends ConvertKit_Resource {
 		// Initialize the API if the API Key and Secret have been defined in the Plugin Settings.
 		if ( WP_CKWC_Integration()->is_enabled() ) {
 			$this->api = new CKWC_API(
-				WP_CKWC_Integration()->get_option( 'api_key' ),
-				WP_CKWC_Integration()->get_option( 'api_secret' ),
+				CKWC_OAUTH_CLIENT_ID,
+				admin_url( 'index.php' ),
+				WP_CKWC_Integration()->get_option( 'access_token' ),
+				WP_CKWC_Integration()->get_option( 'refresh_token' ),
 				WP_CKWC_Integration()->get_option_bool( 'debug' )
 			);
 		}
