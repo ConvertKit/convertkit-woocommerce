@@ -42,8 +42,8 @@ class ResourceCustomFieldsNoDataTest extends \Codeception\TestCase\WPTestCase
 
 		// Enable integration, storing API Key and Secret in Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'yes' );
-		WP_CKWC_Integration()->update_option( 'api_key', $_ENV['CONVERTKIT_API_KEY_NO_DATA'] );
-		WP_CKWC_Integration()->update_option( 'api_secret', $_ENV['CONVERTKIT_API_SECRET_NO_DATA'] );
+		WP_CKWC_Integration()->update_option( 'access_token', $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN_NO_DATA'] );
+		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA'] );
 
 		// Initialize the resource class we want to test.
 		$this->resource = new CKWC_Resource_Custom_Fields();
@@ -59,8 +59,8 @@ class ResourceCustomFieldsNoDataTest extends \Codeception\TestCase\WPTestCase
 	{
 		// Disable integration, removing API Key and Secret from Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'no' );
-		WP_CKWC_Integration()->update_option( 'api_key', '' );
-		WP_CKWC_Integration()->update_option( 'api_secret', '' );
+		WP_CKWC_Integration()->update_option( 'access_token', '' );
+		WP_CKWC_Integration()->update_option( 'refresh_token', '' );
 
 		// Delete Settings and Resources from options table.
 		delete_option($this->settings_key);

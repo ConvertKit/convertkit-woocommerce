@@ -246,33 +246,40 @@ class ConvertKitAPI extends \Codeception\Module
 	 */
 	public function apiRequest($endpoint, $method = 'GET', $params = array())
 	{
-		// Build query parameters.
-		$params = array_merge(
-			$params,
-			[
-				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
-				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
-			]
-		);
-
 		// Send request.
-		try {
-			$client = new \GuzzleHttp\Client();
-			$result = $client->request(
-				$method,
-				'https://api.convertkit.com/v3/' . $endpoint . '?' . http_build_query($params),
-				[
-					'headers' => [
-						'Accept-Encoding' => 'gzip',
-						'timeout'         => 5,
-					],
-				]
-			);
+		$client = new \GuzzleHttp\Client();
+		switch ($method) {
+			case 'GET':
+				$result = $client->request(
+					$method,
+					'https://api.convertkit.com/v4/' . $endpoint . '?' . http_build_query($params),
+					[
+						'headers' => [
+							'Authorization' => 'Bearer ' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+							'timeout'       => 5,
+						],
+					]
+				);
+				break;
 
-			// Return JSON decoded response.
-			return json_decode($result->getBody()->getContents(), true);
-		} catch (\GuzzleHttp\Exception\ClientException $e) {
-			return [];
+			default:
+				$result = $client->request(
+					$method,
+					'https://api.convertkit.com/v4/' . $endpoint,
+					[
+						'headers' => [
+							'Accept'        => 'application/json',
+							'Content-Type'  => 'application/json; charset=utf-8',
+							'Authorization' => 'Bearer ' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+							'timeout'       => 5,
+						],
+						'body'    => (string) json_encode($params), // phpcs:ignore WordPress.WP.AlternativeFunctions
+					]
+				);
+				break;
 		}
+
+		// Return JSON decoded response.
+		return json_decode($result->getBody()->getContents(), true);
 	}
 }
