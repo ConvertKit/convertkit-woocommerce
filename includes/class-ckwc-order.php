@@ -205,8 +205,10 @@ class CKWC_Order {
 
 		// Setup the API.
 		$this->api = new CKWC_API(
-			$this->integration->get_option( 'api_key' ),
-			$this->integration->get_option( 'api_secret' ),
+			CONVERTKIT_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
 			$this->integration->get_option_bool( 'debug' )
 		);
 
@@ -483,8 +485,10 @@ class CKWC_Order {
 
 		// Setup the API.
 		$this->api = new CKWC_API(
-			$this->integration->get_option( 'api_key' ),
-			$this->integration->get_option( 'api_secret' ),
+			CONVERTKIT_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
 			$this->integration->get_option_bool( 'debug' )
 		);
 
