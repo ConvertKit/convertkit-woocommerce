@@ -111,12 +111,9 @@ class CKWC_Integration extends WC_Integration {
 	private function maybe_get_and_store_access_token() {
 
 		// Bail if we're not on the settings screen.
-		// @TODO.
-		/*
 		if ( ! $this->on_settings_screen() ) {
 			return;
 		}
-		*/
 
 		// Bail if no authorization code is included in the request.
 		if ( ! array_key_exists( 'code', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -175,11 +172,8 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	private function maybe_export_configuration() {
 
-		// Bail if the action isn't for exporting a configuration file.
-		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			return;
-		}
-		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore WordPress.Security.NonceVerification
+		// Bail if we're not on the settings screen.
+		if ( ! $this->on_settings_screen( 'ckwc-export' ) ) {
 			return;
 		}
 
@@ -1091,6 +1085,54 @@ class CKWC_Integration extends WC_Integration {
 	public function option_exists( $name ) {
 
 		return ! empty( $this->get_option( $name ) );
+
+	}
+
+	/**
+	 * Helper method to determine if we're viewing the current settings screen.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @return  bool
+	 */
+	private function on_settings_screen( $action = false ) {
+
+		// The settings screen is loaded without a nonce in WooCommerce, so we cannot perform verification.
+		// phpcs:disable WordPress.Security.NonceVerification
+
+		if ( ! isset( $_REQUEST['page'] ) ) {
+			return false;
+		}
+		if ( $_REQUEST['page'] !== 'wc-settings' ) {
+			return false;
+		}
+
+		if ( ! isset( $_REQUEST['tab'] ) ) {
+			return false;
+		}
+		if ( $_REQUEST['tab'] !== 'integration' ) {
+			return false;
+		}
+
+		if ( ! isset( $_REQUEST['section'] ) ) {
+			return false;
+		}
+		if ( $_REQUEST['section'] !== $this->id ) {
+			return false;
+		}
+
+		// If an action is specified, check it matches now.
+		if ( $action ) {
+			if ( ! array_key_exists( 'action', $_REQUEST ) ) {
+				return false;
+			}
+			if ( $_REQUEST['action'] !== $action ) {
+				return false;
+			}
+		}
+		// phpcs:enable
+
+		return true;
 
 	}
 
