@@ -459,7 +459,7 @@ class CKWC_Order {
 			// we honor the integration's "Name Format" setting.
 			'first_name'       => $this->name( $order ),
 			'currency'         => $order->get_currency(),
-			'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
+			'transaction_time' => $order->get_date_created(), // @TODO Check this is a DateTime object.
 			'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
 			'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
 			'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
@@ -493,7 +493,20 @@ class CKWC_Order {
 		);
 
 		// Send purchase data to ConvertKit.
-		$response = $this->api->purchase_create( $purchase );
+		$response = $this->api->create_purchase(
+			$purchase['email_address'],
+			$purchase['transaction_id'],
+			$purchase['products'],
+			$purchase['currency'],
+			$purchase['first_name'],
+			$purchase['status'],
+			$purchase['subtotal'],
+			$purchase['tax'],
+			$purchase['shipping'],
+			$purchase['discount'],
+			$purchase['total'],
+			$purchase['transaction_time']
+		);
 
 		// If an error occured sending the purchase data to ConvertKit, add a WooCommerce Order note and bail.
 		if ( is_wp_error( $response ) ) {
