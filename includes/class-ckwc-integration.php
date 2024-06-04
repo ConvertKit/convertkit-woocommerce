@@ -146,26 +146,11 @@ class CKWC_Integration extends WC_Integration {
 			exit();
 		}
 
-		// Load settings.
-		$this->init_settings();
-
-		// Inject Access Token, Refresh Token and Expiry.
-		$this->settings = array_merge(
-			$this->settings,
-			array(
-				'access_token'  => $result['access_token'],
-				'refresh_token' => $result['refresh_token'],
-				'token_expires' => ( $result['created_at'] + $result['expires_in'] ),
-			)
-		);
-
 		// Update settings.
-		update_option(
-			$this->get_option_key(),
-			apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ),
-			'yes'
-		);
-
+		$this->update_option( 'access_token', $result['access_token'] );
+		$this->update_option( 'refresh_token', $result['refresh_token'] );
+		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+		
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.
 		wp_safe_redirect(
@@ -389,6 +374,8 @@ class CKWC_Integration extends WC_Integration {
 			),
 
 			// API Key and Secret.
+			// @TODO Deprecate for hidden fields for access token etc?
+			/*
 			'api_key'                       => array(
 				'title'       => __( 'API Key', 'woocommerce-convertkit' ),
 				'type'        => 'text',
@@ -396,6 +383,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' =>
 					sprintf(
 						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
+						/*
 						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
 						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Key.', 'woocommerce-convertkit' ) . '</a>',
 						'<br />',
@@ -413,6 +401,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' =>
 					sprintf(
 						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
+						/*
 						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
 						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Secret.', 'woocommerce-convertkit' ) . '</a>',
 						'<br />',
@@ -423,6 +412,7 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled',
 			),
+			*/
 
 			// Subscribe.
 			'event'                         => array(
@@ -982,65 +972,6 @@ class CKWC_Integration extends WC_Integration {
 		ob_start();
 		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/link-button.php';
 		return ob_get_clean();
-
-	}
-
-	/**
-	 * Sanitize settings before saving.
-	 *
-	 * @since   1.0.0
-	 *
-	 * @param   array $settings   Plugin Settings.
-	 * @return  array               Plugin Settings, sanitized
-	 */
-	public function sanitize_settings( $settings ) {
-
-		$settings['api_key']    = trim( $settings['api_key'] );
-		$settings['api_secret'] = trim( $settings['api_secret'] );
-		return $settings;
-
-	}
-
-	/**
-	 * Validate that the API Key is valid when saving settings.
-	 *
-	 * @since   1.0.0
-	 *
-	 * @param   string $key        Setting Key.
-	 * @param   string $api_key    API Key.
-	 * @return  string              API Key
-	 */
-	public function validate_api_key_field( $key, $api_key ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
-
-		// If the integration isn't enabled, don't validate the API Key.
-		if ( ! isset( $_POST[ $this->plugin_id . $this->id . '_enabled' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->resources_delete();
-			return $api_key;
-		}
-
-		// Bail if the API Key has not been specified.
-		if ( empty( $api_key ) ) {
-			$this->resources_delete();
-			WC_Admin_Settings::add_error( esc_html__( 'Please provide your ConvertKit API Key.', 'woocommerce-convertkit' ) );
-			return $api_key;
-		}
-
-		// Get Forms to test that the API Key is valid.
-		$api   = new CKWC_API(
-			$api_key,
-			$this->get_option( 'api_secret' ),
-			$this->get_option_bool( 'debug' )
-		);
-		$forms = $api->get_forms();
-
-		// Bail if an error occured.
-		if ( is_wp_error( $forms ) ) {
-			$this->resources_delete();
-			WC_Admin_Settings::add_error( esc_html__( 'Your ConvertKit API Key appears to be invalid. Please double check the value.', 'woocommerce-convertkit' ) );
-		}
-
-		// Return API Key.
-		return $api_key;
 
 	}
 
