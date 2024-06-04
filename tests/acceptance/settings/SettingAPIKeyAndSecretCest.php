@@ -1,11 +1,10 @@
 <?php
 /**
- * Tests various setting combinations for the "Display Opt-In Checkbox" and associated
- * options.
+ * Tests OAuth connection and disconnection on the settings screen.
  *
  * @since   1.4.2
  */
-class SettingAPIKeyAndSecretCest
+class SettingOAuthCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
@@ -17,91 +16,106 @@ class SettingAPIKeyAndSecretCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
-
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
 	}
 
 	/**
-	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen when the Save Changes
-	 * button is pressed and no settings are specified at WooCommerce > Settings > Integration > ConvertKit.
+	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen
+	 * and a Connect button is displayed when no credentials exist.
 	 *
-	 * @since   1.4.2
+	 * @since   1.8.0
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testSaveBlankSettings(AcceptanceTester $I)
+	public function testNoCredentials(AcceptanceTester $I)
 	{
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/settings.css', 'ckwc-settings-css' );
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/select2.css', 'ckwc-admin-select2-css' );
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/select2.js' );
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/integration.js' );
 
-		// Click the Save Changes button.
-		$I->click('Save changes');
+		// Confirm no option is displayed to save changes, as the Plugin isn't authenticated.
+		$I->dontSeeElementInDOM('input#submit');
 
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		// Confirm the Connect button displays.
+		$I->see('Connect');
+		$I->dontSee('Disconnect');
 
-		// Confirm that a message is displayed confirming settings saved.
-		$I->seeInSource('Your settings have been saved.');
+		// Check that a link to the OAuth auth screen exists and includes the state parameter.
+		$I->seeInSource('<a href="https://app.convertkit.com/oauth/authorize?client_id=' . $_ENV['CKWC_OAUTH_CLIENT_ID'] . '&amp;response_type=code&amp;redirect_uri=' . urlencode( $_ENV['CONVERTKIT_OAUTH_REDIRECT_URI'] ) );
+		$I->seeInSource('&amp;state=' . urlencode( $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-settings&tab=integration&section=ckwc' ) );
+
+		// Click the connect button.
+		$I->click('Connect');
+
+		// Confirm the ConvertKit hosted OAuth login screen is displayed.
+		$I->waitForElementVisible('body.sessions');
+		$I->seeInSource('oauth/authorize?client_id=' . $_ENV['CKWC_OAUTH_CLIENT_ID']);
 	}
 
 	/**
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
-	 * and a warning is displayed that the user needs to enter API credentials, when
-	 * enabling the integration at WooCommerce > Settings > Integration > ConvertKit.
+	 * and a warning is displayed that the supplied credentials are invalid, when
+	 * e.g. the access token has been revoked.
 	 *
-	 * @since   1.4.2
+	 * @since   1.8.0
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testSaveBlankSettingsWithIntegrationEnabled(AcceptanceTester $I)
+	public function testInvalidCredentials(AcceptanceTester $I)
 	{
-		// Enable the Integration.
-		$I->checkOption('#woocommerce_ckwc_enabled');
+		// Setup Plugin.
+		$I->setupConvertKitPlugin(
+			$I,
+			[
+				'access_token'  => 'fakeAccessToken',
+				'refresh_token' => 'fakeRefreshToken',
+			]
+		);
 
-		// Complete API Fields.
-		$I->fillField('woocommerce_ckwc_api_key', '');
-		$I->fillField('woocommerce_ckwc_api_secret', '');
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 
-		// Click the Save Changes button.
-		$I->click('Save changes');
+		$I->see('XXX');
 
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		// Confirm the Connect button displays.
+		$I->see('Connect');
+		$I->dontSee('Disconnect');
+		$I->dontSeeElementInDOM('input#submit');
 
-		// Confirm that a message is displayed telling the user to enter their API Key.
-		$I->seeInSource('Please provide your ConvertKit API Key.');
+		// Navigate to the WordPress Admin.
+		$I->amOnAdminPage('index.php');
+
+		// Check that a notice is displayed that the API credentials are invalid.
+		$I->seeErrorNotice($I, 'ConvertKit: Authorization failed. Please connect your ConvertKit account.');
 	}
 
 	/**
 	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
-	 * and no warning is displayed that the supplied API credentials are invalid, when
-	 * saving valid API credentials at WooCommerce > Settings > Integration > ConvertKit.
+	 * when valid credentials exist.
 	 *
-	 * @since   1.4.2
+	 * @since   1.8.0
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testSaveValidAPICredentials(AcceptanceTester $I)
+	public function testValidCredentials(AcceptanceTester $I)
 	{
+		// Setup Plugin.
+		$I->setupConvertKitPlugin($I);
+		$I->setupConvertKitPluginResources($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Confirm the Disconnect and Save Changes buttons display.
+		$I->see('Disconnect');
+		$I->seeElementInDOM('input#submit');
+
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
-
-		// Complete API Fields.
-		$I->fillField('woocommerce_ckwc_api_key', $_ENV['CONVERTKIT_API_KEY']);
-		$I->fillField('woocommerce_ckwc_api_secret', $_ENV['CONVERTKIT_API_SECRET']);
-
-		// Click the Save Changes button.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Confirm that no message is displayed telling the user that the API Credentials are invalid.
-		$I->dontSeeInSource('Your ConvertKit API Key appears to be invalid. Please double check the value.');
 
 		// Confirm that the Subscription dropdown option is displayed.
 		$I->seeElement('#woocommerce_ckwc_subscription');
@@ -111,38 +125,14 @@ class SettingAPIKeyAndSecretCest
 
 		// Confirm that an expected option can be selected.
 		$I->selectOption('#woocommerce_ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
-	}
 
-	/**
-	 * Test that no PHP errors or notices are displayed on the Plugin's Setting screen,
-	 * and a warning is displayed that the supplied API credentials are invalid, when
-	 * saving invalid API credentials at WooCommerce > Settings > Integration > ConvertKit.
-	 *
-	 * @since   1.4.2
-	 *
-	 * @param   AcceptanceTester $I  Tester.
-	 */
-	public function testSaveInvalidAPICredentials(AcceptanceTester $I)
-	{
-		// Enable the Integration.
-		$I->checkOption('#woocommerce_ckwc_enabled');
+		// Disconnect the Plugin connection to ConvertKit.
+		$I->click('Disconnect');
 
-		// Complete API Fields.
-		$I->fillField('woocommerce_ckwc_api_key', 'fakeApiKey');
-		$I->fillField('woocommerce_ckwc_api_secret', 'fakeApiSecret');
-
-		// Click the Save Changes button.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
-
-		// Check the value of the fields match the inputs provided.
-		$I->seeInField('woocommerce_ckwc_api_key', 'fakeApiKey');
-		$I->seeInField('woocommerce_ckwc_api_secret', 'fakeApiSecret');
-
-		// Confirm that a message is displayed telling the user that the API Credentials are invalid.
-		$I->seeInSource('Your ConvertKit API Key appears to be invalid. Please double check the value.');
+		// Confirm the Connect button displays.
+		$I->see('Connect');
+		$I->dontSee('Disconnect');
+		$I->dontSeeElementInDOM('input#submit');
 	}
 
 	/**

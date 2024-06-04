@@ -16,6 +16,15 @@
 class CKWC_Integration extends WC_Integration {
 
 	/**
+	 * Holds the ConvertKit account name.
+	 * 
+	 * @since 	1.8.0
+	 * 
+	 * @var 	string
+	 */
+	private $account_name = '';
+
+	/**
 	 * Holds an array of WooCommerce Order IDs not sent to ConvertKit.
 	 * False if all Orders have been sent to ConvertKit.
 	 *
@@ -73,6 +82,11 @@ class CKWC_Integration extends WC_Integration {
 		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
 		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
 
+		// Initialize form fields and settings.
+		$this->init_form_fields();
+		$this->init_settings();
+
+		// Load Admin screens, save settings.
 		if ( is_admin() ) {
 			// Disconnect if requested.
 			$this->maybe_disconnect();
@@ -82,23 +96,13 @@ class CKWC_Integration extends WC_Integration {
 
 			// Export configuration to JSON file, if requested.
 			$this->maybe_export_configuration();
-		}
 
-		// Initialize form fields and settings.
-		$this->init_form_fields();
-		$this->init_settings();
-
-		// Load Admin screens, save settings.
-		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
 			// Takes the form data and saves it to WooCommerce's settings.
 			// PHPStan: WooCommerce's process_admin_options() returns a value, which PHPStan rightly flags, so we need to ignore this line.
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line
-
-			// Sanitizes and tests specific setting fields to ensure they're valid.
-			// add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
 
 			// Import configuration, if a configuration file was uploaded.
 			$this->maybe_import_configuration();
@@ -180,7 +184,7 @@ class CKWC_Integration extends WC_Integration {
 		$authorization_code = sanitize_text_field( $_REQUEST['code'] ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		// Exchange the authorization code and verifier for an access token.
-		$api    = new CKWC_API( CONVERTKIT_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
+		$api    = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
 		$result = $api->get_access_token( $authorization_code );
 
 		// Redirect with an error if we could not fetch the access token.
@@ -335,10 +339,55 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function admin_options() {
 
-		global $hide_save_button;
-
 		// Get the requested screen name.
 		$screen_name = $this->get_integration_screen_name();
+
+		// Bail if not an options screen?
+		if ( ! $screen_name ) {
+			return;
+		}
+
+		// If no Access Token and Refresh Token exist, show the OAuth screen.
+		if ( ! $this->has_access_and_refresh_token() ) {
+			// Hide 'Save changes' button, so we can add our own to each panel.
+			$hide_save_button = true;
+
+			// Initialize API.
+			$api   = new CKWC_API(
+				CKWC_OAUTH_CLIENT_ID,
+				CKWC_OAUTH_CLIENT_REDIRECT_URI
+			);
+
+			// Load view.
+			include_once CKWC_PLUGIN_PATH . '/views/backend/settings/oauth.php';
+			return;
+		}
+
+		// Setup the API.
+		$api = new CKWC_API(
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->get_option( 'access_token' ),
+			$this->get_option( 'refresh_token' ),
+			$this->get_option_bool( 'debug' )
+		);
+
+		// Get Account Details, which we'll use in the Account Name field, but also lets us test
+		// whether the API credentials are valid.
+		$account = $api->get_account();
+
+		// If an error occured, display it now and don't show the fields.
+		if ( is_wp_error( $account ) ) {
+			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
+			WC_Admin_Settings::add_error( $account->get_error_message() );
+
+			// Load view.
+			include_once CKWC_PLUGIN_PATH . '/views/backend/settings/oauth.php';
+			return;
+		}
+
+		// Store the account name.
+		$this->account_name = $account['account']['name'];
 
 		// Load the requested screen.
 		switch ( $screen_name ) {
@@ -369,19 +418,6 @@ class CKWC_Integration extends WC_Integration {
 			default:
 				// Hide 'Save changes' button, so we can add our own to each panel.
 				$hide_save_button = true;
-
-				// If no Access Token and Refresh Token exist, show the OAuth screen.
-				if ( ! $this->has_access_and_refresh_token() ) {
-					// Initialize API.
-					$api   = new CKWC_API(
-						CKWC_OAUTH_CLIENT_ID,
-						CKWC_OAUTH_CLIENT_REDIRECT_URI
-					);
-
-					// Load view.
-					include_once CKWC_PLUGIN_PATH . '/views/backend/settings/oauth.php';
-					break;
-				}
 
 				// Define variables.
 				$export_url = admin_url(
@@ -414,31 +450,6 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function init_form_fields() {
 
-		// If no Access and Refresh Token exists, don't define any form fields, as the
-		// OAuth connect button will be displayed instead.
-		if ( ! $this->has_access_and_refresh_token() ) {
-			return;
-		}
-
-		// Setup the API.
-		$api = new CKWC_API(
-			CONVERTKIT_OAUTH_CLIENT_ID,
-			CKWC_OAUTH_CLIENT_REDIRECT_URI,
-			$this->get_option( 'access_token' ),
-			$this->get_option( 'refresh_token' ),
-			$this->get_option_bool( 'debug' )
-		);
-
-		// Get Account Details, which we'll use in the Account Name field, but also lets us test
-		// whether the API credentials are valid.
-		$account = $api->get_account();
-
-		// If the request succeeded, no need to perform further actions.
-		if ( ! is_wp_error( $account ) ) {
-			// @TODO Show an error.
-
-		}
-
 		$this->form_fields = array(
 			// Account name.
 			'account_name' => array(
@@ -459,7 +470,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 				'desc_tip'    => false,
 				'class' 		=> 'button button-primary',
-				'description' 	=> $account['account']['name'],
+				'description' 	=> $this->account_name,
 			),
 
 			// Enable/Disable entire integration.
