@@ -74,7 +74,10 @@ class CKWC_Integration extends WC_Integration {
 		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
 
 		if ( is_admin() ) {
-			// Get Access Token, if required.
+			// Disconnect if requested.
+			$this->maybe_disconnect();
+
+			// Get Access Token, if requested.
 			$this->maybe_get_and_store_access_token();
 
 			// Export configuration to JSON file, if requested.
@@ -95,11 +98,64 @@ class CKWC_Integration extends WC_Integration {
 			add_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line
 
 			// Sanitizes and tests specific setting fields to ensure they're valid.
-			add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
+			// add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'sanitize_settings' ) );
 
 			// Import configuration, if a configuration file was uploaded.
 			$this->maybe_import_configuration();
 		}
+
+	}
+
+	/**
+	 * Deletes the OAuth Access Token, Refresh Token and Expiry from the Plugin's settings, if the user
+	 * clicked the Disconnect button.
+	 *
+	 * @since   2.5.0
+	 */
+	private function maybe_disconnect() {
+
+		// Bail if we're not on the integration screen for this action.
+		if ( ! $this->on_integration_screen( 'ckwc-oauth-disconnect' ) ) {
+			return;
+		}
+
+		// Bail if nonce verification fails.
+		if ( ! isset( $_REQUEST['nonce'] ) ) {
+			return;
+		}
+		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-oauth-disconnect' ) ) {
+			return;
+		}
+
+		// Delete cached resources.
+		// @TODO throws error?
+		/*
+		$forms = new CKWC_Resource_Forms();
+		$sequences = new CKWC_Resource_Sequences();
+		$tags = new CKWC_Resource_Tags();
+		$forms->delete();
+		$sequences->delete();
+		$tags->delete();
+		*/
+
+		// Remove Access Token from settings.
+		$this->update_option( 'access_token', '' );
+		$this->update_option( 'refresh_token', '' );
+		$this->update_option( 'token_expires', '' );
+
+		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
+		// is now authenticated.
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'  => 'wc-settings',
+					'tab' => 'integration',
+					'section' => 'ckwc',
+				),
+				'admin.php'
+			)
+		);
+		exit();
 
 	}
 
@@ -110,8 +166,8 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	private function maybe_get_and_store_access_token() {
 
-		// Bail if we're not on the settings screen.
-		if ( ! $this->on_settings_screen() ) {
+		// Bail if we're not on the integration screen.
+		if ( ! $this->on_integration_screen() ) {
 			return;
 		}
 
@@ -173,7 +229,7 @@ class CKWC_Integration extends WC_Integration {
 	private function maybe_export_configuration() {
 
 		// Bail if we're not on the settings screen.
-		if ( ! $this->on_settings_screen( 'ckwc-export' ) ) {
+		if ( ! $this->on_integration_screen( 'ckwc-export' ) ) {
 			return;
 		}
 
@@ -358,7 +414,54 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function init_form_fields() {
 
+		// If no Access and Refresh Token exists, don't define any form fields, as the
+		// OAuth connect button will be displayed instead.
+		if ( ! $this->has_access_and_refresh_token() ) {
+			return;
+		}
+
+		// Setup the API.
+		$api = new CKWC_API(
+			CONVERTKIT_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->get_option( 'access_token' ),
+			$this->get_option( 'refresh_token' ),
+			$this->get_option_bool( 'debug' )
+		);
+
+		// Get Account Details, which we'll use in the Account Name field, but also lets us test
+		// whether the API credentials are valid.
+		$account = $api->get_account();
+
+		// If the request succeeded, no need to perform further actions.
+		if ( ! is_wp_error( $account ) ) {
+			// @TODO Show an error.
+
+		}
+
 		$this->form_fields = array(
+			// Account name.
+			'account_name' => array(
+				'title'   => __( 'Account Name', 'woocommerce-convertkit' ),
+				'type'    => 'link_button',
+				'label'   => __( 'Disconnect', 'woocommerce-convertkit' ),
+				'url' 	  => admin_url(
+					add_query_arg(
+						array(
+							'page'        => 'wc-settings',
+							'tab'         => 'integration',
+							'section'     => 'ckwc',
+							'action'	  => 'ckwc-oauth-disconnect',
+							'nonce'		  => wp_create_nonce( 'ckwc-oauth-disconnect' ),
+						),
+						'admin.php'
+					)
+				),
+				'desc_tip'    => false,
+				'class' 		=> 'button button-primary',
+				'description' 	=> $account['account']['name'],
+			),
+
 			// Enable/Disable entire integration.
 			'enabled'                       => array(
 				'title'   => __( 'Enable/Disable', 'woocommerce-convertkit' ),
@@ -366,47 +469,6 @@ class CKWC_Integration extends WC_Integration {
 				'label'   => __( 'Enable ConvertKit integration', 'woocommerce-convertkit' ),
 				'default' => 'no',
 			),
-
-			// API Key and Secret.
-			// @TODO Deprecate for hidden fields for access token etc?
-			/*
-			'api_key'                       => array(
-				'title'       => __( 'API Key', 'woocommerce-convertkit' ),
-				'type'        => 'text',
-				'default'     => '',
-				'description' =>
-					sprintf(
-						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
-						/*
-						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
-						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Key.', 'woocommerce-convertkit' ) . '</a>',
-						'<br />',
-						'<a href="' . esc_url( ckwc_get_signup_url() ) . '" target="_blank">' . esc_html__( 'Sign up here.', 'woocommerce-convertkit' ) . '</a>'
-					),
-				'desc_tip'    => false,
-
-				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled',
-			),
-			'api_secret'                    => array(
-				'title'       => __( 'API Secret', 'woocommerce-convertkit' ),
-				'type'        => 'text',
-				'default'     => '',
-				'description' =>
-					sprintf(
-						/* translators: %1$s: Link to ConvertKit Account, %2$s: <br>, %3$s Link to ConvertKit Signup */
-						/*
-						esc_html__( '%1$s Required for proper plugin function. %2$s Don\'t have a ConvertKit account? %3$s', 'woocommerce-convertkit' ),
-						'<a href="' . esc_url( ckwc_get_api_key_url() ) . '" target="_blank">' . esc_html__( 'Get your ConvertKit API Secret.', 'woocommerce-convertkit' ) . '</a>',
-						'<br />',
-						'<a href="' . esc_url( ckwc_get_signup_url() ) . '" target="_blank">' . esc_html__( 'Sign up here.', 'woocommerce-convertkit' ) . '</a>'
-					),
-				'desc_tip'    => false,
-
-				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled',
-			),
-			*/
 
 			// Subscribe.
 			'event'                         => array(
@@ -784,6 +846,12 @@ class CKWC_Integration extends WC_Integration {
 
 	}
 
+	public function generate_oauth_disconnect_button_html( $key, $data ) {
+
+		return 'hello';
+
+	}
+
 	/**
 	 * Output HTML for the Form / Tag setting.
 	 *
@@ -1089,15 +1157,15 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Helper method to determine if we're viewing the current settings screen.
+	 * Helper method to determine if we're viewing the current integration screen.
 	 *
 	 * @since   1.8.0
 	 *
 	 * @return  bool
 	 */
-	private function on_settings_screen( $action = false ) {
+	private function on_integration_screen( $action = false ) {
 
-		// The settings screen is loaded without a nonce in WooCommerce, so we cannot perform verification.
+		// The integration screen is loaded without a nonce in WooCommerce, so we cannot perform verification.
 		// phpcs:disable WordPress.Security.NonceVerification
 
 		if ( ! isset( $_REQUEST['page'] ) ) {

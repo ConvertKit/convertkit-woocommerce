@@ -15,12 +15,12 @@
 	<td class="forminp">
 		<fieldset>
 			<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+			<?php echo $this->get_description_html( $data ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<a href="<?php echo esc_attr( $data['url'] ); ?>" id="<?php echo esc_attr( $key ); ?>" class="button button-secondary <?php echo esc_attr( $data['class'] ); ?>">
 				<?php
 				echo esc_html( $data['label'] );
 				?>
 			</a>
-			<?php echo $this->get_description_html( $data ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</fieldset>
 	</td>
 </tr>
