@@ -247,7 +247,7 @@ class CKWC_Integration extends WC_Integration {
 						'action' => 'ckwc-export',
 						'nonce'  => wp_create_nonce( 'ckwc-nonce' ),
 					)
-				)
+				);
 
 				// Hide 'Save changes' button, so we can add our own to each panel.
 				$hide_save_button = true;
