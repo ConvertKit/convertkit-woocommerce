@@ -138,16 +138,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.
-		wp_safe_redirect(
-			add_query_arg(
-				array(
-					'page'    => 'wc-settings',
-					'tab'     => 'integration',
-					'section' => 'ckwc',
-				),
-				'admin.php'
-			)
-		);
+		wp_safe_redirect( ckwc_get_settings_link() );
 		exit();
 
 	}
@@ -179,15 +170,9 @@ class CKWC_Integration extends WC_Integration {
 		// Redirect with an error if we could not fetch the access token.
 		if ( is_wp_error( $result ) ) {
 			wp_safe_redirect(
-				add_query_arg(
-					array(
-						'page'    => 'wc-settings',
-						'tab'     => 'integration',
-						'section' => 'ckwc',
-						'error'   => $result->get_error_code(),
-					),
-					'admin.php'
-				)
+				ckwc_get_settings_link( array(
+					'error' => $result->get_error_code(),
+				) )
 			);
 			exit();
 		}
@@ -199,16 +184,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.
-		wp_safe_redirect(
-			add_query_arg(
-				array(
-					'page'    => 'wc-settings',
-					'tab'     => 'integration',
-					'section' => 'ckwc',
-				),
-				'admin.php'
-			)
-		);
+		wp_safe_redirect( ckwc_get_settings_link() );
 		exit();
 
 	}
@@ -346,11 +322,11 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
+		// Hide 'Save changes' button, so we can add our own to each panel.
+		$hide_save_button = true;
+
 		// If no Access Token and Refresh Token exist, show the OAuth screen.
 		if ( ! $this->has_access_and_refresh_token() ) {
-			// Hide 'Save changes' button, so we can add our own to each panel.
-			$hide_save_button = true;
-
 			// Initialize API.
 			$api = new CKWC_API(
 				CKWC_OAUTH_CLIENT_ID,
@@ -375,10 +351,15 @@ class CKWC_Integration extends WC_Integration {
 		// whether the API credentials are valid.
 		$account = $api->get_account();
 
-		// If an error occured, display it now and don't show the fields.
+		// If an error occured, display it now with the OAuth screen.
 		if ( is_wp_error( $account ) ) {
-			// Add error message to $errors, which WooCommerce will output as error notifications at the top of the screen.
-			WC_Admin_Settings::add_error( $account->get_error_message() );
+			?>
+			<div class="notice notice-error is-dismissible">
+				<p>
+					<?php echo esc_html( $account->get_error_message() ); ?>
+				</p>
+			</div>
+			<?php
 
 			// Load view.
 			include_once CKWC_PLUGIN_PATH . '/views/backend/settings/oauth.php';
@@ -415,9 +396,6 @@ class CKWC_Integration extends WC_Integration {
 			 * Settings.
 			 */
 			default:
-				// Hide 'Save changes' button, so we can add our own to each panel.
-				$hide_save_button = true;
-
 				// Define variables.
 				$export_url = admin_url(
 					add_query_arg(

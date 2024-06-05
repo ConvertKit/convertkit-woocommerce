@@ -149,10 +149,10 @@ class RefreshResourcesButtonCest
 		$I->haveOptionInDatabase(
 			'woocommerce_ckwc_settings',
 			[
-				'enabled'    	=> 'yes',
+				'enabled'       => 'yes',
 				'access_token'  => 'fakeAccessToken',
 				'refresh_token' => 'fakeRefreshToken',
-				'debug'      	=> 'yes',
+				'debug'         => 'yes',
 			]
 		);
 
