@@ -459,7 +459,7 @@ class CKWC_Order {
 			// we honor the integration's "Name Format" setting.
 			'first_name'       => $this->name( $order ),
 			'currency'         => $order->get_currency(),
-			'transaction_time' => $order->get_date_created(), // @TODO Check this is a DateTime object.
+			'transaction_time' => $order->get_date_created(),
 			'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
 			'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
 			'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),

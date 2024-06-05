@@ -17,7 +17,7 @@
 			<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
 			<p class="description">
 				<?php
-				echo $this->account_name;
+				echo esc_html( $this->account_name );
 				?>
 			</p>
 			<a href="<?php echo esc_attr( $data['url'] ); ?>" id="<?php echo esc_attr( $key ); ?>" class="button button-secondary">
