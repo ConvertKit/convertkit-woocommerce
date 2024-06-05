@@ -339,6 +339,8 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function admin_options() {
 
+		global $hide_save_button;
+
 		// Get the requested screen name.
 		$screen_name = $this->get_integration_screen_name();
 
