@@ -119,7 +119,7 @@ class CKWC_Integration extends WC_Integration {
 	private function maybe_disconnect() {
 
 		// Bail if we're not on the integration screen for this action.
-		if ( ! $this->on_integration_screen( 'ckwc-oauth-disconnect' ) ) {
+		if ( ! $this->get_integration_screen_name() ) {
 			return;
 		}
 
@@ -130,17 +130,6 @@ class CKWC_Integration extends WC_Integration {
 		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-oauth-disconnect' ) ) {
 			return;
 		}
-
-		// Delete cached resources.
-		// @TODO throws error?
-		/*
-		$forms = new CKWC_Resource_Forms();
-		$sequences = new CKWC_Resource_Sequences();
-		$tags = new CKWC_Resource_Tags();
-		$forms->delete();
-		$sequences->delete();
-		$tags->delete();
-		*/
 
 		// Remove Access Token from settings.
 		$this->update_option( 'access_token', '' );
@@ -171,7 +160,7 @@ class CKWC_Integration extends WC_Integration {
 	private function maybe_get_and_store_access_token() {
 
 		// Bail if we're not on the integration screen.
-		if ( ! $this->on_integration_screen() ) {
+		if ( ! $this->get_integration_screen_name() ) {
 			return;
 		}
 
@@ -233,7 +222,7 @@ class CKWC_Integration extends WC_Integration {
 	private function maybe_export_configuration() {
 
 		// Bail if we're not on the settings screen.
-		if ( ! $this->on_integration_screen( 'ckwc-export' ) ) {
+		if ( ! $this->get_integration_screen_name() ) {
 			return;
 		}
 
@@ -455,10 +444,10 @@ class CKWC_Integration extends WC_Integration {
 		$this->form_fields = array(
 			// Account name.
 			'account_name'                  => array(
-				'title'       => __( 'Account Name', 'woocommerce-convertkit' ),
-				'type'        => 'oauth_disconnect',
-				'label'       => __( 'Disconnect', 'woocommerce-convertkit' ),
-				'url'         => admin_url(
+				'title' => __( 'Account Name', 'woocommerce-convertkit' ),
+				'type'  => 'oauth_disconnect',
+				'label' => __( 'Disconnect', 'woocommerce-convertkit' ),
+				'url'   => admin_url(
 					add_query_arg(
 						array(
 							'page'    => 'wc-settings',
@@ -856,12 +845,6 @@ class CKWC_Integration extends WC_Integration {
 
 	}
 
-	public function generate_oauth_disconnect_button_html( $key, $data ) {
-
-		return 'hello';
-
-	}
-
 	/**
 	 * Output HTML for the Form / Tag setting.
 	 *
@@ -1149,54 +1132,6 @@ class CKWC_Integration extends WC_Integration {
 	public function option_exists( $name ) {
 
 		return ! empty( $this->get_option( $name ) );
-
-	}
-
-	/**
-	 * Helper method to determine if we're viewing the current integration screen.
-	 *
-	 * @since   1.8.0
-	 *
-	 * @return  bool
-	 */
-	private function on_integration_screen( $action = false ) {
-
-		// The integration screen is loaded without a nonce in WooCommerce, so we cannot perform verification.
-		// phpcs:disable WordPress.Security.NonceVerification
-
-		if ( ! isset( $_REQUEST['page'] ) ) {
-			return false;
-		}
-		if ( $_REQUEST['page'] !== 'wc-settings' ) {
-			return false;
-		}
-
-		if ( ! isset( $_REQUEST['tab'] ) ) {
-			return false;
-		}
-		if ( $_REQUEST['tab'] !== 'integration' ) {
-			return false;
-		}
-
-		if ( ! isset( $_REQUEST['section'] ) ) {
-			return false;
-		}
-		if ( $_REQUEST['section'] !== $this->id ) {
-			return false;
-		}
-
-		// If an action is specified, check it matches now.
-		if ( $action ) {
-			if ( ! array_key_exists( 'action', $_REQUEST ) ) {
-				return false;
-			}
-			if ( $_REQUEST['action'] !== $action ) {
-				return false;
-			}
-		}
-		// phpcs:enable
-
-		return true;
 
 	}
 
