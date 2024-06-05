@@ -456,7 +456,7 @@ class CKWC_Integration extends WC_Integration {
 			// Account name.
 			'account_name'                  => array(
 				'title'       => __( 'Account Name', 'woocommerce-convertkit' ),
-				'type'        => 'link_button',
+				'type'        => 'oauth_disconnect',
 				'label'       => __( 'Disconnect', 'woocommerce-convertkit' ),
 				'url'         => admin_url(
 					add_query_arg(
@@ -470,9 +470,6 @@ class CKWC_Integration extends WC_Integration {
 						'admin.php'
 					)
 				),
-				'desc_tip'    => false,
-				'class'       => 'button button-primary',
-				'description' => $this->account_name,
 			),
 
 			// Enable/Disable entire integration.
@@ -891,13 +888,6 @@ class CKWC_Integration extends WC_Integration {
 
 		$data = wp_parse_args( $data, $defaults );
 
-		// If the integration isn't enabled, don't output a selection field.
-		if ( ! $this->is_enabled() ) {
-			ob_start();
-			require CKWC_PLUGIN_PATH . '/views/backend/settings/subscription-disabled.php';
-			return ob_get_clean();
-		}
-
 		// Get Forms, Tags and Sequences, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
 		if ( ! $this->forms ) {
@@ -958,13 +948,6 @@ class CKWC_Integration extends WC_Integration {
 		);
 
 		$data = wp_parse_args( $data, $defaults );
-
-		// If the integration isn't enabled, don't output a selection field.
-		if ( ! $this->is_enabled() ) {
-			ob_start();
-			include CKWC_PLUGIN_PATH . '/views/backend/settings/custom-field-disabled.php';
-			return ob_get_clean();
-		}
 
 		// Get Custom Fields, refreshing them to fetch the latest data from the API,
 		// if we haven't already fetched them.
@@ -1034,18 +1017,18 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Renders a button that links to the given URL.
+	 * Renders the Account Name and a button to disconnect OAuth.
 	 *
-	 * @since   1.4.5
+	 * @since   1.8.0
 	 *
 	 * @param   string $key    Setting Field Key.
 	 * @param   array  $data   Setting Field Configuration.
 	 */
-	public function generate_link_button_html( $key, $data ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	public function generate_oauth_disconnect_html( $key, $data ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 
 		// Return HTML for button.
 		ob_start();
-		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/link-button.php';
+		require_once CKWC_PLUGIN_PATH . '/views/backend/settings/oauth-disconnect.php';
 		return ob_get_clean();
 
 	}
