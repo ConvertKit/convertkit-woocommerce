@@ -3,7 +3,7 @@
  * Tests various setting combinations across the following settings:
  * - Subscribe Event
  * - Display Opt-In Checkbox
- * - API Keys
+ * - Access and Refresh Tokens
  * - Subscription Form
  *
  * @since   1.4.6
@@ -22,7 +22,7 @@ class SettingImportExportCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.
@@ -74,7 +74,7 @@ class SettingImportExportCest
 		// Confirm success message displays.
 		$I->seeInSource('Configuration imported successfully.');
 
-		// Confirm that the fake API Key and Secret are populated.
+		// Confirm that the fake Access Token and Refresh Token are populated.
 		$I->seeInField('woocommerce_ckwc_api_key', 'fakeApiKey');
 		$I->seeInField('woocommerce_ckwc_api_secret', 'fakeApiSecret');
 	}

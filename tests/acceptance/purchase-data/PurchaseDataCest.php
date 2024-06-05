@@ -208,11 +208,11 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -253,11 +253,11 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithSimpleProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -298,11 +298,11 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -343,11 +343,11 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithVirtualProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -388,11 +388,11 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -433,11 +433,11 @@ class PurchaseDataCest
 	 */
 	public function testDontSendPurchaseDataWithZeroValueProductNoPaymentMethodManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -478,11 +478,11 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithSimpleProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -558,11 +558,11 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithVirtualProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -638,11 +638,11 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithZeroValueProductCODManualOrder(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.

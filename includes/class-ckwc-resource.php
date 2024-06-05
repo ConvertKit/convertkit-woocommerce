@@ -21,7 +21,7 @@ class CKWC_Resource extends ConvertKit_Resource_V4 {
 	 */
 	public function __construct() {
 
-		// Initialize the API if the API Key and Secret have been defined in the Plugin Settings.
+		// Initialize the API if the integration is connected to ConvertKit and has been enabled in the Plugin Settings.
 		if ( WP_CKWC_Integration()->is_enabled() ) {
 			$this->api = new CKWC_API(
 				CKWC_OAUTH_CLIENT_ID,

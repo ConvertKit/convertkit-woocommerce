@@ -87,40 +87,6 @@ class SyncPastOrdersCest
 
 	/**
 	 * Test that no button is displayed on the Integration Settings screen
-	 * when the Integration is enabled, and no API credentials are specified.
-	 *
-	 * @since   1.4.3
-	 *
-	 * @param   AcceptanceTester $I  Tester.
-	 */
-	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
-	{
-		// Delete all existing WooCommerce Orders from the database.
-		$I->wooCommerceDeleteAllOrders($I);
-
-		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
-
-		// Login as the Administrator.
-		$I->loginAsAdmin();
-
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable integration, removing API Keys.
-		$I->checkOption('#woocommerce_ckwc_enabled');
-		$I->fillField('woocommerce_ckwc_api_key', '');
-		$I->fillField('woocommerce_ckwc_api_secret', '');
-
-		// Save changes.
-		$I->click('Save changes');
-
-		// Confirm that no Sync Past Order button is displayed.
-		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
-	}
-
-	/**
-	 * Test that no button is displayed on the Integration Settings screen
 	 * when the Integration is enabled, valid API credentials are specified
 	 * but there are no WooCommerce Orders.
 	 *
@@ -133,7 +99,7 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->wooCommerceDeleteAllOrders($I);
 
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.
@@ -363,6 +329,7 @@ class SyncPastOrdersCest
 		$I->wait(5);
 
 		// Confirm that the log shows a success message.
+		// @TODO.
 		$I->seeInSource('1/1: Response Error: Authorization Failed: API Key not valid');
 
 		// Cancel sync.

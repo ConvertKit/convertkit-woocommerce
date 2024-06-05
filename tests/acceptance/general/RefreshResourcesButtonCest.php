@@ -17,6 +17,7 @@ class RefreshResourcesButtonCest
 	public function _before(AcceptanceTester $I)
 	{
 		// Activate and Setup ConvertKit plugin using API keys that have no resources (forms, sequences, tags).
+		// @TODO Is this really happening?
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 		$I->setupConvertKitPlugin($I);
 	}
@@ -175,7 +176,7 @@ class RefreshResourcesButtonCest
 
 		// Confirm that an error notification is displayed on screen, with the expected error message.
 		$I->seeElementInDOM('div.ckwc-error');
-		$I->see('Authorization Failed: API Key not valid');
+		$I->see('Authorization Failed: API Key not valid'); // @TODO.
 
 		// Confirm that the notice is dismissible.
 		$I->click('div.ckwc-error button.notice-dismiss');

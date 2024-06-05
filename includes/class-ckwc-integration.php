@@ -953,7 +953,7 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function generate_sync_past_orders_button_html( $key, $data ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 
-		// Bail if the Integration isn't enabled and doesn't have an API Key and Secret specified.
+		// Bail if the Integration isn't connected and enabled.
 		if ( ! $this->is_enabled() ) {
 			return;
 		}
@@ -1073,8 +1073,8 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Whether the ConvertKit integration is enabled, meaning:
-	 * - the 'Enable/Disable' option is checked,
-	 * - an API Key and Secret are specified.
+	 * - an Access Token and Refresh Token are specified,
+	 * - the 'Enable/Disable' option is checked.
 	 *
 	 * @since   1.4.2
 	 *
