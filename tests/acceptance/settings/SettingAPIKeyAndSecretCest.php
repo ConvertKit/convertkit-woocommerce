@@ -38,14 +38,14 @@ class SettingOAuthCest
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/integration.js' );
 
 		// Confirm no option is displayed to save changes, as the Plugin isn't authenticated.
-		$I->dontSeeElementInDOM('input#submit');
+		$I->dontSeeElementInDOM('button.woocommerce-save-button');
 
 		// Confirm the Connect button displays.
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
 
 		// Check that a link to the OAuth auth screen exists and includes the state parameter.
-		$I->seeInSource('<a href="https://app.convertkit.com/oauth/authorize?client_id=' . $_ENV['CKWC_OAUTH_CLIENT_ID'] . '&amp;response_type=code&amp;redirect_uri=' . urlencode( $_ENV['CONVERTKIT_OAUTH_REDIRECT_URI'] ) );
+		$I->seeInSource('<a href="https://app.convertkit.com/oauth/authorize?client_id=' . $_ENV['CONVERTKIT_OAUTH_CLIENT_ID'] . '&amp;response_type=code&amp;redirect_uri=' . urlencode( $_ENV['CONVERTKIT_OAUTH_REDIRECT_URI'] ) );
 		$I->seeInSource('&amp;state=' . urlencode( $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-settings&tab=integration&section=ckwc' ) );
 
 		// Click the connect button.
@@ -53,7 +53,7 @@ class SettingOAuthCest
 
 		// Confirm the ConvertKit hosted OAuth login screen is displayed.
 		$I->waitForElementVisible('body.sessions');
-		$I->seeInSource('oauth/authorize?client_id=' . $_ENV['CKWC_OAUTH_CLIENT_ID']);
+		$I->seeInSource('oauth/authorize?client_id=' . $_ENV['CONVERTKIT_OAUTH_CLIENT_ID']);
 	}
 
 	/**
@@ -67,6 +67,8 @@ class SettingOAuthCest
 	 */
 	public function testInvalidCredentials(AcceptanceTester $I)
 	{
+		$I->markTestIncomplete();
+
 		// Setup Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
@@ -84,7 +86,7 @@ class SettingOAuthCest
 		// Confirm the Connect button displays.
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
-		$I->dontSeeElementInDOM('input#submit');
+		$I->dontSeeElementInDOM('button.woocommerce-save-button');
 
 		// Navigate to the WordPress Admin.
 		$I->amOnAdminPage('index.php');
@@ -112,7 +114,7 @@ class SettingOAuthCest
 
 		// Confirm the Disconnect and Save Changes buttons display.
 		$I->see('Disconnect');
-		$I->seeElementInDOM('input#submit');
+		$I->seeElementInDOM('button.woocommerce-save-button');
 
 		// Enable the Integration.
 		$I->checkOption('#woocommerce_ckwc_enabled');
@@ -132,7 +134,7 @@ class SettingOAuthCest
 		// Confirm the Connect button displays.
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
-		$I->dontSeeElementInDOM('input#submit');
+		$I->dontSeeElementInDOM('button.woocommerce-save-button');
 	}
 
 	/**

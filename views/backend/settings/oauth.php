@@ -9,14 +9,14 @@
 ?>
 <div class="metabox-holder">
 	<div id="oauth" class="postbox">
-		<h2><?php esc_html_e( 'Connect to ConvertKit', 'convertkit' ); ?></h2>
+		<h2><?php esc_html_e( 'Connect to ConvertKit', 'woocommerce-convertkit' ); ?></h2>
 
 		<p class="description">
-			<?php esc_html_e( 'For the ConvertKit Plugin to function, please connect your ConvertKit account using the button below.', 'convertkit' ); ?><br />
+			<?php esc_html_e( 'For the ConvertKit for WooCommerce Plugin to function, please connect your ConvertKit account using the button below.', 'woocommerce-convertkit' ); ?><br />
 		</p>
 
 		<p>
-			<a href="<?php echo esc_url( $api->get_oauth_url( admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc' ) ) ); ?>" class="button button-primary"><?php esc_html_e( 'Connect', 'convertkit' ); ?></a>
+			<a href="<?php echo esc_url( $api->get_oauth_url( admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc' ) ) ); ?>" class="button button-primary"><?php esc_html_e( 'Connect', 'woocommerce-convertkit' ); ?></a>
 		</p>
 	</div><!-- .postbox -->
 

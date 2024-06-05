@@ -17,10 +17,10 @@ class CKWC_Integration extends WC_Integration {
 
 	/**
 	 * Holds the ConvertKit account name.
-	 * 
-	 * @since 	1.8.0
-	 * 
-	 * @var 	string
+	 *
+	 * @since   1.8.0
+	 *
+	 * @var     string
 	 */
 	private $account_name = '';
 
@@ -152,8 +152,8 @@ class CKWC_Integration extends WC_Integration {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'  => 'wc-settings',
-					'tab' => 'integration',
+					'page'    => 'wc-settings',
+					'tab'     => 'integration',
 					'section' => 'ckwc',
 				),
 				'admin.php'
@@ -192,10 +192,10 @@ class CKWC_Integration extends WC_Integration {
 			wp_safe_redirect(
 				add_query_arg(
 					array(
-						'page'  => 'wc-settings',
-						'tab' => 'integration',
+						'page'    => 'wc-settings',
+						'tab'     => 'integration',
 						'section' => 'ckwc',
-						'error' => $result->get_error_code(),
+						'error'   => $result->get_error_code(),
 					),
 					'admin.php'
 				)
@@ -207,14 +207,14 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'access_token', $result['access_token'] );
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
 		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
-		
+
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'  => 'wc-settings',
-					'tab' => 'integration',
+					'page'    => 'wc-settings',
+					'tab'     => 'integration',
 					'section' => 'ckwc',
 				),
 				'admin.php'
@@ -353,7 +353,7 @@ class CKWC_Integration extends WC_Integration {
 			$hide_save_button = true;
 
 			// Initialize API.
-			$api   = new CKWC_API(
+			$api = new CKWC_API(
 				CKWC_OAUTH_CLIENT_ID,
 				CKWC_OAUTH_CLIENT_REDIRECT_URI
 			);
@@ -452,25 +452,25 @@ class CKWC_Integration extends WC_Integration {
 
 		$this->form_fields = array(
 			// Account name.
-			'account_name' => array(
-				'title'   => __( 'Account Name', 'woocommerce-convertkit' ),
-				'type'    => 'link_button',
-				'label'   => __( 'Disconnect', 'woocommerce-convertkit' ),
-				'url' 	  => admin_url(
+			'account_name'                  => array(
+				'title'       => __( 'Account Name', 'woocommerce-convertkit' ),
+				'type'        => 'link_button',
+				'label'       => __( 'Disconnect', 'woocommerce-convertkit' ),
+				'url'         => admin_url(
 					add_query_arg(
 						array(
-							'page'        => 'wc-settings',
-							'tab'         => 'integration',
-							'section'     => 'ckwc',
-							'action'	  => 'ckwc-oauth-disconnect',
-							'nonce'		  => wp_create_nonce( 'ckwc-oauth-disconnect' ),
+							'page'    => 'wc-settings',
+							'tab'     => 'integration',
+							'section' => 'ckwc',
+							'action'  => 'ckwc-oauth-disconnect',
+							'nonce'   => wp_create_nonce( 'ckwc-oauth-disconnect' ),
 						),
 						'admin.php'
 					)
 				),
 				'desc_tip'    => false,
-				'class' 		=> 'button button-primary',
-				'description' 	=> $this->account_name,
+				'class'       => 'button button-primary',
+				'description' => $this->account_name,
 			),
 
 			// Enable/Disable entire integration.
