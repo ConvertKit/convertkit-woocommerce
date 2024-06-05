@@ -226,6 +226,14 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
+		// Bail if the action isn't for exporting a configuration file.
+		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
 		// Load settings.
 		$this->init_settings();
 
