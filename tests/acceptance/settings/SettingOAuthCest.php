@@ -67,32 +67,23 @@ class SettingOAuthCest
 	 */
 	public function testInvalidCredentials(AcceptanceTester $I)
 	{
-		$I->markTestIncomplete();
-
 		// Setup Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
-			[
-				'access_token'  => 'fakeAccessToken',
-				'refresh_token' => 'fakeRefreshToken',
-			]
+			'fakeAccessToken',
+			'fakeRefreshToken'
 		);
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
-		$I->see('XXX');
+		// Confirm an error message is displayed confirming that the access token is invalid.
+		$I->see('The access token is invalid');
 
 		// Confirm the Connect button displays.
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
 		$I->dontSeeElementInDOM('button.woocommerce-save-button');
-
-		// Navigate to the WordPress Admin.
-		$I->amOnAdminPage('index.php');
-
-		// Check that a notice is displayed that the API credentials are invalid.
-		$I->seeErrorNotice($I, 'ConvertKit: Authorization failed. Please connect your ConvertKit account.');
 	}
 
 	/**
@@ -127,6 +118,9 @@ class SettingOAuthCest
 
 		// Confirm that an expected option can be selected.
 		$I->selectOption('#woocommerce_ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
+
+		// Save changes.
+		$I->click('Save changes');
 
 		// Disconnect the Plugin connection to ConvertKit.
 		$I->click('Disconnect');
