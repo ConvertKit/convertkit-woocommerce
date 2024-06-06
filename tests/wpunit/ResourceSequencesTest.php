@@ -184,8 +184,8 @@ class ResourceSequencesTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('name', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('WordPress Sequence', reset($result)['name']);
-		$this->assertEquals('Another Sequence', end($result)['name']);
+		$this->assertEquals('Another Sequence', reset($result)['name']);
+		$this->assertEquals('WordPress Sequence', end($result)['name']);
 	}
 
 	/**

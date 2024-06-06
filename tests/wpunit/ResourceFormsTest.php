@@ -184,8 +184,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('name', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('AAA Test', reset($result)['name']);
-		$this->assertEquals('WooCommerce Product Form', end($result)['name']);
+		$this->assertEquals('WPForms Form', reset($result)['name']);
+		$this->assertEquals('Legacy Form', end($result)['name']);
 	}
 
 	/**

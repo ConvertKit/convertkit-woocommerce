@@ -42,8 +42,8 @@ class ResourceTagsNoDataTest extends \Codeception\TestCase\WPTestCase
 
 		// Enable integration, storing Access Token and Refresh Token in Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'yes' );
-		WP_CKWC_Integration()->update_option( 'access_token', $_ENV['CONVERTKIT_API_KEY_NO_DATA'] );
-		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_API_SECRET_NO_DATA'] );
+		WP_CKWC_Integration()->update_option( 'access_token', $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN_NO_DATA'] );
+		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA'] );
 
 		// Initialize the resource class we want to test.
 		$this->resource = new CKWC_Resource_Tags();
