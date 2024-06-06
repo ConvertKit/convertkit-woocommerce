@@ -48,7 +48,7 @@ class SettingImportExportCest
 		// Check downloaded file exists and contains some expected information.
 		$I->openFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
 		$I->seeInThisFile('{"settings":{"enabled":"yes"');
-		$I->seeInThisFile('"access_token":"' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] . ' ","refresh_token":"' . $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] . ' ",')
+		$I->seeInThisFile('"access_token":"' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] . ' ","refresh_token":"' . $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] . ' ",');
 
 		// Delete the file.
 		$I->deleteFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
