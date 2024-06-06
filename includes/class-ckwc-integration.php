@@ -170,9 +170,11 @@ class CKWC_Integration extends WC_Integration {
 		// Redirect with an error if we could not fetch the access token.
 		if ( is_wp_error( $result ) ) {
 			wp_safe_redirect(
-				ckwc_get_settings_link( array(
-					'error' => $result->get_error_code(),
-				) )
+				ckwc_get_settings_link(
+					array(
+						'error' => $result->get_error_code(),
+					)
+				)
 			);
 			exit();
 		}

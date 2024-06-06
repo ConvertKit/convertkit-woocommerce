@@ -287,8 +287,8 @@ class SyncPastOrdersCest
 
 	/**
 	 * Test that a WooCommerce Order, that has not had its Purchase Data sent to ConvertKit,
-	 * is not sent to ConvertKit when the Sync Past Orders button is clicked and the API
-	 * credentials are invalid.
+	 * is not sent to ConvertKit when attempting to access the Sync Past Orders screen
+	 * and the API credentials are invalid.
 	 *
 	 * @since   1.4.3
 	 *
@@ -317,33 +317,18 @@ class SyncPastOrdersCest
 			]
 		);
 
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
+		// Attempt to directly load the Sync Orders screen.
+		// This won't be available via a button, as loading the Settings screen will correctly state the access token is invalid
+		// and only show the Connect button to begin the OAuth flow.
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&sub_section=sync_past_orders');
 
-		// Confirm that the Sync Past Order button is displayed.
-		$I->seeElementInDOM('a#ckwc_sync_past_orders');
+		// Confirm an error message is displayed confirming that the access token is invalid.
+		$I->see('The access token is invalid');
 
-		// Click the button.
-		$I->click('a#ckwc_sync_past_orders');
-
-		// Confirm the popup.
-		$I->acceptPopup();
-
-		// Wait a few seconds for the API call to be made.
-		$I->wait(5);
-
-		// Confirm that the log shows a success message.
-		// @TODO.
-		$I->seeInSource('1/1: Response Error: Authorization Failed: API Key not valid');
-
-		// Cancel sync.
-		$I->click('Cancel');
-
-		// Wait a few seconds for the current request to complete.
-		$I->wait(5);
-
-		// Confirm that the Cancel Sync button is disabled.
-		$I->seeElementInDOM('a.cancel[disabled]');
+		// Confirm the Connect button displays.
+		$I->see('Connect');
+		$I->dontSee('Disconnect');
+		$I->dontSeeElementInDOM('button.woocommerce-save-button');
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address'], $result['product_id']);

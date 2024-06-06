@@ -270,9 +270,6 @@ class WooCommerce extends \Codeception\Module
 		// Define Email Address for this Test.
 		$emailAddress = $I->generateEmailAddress();
 
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($emailAddress);
-
 		// Logout as the WordPress Administrator.
 		$I->logOut();
 
