@@ -101,7 +101,6 @@ class CKWC_Order {
 
 		// Bail if the Subscribe Event doesn't match the Order's new status.
 		if ( $this->integration->get_option( 'event' ) !== $status_new ) {
-			error_log( 'Plugin event = ' . $this->integration->get_option( 'event' ) . ', Order event = ' . $status_new );
 			return;
 		}
 
@@ -276,15 +275,6 @@ class CKWC_Order {
 				);
 				break;
 		}
-
-		/*
-		error_log( print_r( $resource_type, true ) );
-		error_log( print_r( $resource_id, true ) );
-		error_log( print_r( $email, true ) );
-		error_log( print_r( $name, true ) );
-		error_log( print_r( $custom_fields, true ) );
-		error_log( print_r( $result, true ) );
-		*/
 
 		// If an error occured, bail.
 		if ( is_wp_error( $result ) ) {

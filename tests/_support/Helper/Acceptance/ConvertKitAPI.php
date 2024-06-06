@@ -29,9 +29,6 @@ class ConvertKitAPI extends \Codeception\Module
 			]
 		);
 
-		var_dump( $results );
-		die();
-
 		// Check at least one subscriber was returned and it matches the email address.
 		$I->assertGreaterThan(0, $results['pagination']['total_count']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
