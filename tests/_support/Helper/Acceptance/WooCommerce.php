@@ -225,8 +225,8 @@ class WooCommerce extends \Codeception\Module
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			$options['subscription_event'],
 			$options['plugin_form_tag_sequence'],
 			$options['name_format'],

@@ -198,7 +198,7 @@ class ConvertKitAPI extends \Codeception\Module
 		// Run request.
 		$this->apiRequest(
 			'unsubscribe',
-			'PUT',
+			'DELETE',
 			[
 				'email' => $emailAddress,
 			]

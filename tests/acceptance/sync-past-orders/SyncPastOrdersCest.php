@@ -306,15 +306,19 @@ class SyncPastOrdersCest
 		// Login as the Administrator.
 		$I->loginAsAdmin();
 
+		// Specify invalid API credentials.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'       => 'yes',
+				'access_token'  => 'fakeAccessToken',
+				'refresh_token' => 'fakeRefreshToken',
+				'debug'         => 'yes',
+			]
+		);
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
-
-		// Enable the Integration and define invalid API Credentials.
-		$I->loadConvertKitSettingsScreen($I);
-		$I->checkOption('#woocommerce_ckwc_enabled');
-		$I->fillField('woocommerce_ckwc_api_key', 'invalidApiKey');
-		$I->fillField('woocommerce_ckwc_api_secret', 'invalidApiSecret');
-		$I->click('Save changes');
 
 		// Confirm that the Sync Past Order button is displayed.
 		$I->seeElementInDOM('a#ckwc_sync_past_orders');
