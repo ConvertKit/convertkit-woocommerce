@@ -22,7 +22,7 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @var     string
 	 */
-	private $account_name = '';
+	private $account_name = ''; // @phpstan-ignore-line
 
 	/**
 	 * Holds an array of WooCommerce Order IDs not sent to ConvertKit.
@@ -88,15 +88,12 @@ class CKWC_Integration extends WC_Integration {
 
 		// Load Admin screens, save settings.
 		if ( is_admin() ) {
-			// Disconnect if requested.
-			$this->maybe_disconnect();
+			// Perform OAuth and export configuration options, if required.
+			add_action( 'admin_init', array( $this, 'maybe_disconnect' ), 1 );
+			add_action( 'admin_init', array( $this, 'maybe_get_and_store_access_token' ), 2 );
+			add_action( 'admin_init', array( $this, 'maybe_export_configuration' ), 3 );
 
-			// Get Access Token, if requested.
-			$this->maybe_get_and_store_access_token();
-
-			// Export configuration to JSON file, if requested.
-			$this->maybe_export_configuration();
-
+			// Enqueue JS and CSS.
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
@@ -116,7 +113,7 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @since   2.5.0
 	 */
-	private function maybe_disconnect() {
+	public function maybe_disconnect() {
 
 		// Bail if we're not on the integration screen for this action.
 		if ( ! $this->get_integration_screen_name() ) {
@@ -130,6 +127,9 @@ class CKWC_Integration extends WC_Integration {
 		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-oauth-disconnect' ) ) {
 			return;
 		}
+
+		// Delete resources.
+		$this->resources_delete();
 
 		// Remove Access Token from settings.
 		$this->update_option( 'access_token', '' );
@@ -148,7 +148,7 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @since   1.8.0
 	 */
-	private function maybe_get_and_store_access_token() {
+	public function maybe_get_and_store_access_token() {
 
 		// Bail if we're not on the integration screen.
 		if ( ! $this->get_integration_screen_name() ) {
@@ -197,7 +197,7 @@ class CKWC_Integration extends WC_Integration {
 	 *
 	 * @since   1.4.6
 	 */
-	private function maybe_export_configuration() {
+	public function maybe_export_configuration() {
 
 		// Bail if we're not on the settings screen.
 		if ( ! $this->get_integration_screen_name() ) {

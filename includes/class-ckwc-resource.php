@@ -25,7 +25,7 @@ class CKWC_Resource extends ConvertKit_Resource_V4 {
 		if ( WP_CKWC_Integration()->is_enabled() ) {
 			$this->api = new CKWC_API(
 				CKWC_OAUTH_CLIENT_ID,
-				admin_url( 'index.php' ),
+				CKWC_OAUTH_CLIENT_REDIRECT_URI,
 				WP_CKWC_Integration()->get_option( 'access_token' ),
 				WP_CKWC_Integration()->get_option( 'refresh_token' ),
 				WP_CKWC_Integration()->get_option_bool( 'debug' )
