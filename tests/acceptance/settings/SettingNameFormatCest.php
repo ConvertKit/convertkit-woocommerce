@@ -63,10 +63,10 @@ class SettingNameFormatCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit with a name.
-		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -105,13 +105,10 @@ class SettingNameFormatCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Confirm that the subscriber's name = Last.
-		$I->apiCheckSubscriberExists($I, $result['email_address'], 'Last');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'Last');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -150,13 +147,10 @@ class SettingNameFormatCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Confirm that the subscriber's name = First Last.
-		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**

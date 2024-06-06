@@ -49,10 +49,7 @@ class SyncPastOrdersCest
 		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);
 
 		// Define Email Address for this Test.
-		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($emailAddress);
+		$emailAddress = $I->generateEmailAddress();
 
 		// Logout as the WordPress Administrator.
 		$I->logOut();

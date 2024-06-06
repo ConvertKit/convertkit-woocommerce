@@ -802,11 +802,8 @@ class PurchaseDataCest
 			]
 		);
 
-		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Confirm that the subscriber's name = First Last.
-		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
+		// Confirm that the email address was now added to ConvertKit with a valid name.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
@@ -815,7 +812,7 @@ class PurchaseDataCest
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**

@@ -164,21 +164,15 @@ class ConvertKitAPI extends \Codeception\Module
 	}
 
 	/**
-	 * Unsubscribes the given email address. Useful for clearing the API
+	 * Unsubscribes the given subscriber ID. Useful for clearing the API
 	 * between tests.
 	 *
-	 * @param   string $emailAddress   Email Address.
+	 * @param   int $id Subscriber ID.
 	 */
-	public function apiUnsubscribe($emailAddress)
+	public function apiUnsubscribe($id)
 	{
 		// Run request.
-		$this->apiRequest(
-			'unsubscribe',
-			'DELETE',
-			[
-				'email' => $emailAddress,
-			]
-		);
+		$this->apiRequest('subscribers/' . $id . '/unsubscribe', 'POST');
 	}
 
 	/**
