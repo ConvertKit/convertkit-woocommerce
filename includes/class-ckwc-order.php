@@ -101,6 +101,7 @@ class CKWC_Order {
 
 		// Bail if the Subscribe Event doesn't match the Order's new status.
 		if ( $this->integration->get_option( 'event' ) !== $status_new ) {
+			error_log( 'Plugin event = ' . $this->integration->get_option( 'event' ) . ', Order event = ' . $status_new );
 			return;
 		}
 
@@ -275,6 +276,15 @@ class CKWC_Order {
 				);
 				break;
 		}
+
+		/*
+		error_log( print_r( $resource_type, true ) );
+		error_log( print_r( $resource_id, true ) );
+		error_log( print_r( $email, true ) );
+		error_log( print_r( $name, true ) );
+		error_log( print_r( $custom_fields, true ) );
+		error_log( print_r( $result, true ) );
+		*/
 
 		// If an error occured, bail.
 		if ( is_wp_error( $result ) ) {
@@ -873,7 +883,7 @@ class CKWC_Order {
 	 * @since   1.4.3
 	 *
 	 * @param   WC_Order|WC_Order_Refund $order  Order.
-	 * @return  mixed                            array | false
+	 * @return  array
 	 */
 	private function custom_field_data( $order ) {
 
@@ -907,15 +917,10 @@ class CKWC_Order {
 		 *
 		 * @since   1.4.3
 		 *
-		 * @param   mixed                       $fields     Custom Field Key/Value pairs (false | array).
+		 * @param   array                       $fields     Custom Field Key/Value pairs (false | array).
 		 * @param   WC_Order|WC_Order_Refund    $order      WooCommerce Order.
 		 */
 		$fields = apply_filters( 'convertkit_for_woocommerce_custom_field_data', $fields, $order );
-
-		// If the fields array is empty, no Custom Field mappings exist.
-		if ( ! count( $fields ) ) {
-			return false;
-		}
 
 		return $fields;
 

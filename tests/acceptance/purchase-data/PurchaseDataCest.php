@@ -806,7 +806,7 @@ class PurchaseDataCest
 		$I->apiCheckSubscriberExists($I, $result['email_address']);
 
 		// Confirm that the subscriber's name = First Last.
-		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'First Last');
+		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
 
 		// Confirm that the purchase was added to ConvertKit.
 		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);

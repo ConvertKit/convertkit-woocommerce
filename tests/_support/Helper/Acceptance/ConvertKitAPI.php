@@ -24,12 +24,16 @@ class ConvertKitAPI extends \Codeception\Module
 			'subscribers',
 			'GET',
 			[
-				'email_address' => $emailAddress,
+				'email_address'       => $emailAddress,
+				'include_total_count' => true,
 			]
 		);
 
+		var_dump( $results );
+		die();
+
 		// Check at least one subscriber was returned and it matches the email address.
-		$I->assertGreaterThan(0, $results['total_subscribers']);
+		$I->assertGreaterThan(0, $results['pagination']['total_count']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
 
 		// If defined, check that the name matches for the subscriber.
@@ -53,38 +57,13 @@ class ConvertKitAPI extends \Codeception\Module
 			'subscribers',
 			'GET',
 			[
-				'email_address' => $emailAddress,
+				'email_address'       => $emailAddress,
+				'include_total_count' => true,
 			]
 		);
 
 		// Check no subscribers are returned by this request.
-		$I->assertEquals(0, $results['total_subscribers']);
-	}
-
-	/**
-	 * Check the given email address and name exists as a subscriber on ConvertKit.
-	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester.
-	 * @param   string           $emailAddress   Email Address.
-	 * @param   string           $name           Name.
-	 */
-	public function apiCheckSubscriberEmailAndNameExists($I, $emailAddress, $name)
-	{
-		// Run request.
-		$results = $this->apiRequest(
-			'subscribers',
-			'GET',
-			[
-				'email_address' => $emailAddress,
-			]
-		);
-
-		// Check at least one subscriber was returned and it matches the email address.
-		$I->assertGreaterThan(0, $results['total_subscribers']);
-		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
-
-		// Check that the first_name matches the given name.
-		$I->assertEquals($name, $results['subscribers'][0]['first_name']);
+		$I->assertEquals(0, $results['pagination']['total_count']);
 	}
 
 	/**
