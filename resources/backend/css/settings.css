@@ -37,7 +37,8 @@ body.woocommerce_page_wc-settings .wrap .postbox p {
 body.woocommerce_page_wc-settings .wrap p.submit {
 	padding: 0;
 }
-body.woocommerce_page_wc-settings .wrap p.submit .button {
+body.woocommerce_page_wc-settings .wrap p.submit .button,
+body.woocommerce_page_wc-settings .wrap p.submit .button-primary {
 	margin: 0 5px 0 0;
 	padding: 4px 12px;
 	font-size: 14px;
