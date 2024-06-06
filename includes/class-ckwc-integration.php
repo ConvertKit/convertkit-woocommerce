@@ -231,16 +231,7 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			case 'sync_past_orders':
 				// Define URL to return to main Integration Settings screen.
-				$return_url = admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'wc-settings',
-							'tab'     => 'integration',
-							'section' => 'ckwc',
-						),
-						'admin.php'
-					)
-				);
+				$return_url = ckwc_get_settings_link();
 
 				// Load view.
 				include_once CKWC_PLUGIN_PATH . '/views/backend/settings/sync-past-orders.php';
@@ -251,16 +242,10 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			default:
 				// Define variables.
-				$export_url = admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'wc-settings',
-							'tab'     => 'integration',
-							'section' => 'ckwc',
-							'action'  => 'ckwc-export',
-							'nonce'   => wp_create_nonce( 'ckwc-nonce' ),
-						),
-						'admin.php'
+				$export_url = ckwc_get_settings_link(
+					array(
+						'action' => 'ckwc-export',
+						'nonce'  => wp_create_nonce( 'ckwc-nonce' ),
 					)
 				);
 
@@ -557,15 +542,9 @@ class CKWC_Integration extends WC_Integration {
 				'type'     => 'sync_past_orders_button',
 				'default'  => '',
 				'desc_tip' => false,
-				'url'      => admin_url(
-					add_query_arg(
-						array(
-							'page'        => 'wc-settings',
-							'tab'         => 'integration',
-							'section'     => 'ckwc',
-							'sub_section' => 'sync_past_orders',
-						),
-						'admin.php'
+				'url'      => ckwc_get_settings_link(
+					array(
+						'sub_section' => 'sync_past_orders',
 					)
 				),
 
