@@ -21,7 +21,7 @@ class SettingNameFormatCest
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.
@@ -58,18 +58,15 @@ class SettingNameFormatCest
 				'display_opt_in'           => true,
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
-				'subscription_event'       => 'pending',
+				'subscription_event'       => 'pending', // processing?
 			]
 		);
 
-		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Confirm that the subscriber's name = First.
-		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'First');
+		// Confirm that the email address was now added to ConvertKit with a name.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -108,13 +105,10 @@ class SettingNameFormatCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Confirm that the subscriber's name = Last.
-		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'Last');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'Last');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -153,13 +147,10 @@ class SettingNameFormatCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Confirm that the subscriber's name = First Last.
-		$I->apiCheckSubscriberEmailAndNameExists($I, $result['email_address'], 'First Last');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**

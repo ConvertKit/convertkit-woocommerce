@@ -63,7 +63,7 @@ class ProductCest
 	 */
 	public function testProductFieldsWithIntegrationEnabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -104,19 +104,19 @@ class ProductCest
 	/**
 	 * Test that the meta box displayed when adding/editing a Product does not
 	 * output a field, and instead tells the user to configure the integration,
-	 * when the integration is enabled but no API Key is specified.
+	 * when the integration is enabled but no credentials are specified.
 	 *
 	 * @since   1.4.2
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testProductFieldsWithIntegrationEnabledAndNoAPIKey(AcceptanceTester $I)
+	public function testProductFieldsWithIntegrationEnabledAndNoCredentials(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define no Access or Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'', // No API Key.
-			'', // No API Secret.
+			'', // No Access Token.
+			'', // No Refresh Token.
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -146,19 +146,19 @@ class ProductCest
 
 	/**
 	 * Test that the meta box displayed when adding/editing a Product does not
-	 * output PHP errors when the integration is enabled with an invalid API Key.
+	 * output PHP errors when the integration is enabled with an invalid credentials.
 	 *
 	 * @since   1.4.2
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testProductFieldsWithIntegrationEnabledAndInvalidAPIKey(AcceptanceTester $I)
+	public function testProductFieldsWithIntegrationEnabledAndInvalidCredentials(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define invalid Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'fakeApiKey',
-			'fakeApiSecret',
+			'fakeAccessToken',
+			'fakeRefreshToken',
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -190,7 +190,7 @@ class ProductCest
 	 */
 	public function testQuickEditUsingDefinedResource(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -273,7 +273,7 @@ class ProductCest
 	 */
 	public function testBulkEditUsingDefinedResource(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -334,7 +334,7 @@ class ProductCest
 	 */
 	public function testBulkEditWithNoChanges(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -394,7 +394,7 @@ class ProductCest
 	 */
 	public function testBulkEditFieldsHiddenWhenNoProductsFound(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
