@@ -58,7 +58,7 @@ class SettingNameFormatCest
 				'display_opt_in'           => true,
 				'check_opt_in'             => true,
 				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
-				'subscription_event'       => 'pending', // processing?
+				'subscription_event'       => 'pending',
 			]
 		);
 
