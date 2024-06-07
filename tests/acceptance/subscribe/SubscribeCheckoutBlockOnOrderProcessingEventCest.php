@@ -361,7 +361,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 				'check_opt_in'              => true,
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
-				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'],
+				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'],
 				'use_legacy_checkout'       => false,
 			]
 		);
@@ -380,7 +380,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_SECOND_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'] . ']');
 	}
 
 	/**
@@ -493,7 +493,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 				'check_opt_in'              => true,
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
-				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'],
+				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'],
 				'use_legacy_checkout'       => false,
 			]
 		);
@@ -512,7 +512,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_SECOND_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'] . ']');
 	}
 
 	/**
