@@ -29,7 +29,7 @@ define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
 define( 'CKWC_PLUGIN_VERSION', '1.8.0' );
-define( 'CKWC_OAUTH_CLIENT_ID', 'HXZlOCj-K5r0ufuWCtyoyo3f688VmMAYSsKg1eGvw0Y' );
+define( 'CKWC_OAUTH_CLIENT_ID', 'L0kyADsB3WP5zO5MvUpXQU64gIntQg9BBAIme17r_7A' );
 define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://cktestplugins.wpengine.com/' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
