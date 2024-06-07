@@ -49,7 +49,10 @@ class SyncPastOrdersCest
 		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);
 
 		// Define Email Address for this Test.
-		$emailAddress = $I->generateEmailAddress();
+		$emailAddress = 'wordpress-' . date( 'YmdHis' ) . '@convertkit.com';
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($emailAddress);
 
 		// Logout as the WordPress Administrator.
 		$I->logOut();
@@ -84,6 +87,40 @@ class SyncPastOrdersCest
 
 	/**
 	 * Test that no button is displayed on the Integration Settings screen
+	 * when the Integration is enabled, and no API credentials are specified.
+	 *
+	 * @since   1.4.3
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testNoButtonDisplayedWhenIntegrationEnabledWithNoAPICredentials(AcceptanceTester $I)
+	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->wooCommerceDeleteAllOrders($I);
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
+
+		// Login as the Administrator.
+		$I->loginAsAdmin();
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Enable integration, removing API Keys.
+		$I->checkOption('#woocommerce_ckwc_enabled');
+		$I->fillField('woocommerce_ckwc_api_key', '');
+		$I->fillField('woocommerce_ckwc_api_secret', '');
+
+		// Save changes.
+		$I->click('Save changes');
+
+		// Confirm that no Sync Past Order button is displayed.
+		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
+	}
+
+	/**
+	 * Test that no button is displayed on the Integration Settings screen
 	 * when the Integration is enabled, valid API credentials are specified
 	 * but there are no WooCommerce Orders.
 	 *
@@ -96,7 +133,7 @@ class SyncPastOrdersCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->wooCommerceDeleteAllOrders($I);
 
-		// Enable Integration and define its Access and Refresh Tokens.
+		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.
@@ -284,8 +321,8 @@ class SyncPastOrdersCest
 
 	/**
 	 * Test that a WooCommerce Order, that has not had its Purchase Data sent to ConvertKit,
-	 * is not sent to ConvertKit when attempting to access the Sync Past Orders screen
-	 * and the API credentials are invalid.
+	 * is not sent to ConvertKit when the Sync Past Orders button is clicked and the API
+	 * credentials are invalid.
 	 *
 	 * @since   1.4.3
 	 *
@@ -303,29 +340,39 @@ class SyncPastOrdersCest
 		// Login as the Administrator.
 		$I->loginAsAdmin();
 
-		// Specify invalid API credentials.
-		$I->haveOptionInDatabase(
-			'woocommerce_ckwc_settings',
-			[
-				'enabled'       => 'yes',
-				'access_token'  => 'fakeAccessToken',
-				'refresh_token' => 'fakeRefreshToken',
-				'debug'         => 'yes',
-			]
-		);
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 
-		// Attempt to directly load the Sync Orders screen.
-		// This won't be available via a button, as loading the Settings screen will correctly state the access token is invalid
-		// and only show the Connect button to begin the OAuth flow.
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&sub_section=sync_past_orders');
+		// Enable the Integration and define invalid API Credentials.
+		$I->loadConvertKitSettingsScreen($I);
+		$I->checkOption('#woocommerce_ckwc_enabled');
+		$I->fillField('woocommerce_ckwc_api_key', 'invalidApiKey');
+		$I->fillField('woocommerce_ckwc_api_secret', 'invalidApiSecret');
+		$I->click('Save changes');
 
-		// Confirm an error message is displayed confirming that the access token is invalid.
-		$I->see('The access token is invalid');
+		// Confirm that the Sync Past Order button is displayed.
+		$I->seeElementInDOM('a#ckwc_sync_past_orders');
 
-		// Confirm the Connect button displays.
-		$I->see('Connect');
-		$I->dontSee('Disconnect');
-		$I->dontSeeElementInDOM('button.woocommerce-save-button');
+		// Click the button.
+		$I->click('a#ckwc_sync_past_orders');
+
+		// Confirm the popup.
+		$I->acceptPopup();
+
+		// Wait a few seconds for the API call to be made.
+		$I->wait(5);
+
+		// Confirm that the log shows a success message.
+		$I->seeInSource('1/1: Response Error: Authorization Failed: API Key not valid');
+
+		// Cancel sync.
+		$I->click('Cancel');
+
+		// Wait a few seconds for the current request to complete.
+		$I->wait(5);
+
+		// Confirm that the Cancel Sync button is disabled.
+		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the purchase was not added to ConvertKit.
 		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address'], $result['product_id']);

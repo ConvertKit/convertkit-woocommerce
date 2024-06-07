@@ -17,7 +17,7 @@ class SettingDebugLogCest
 	{
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Enable Integration and define its Access and Refresh Tokens.
+		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.

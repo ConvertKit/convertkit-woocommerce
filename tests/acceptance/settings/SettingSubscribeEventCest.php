@@ -3,7 +3,7 @@
  * Tests various setting combinations across the following settings:
  * - Subscribe Event
  * - Display Opt-In Checkbox
- * - Access and Refresh Tokens
+ * - API Keys
  * - Subscription Form
  *
  * @since   1.4.2
@@ -22,7 +22,7 @@ class SettingSubscribeEventCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Enable Integration and define its Access and Refresh Tokens.
+		// Enable Integration and define its API Keys.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.

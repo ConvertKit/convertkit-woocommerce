@@ -39,12 +39,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		require_once 'includes/class-ckwc-api.php';
 
 		// Initialize the classes we want to test.
-		$this->api = new CKWC_API(
-			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
-			$_ENV['CONVERTKIT_OAUTH_REDIRECT_URI'],
-			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
-			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN']
-		);
+		$this->api = new CKWC_API( $_ENV['CONVERTKIT_API_KEY'], $_ENV['CONVERTKIT_API_SECRET'] );
 	}
 
 	/**
@@ -83,6 +78,6 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		);
 
 		// Perform a request.
-		$result = $this->api->get_account();
+		$result = $this->api->account();
 	}
 }

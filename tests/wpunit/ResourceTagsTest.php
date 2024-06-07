@@ -40,10 +40,10 @@ class ResourceTagsTest extends \Codeception\TestCase\WPTestCase
 	{
 		parent::setUp();
 
-		// Enable integration, storing Access Token and Refresh Token in Plugin's settings.
+		// Enable integration, storing API Key and Secret in Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'yes' );
-		WP_CKWC_Integration()->update_option( 'access_token', $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] );
-		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] );
+		WP_CKWC_Integration()->update_option( 'api_key', $_ENV['CONVERTKIT_API_KEY'] );
+		WP_CKWC_Integration()->update_option( 'api_secret', $_ENV['CONVERTKIT_API_SECRET'] );
 
 		// Initialize the resource class we want to test.
 		$this->resource = new CKWC_Resource_Tags();
@@ -57,10 +57,10 @@ class ResourceTagsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function tearDown(): void
 	{
-		// Disable integration, removing Access Token and Refresh Token from Plugin's settings.
+		// Disable integration, removing API Key and Secret from Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'no' );
-		WP_CKWC_Integration()->update_option( 'access_token', '' );
-		WP_CKWC_Integration()->update_option( 'refresh_token', '' );
+		WP_CKWC_Integration()->update_option( 'api_key', '' );
+		WP_CKWC_Integration()->update_option( 'api_secret', '' );
 
 		// Delete Settings and Resources from options table.
 		delete_option($this->settings_key);
@@ -184,8 +184,8 @@ class ResourceTagsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('name', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('wpforms', reset($result)['name']);
-		$this->assertEquals('wordpress', end($result)['name']);
+		$this->assertEquals('wordpress', reset($result)['name']);
+		$this->assertEquals('wpforms', end($result)['name']);
 	}
 
 	/**

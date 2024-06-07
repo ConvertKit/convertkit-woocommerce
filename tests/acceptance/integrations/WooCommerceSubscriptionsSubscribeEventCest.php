@@ -65,7 +65,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($subscriber['id']);
+		$I->apiUnsubscribe($result['email_address']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -116,10 +116,10 @@ class WooCommerceSubscriptionsSubscribeEventCest
 		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+		$I->apiCheckSubscriberExists($I, $result['email_address']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($subscriber['id']);
+		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
