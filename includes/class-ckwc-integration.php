@@ -984,6 +984,60 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
+	 * Returns the API Key Plugin setting.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @return  string
+	 */
+	public function get_api_key() {
+
+		// Return API Key from settings.
+		return $this->get_option( 'api_key' );
+
+	}
+
+	/**
+	 * Returns whether the API Key has been set in the Plugin settings.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @return  bool
+	 */
+	public function has_api_key() {
+
+		return ( ! empty( $this->get_api_key() ) ? true : false );
+
+	}
+
+	/**
+	 * Returns the API Key Plugin setting.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @return  string
+	 */
+	public function get_api_secret() {
+
+		// Return API Secret from settings.
+		return $this->get_option( 'api_secret' );
+
+	}
+
+	/**
+	 * Returns whether the API Secret has been set in the Plugin settings.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @return  bool
+	 */
+	public function has_api_secret() {
+
+		return ( ! empty( $this->get_api_secret() ) ? true : false );
+
+	}
+
+	/**
 	 * Returns the Access Token Plugin setting.
 	 *
 	 * @since   1.8.0
