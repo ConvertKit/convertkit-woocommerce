@@ -210,4 +210,38 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		$result = $this->resource->exist();
 		$this->assertSame($result, true);
 	}
+
+
+	/**
+	 * Test that the is_legacy() function returns true for a Legacy Form ID.
+	 *
+	 * @since   1.8.0
+	 */
+	public function testIsLegacyFormWithLegacyFormID()
+	{
+		$this->resource->refresh();
+		$this->assertTrue($this->resource->is_legacy($_ENV['CONVERTKIT_API_LEGACY_FORM_ID']));
+	}
+
+	/**
+	 * Test that the is_legacy() function returns false for a non-Legacy Form ID.
+	 *
+	 * @since   1.8.0
+	 */
+	public function testIsLegacyFormWithFormID()
+	{
+		$this->resource->refresh();
+		$this->assertFalse($this->resource->is_legacy($_ENV['CONVERTKIT_API_FORM_ID']));
+	}
+
+	/**
+	 * Test that the is_legacy() function returns false for an invalid Form ID.
+	 *
+	 * @since   1.8.0
+	 */
+	public function testIsLegacyFormWithInvalidFormID()
+	{
+		$this->resource->refresh();
+		$this->assertFalse($this->resource->is_legacy(12345));
+	}
 }
