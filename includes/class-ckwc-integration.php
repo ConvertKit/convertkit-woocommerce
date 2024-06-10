@@ -86,6 +86,9 @@ class CKWC_Integration extends WC_Integration {
 		$this->init_form_fields();
 		$this->init_settings();
 
+		// Update Access Token when refreshed by the API class.
+		add_action( 'convertkit_api_refresh_token', array( $this, 'update_credentials' ), 10, 2 );
+
 		// Load Admin screens, save settings.
 		if ( is_admin() ) {
 			// Perform OAuth and export configuration options, if required.
@@ -108,10 +111,34 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
+	 * Saves the new access token, refresh token and its expiry when the API
+	 * class automatically refreshes an outdated access token.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @param   array  $result      New Access Token, Refresh Token and Expiry.
+	 * @param 	string $client_id 	OAuth Client ID used for the Access and Refresh Tokens.
+	 */
+	public function update_credentials( $result, $client_id ) {
+
+		// Don't save these credentials if they're not for this Client ID.
+		// They're for another ConvertKit Plugin that uses OAuth.
+		if ( $client_id !== CKWC_OAUTH_CLIENT_ID ) {
+			return;
+		}
+
+		// Update settings.
+		$this->update_option( 'access_token', $result['access_token'] );
+		$this->update_option( 'refresh_token', $result['refresh_token'] );
+		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+
+	}
+
+	/**
 	 * Deletes the OAuth Access Token, Refresh Token and Expiry from the Plugin's settings, if the user
 	 * clicked the Disconnect button.
 	 *
-	 * @since   2.5.0
+	 * @since   1.8.0
 	 */
 	public function maybe_disconnect() {
 
