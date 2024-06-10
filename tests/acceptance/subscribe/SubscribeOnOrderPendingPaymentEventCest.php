@@ -54,10 +54,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -85,9 +85,6 @@ class SubscribeOnOrderPendingPaymentEventCest
 
 		// Confirm that the email address was not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
@@ -112,10 +109,10 @@ class SubscribeOnOrderPendingPaymentEventCest
 		);
 
 		// Confirm that the email address was added to ConvertKit.
-		$I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -151,7 +148,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -187,7 +184,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -223,7 +220,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -252,9 +249,6 @@ class SubscribeOnOrderPendingPaymentEventCest
 
 		// Confirm that the email address was still not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
@@ -282,9 +276,6 @@ class SubscribeOnOrderPendingPaymentEventCest
 
 		// Confirm that the email address was still not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**
@@ -310,9 +301,6 @@ class SubscribeOnOrderPendingPaymentEventCest
 
 		// Confirm that the email address was still not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
 	}
 
 	/**

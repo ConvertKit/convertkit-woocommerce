@@ -16,7 +16,7 @@ class RefreshResourcesButtonCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		// Activate and Setup ConvertKit plugin using API keys that have no resources (forms, sequences, tags).
+		// Activate and Setup ConvertKit plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 		$I->setupConvertKitPlugin($I);
 	}
@@ -149,10 +149,10 @@ class RefreshResourcesButtonCest
 		$I->haveOptionInDatabase(
 			'woocommerce_ckwc_settings',
 			[
-				'enabled'    => 'yes',
-				'api_key'    => 'fakeApiKey',
-				'api_secret' => 'fakeApiSecret',
-				'debug'      => 'yes',
+				'enabled'       => 'yes',
+				'access_token'  => 'fakeAccessToken',
+				'refresh_token' => 'fakeRefreshToken',
+				'debug'         => 'yes',
 			]
 		);
 
@@ -175,7 +175,7 @@ class RefreshResourcesButtonCest
 
 		// Confirm that an error notification is displayed on screen, with the expected error message.
 		$I->seeElementInDOM('div.ckwc-error');
-		$I->see('Authorization Failed: API Key not valid');
+		$I->see('The access token is invalid');
 
 		// Confirm that the notice is dismissible.
 		$I->click('div.ckwc-error button.notice-dismiss');
