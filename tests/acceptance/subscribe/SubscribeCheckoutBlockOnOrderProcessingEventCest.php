@@ -63,7 +63,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -95,9 +95,6 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 
 		// Confirm that the email address was not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
 
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
 		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
@@ -133,7 +130,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -173,7 +170,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -210,7 +207,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -247,7 +244,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -277,9 +274,6 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 
 		// Confirm that the email address was still not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
 
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
 		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
@@ -312,9 +306,6 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		// Confirm that the email address was still not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
-
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
 		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
@@ -344,9 +335,6 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		// Confirm that the email address was still not added to ConvertKit.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
-
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
 		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
 	}
@@ -373,7 +361,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 				'check_opt_in'              => true,
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
-				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'],
+				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'],
 				'use_legacy_checkout'       => false,
 			]
 		);
@@ -386,13 +374,13 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_SECOND_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'] . ']');
 	}
 
 	/**
@@ -430,7 +418,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -474,7 +462,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -505,7 +493,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 				'check_opt_in'              => true,
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'processing',
-				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'],
+				'product_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'],
 				'use_legacy_checkout'       => false,
 			]
 		);
@@ -518,13 +506,13 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_SECOND_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SECOND_FORM_ID'] . ']');
 	}
 
 	/**
@@ -562,7 +550,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -606,7 +594,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
@@ -651,7 +639,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($result['email_address']);
+		$I->apiUnsubscribe($subscriber['id']);
 
 		// Change the Order's Status to any status other than 'Processing'.
 		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'Pending payment');

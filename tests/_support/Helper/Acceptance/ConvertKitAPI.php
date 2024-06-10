@@ -24,12 +24,13 @@ class ConvertKitAPI extends \Codeception\Module
 			'subscribers',
 			'GET',
 			[
-				'email_address' => $emailAddress,
+				'email_address'       => $emailAddress,
+				'include_total_count' => true,
 			]
 		);
 
 		// Check at least one subscriber was returned and it matches the email address.
-		$I->assertGreaterThan(0, $results['total_subscribers']);
+		$I->assertGreaterThan(0, $results['pagination']['total_count']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
 
 		// If defined, check that the name matches for the subscriber.
@@ -53,38 +54,13 @@ class ConvertKitAPI extends \Codeception\Module
 			'subscribers',
 			'GET',
 			[
-				'email_address' => $emailAddress,
+				'email_address'       => $emailAddress,
+				'include_total_count' => true,
 			]
 		);
 
 		// Check no subscribers are returned by this request.
-		$I->assertEquals(0, $results['total_subscribers']);
-	}
-
-	/**
-	 * Check the given email address and name exists as a subscriber on ConvertKit.
-	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester.
-	 * @param   string           $emailAddress   Email Address.
-	 * @param   string           $name           Name.
-	 */
-	public function apiCheckSubscriberEmailAndNameExists($I, $emailAddress, $name)
-	{
-		// Run request.
-		$results = $this->apiRequest(
-			'subscribers',
-			'GET',
-			[
-				'email_address' => $emailAddress,
-			]
-		);
-
-		// Check at least one subscriber was returned and it matches the email address.
-		$I->assertGreaterThan(0, $results['total_subscribers']);
-		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
-
-		// Check that the first_name matches the given name.
-		$I->assertEquals($name, $results['subscribers'][0]['first_name']);
+		$I->assertEquals(0, $results['pagination']['total_count']);
 	}
 
 	/**
@@ -188,21 +164,15 @@ class ConvertKitAPI extends \Codeception\Module
 	}
 
 	/**
-	 * Unsubscribes the given email address. Useful for clearing the API
+	 * Unsubscribes the given subscriber ID. Useful for clearing the API
 	 * between tests.
 	 *
-	 * @param   string $emailAddress   Email Address.
+	 * @param   int $id Subscriber ID.
 	 */
-	public function apiUnsubscribe($emailAddress)
+	public function apiUnsubscribe($id)
 	{
 		// Run request.
-		$this->apiRequest(
-			'unsubscribe',
-			'PUT',
-			[
-				'email' => $emailAddress,
-			]
-		);
+		$this->apiRequest('subscribers/' . $id . '/unsubscribe', 'POST');
 	}
 
 	/**
@@ -246,33 +216,40 @@ class ConvertKitAPI extends \Codeception\Module
 	 */
 	public function apiRequest($endpoint, $method = 'GET', $params = array())
 	{
-		// Build query parameters.
-		$params = array_merge(
-			$params,
-			[
-				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
-				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
-			]
-		);
-
 		// Send request.
-		try {
-			$client = new \GuzzleHttp\Client();
-			$result = $client->request(
-				$method,
-				'https://api.convertkit.com/v3/' . $endpoint . '?' . http_build_query($params),
-				[
-					'headers' => [
-						'Accept-Encoding' => 'gzip',
-						'timeout'         => 5,
-					],
-				]
-			);
+		$client = new \GuzzleHttp\Client();
+		switch ($method) {
+			case 'GET':
+				$result = $client->request(
+					$method,
+					'https://api.convertkit.com/v4/' . $endpoint . '?' . http_build_query($params),
+					[
+						'headers' => [
+							'Authorization' => 'Bearer ' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+							'timeout'       => 5,
+						],
+					]
+				);
+				break;
 
-			// Return JSON decoded response.
-			return json_decode($result->getBody()->getContents(), true);
-		} catch (\GuzzleHttp\Exception\ClientException $e) {
-			return [];
+			default:
+				$result = $client->request(
+					$method,
+					'https://api.convertkit.com/v4/' . $endpoint,
+					[
+						'headers' => [
+							'Accept'        => 'application/json',
+							'Content-Type'  => 'application/json; charset=utf-8',
+							'Authorization' => 'Bearer ' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+							'timeout'       => 5,
+						],
+						'body'    => (string) json_encode($params), // phpcs:ignore WordPress.WP.AlternativeFunctions
+					]
+				);
+				break;
 		}
+
+		// Return JSON decoded response.
+		return json_decode($result->getBody()->getContents(), true);
 	}
 }

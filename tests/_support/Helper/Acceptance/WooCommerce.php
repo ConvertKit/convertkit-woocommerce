@@ -225,8 +225,8 @@ class WooCommerce extends \Codeception\Module
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_API_KEY'],
-			$_ENV['CONVERTKIT_API_SECRET'],
+			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 			$options['subscription_event'],
 			$options['plugin_form_tag_sequence'],
 			$options['name_format'],
@@ -269,9 +269,6 @@ class WooCommerce extends \Codeception\Module
 
 		// Define Email Address for this Test.
 		$emailAddress = $I->generateEmailAddress();
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($emailAddress);
 
 		// Logout as the WordPress Administrator.
 		$I->logOut();
