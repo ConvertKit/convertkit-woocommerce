@@ -117,7 +117,7 @@ class CKWC_Integration extends WC_Integration {
 	 * @since   1.8.0
 	 *
 	 * @param   array  $result      New Access Token, Refresh Token and Expiry.
-	 * @param 	string $client_id 	OAuth Client ID used for the Access and Refresh Tokens.
+	 * @param   string $client_id   OAuth Client ID used for the Access and Refresh Tokens.
 	 */
 	public function update_credentials( $result, $client_id ) {
 
