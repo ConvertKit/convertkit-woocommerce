@@ -112,7 +112,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	/**
 	 * Mocks an API response as if the Access Token expired.
 	 *
-	 * @since   1.5.0
+	 * @since   1.8.0
 	 *
 	 * @param   mixed  $response       HTTP Response.
 	 * @param   array  $parsed_args    Request arguments.
@@ -152,7 +152,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	/**
 	 * Mocks an API response as if a refresh token was used to fetch new tokens.
 	 *
-	 * @since   1.5.0
+	 * @since   1.8.0
 	 *
 	 * @param   mixed  $response       HTTP Response.
 	 * @param   array  $parsed_args    Request arguments.
