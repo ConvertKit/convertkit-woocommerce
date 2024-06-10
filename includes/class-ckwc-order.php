@@ -252,6 +252,13 @@ class CKWC_Order {
 		// Call API to subscribe the email address to the given Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
+				// For Legacy Forms, a different endpoint is used.
+				$forms = new CKWC_Resource_Forms();
+				if ( $forms->is_legacy( $resource_id ) ) {
+					$result = $this->api->legacy_form_subscribe( $resource_id, $email, $name, $custom_fields );
+					break;
+				}
+
 				$result = $this->api->form_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 
