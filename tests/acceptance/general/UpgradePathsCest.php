@@ -16,19 +16,12 @@ class UpgradePathsCest
 	 */
 	public function testGetAccessTokenByAPIKeyAndSecret(AcceptanceTester $I)
 	{
-		// Setup ConvertKit Plugin's settings with an API Key and Secret.
+		// Setup Plugin's settings with an API Key and Secret.
 		$I->haveOptionInDatabase(
-			'_wp_convertkit_settings',
+			'woocommerce_ckwc_settings',
 			[
-				'api_key'         => $_ENV['CONVERTKIT_API_KEY'],
-				'api_secret'      => $_ENV['CONVERTKIT_API_SECRET'],
-				'debug'           => 'on',
-				'no_scripts'      => '',
-				'no_css'          => '',
-				'post_form'       => $_ENV['CONVERTKIT_API_FORM_ID'],
-				'page_form'       => $_ENV['CONVERTKIT_API_FORM_ID'],
-				'product_form'    => $_ENV['CONVERTKIT_API_FORM_ID'],
-				'non_inline_form' => '',
+				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
+				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
 			]
 		);
 
@@ -36,10 +29,10 @@ class UpgradePathsCest
 		$I->haveOptionInDatabase('ckwc_version', '1.4.0');
 
 		// Activate the Plugin, as if we just upgraded to 1.8.0 or higher.
-		$I->activateConvertKitPlugin($I);
+		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Confirm the options table now contains an Access Token and Refresh Token.
-		$settings = $I->grabOptionFromDatabase('_wp_convertkit_settings');
+		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
 		$I->assertArrayHasKey('access_token', $settings);
 		$I->assertArrayHasKey('refresh_token', $settings);
 		$I->assertArrayHasKey('token_expires', $settings);
@@ -50,21 +43,24 @@ class UpgradePathsCest
 		$I->assertEquals($settings['api_key'], $_ENV['CONVERTKIT_API_KEY']);
 		$I->assertEquals($settings['api_secret'], $_ENV['CONVERTKIT_API_SECRET']);
 
-		// Go to the Plugin's Settings Screen.
-		$I->loadConvertKitSettingsGeneralScreen($I);
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
 
-		// Confirm the Plugin authorized by checking for a Disconnect button.
-		$I->see('ConvertKit WordPress');
+		// Confirm the Disconnect and Save Changes buttons display.
 		$I->see('Disconnect');
+		$I->seeElementInDOM('button.woocommerce-save-button');
 
-		// Check the order of the Form resources are alphabetical, with 'None' as the first choice.
-		$I->checkSelectFormOptionOrder(
-			$I,
-			'#_wp_convertkit_settings_page_form',
-			[
-				'None',
-			]
-		);
+		// Enable the Integration.
+		$I->checkOption('#woocommerce_ckwc_enabled');
+
+		// Confirm that the Subscription dropdown option is displayed.
+		$I->seeElement('#woocommerce_ckwc_subscription');
+
+		// Check the order of the resource dropdown are alphabetical.
+		$I->checkSelectWithOptionGroupsOptionOrder($I, '#woocommerce_ckwc_subscription');
+
+		// Save changes (avoids a JS alert box which would prevent other tests from running due to changes made on screen).
+		$I->click('Save changes');
 	}
 
 	/**
@@ -72,13 +68,13 @@ class UpgradePathsCest
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
 	 *
-	 * @since   1.9.6.7
+	 * @since   1.8.0
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
-		$I->deactivateConvertKitPlugin($I);
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->resetConvertKitPlugin($I);
 	}
 }
