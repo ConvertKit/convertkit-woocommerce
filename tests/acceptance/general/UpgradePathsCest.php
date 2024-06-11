@@ -22,6 +22,7 @@ class UpgradePathsCest
 			[
 				'api_key'    => $_ENV['CONVERTKIT_API_KEY'],
 				'api_secret' => $_ENV['CONVERTKIT_API_SECRET'],
+				'enabled'    => 'yes',
 			]
 		);
 
