@@ -1006,7 +1006,7 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function has_api_key() {
 
-		return ( ! empty( $this->get_api_key() ) ? true : false );
+		return ( ! empty( $this->get_api_key() ) );
 
 	}
 
