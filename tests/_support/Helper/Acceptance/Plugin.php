@@ -81,13 +81,13 @@ class Plugin extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to setup the Plugin's API Key and Secret.
+	 * Helper method to setup the Plugin.
 	 *
 	 * @since   1.6.0
 	 *
 	 * @param   AcceptanceTester $I                     Acceptance Tester.
-	 * @param   bool|string      $apiKey                API Key (if specified, used instead of CONVERTKIT_API_KEY).
-	 * @param   bool|string      $apiSecret             API Secret (if specified, used instead of CONVERTKIT_API_SECRET).
+	 * @param   bool|string      $accessToken           Access Token (if specified, used instead of CONVERTKIT_OAUTH_ACCESS_TOKEN).
+	 * @param   bool|string      $refreshToken          Refresh Token (if specified, used instead of CONVERTKIT_OAUTH_REFRESH_TOKEN).
 	 * @param   string           $subscriptionEvent     Subscribe Event.
 	 * @param   bool|string      $subscription          Form, Tag or Sequence to subscribe customer to.
 	 * @param   string           $nameFormat            Name Format.
@@ -97,8 +97,8 @@ class Plugin extends \Codeception\Module
 	 */
 	public function setupConvertKitPlugin(
 		$I,
-		$apiKey = false,
-		$apiSecret = false,
+		$accessToken = false,
+		$refreshToken = false,
 		$subscriptionEvent = 'pending',
 		$subscription = false,
 		$nameFormat = 'first',
@@ -111,8 +111,8 @@ class Plugin extends \Codeception\Module
 			'woocommerce_ckwc_settings',
 			[
 				'enabled'                       => 'yes',
-				'api_key'                       => ( $apiKey !== false ? $apiKey : $_ENV['CONVERTKIT_API_KEY'] ),
-				'api_secret'                    => ( $apiSecret !== false ? $apiSecret : $_ENV['CONVERTKIT_API_SECRET'] ),
+				'access_token'                  => ( $accessToken !== false ? $accessToken : $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] ),
+				'refresh_token'                 => ( $refreshToken !== false ? $refreshToken : $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] ),
 				'event'                         => $subscriptionEvent,
 				'subscription'                  => ( $subscription ? $subscription : '' ),
 				'name_format'                   => $nameFormat,

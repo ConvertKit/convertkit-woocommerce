@@ -205,8 +205,10 @@ class CKWC_Order {
 
 		// Setup the API.
 		$this->api = new CKWC_API(
-			$this->integration->get_option( 'api_key' ),
-			$this->integration->get_option( 'api_secret' ),
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
 			$this->integration->get_option_bool( 'debug' )
 		);
 
@@ -250,6 +252,13 @@ class CKWC_Order {
 		// Call API to subscribe the email address to the given Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
+				// For Legacy Forms, a different endpoint is used.
+				$forms = new CKWC_Resource_Forms();
+				if ( $forms->is_legacy( $resource_id ) ) {
+					$result = $this->api->legacy_form_subscribe( $resource_id, $email, $name, $custom_fields );
+					break;
+				}
+
 				$result = $this->api->form_subscribe( $resource_id, $email, $name, $custom_fields );
 				break;
 
@@ -457,7 +466,7 @@ class CKWC_Order {
 			// we honor the integration's "Name Format" setting.
 			'first_name'       => $this->name( $order ),
 			'currency'         => $order->get_currency(),
-			'transaction_time' => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
+			'transaction_time' => $order->get_date_created(),
 			'subtotal'         => round( floatval( $order->get_subtotal() ), 2 ),
 			'tax'              => round( floatval( $order->get_total_tax( 'edit' ) ), 2 ),
 			'shipping'         => round( floatval( $order->get_shipping_total( 'edit' ) ), 2 ),
@@ -483,13 +492,28 @@ class CKWC_Order {
 
 		// Setup the API.
 		$this->api = new CKWC_API(
-			$this->integration->get_option( 'api_key' ),
-			$this->integration->get_option( 'api_secret' ),
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
 			$this->integration->get_option_bool( 'debug' )
 		);
 
 		// Send purchase data to ConvertKit.
-		$response = $this->api->purchase_create( $purchase );
+		$response = $this->api->create_purchase(
+			$purchase['email_address'],
+			$purchase['transaction_id'],
+			$purchase['products'],
+			$purchase['currency'],
+			$purchase['first_name'],
+			$purchase['status'],
+			$purchase['subtotal'],
+			$purchase['tax'],
+			$purchase['shipping'],
+			$purchase['discount'],
+			$purchase['total'],
+			$purchase['transaction_time']
+		);
 
 		// If an error occured sending the purchase data to ConvertKit, add a WooCommerce Order note and bail.
 		if ( is_wp_error( $response ) ) {
@@ -856,7 +880,7 @@ class CKWC_Order {
 	 * @since   1.4.3
 	 *
 	 * @param   WC_Order|WC_Order_Refund $order  Order.
-	 * @return  mixed                            array | false
+	 * @return  array
 	 */
 	private function custom_field_data( $order ) {
 
@@ -890,15 +914,10 @@ class CKWC_Order {
 		 *
 		 * @since   1.4.3
 		 *
-		 * @param   mixed                       $fields     Custom Field Key/Value pairs (false | array).
+		 * @param   array                       $fields     Custom Field Key/Value pairs (false | array).
 		 * @param   WC_Order|WC_Order_Refund    $order      WooCommerce Order.
 		 */
 		$fields = apply_filters( 'convertkit_for_woocommerce_custom_field_data', $fields, $order );
-
-		// If the fields array is empty, no Custom Field mappings exist.
-		if ( ! count( $fields ) ) {
-			return false;
-		}
 
 		return $fields;
 

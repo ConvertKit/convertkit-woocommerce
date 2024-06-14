@@ -61,6 +61,16 @@ class SettingEnabledDisabledCest
 	 */
 	public function testEnabled(AcceptanceTester $I)
 	{
+		// Setup Plugin.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'       => 'no',
+				'access_token'  => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+				'refresh_token' => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+			]
+		);
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
@@ -87,6 +97,16 @@ class SettingEnabledDisabledCest
 	 */
 	public function testDisabled(AcceptanceTester $I)
 	{
+		// Setup Plugin.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'       => 'yes',
+				'access_token'  => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+				'refresh_token' => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+			]
+		);
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 

@@ -63,7 +63,7 @@ class CouponCest
 	 */
 	public function testCouponFieldsWithIntegrationEnabled(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -100,19 +100,19 @@ class CouponCest
 	/**
 	 * Test that the meta box displayed when adding/editing a Coupon does not
 	 * output a field, and instead tells the user to configure the integration,
-	 * when the integration is enabled but no API Key is specified.
+	 * when the integration is enabled but no credentials are specified.
 	 *
 	 * @since   1.5.9
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testCouponFieldsWithIntegrationEnabledAndNoAPIKey(AcceptanceTester $I)
+	public function testCouponFieldsWithIntegrationEnabledAndNoCredentials(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define no Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'', // No API Key.
-			'', // No API Secret.
+			'', // No Access Token.
+			'', // No Refresh Token.
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -142,19 +142,19 @@ class CouponCest
 
 	/**
 	 * Test that the meta box displayed when adding/editing a Coupon does not
-	 * output PHP errors when the integration is enabled with an invalid API Key.
+	 * output PHP errors when the integration is enabled with invalid credentials
 	 *
 	 * @since   1.5.9
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
-	public function testCouponFieldsWithIntegrationEnabledAndInvalidAPIKey(AcceptanceTester $I)
+	public function testCouponFieldsWithIntegrationEnabledAndInvalidCredentials(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define invalid Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'fakeApiKey',
-			'fakeApiSecret',
+			'fakeAccessToken',
+			'fakeRefreshToken',
 			false, // Don't define a subscribe event.
 			false, // Don't subscribe the customer to anything.
 			'first', // Name format.
@@ -218,7 +218,7 @@ class CouponCest
 	 */
 	public function testBulkEditUsingDefinedForm(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -273,7 +273,7 @@ class CouponCest
 	 */
 	public function testBulkEditWithNoChanges(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.
@@ -334,7 +334,7 @@ class CouponCest
 	 */
 	public function testBulkEditFieldsHiddenWhenNoCouponsFound(AcceptanceTester $I)
 	{
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Populate resoruces.

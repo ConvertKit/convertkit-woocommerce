@@ -40,7 +40,7 @@ class CKWC_CLI_Sync_Past_Orders {
 
 		// Bail if the integration isn't enabled.
 		if ( ! $this->integration->is_enabled() ) {
-			WP_CLI::error( __( 'Please enable the integration at WooCommerce > Settings > Integration > ConvertKit, entering an API Key and Secret.', 'woocommerce-convertkit' ) );
+			WP_CLI::error( __( 'Please connect your ConvertKit account and enable the integration at WooCommerce > Settings > Integration > ConvertKit.', 'woocommerce-convertkit' ) );
 		}
 
 		// Fetch all WooCommerce Orders not sent to ConvertKit.
