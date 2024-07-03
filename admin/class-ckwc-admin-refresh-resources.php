@@ -93,7 +93,7 @@ class CKWC_Admin_Refresh_Resources {
 		// Get integration.
 		$integration = WP_CKWC_Integration();
 
-		// Bail if no API keys are defined.
+		// Bail if the integration is not authenticated with OAuth and not enabled.
 		if ( ! $integration->is_enabled() ) {
 			return;
 		}

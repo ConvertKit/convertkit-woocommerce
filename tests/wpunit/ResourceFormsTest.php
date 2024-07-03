@@ -40,10 +40,10 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 	{
 		parent::setUp();
 
-		// Enable integration, storing API Key and Secret in Plugin's settings.
+		// Enable integration, storing Access Token and Refresh Token in Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'yes' );
-		WP_CKWC_Integration()->update_option( 'api_key', $_ENV['CONVERTKIT_API_KEY'] );
-		WP_CKWC_Integration()->update_option( 'api_secret', $_ENV['CONVERTKIT_API_SECRET'] );
+		WP_CKWC_Integration()->update_option( 'access_token', $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] );
+		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] );
 
 		// Initialize the resource class we want to test.
 		$this->resource = new CKWC_Resource_Forms();
@@ -57,10 +57,10 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function tearDown(): void
 	{
-		// Disable integration, removing API Key and Secret from Plugin's settings.
+		// Disable integration, removing Access Token and Refresh Token from Plugin's settings.
 		WP_CKWC_Integration()->update_option( 'enabled', 'no' );
-		WP_CKWC_Integration()->update_option( 'api_key', '' );
-		WP_CKWC_Integration()->update_option( 'api_secret', '' );
+		WP_CKWC_Integration()->update_option( 'access_token', '' );
+		WP_CKWC_Integration()->update_option( 'refresh_token', '' );
 
 		// Delete Settings and Resources from options table.
 		delete_option($this->settings_key);
@@ -184,8 +184,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('name', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('AAA Test', reset($result)['name']);
-		$this->assertEquals('WooCommerce Product Form', end($result)['name']);
+		$this->assertEquals('WPForms Form', reset($result)['name']);
+		$this->assertEquals('Legacy Form', end($result)['name']);
 	}
 
 	/**
@@ -209,5 +209,39 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		// Confirm that the function returns true, because resources exist.
 		$result = $this->resource->exist();
 		$this->assertSame($result, true);
+	}
+
+
+	/**
+	 * Test that the is_legacy() function returns true for a Legacy Form ID.
+	 *
+	 * @since   1.8.0
+	 */
+	public function testIsLegacyFormWithLegacyFormID()
+	{
+		$this->resource->refresh();
+		$this->assertTrue($this->resource->is_legacy($_ENV['CONVERTKIT_API_LEGACY_FORM_ID']));
+	}
+
+	/**
+	 * Test that the is_legacy() function returns false for a non-Legacy Form ID.
+	 *
+	 * @since   1.8.0
+	 */
+	public function testIsLegacyFormWithFormID()
+	{
+		$this->resource->refresh();
+		$this->assertFalse($this->resource->is_legacy($_ENV['CONVERTKIT_API_FORM_ID']));
+	}
+
+	/**
+	 * Test that the is_legacy() function returns false for an invalid Form ID.
+	 *
+	 * @since   1.8.0
+	 */
+	public function testIsLegacyFormWithInvalidFormID()
+	{
+		$this->resource->refresh();
+		$this->assertFalse($this->resource->is_legacy(12345));
 	}
 }

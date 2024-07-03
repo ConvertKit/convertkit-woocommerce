@@ -53,6 +53,9 @@ class WP_CKWC {
 		// Initialize.
 		add_action( 'woocommerce_init', array( $this, 'woocommerce_init' ) );
 
+		// Update.
+		add_action( 'convertkit_for_woocommerce_initialize_global', array( $this, 'update' ) );
+
 		// Load language files.
 		add_action( 'init', array( $this, 'load_language_files' ) );
 
@@ -244,6 +247,7 @@ class WP_CKWC {
 
 		$this->classes['order']            = new CKWC_Order();
 		$this->classes['review_request']   = new ConvertKit_Review_Request( 'ConvertKit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
+		$this->classes['setup']            = new CKWC_Setup();
 		$this->classes['wc_subscriptions'] = new CKWC_WC_Subscriptions();
 
 		/**
@@ -252,6 +256,19 @@ class WP_CKWC {
 		 * @since   1.4.2
 		 */
 		do_action( 'convertkit_for_woocommerce_initialize_global' );
+
+	}
+
+	/**
+	 * Runs the Plugin's update routine, which checks if
+	 * the Plugin has just been updated to a newer version,
+	 * and if so runs any specific processes that might be needed.
+	 *
+	 * @since   1.8.0
+	 */
+	public function update() {
+
+		$this->get_class( 'setup' )->update();
 
 	}
 

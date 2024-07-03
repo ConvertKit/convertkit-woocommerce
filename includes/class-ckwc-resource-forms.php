@@ -28,4 +28,30 @@ class CKWC_Resource_Forms extends CKWC_Resource {
 	 */
 	public $type = 'forms';
 
+	/**
+	 * Determines if the given Form ID is a legacy Form or Landing Page.
+	 *
+	 * @since   1.8.0
+	 *
+	 * @param   int $id     Form or Landing Page ID.
+	 */
+	public function is_legacy( $id ) {
+
+		// Get Form.
+		$form = $this->get_by_id( (int) $id );
+
+		// Return false if no Form exists.
+		if ( ! $form ) {
+			return false;
+		}
+
+		// If the `format` key exists, this is not a legacy Form.
+		if ( array_key_exists( 'format', $form ) ) {
+			return false;
+		}
+
+		return true;
+
+	}
+
 }

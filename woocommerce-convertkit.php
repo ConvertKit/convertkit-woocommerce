@@ -9,7 +9,7 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.7.3
+ * Version: 1.8.0
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
  * Text Domain: woocommerce-convertkit
@@ -28,14 +28,19 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '1.7.3' );
+define( 'CKWC_PLUGIN_VERSION', '1.8.0' );
+define( 'CKWC_OAUTH_CLIENT_ID', 'L0kyADsB3WP5zO5MvUpXQU64gIntQg9BBAIme17r_7A' );
+define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://app.convertkit.com/wordpress/redirect' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
-if ( ! class_exists( 'ConvertKit_API' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api.php';
+if ( ! trait_exists( 'ConvertKit_API_Traits' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-traits.php';
 }
-if ( ! class_exists( 'ConvertKit_Resource' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource.php';
+if ( ! class_exists( 'ConvertKit_API_V4' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-v4.php';
+}
+if ( ! class_exists( 'ConvertKit_Resource_V4' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource-v4.php';
 }
 if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
 	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php';
@@ -53,6 +58,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-custom-fields.php
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-forms.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-sequences.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-tags.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-setup.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 
 // Load files that are only used in the WordPress Administration interface.

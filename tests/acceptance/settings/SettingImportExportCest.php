@@ -3,7 +3,7 @@
  * Tests various setting combinations across the following settings:
  * - Subscribe Event
  * - Display Opt-In Checkbox
- * - API Keys
+ * - Access and Refresh Tokens
  * - Subscription Form
  *
  * @since   1.4.6
@@ -22,7 +22,7 @@ class SettingImportExportCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Enable Integration and define its API Keys.
+		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
 		// Load Settings screen.
@@ -47,7 +47,8 @@ class SettingImportExportCest
 
 		// Check downloaded file exists and contains some expected information.
 		$I->openFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
-		$I->seeInThisFile('{"settings":{"enabled":"yes","api_key":"' . $_ENV['CONVERTKIT_API_KEY'] . '","api_secret":"' . $_ENV['CONVERTKIT_API_SECRET'] . '"');
+		$I->seeInThisFile('{"settings":{"enabled":"yes"');
+		$I->seeInThisFile('"access_token":"' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] . '","refresh_token":"' . $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] . '",');
 
 		// Delete the file.
 		$I->deleteFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
@@ -74,9 +75,12 @@ class SettingImportExportCest
 		// Confirm success message displays.
 		$I->seeInSource('Configuration imported successfully.');
 
-		// Confirm that the fake API Key and Secret are populated.
-		$I->seeInField('woocommerce_ckwc_api_key', 'fakeApiKey');
-		$I->seeInField('woocommerce_ckwc_api_secret', 'fakeApiSecret');
+		// Confirm that the options table contains the fake Access Token and Refresh Token.
+		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
+		$I->assertArrayHasKey('access_token', $settings);
+		$I->assertArrayHasKey('refresh_token', $settings);
+		$I->assertEquals($settings['access_token'], 'fakeAccessToken');
+		$I->assertEquals($settings['refresh_token'], 'fakeRefreshToken');
 	}
 
 	/**

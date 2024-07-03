@@ -12,7 +12,7 @@
  * @package CKWC
  * @author ConvertKit
  */
-class CKWC_API extends ConvertKit_API {
+class CKWC_API extends ConvertKit_API_V4 {
 
 	/**
 	 * Holds the log class for writing to the log file
@@ -34,16 +34,22 @@ class CKWC_API extends ConvertKit_API {
 	 *
 	 * @since   1.4.2
 	 *
-	 * @param   bool|string $api_key        ConvertKit API Key.
-	 * @param   bool|string $api_secret     ConvertKit API Secret.
-	 * @param   bool|object $debug          Save data to log.
+	 * @param   string      $client_id         OAuth Client ID.
+	 * @param   string      $redirect_uri      OAuth Redirect URI.
+	 * @param   bool|string $access_token      ConvertKit OAuth Access Token.
+	 * @param   bool|string $refresh_token     ConvertKit OAuth Refresh Token.
+	 * @param   bool|object $debug             Save data to log.
+	 * @param   bool|string $context           Context of originating request.
 	 */
-	public function __construct( $api_key = false, $api_secret = false, $debug = false ) {
+	public function __construct( $client_id, $redirect_uri, $access_token = false, $refresh_token = false, $debug = false, $context = false ) {
 
 		// Set API credentials, debugging and logging class.
-		$this->api_key        = $api_key;
-		$this->api_secret     = $api_secret;
+		$this->client_id      = $client_id;
+		$this->redirect_uri   = $redirect_uri;
+		$this->access_token   = $access_token;
+		$this->refresh_token  = $refresh_token;
 		$this->debug          = $debug;
+		$this->context        = $context;
 		$this->plugin_name    = ( defined( 'CKWC_PLUGIN_NAME' ) ? CKWC_PLUGIN_NAME : false );
 		$this->plugin_path    = ( defined( 'CKWC_PLUGIN_PATH' ) ? CKWC_PLUGIN_PATH : false );
 		$this->plugin_url     = ( defined( 'CKWC_PLUGIN_URL' ) ? CKWC_PLUGIN_URL : false );
