@@ -1,11 +1,11 @@
 === ConvertKit for WooCommerce ===
 Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
-Tags: email, marketing, embed form, convertkit, capture, woocommerce
+Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
-Tested up to: 6.5
+Tested up to: 6.5.5
 Requires PHP: 5.6.20
-Stable tag: 1.7.3
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,10 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.8.0 2024-07-04
+* Added: Use ConvertKit v4 API and OAuth
+* Updated: ConvertKit WordPress Libraries to 2.0.0
 
 ### 1.7.3 2024-03-12
 * Updated: ConvertKit WordPress Libraries to 1.4.2
