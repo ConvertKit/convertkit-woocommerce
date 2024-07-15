@@ -51,12 +51,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
-        php-versions: [ '7.4' ] #[ '7.4', '8.0', '8.1' ]
+        wp-versions: [ '6.6-RC3' ] #[ '6.1.1', 'latest' ]
+        php-versions: [ '7.4', '8.0', '8.1', '8.2', '8.3' ] #[ '7.4', '8.0', '8.1' ]
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
-          'acceptance/subscribe'
+          'acceptance/general',
+          'acceptance/integrations',
+          'acceptance/purchase-data',
+          'acceptance/settings',
+          'acceptance/subscribe',
+          'acceptance/sync-past-orders'
         ]
 
     # Steps to install, configure and run tests
