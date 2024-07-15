@@ -307,6 +307,7 @@ class WooCommerce extends \Codeception\Module
 				break;
 
 			case false:
+				$I->waitForElementNotVisible('.blockOverlay');
 				$I->click('button.wc-block-components-checkout-place-order-button');
 				break;
 		}
