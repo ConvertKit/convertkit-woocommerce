@@ -307,11 +307,18 @@ class WooCommerce extends \Codeception\Module
 				break;
 
 			case false:
+				$I->click('button.wc-block-components-checkout-place-order-button');
+
 				// WooCommerce has a bug where clicking the Place Order button the first time doesn't do anything.
 				// This can be reproduced without the ConvertKit for WooCommerce Plugin active, so it's not a conflict.
-				$I->click('button.wc-block-components-checkout-place-order-button');
-				$I->wait(2);
-				$I->click('button.wc-block-components-checkout-place-order-button');
+				// However, it doesn't always happen, so check if the button is still visible, and click it again if so.
+				try {
+					$I->wait(2);
+					$I->seeElement('button.wc-block-components-checkout-place-order-button');
+					$I->click('button.wc-block-components-checkout-place-order-button');
+				} catch (\Exception $e) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+					// Don't throw an error. Continue through the assertions.
+				}
 				break;
 		}
 
