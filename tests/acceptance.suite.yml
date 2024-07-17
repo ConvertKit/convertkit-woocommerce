@@ -70,11 +70,11 @@ modules:
             port: 9515
             window_size: 1920x1080
             capabilities:
-                chromeOptions:
+                goog:chromeOptions:
                     args: [
                         "--headless=new",
                         "--disable-gpu",
-                        "--user-agent=HeadlessChrome"
+                        "--user-agent=%TEST_SITE_HTTP_USER_AGENT%",
                     ]
                     prefs:
                         download.default_directory: '%WP_ROOT_FOLDER%'
