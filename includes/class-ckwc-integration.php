@@ -323,7 +323,7 @@ class CKWC_Integration extends WC_Integration {
 		remove_action( "woocommerce_update_options_integration_{$this->id}", array( $this, 'process_admin_options' ) );
 
 		// Import: Settings.
-		update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $import['settings'] ), 'yes' );
+		update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $import['settings'] ), true );
 
 		// Initialize the settings again, so the imported settings that were saved above are read.
 		$this->init_settings();
