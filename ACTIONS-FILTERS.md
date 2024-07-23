@@ -29,7 +29,7 @@
 					</tr><tr>
 						<td>&nbsp;</td>
 						<td><a href="#convertkit_for_woocommerce_order_send_purchase_data"><code>convertkit_for_woocommerce_order_send_purchase_data</code></a></td>
-						<td>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.convertkit.com/#create-a-purchase</td>
+						<td>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.kit.com/#create-a-purchase</td>
 					</tr><tr>
 						<td>&nbsp;</td>
 						<td><a href="#convertkit_for_woocommerce_order_should_opt_in_customer"><code>convertkit_for_woocommerce_order_should_opt_in_customer</code></a></td>
@@ -200,7 +200,7 @@ add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscript
 						convertkit_for_woocommerce_order_send_purchase_data
 						<code>includes/class-ckwc-order.php::490</code>
 					</h3><h4>Overview</h4>
-						<p>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.convertkit.com/#create-a-purchase</p><h4>Parameters</h4>
+						<p>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.kit.com/#create-a-purchase</p><h4>Parameters</h4>
 					<table>
 						<thead>
 							<tr>

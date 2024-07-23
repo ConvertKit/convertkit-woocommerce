@@ -1,6 +1,6 @@
 === ConvertKit for WooCommerce ===
 Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
-Donate link: https://convertkit.com
+Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 6.6
@@ -13,11 +13,11 @@ Integrates WooCommerce with ConvertKit allowing customers to be automatically se
 
 == Description ==
 
-[ConvertKit](https://convertkit.com) makes it easy to capture more leads and sell more products by easily embedding email capture forms anywhere.
+[ConvertKit](https://kit.com) makes it easy to capture more leads and sell more products by easily embedding email capture forms anywhere.
 
 This Plugin integrates WooCommerce with ConvertKit, allowing customers and purchase data to be automatically sent to your ConvertKit account.
 
-Full plugin documentation is located [here](https://help.convertkit.com/en/articles/2502554-woocommerce-integration).
+Full plugin documentation is located [here](https://help.kit.com/en/articles/2502554-woocommerce-integration).
 
 == Installation ==
 
@@ -28,7 +28,7 @@ Full plugin documentation is located [here](https://help.convertkit.com/en/artic
 
 1. Configure the plugin by navigating to WooCommerce > Settings > in the WordPress Administration Menu, then click the Integration tab > ConvertKit
 2. Enable the integration
-3. Enter your [API Key](https://app.convertkit.com/account_settings/advanced_settings) and API Secret, clicking Save changes
+3. Enter your [API Key](https://app.kit.com/account_settings/advanced_settings) and API Secret, clicking Save changes
 4. Choose the Subscription Form, Tag or Sequence to subscribe Customers to when they complete the WooCommerce Checkout
 5. Configure other settings as necessary, depending on your requirements
 6. (Optional) Configure which Sequence, Form or Tag to subscribe a Customer to when editing individual WooCommerce Products
@@ -37,7 +37,7 @@ Full plugin documentation is located [here](https://help.convertkit.com/en/artic
 
 = Does this plugin require a paid service? =
 
-No. You must first have an account on ConvertKit.com, but you do not have to use a paid plan!
+No. You must first have an account on kit.com, but you do not have to use a paid plan!
 
 == Screenshots ==
 

@@ -8,8 +8,8 @@ Welcome to the ConvertKit WooCommerce Addon for WordPress repository on GitHub. 
 
 If you are having issues setting up this plugin on your WordPress site, or have issues with your ConvertKit forms please do the following:
 
-* Check the [Knowledge Base](https://help.convertkit.com/) for an answer to your question.
-* If you're still having trouble contact [ConvertKit Support](https://convertkit.com/support/).
+* Check the [Knowledge Base](https://help.kit.com/) for an answer to your question.
+* If you're still having trouble contact [ConvertKit Support](https://kit.com/support/).
 
 ## Developers
 

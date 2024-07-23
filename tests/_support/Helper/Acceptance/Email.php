@@ -22,6 +22,6 @@ class Email extends \Codeception\Module
 	{
 		// Include uniqid() as there's a possibility that tests run in parallel on the same PHP version
 		// could request an email address on the same second.
-		return 'wordpress-' . uniqid() . '-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '@convertkit.com';
+		return 'wordpress-' . uniqid() . '-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '@kit.com';
 	}
 }
