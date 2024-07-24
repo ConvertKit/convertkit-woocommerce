@@ -203,9 +203,9 @@ class SyncPastOrdersCest
 		// Confirm that the Settings screen is displayed.
 		$I->seeInSource('Enable ConvertKit integration');
 
-		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', [@TODO PURCHASE DATA ID], true);
 	}
 
 	/**
@@ -277,9 +277,9 @@ class SyncPastOrdersCest
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
 
-		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', [@TODO PURCHASE DATA ID], true);
 	}
 
 	/**

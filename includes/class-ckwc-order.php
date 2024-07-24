@@ -530,10 +530,15 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		$this->mark_purchase_data_sent( $order, $response['id'] );
+		$this->mark_purchase_data_sent( $order, $response['purchase']['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
-		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
+		$order->add_order_note( 
+			sprintf(
+				__( '[ConvertKit] Purchase Data sent successfully: ID [%s]', 'woocommerce-convertkit' ),
+				$response['purchase']['id']
+			)
+		);
 
 		// The customer's purchase data was sent to ConvertKit, so request a Plugin review.
 		// This can safely be called multiple times, as the review request
