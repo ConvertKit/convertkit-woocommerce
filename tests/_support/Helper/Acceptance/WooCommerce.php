@@ -782,9 +782,6 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function wooCommerceOrderNoteExists($I, $orderID, $noteText)
 	{
-		var_dump( $orderID );
-		die();
-		
 		// Logout.
 		$I->logOut();
 
@@ -839,7 +836,7 @@ class WooCommerce extends \Codeception\Module
 	 * @param   AcceptanceTester $I             AcceptanceTester.
 	 * @param   int              $orderID       Order ID.
 	 * @param   string           $metaKey       Meta Key.
-	 * @param 	string 			 $metaValue 	Meta Value.
+	 * @param   string           $metaValue     Meta Value.
 	 * @param   bool             $hposEnabled   If HPOS is enabled.
 	 */
 	public function wooCommerceOrderMetaKeyAndValueExist($I, $orderID, $metaKey, $metaValue, $hposEnabled = false)
@@ -848,7 +845,7 @@ class WooCommerce extends \Codeception\Module
 		// to make it unique for tests run in parallel.
 		// Extract the true order ID.
 		if ( ! is_numeric( $orderID ) ) {
-			$orderIDParts = explode( '-', $result['order_id'] );
+			$orderIDParts = explode( '-', $orderID );
 			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
 		}
 
@@ -857,8 +854,8 @@ class WooCommerce extends \Codeception\Module
 		if ( ! $hposEnabled) {
 			$I->seePostMetaInDatabase(
 				[
-					'post_id'  => $orderID,
-					'meta_key' => $metaKey,
+					'post_id'    => $orderID,
+					'meta_key'   => $metaKey,
 					'meta_value' => $metaValue,
 				]
 			);
@@ -866,8 +863,8 @@ class WooCommerce extends \Codeception\Module
 			$I->seeInDatabase(
 				'wp_wc_orders_meta',
 				[
-					'order_id' => $orderID,
-					'meta_key' => $metaKey,
+					'order_id'   => $orderID,
+					'meta_key'   => $metaKey,
 					'meta_value' => $metaValue,
 				]
 			);

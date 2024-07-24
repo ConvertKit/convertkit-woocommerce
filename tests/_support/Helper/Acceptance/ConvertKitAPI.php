@@ -100,7 +100,7 @@ class ConvertKitAPI extends \Codeception\Module
 	 * @param   int              $orderID        Order ID.
 	 * @param   string           $emailAddress   Email Address.
 	 * @param   int              $productID      Product ID.
-	 * @return  int 							 ConvertKit ID.
+	 * @return  int                              ConvertKit ID.
 	 */
 	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
@@ -159,9 +159,6 @@ class ConvertKitAPI extends \Codeception\Module
 	 */
 	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
 	{
-		var_dump( $orderID );
-		die();
-		
 		// Bail if no purchases exist.
 		if ( ! isset($purchases)) {
 			return [

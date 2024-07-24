@@ -533,8 +533,9 @@ class CKWC_Order {
 		$this->mark_purchase_data_sent( $order, $response['purchase']['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
-		$order->add_order_note( 
+		$order->add_order_note(
 			sprintf(
+				/* translators: ConvertKit Purchase ID */
 				__( '[ConvertKit] Purchase Data sent successfully: ID [%s]', 'woocommerce-convertkit' ),
 				$response['purchase']['id']
 			)
