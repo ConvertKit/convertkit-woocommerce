@@ -829,32 +829,43 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
-	 * Check the given Order ID has the given meta key.
+	 * Check the given Order ID has the given meta key and value pair.
 	 *
 	 * @since   1.6.6
 	 *
 	 * @param   AcceptanceTester $I             AcceptanceTester.
 	 * @param   int              $orderID       Order ID.
 	 * @param   string           $metaKey       Meta Key.
+	 * @param   string           $metaValue     Meta Value.
 	 * @param   bool             $hposEnabled   If HPOS is enabled.
 	 */
-	public function wooCommerceOrderMetaKeyExists($I, $orderID, $metaKey, $hposEnabled = false)
+	public function wooCommerceOrderMetaKeyAndValueExist($I, $orderID, $metaKey, $metaValue, $hposEnabled = false)
 	{
+		// If the $orderID isn't numeric, the Custom Order Number Prefix Plugin has prefixed the Order ID
+		// to make it unique for tests run in parallel.
+		// Extract the true order ID.
+		if ( ! is_numeric( $orderID ) ) {
+			$orderIDParts = explode( '-', $orderID );
+			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
+		}
+
 		// If HPOS is enabled, check the wp_wc_orders_meta table instead, as the Post
 		// Meta isn't used.
 		if ( ! $hposEnabled) {
 			$I->seePostMetaInDatabase(
 				[
-					'post_id'  => $orderID,
-					'meta_key' => $metaKey,
+					'post_id'    => $orderID,
+					'meta_key'   => $metaKey,
+					'meta_value' => $metaValue,
 				]
 			);
 		} else {
 			$I->seeInDatabase(
 				'wp_wc_orders_meta',
 				[
-					'order_id' => $orderID,
-					'meta_key' => $metaKey,
+					'order_id'   => $orderID,
+					'meta_key'   => $metaKey,
+					'meta_value' => $metaValue,
 				]
 			);
 		}
