@@ -128,9 +128,18 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Update settings.
+		error_log( 'update_credentials' );
+		error_log( print_r( $result, true ) );
+
+		error_log( 'Old Access Token from WC Integration Settings: ' . $this->get_access_token() );
+		error_log( 'Old Refresh Token from WC Integration Settings: ' . $this->get_refresh_token() );
+
 		$this->update_option( 'access_token', $result['access_token'] );
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
 		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+
+		error_log( 'New Access Token from WC Integration Settings: ' . $this->get_access_token() );
+		error_log( 'New Refresh Token from WC Integration Settings: ' . $this->get_refresh_token() );
 
 	}
 

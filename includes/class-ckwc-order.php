@@ -71,6 +71,15 @@ class CKWC_Order {
 			return;
 		}
 
+		// Setup the API.
+		$this->api = new CKWC_API(
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
+			$this->integration->get_option_bool( 'debug' )
+		);
+
 		// Subscribe customer's email address to a form, tag or sequence.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_subscribe_customer' ), 99999, 1 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_subscribe_customer' ), 99999, 3 );
@@ -203,15 +212,6 @@ class CKWC_Order {
 		 */
 		$subscriptions = apply_filters( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscriptions', $subscriptions, $order_id, $status_old, $status_new );
 
-		// Setup the API.
-		$this->api = new CKWC_API(
-			CKWC_OAUTH_CLIENT_ID,
-			CKWC_OAUTH_CLIENT_REDIRECT_URI,
-			$this->integration->get_option( 'access_token' ),
-			$this->integration->get_option( 'refresh_token' ),
-			$this->integration->get_option_bool( 'debug' )
-		);
-
 		// Iterate through each subscription (Form, Tag, Sequence), subscribing the Customer to each.
 		foreach ( $subscriptions as $subscription_raw ) {
 			list( $subscription['type'], $subscription['id'] ) = explode( ':', $subscription_raw );
@@ -287,7 +287,12 @@ class CKWC_Order {
 		if ( is_wp_error( $result ) ) {
 			wc_create_order_note(
 				$order_id,
-				$result->get_error_message()
+				sprintf(
+					'[ConvertKit] Customer not subscribed to the %s: [%s]: %s',
+					ucfirst( $resource_type ),
+					$resource_id,
+					$result->get_error_message()
+				)
 			);
 			return;
 		}
@@ -490,15 +495,6 @@ class CKWC_Order {
 		 */
 		$purchase = apply_filters( 'convertkit_for_woocommerce_order_send_purchase_data', $purchase, $order_id, $status_old, $status_new );
 
-		// Setup the API.
-		$this->api = new CKWC_API(
-			CKWC_OAUTH_CLIENT_ID,
-			CKWC_OAUTH_CLIENT_REDIRECT_URI,
-			$this->integration->get_option( 'access_token' ),
-			$this->integration->get_option( 'refresh_token' ),
-			$this->integration->get_option_bool( 'debug' )
-		);
-
 		// Send purchase data to ConvertKit.
 		$response = $this->api->create_purchase(
 			$purchase['email_address'],
@@ -530,10 +526,15 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		$this->mark_purchase_data_sent( $order, $response['id'] );
+		$this->mark_purchase_data_sent( $order, $response['purchase']['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
-		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
+		$order->add_order_note( 
+			sprintf(
+				__( '[ConvertKit] Purchase Data sent successfully: ID [%s]', 'woocommerce-convertkit' ),
+				$response['purchase']['id']
+			)
+		);
 
 		// The customer's purchase data was sent to ConvertKit, so request a Plugin review.
 		// This can safely be called multiple times, as the review request
