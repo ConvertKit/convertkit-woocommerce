@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the ConvertKit for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: ConvertKit for WooCommerce 1.8.1\n"
+"Project-Id-Version: ConvertKit for WooCommerce 1.8.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-18T03:32:29+00:00\n"
+"POT-Creation-Date: 2024-07-25T02:46:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -526,8 +526,9 @@ msgstr ""
 msgid "[ConvertKit] Send Purchase Data Error: %1$s %2$s"
 msgstr ""
 
-#: includes/class-ckwc-order.php:536
-msgid "[ConvertKit] Purchase Data sent successfully"
+#. translators: ConvertKit Purchase ID
+#: includes/class-ckwc-order.php:539
+msgid "[ConvertKit] Purchase Data sent successfully: ID [%s]"
 msgstr ""
 
 #: includes/class-wp-ckwc.php:195
