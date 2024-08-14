@@ -257,7 +257,7 @@ class CKWC_Order {
 
 				// If an error occured, don't attempt to add the subscriber to the Form, as it won't work.
 				if ( is_wp_error( $subscriber ) ) {
-					break;
+					return;
 				}
 
 				// For Legacy Forms, a different endpoint is used.
