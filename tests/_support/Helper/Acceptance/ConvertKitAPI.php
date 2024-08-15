@@ -56,6 +56,9 @@ class ConvertKitAPI extends \Codeception\Module
 			[
 				'email_address'       => $emailAddress,
 				'include_total_count' => true,
+
+				// Check all subscriber states.
+				'status'              => 'all',
 			]
 		);
 

@@ -252,14 +252,23 @@ class CKWC_Order {
 		// Call API to subscribe the email address to the given Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
+				// Subscribe with inactive state.
+				$subscriber = $this->api->create_subscriber( $email, $name, 'inactive', $custom_fields );
+
+				// If an error occured, don't attempt to add the subscriber to the Form, as it won't work.
+				if ( is_wp_error( $subscriber ) ) {
+					return;
+				}
+
 				// For Legacy Forms, a different endpoint is used.
 				$forms = new CKWC_Resource_Forms();
 				if ( $forms->is_legacy( $resource_id ) ) {
-					$result = $this->api->legacy_form_subscribe( $resource_id, $email, $name, $custom_fields );
+					$result = $this->api->add_subscriber_to_legacy_form( $resource_id, $subscriber['subscriber']['id'] );
 					break;
 				}
 
-				$result = $this->api->form_subscribe( $resource_id, $email, $name, $custom_fields );
+				// Add subscriber to form.
+				$result = $this->api->add_subscriber_to_form( $resource_id, $subscriber['subscriber']['id'] );
 				break;
 
 			case 'tag':
