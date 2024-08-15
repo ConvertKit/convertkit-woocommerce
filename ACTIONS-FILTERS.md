@@ -198,7 +198,7 @@ add_filter( 'convertkit_for_woocommerce_order_maybe_subscribe_customer_subscript
 </pre>
 <h3 id="convertkit_for_woocommerce_order_send_purchase_data">
 						convertkit_for_woocommerce_order_send_purchase_data
-						<code>includes/class-ckwc-order.php::490</code>
+						<code>includes/class-ckwc-order.php::499</code>
 					</h3><h4>Overview</h4>
 						<p>Define the data to send to the ConvertKit API to create a Purchase in ConvertKit https://developers.convertkit.com/#create-a-purchase</p><h4>Parameters</h4>
 					<table>
@@ -233,7 +233,7 @@ add_filter( 'convertkit_for_woocommerce_order_send_purchase_data', function( $pu
 </pre>
 <h3 id="convertkit_for_woocommerce_order_should_opt_in_customer">
 						convertkit_for_woocommerce_order_should_opt_in_customer
-						<code>includes/class-ckwc-order.php::720</code>
+						<code>includes/class-ckwc-order.php::729</code>
 					</h3><h4>Overview</h4>
 						<p>Determine if the Customer should be opted in to ConvertKit. If the Order already opted in the Customer, this filter will not be fired. If the Order does not permit the Customer be opted in (i.e. they declined at checkout), this filter will not be fired.</p><h4>Parameters</h4>
 					<table>
@@ -264,7 +264,7 @@ add_filter( 'convertkit_for_woocommerce_order_should_opt_in_customer', function(
 </pre>
 <h3 id="convertkit_for_woocommerce_email">
 						convertkit_for_woocommerce_email
-						<code>includes/class-ckwc-order.php::752</code>
+						<code>includes/class-ckwc-order.php::761</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's email address for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -295,7 +295,7 @@ add_filter( 'convertkit_for_woocommerce_email', function( $email, $order ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_order_name">
 						convertkit_for_woocommerce_order_name
-						<code>includes/class-ckwc-order.php::807</code>
+						<code>includes/class-ckwc-order.php::816</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence, or sending Purchase Data.</p><h4>Parameters</h4>
 					<table>
@@ -326,7 +326,7 @@ add_filter( 'convertkit_for_woocommerce_order_name', function( $name, $order ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_first_name">
 						convertkit_for_woocommerce_first_name
-						<code>includes/class-ckwc-order.php::839</code>
+						<code>includes/class-ckwc-order.php::848</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's first name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -357,7 +357,7 @@ add_filter( 'convertkit_for_woocommerce_first_name', function( $first_name, $ord
 </pre>
 <h3 id="convertkit_for_woocommerce_last_name">
 						convertkit_for_woocommerce_last_name
-						<code>includes/class-ckwc-order.php::871</code>
+						<code>includes/class-ckwc-order.php::880</code>
 					</h3><h4>Overview</h4>
 						<p>Returns the customer's last name for the given WooCommerce Order, immediately before it is sent to ConvertKit when subscribing the Customer to a Form, Tag or Sequence.</p><h4>Parameters</h4>
 					<table>
@@ -388,7 +388,7 @@ add_filter( 'convertkit_for_woocommerce_last_name', function( $last_name, $order
 </pre>
 <h3 id="convertkit_for_woocommerce_custom_field_data">
 						convertkit_for_woocommerce_custom_field_data
-						<code>includes/class-ckwc-order.php::925</code>
+						<code>includes/class-ckwc-order.php::934</code>
 					</h3><h4>Overview</h4>
 						<p>Returns an array of ConvertKit Custom Field Key/Value pairs, with values comprising of Order data based, to be sent to ConvertKit when an Order's Customer is subscribed via a Form, Tag or Sequence. Returns false if no Order data should be stored in ConvertKit Custom Fields.</p><h4>Parameters</h4>
 					<table>

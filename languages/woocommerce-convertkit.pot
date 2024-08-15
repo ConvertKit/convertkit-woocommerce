@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the ConvertKit for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: ConvertKit for WooCommerce 1.8.2\n"
+"Project-Id-Version: ConvertKit for WooCommerce 1.8.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-25T02:46:45+00:00\n"
+"POT-Creation-Date: 2024-08-15T03:33:44+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -488,46 +488,46 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Resource Type
-#: includes/class-ckwc-order.php:279
+#: includes/class-ckwc-order.php:288
 msgid "Resource type %s is not supported in CKWC_Order::subscribe_customer()"
 msgstr ""
 
 #. translators: %1$s: Form Name, %2$s: Form ID
-#: includes/class-ckwc-order.php:312
+#: includes/class-ckwc-order.php:321
 msgid "[ConvertKit] Customer subscribed to the Form: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Tag Name, %2$s: Tag ID
-#: includes/class-ckwc-order.php:329
+#: includes/class-ckwc-order.php:338
 msgid "[ConvertKit] Customer subscribed to the Tag: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Sequence Name, %2$s: Sequence ID
-#: includes/class-ckwc-order.php:347
+#: includes/class-ckwc-order.php:356
 msgid "[ConvertKit] Customer subscribed to the Sequence: %1$s [%2$s]"
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:407
+#: includes/class-ckwc-order.php:416
 msgid "Order ID %s could not be found in WooCommerce."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:421
+#: includes/class-ckwc-order.php:430
 msgid "Order ID %s has already been sent to ConvertKit."
 msgstr ""
 
-#: includes/class-ckwc-order.php:452
+#: includes/class-ckwc-order.php:461
 msgid "[ConvertKit] Purchase Data skipped, as this Order has no Products"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:523
+#: includes/class-ckwc-order.php:532
 msgid "[ConvertKit] Send Purchase Data Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Purchase ID
-#: includes/class-ckwc-order.php:539
+#: includes/class-ckwc-order.php:548
 msgid "[ConvertKit] Purchase Data sent successfully: ID [%s]"
 msgstr ""
 
