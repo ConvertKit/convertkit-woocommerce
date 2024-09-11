@@ -612,6 +612,15 @@ class CKWC_Order {
 			);
 		}
 
+		// Add a note to the WooCommerce Order that the custom fields data sent successfully.
+		$order->add_order_note(
+			sprintf(
+				/* translators: ConvertKit Subscriber ID */
+				__( '[ConvertKit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]', 'woocommerce-convertkit' ),
+				$subscriber_id
+			)
+		);
+
 		// Return.
 		return $response;
 
