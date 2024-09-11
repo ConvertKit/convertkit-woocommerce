@@ -571,8 +571,8 @@ class CKWC_Order {
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
 					__( '[ConvertKit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
-					$response->get_error_code(),
-					$response->get_error_message()
+					$subscriber_id->get_error_code(),
+					$subscriber_id->get_error_message()
 				)
 			);
 
