@@ -556,6 +556,71 @@ class CKWC_Order {
 		// it is never displayed again.
 		WP_CKWC()->get_class( 'review_request' )->request_review();
 
+		// Check if any custom field data needs to be added to the subscriber.
+		$fields = $this->custom_field_data( $order );
+		if ( ! count( $fields ) ) {
+			return $response;
+		}
+
+		// Get subscriber ID by email address.
+		$subscriber_id = $this->api->get_subscriber_id( $purchase['email_address'] );
+
+		// If an error occured fetching the subscriber, add a WooCommerce Order note and bail.
+		if ( is_wp_error( $subscriber_id ) ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
+					__( '[ConvertKit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					$subscriber_id->get_error_code(),
+					$subscriber_id->get_error_message()
+				)
+			);
+
+			return $subscriber_id;
+		}
+
+		// If no subscriber could be found, add a WooCommerce Order note and bail.
+		if ( ! $subscriber_id ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
+					__( '[ConvertKit] Purchase Data: Custom Fields: No subscriber found for email address %s', 'woocommerce-convertkit' ),
+					$purchase['email_address']
+				)
+			);
+
+			return $subscriber_id;
+		}
+
+		// Update subscriber with custom field data.
+		$response = $this->api->update_subscriber(
+			$subscriber_id,
+			$purchase['first_name'],
+			$purchase['email_address'],
+			$fields
+		);
+
+		// If an error occured updating the subscriber, add a WooCommerce Order note.
+		if ( is_wp_error( $response ) ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
+					__( '[ConvertKit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					$response->get_error_code(),
+					$response->get_error_message()
+				)
+			);
+		}
+
+		// Add a note to the WooCommerce Order that the custom fields data sent successfully.
+		$order->add_order_note(
+			sprintf(
+				/* translators: ConvertKit Subscriber ID */
+				__( '[ConvertKit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]', 'woocommerce-convertkit' ),
+				$subscriber_id
+			)
+		);
+
 		// Return.
 		return $response;
 
