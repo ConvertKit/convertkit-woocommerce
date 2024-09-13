@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,11 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.8.4 2024-09-13
+* Added: Map WooCommerce Order Data (Phone, Billing Address etc) to ConvertKit Subscriber's Custom Fields when sending purchase data 
+* Updated: ConvertKit WordPress Libraries to 2.0.2
+* Fix: Don't automatically refresh tokens on non-production sites
 
 ### 1.8.3 2024-08-15
 * Fix: Set subscriber to `inactive` when a ConvertKit Form is specified, honoring the Form's opt in setting.
