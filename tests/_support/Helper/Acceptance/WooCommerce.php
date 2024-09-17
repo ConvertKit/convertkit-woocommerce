@@ -646,11 +646,12 @@ class WooCommerce extends \Codeception\Module
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
+		$I->wait(3);
+
 		// Complete Billing Details.
 		switch ($useLegacyCheckout) {
 			// Legacy Checkout Shortcode.
 			case true:
-				$I->waitForElementVisible('#billing_first_name');
 				$I->fillField('#billing_first_name', 'First');
 				$I->fillField('#billing_last_name', 'Last');
 				$I->fillField('#billing_address_1', 'Address Line 1');
@@ -663,7 +664,6 @@ class WooCommerce extends \Codeception\Module
 
 			// Checkout Block.
 			case false:
-				$I->waitForElementVisible('#billing-first_name');
 				$I->fillField('#billing-first_name', 'First');
 				$I->fillField('#billing-last_name', 'Last');
 				$I->fillField('#billing-address_1', 'Address Line 1');
