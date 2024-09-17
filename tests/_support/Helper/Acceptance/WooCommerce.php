@@ -233,7 +233,8 @@ class WooCommerce extends \Codeception\Module
 			$options['name_format'],
 			$options['custom_fields'],
 			$options['display_opt_in'],
-			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] )
+			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] ),
+			$options['exclude_name_from_address']
 		);
 
 		// Create Product.
