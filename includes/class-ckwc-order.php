@@ -966,6 +966,14 @@ class CKWC_Order {
 
 		$fields = array();
 
+		// If the name and company name should be excluded from the billing and shipping address
+		// fetched using get_formatted_billing_address() / get_formatted_shipping_address(),
+		// add filters now.
+		if ( $this->integration->get_option_bool( 'custom_field_address_exclude_name' ) ) {
+			add_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'remove_name_from_address' ) );
+			add_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'remove_name_from_address' ) );
+		}
+
 		if ( $this->integration->get_option( 'custom_field_last_name' ) ) {
 			$fields[ $this->integration->get_option( 'custom_field_last_name' ) ] = $order->get_billing_last_name();
 		}
@@ -985,6 +993,14 @@ class CKWC_Order {
 			$fields[ $this->integration->get_option( 'custom_field_customer_note' ) ] = $order->get_customer_note();
 		}
 
+		// If the name and company name should be excluded from the billing and shipping address
+		// fetched using get_formatted_billing_address() / get_formatted_shipping_address(),
+		// remove filters now so these WooCommerce functions work correctly for other Plugins.
+		if ( $this->integration->get_option_bool( 'custom_field_address_exclude_name' ) ) {
+			remove_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'remove_name_from_address' ) );
+			remove_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'remove_name_from_address' ) );
+		}
+
 		/**
 		 * Returns an array of ConvertKit Custom Field Key/Value pairs, with values
 		 * comprising of Order data based, to be sent to ConvertKit when an Order's
@@ -1000,6 +1016,22 @@ class CKWC_Order {
 		$fields = apply_filters( 'convertkit_for_woocommerce_custom_field_data', $fields, $order );
 
 		return $fields;
+
+	}
+
+	/**
+	 * Removes the first name, last name and company name from the WooCommerce Order address,
+	 * when calling WC_Order->get_formatted_billing_address() and WC_Order->get_formatted_shipping_address().
+	 *
+	 * @since   1.8.5
+	 *
+	 * @param   array $address    Billing or Shipping Address.
+	 * @return  array
+	 */
+	public function remove_name_from_address( $address ) {
+
+		unset( $address['first_name'], $address['last_name'], $address['company_name'] );
+		return $address;
 
 	}
 

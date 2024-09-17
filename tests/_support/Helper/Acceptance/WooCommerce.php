@@ -210,6 +210,7 @@ class WooCommerce extends \Codeception\Module
 			'send_purchase_data'        => false,
 			'product_form_tag_sequence' => false,
 			'custom_fields'             => false,
+			'exclude_name_from_address' => false,
 			'name_format'               => 'first',
 			'coupon_form_tag_sequence'  => false,
 			'use_legacy_checkout'       => true,

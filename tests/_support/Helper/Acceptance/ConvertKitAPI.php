@@ -215,14 +215,15 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the subscriber array's custom field data is valid.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester.
-	 * @param   array            $subscriber     Subscriber from API.
+	 * @param   AcceptanceTester $I                         AcceptanceTester.
+	 * @param   array            $subscriber                Subscriber from API.
+	 * @param   bool             $excludeNameFromAddress    Exclude name from billing address.
 	 */
-	public function apiCustomFieldDataIsValid($I, $subscriber)
+	public function apiCustomFieldDataIsValid($I, $subscriber, $excludeNameFromAddress = false)
 	{
 		$I->assertEquals($subscriber['fields']['last_name'], 'Last');
 		$I->assertEquals($subscriber['fields']['phone_number'], '123-123-1234');
-		$I->assertEquals($subscriber['fields']['billing_address'], 'First Last, Address Line 1, City, CA 12345');
+		$I->assertEquals($subscriber['fields']['billing_address'], ( $excludeNameFromAddress ? 'Address Line 1, City, CA 12345' : 'First Last, Address Line 1, City, CA 12345' ));
 		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
 		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
 	}
