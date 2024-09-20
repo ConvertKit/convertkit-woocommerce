@@ -646,6 +646,8 @@ class WooCommerce extends \Codeception\Module
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
+		$I->wait(3);
+
 		// Complete Billing Details.
 		switch ($useLegacyCheckout) {
 			// Legacy Checkout Shortcode.
