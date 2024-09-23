@@ -53,6 +53,7 @@ class SettingCustomFieldsCest
 		$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
 		$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+		$I->checkOption('#woocommerce_ckwc_custom_field_address_exclude_name');
 		$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
 		$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
 
@@ -67,6 +68,7 @@ class SettingCustomFieldsCest
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
+		$I->seeCheckboxIsChecked('#woocommerce_ckwc_custom_field_address_exclude_name');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
 	}

@@ -180,6 +180,46 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Simple' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 * - The Customer's name is not included in the address custom field.
+	 *
+	 * @since   1.8.5
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormCustomFieldsAndExcludeNameFromAddressOnSimpleProduct(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'display_opt_in'            => true,
+				'check_opt_in'              => true,
+				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'        => 'processing',
+				'custom_fields'             => true,
+				'exclude_name_from_address' => true,
+				'use_legacy_checkout'       => false,
+			]
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data exists and is correct, and the name
+		// is not included in the address.
+		$I->apiCustomFieldDataIsValid($I, $subscriber, true);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - Order data is mapped to ConvertKit Custom fields in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
 	 *
 	 * @since   1.4.3
 	 *
