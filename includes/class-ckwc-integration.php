@@ -571,7 +571,7 @@ class CKWC_Integration extends WC_Integration {
 				'class'       => 'enabled subscribe',
 			),
 			'custom_field_address_exclude_name' => array(
-				'title'       => __( 'Exclude Name from Billing + Shipping Addresses', 'woocommerce-convertkit' ),
+				'title'       => __( 'Exclude Name from Billing & Shipping Addresses', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __( 'If enabled, removes the order\'s first name, last name and company name when storing the billing and shipping address above.', 'woocommerce-convertkit' ),
