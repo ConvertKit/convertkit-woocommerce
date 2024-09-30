@@ -172,7 +172,7 @@ jobs:
       - name: Start chromedriver
         run: |
           export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
+          chromedriver --port=9515 --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1920x1080x24 > /dev/null 2>&1 & # optional
 
       # Write any secrets, such as API keys, to the .env.dist.testing file now.
@@ -218,6 +218,7 @@ jobs:
       # This ensures WooCommerce log files can be written to.
       - name: Set Permissions for WooCommerce Logs Directory
         run: |
+          sudo mkdir ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
           sudo chmod g+w ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
           sudo chown www-data:www-data ${{ env.ROOT_DIR }}/wp-content/uploads/wc-logs
 

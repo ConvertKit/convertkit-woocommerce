@@ -85,15 +85,16 @@ class Plugin extends \Codeception\Module
 	 *
 	 * @since   1.6.0
 	 *
-	 * @param   AcceptanceTester $I                     Acceptance Tester.
-	 * @param   bool|string      $accessToken           Access Token (if specified, used instead of CONVERTKIT_OAUTH_ACCESS_TOKEN).
-	 * @param   bool|string      $refreshToken          Refresh Token (if specified, used instead of CONVERTKIT_OAUTH_REFRESH_TOKEN).
-	 * @param   string           $subscriptionEvent     Subscribe Event.
-	 * @param   bool|string      $subscription          Form, Tag or Sequence to subscribe customer to.
-	 * @param   string           $nameFormat            Name Format.
-	 * @param   bool             $mapCustomFields       Map Order data to Custom Fields.
-	 * @param   bool             $displayOptIn          Display Opt-In Checkbox.
-	 * @param   bool             $sendPurchaseDataEvent Send Purchase Data to ConvertKit on Order Event.
+	 * @param   AcceptanceTester $I                      Acceptance Tester.
+	 * @param   bool|string      $accessToken            Access Token (if specified, used instead of CONVERTKIT_OAUTH_ACCESS_TOKEN).
+	 * @param   bool|string      $refreshToken           Refresh Token (if specified, used instead of CONVERTKIT_OAUTH_REFRESH_TOKEN).
+	 * @param   string           $subscriptionEvent      Subscribe Event.
+	 * @param   bool|string      $subscription           Form, Tag or Sequence to subscribe customer to.
+	 * @param   string           $nameFormat             Name Format.
+	 * @param   bool             $mapCustomFields        Map Order data to Custom Fields.
+	 * @param   bool             $displayOptIn           Display Opt-In Checkbox.
+	 * @param   bool             $sendPurchaseDataEvent  Send Purchase Data to ConvertKit on Order Event.
+	 * @param   bool             $excludeNameFromAddress Exclude name from billing and shipping addresses.
 	 */
 	public function setupConvertKitPlugin(
 		$I,
@@ -104,39 +105,41 @@ class Plugin extends \Codeception\Module
 		$nameFormat = 'first',
 		$mapCustomFields = false,
 		$displayOptIn = false,
-		$sendPurchaseDataEvent = false
+		$sendPurchaseDataEvent = false,
+		$excludeNameFromAddress = false
 	) {
 		// Define Plugin's settings.
 		$I->haveOptionInDatabase(
 			'woocommerce_ckwc_settings',
 			[
-				'enabled'                       => 'yes',
-				'access_token'                  => ( $accessToken !== false ? $accessToken : $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] ),
-				'refresh_token'                 => ( $refreshToken !== false ? $refreshToken : $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] ),
-				'event'                         => $subscriptionEvent,
-				'subscription'                  => ( $subscription ? $subscription : '' ),
-				'name_format'                   => $nameFormat,
+				'enabled'                           => 'yes',
+				'access_token'                      => ( $accessToken !== false ? $accessToken : $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] ),
+				'refresh_token'                     => ( $refreshToken !== false ? $refreshToken : $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] ),
+				'event'                             => $subscriptionEvent,
+				'subscription'                      => ( $subscription ? $subscription : '' ),
+				'name_format'                       => $nameFormat,
 
 				// Custom Field mappings.
-				'custom_field_last_name'        => ( $mapCustomFields ? 'last_name' : '' ),
-				'custom_field_phone'            => ( $mapCustomFields ? 'phone_number' : '' ),
-				'custom_field_billing_address'  => ( $mapCustomFields ? 'billing_address' : '' ),
-				'custom_field_shipping_address' => ( $mapCustomFields ? 'shipping_address' : '' ),
-				'custom_field_payment_method'   => ( $mapCustomFields ? 'payment_method' : '' ),
-				'custom_field_customer_note'    => ( $mapCustomFields ? 'notes' : '' ),
+				'custom_field_last_name'            => ( $mapCustomFields ? 'last_name' : '' ),
+				'custom_field_phone'                => ( $mapCustomFields ? 'phone_number' : '' ),
+				'custom_field_billing_address'      => ( $mapCustomFields ? 'billing_address' : '' ),
+				'custom_field_shipping_address'     => ( $mapCustomFields ? 'shipping_address' : '' ),
+				'custom_field_payment_method'       => ( $mapCustomFields ? 'payment_method' : '' ),
+				'custom_field_customer_note'        => ( $mapCustomFields ? 'notes' : '' ),
+				'custom_field_address_exclude_name' => ( $excludeNameFromAddress ? 'yes' : 'no' ),
 
 				// Opt-In Checkbox.
-				'display_opt_in'                => ( $displayOptIn ? 'yes' : 'no' ),
-				'opt_in_label'                  => 'I want to subscribe to the newsletter',
-				'opt_in_status'                 => 'checked',
-				'opt_in_location'               => 'billing',
+				'display_opt_in'                    => ( $displayOptIn ? 'yes' : 'no' ),
+				'opt_in_label'                      => 'I want to subscribe to the newsletter',
+				'opt_in_status'                     => 'checked',
+				'opt_in_location'                   => 'billing',
 
 				// Purchase Data.
-				'send_purchases'                => ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
-				'send_purchases_event'          => ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
+				'send_purchases'                    => ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
+				'send_purchases_event'              => ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
 
 				// Debug.
-				'debug'                         => 'yes',
+				'debug'                             => 'yes',
 			]
 		);
 	}

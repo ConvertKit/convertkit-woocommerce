@@ -252,14 +252,23 @@ class CKWC_Order {
 		// Call API to subscribe the email address to the given Form, Tag or Sequence.
 		switch ( $resource_type ) {
 			case 'form':
+				// Subscribe with inactive state.
+				$subscriber = $this->api->create_subscriber( $email, $name, 'inactive', $custom_fields );
+
+				// If an error occured, don't attempt to add the subscriber to the Form, as it won't work.
+				if ( is_wp_error( $subscriber ) ) {
+					return;
+				}
+
 				// For Legacy Forms, a different endpoint is used.
 				$forms = new CKWC_Resource_Forms();
 				if ( $forms->is_legacy( $resource_id ) ) {
-					$result = $this->api->legacy_form_subscribe( $resource_id, $email, $name, $custom_fields );
+					$result = $this->api->add_subscriber_to_legacy_form( $resource_id, $subscriber['subscriber']['id'] );
 					break;
 				}
 
-				$result = $this->api->form_subscribe( $resource_id, $email, $name, $custom_fields );
+				// Add subscriber to form.
+				$result = $this->api->add_subscriber_to_form( $resource_id, $subscriber['subscriber']['id'] );
 				break;
 
 			case 'tag':
@@ -530,16 +539,87 @@ class CKWC_Order {
 		}
 
 		// Mark the purchase data as being sent, so future Order status transitions don't send it again.
-		$this->mark_purchase_data_sent( $order, $response['id'] );
+		$this->mark_purchase_data_sent( $order, $response['purchase']['id'] );
 
 		// Add a note to the WooCommerce Order that the purchase data sent successfully.
-		$order->add_order_note( __( '[ConvertKit] Purchase Data sent successfully', 'woocommerce-convertkit' ) );
+		$order->add_order_note(
+			sprintf(
+				/* translators: ConvertKit Purchase ID */
+				__( '[ConvertKit] Purchase Data sent successfully: ID [%s]', 'woocommerce-convertkit' ),
+				$response['purchase']['id']
+			)
+		);
 
 		// The customer's purchase data was sent to ConvertKit, so request a Plugin review.
 		// This can safely be called multiple times, as the review request
 		// class will ensure once a review request is dismissed by the user,
 		// it is never displayed again.
 		WP_CKWC()->get_class( 'review_request' )->request_review();
+
+		// Check if any custom field data needs to be added to the subscriber.
+		$fields = $this->custom_field_data( $order );
+		if ( ! count( $fields ) ) {
+			return $response;
+		}
+
+		// Get subscriber ID by email address.
+		$subscriber_id = $this->api->get_subscriber_id( $purchase['email_address'] );
+
+		// If an error occured fetching the subscriber, add a WooCommerce Order note and bail.
+		if ( is_wp_error( $subscriber_id ) ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
+					__( '[ConvertKit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					$subscriber_id->get_error_code(),
+					$subscriber_id->get_error_message()
+				)
+			);
+
+			return $subscriber_id;
+		}
+
+		// If no subscriber could be found, add a WooCommerce Order note and bail.
+		if ( ! $subscriber_id ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
+					__( '[ConvertKit] Purchase Data: Custom Fields: No subscriber found for email address %s', 'woocommerce-convertkit' ),
+					$purchase['email_address']
+				)
+			);
+
+			return $subscriber_id;
+		}
+
+		// Update subscriber with custom field data.
+		$response = $this->api->update_subscriber(
+			$subscriber_id,
+			$purchase['first_name'],
+			$purchase['email_address'],
+			$fields
+		);
+
+		// If an error occured updating the subscriber, add a WooCommerce Order note.
+		if ( is_wp_error( $response ) ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Error Code, %2$s: Error Message */
+					__( '[ConvertKit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					$response->get_error_code(),
+					$response->get_error_message()
+				)
+			);
+		}
+
+		// Add a note to the WooCommerce Order that the custom fields data sent successfully.
+		$order->add_order_note(
+			sprintf(
+				/* translators: ConvertKit Subscriber ID */
+				__( '[ConvertKit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]', 'woocommerce-convertkit' ),
+				$subscriber_id
+			)
+		);
 
 		// Return.
 		return $response;
@@ -886,6 +966,14 @@ class CKWC_Order {
 
 		$fields = array();
 
+		// If the name and company name should be excluded from the billing and shipping address
+		// fetched using get_formatted_billing_address() / get_formatted_shipping_address(),
+		// add filters now.
+		if ( $this->integration->get_option_bool( 'custom_field_address_exclude_name' ) ) {
+			add_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'remove_name_from_address' ) );
+			add_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'remove_name_from_address' ) );
+		}
+
 		if ( $this->integration->get_option( 'custom_field_last_name' ) ) {
 			$fields[ $this->integration->get_option( 'custom_field_last_name' ) ] = $order->get_billing_last_name();
 		}
@@ -905,6 +993,14 @@ class CKWC_Order {
 			$fields[ $this->integration->get_option( 'custom_field_customer_note' ) ] = $order->get_customer_note();
 		}
 
+		// If the name and company name should be excluded from the billing and shipping address
+		// fetched using get_formatted_billing_address() / get_formatted_shipping_address(),
+		// remove filters now so these WooCommerce functions work correctly for other Plugins.
+		if ( $this->integration->get_option_bool( 'custom_field_address_exclude_name' ) ) {
+			remove_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'remove_name_from_address' ) );
+			remove_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'remove_name_from_address' ) );
+		}
+
 		/**
 		 * Returns an array of ConvertKit Custom Field Key/Value pairs, with values
 		 * comprising of Order data based, to be sent to ConvertKit when an Order's
@@ -920,6 +1016,22 @@ class CKWC_Order {
 		$fields = apply_filters( 'convertkit_for_woocommerce_custom_field_data', $fields, $order );
 
 		return $fields;
+
+	}
+
+	/**
+	 * Removes the first name, last name and company name from the WooCommerce Order address,
+	 * when calling WC_Order->get_formatted_billing_address() and WC_Order->get_formatted_shipping_address().
+	 *
+	 * @since   1.8.5
+	 *
+	 * @param   array $address    Billing or Shipping Address.
+	 * @return  array
+	 */
+	public function remove_name_from_address( $address ) {
+
+		unset( $address['first_name'], $address['last_name'], $address['company_name'] );
+		return $address;
 
 	}
 

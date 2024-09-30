@@ -53,14 +53,123 @@ class PurchaseDataCest
 			$I,
 			[
 				'send_purchase_data' => true,
+				'custom_fields'      => false,
 			]
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
+
+		// Confirm that the email address was added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
+		// in the integration's settings.
+		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
+	}
+
+	/**
+	 * Test that the Customer's purchase is sent to ConvertKit with custom field data when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The opt in settings are disabled, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Order is created via the frontend checkout.
+	 *
+	 * @since   1.8.4
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testSendPurchaseDataWithCustomFieldsOnSimpleProductCheckout(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'display_opt_in'     => false,
+				'check_opt_in'       => false,
+				'send_purchase_data' => true,
+				'custom_fields'      => true,
+			]
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data exists and is correct.
+		$I->apiCustomFieldDataIsValid($I, $subscriber);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the custom field data was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data: Custom Fields sent successfully: Subscriber ID [' . $subscriber['id'] . ']');
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
+	}
+
+	/**
+	 * Test that the Customer's purchase is sent to ConvertKit with custom field data when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The opt in settings are disabled, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Order is created via the frontend checkout.
+	 * - The Address Custom Fields in ConvertKit do not include the name
+	 *
+	 * @since   1.8.5
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testSendPurchaseDataWithCustomFieldsAndExcludeNameFromAddressOnSimpleProductCheckout(AcceptanceTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'display_opt_in'            => false,
+				'check_opt_in'              => false,
+				'send_purchase_data'        => true,
+				'custom_fields'             => true,
+				'exclude_name_from_address' => true,
+			]
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data exists and is correct, and the name
+		// is not included in the address.
+		$I->apiCustomFieldDataIsValid($I, $subscriber, true);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the custom field data was added to ConvertKit.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data: Custom Fields sent successfully: Subscriber ID [' . $subscriber['id'] . ']');
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
 	}
 
 	/**
@@ -107,10 +216,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -162,10 +275,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -234,10 +351,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -324,10 +445,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -414,10 +539,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -504,10 +633,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -584,10 +717,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -664,10 +801,14 @@ class PurchaseDataCest
 		);
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -737,10 +878,14 @@ class PurchaseDataCest
 		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -806,10 +951,14 @@ class PurchaseDataCest
 		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First Last');
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);

@@ -56,6 +56,9 @@ class ConvertKitAPI extends \Codeception\Module
 			[
 				'email_address'       => $emailAddress,
 				'include_total_count' => true,
+
+				// Check all subscriber states.
+				'status'              => 'all',
 			]
 		);
 
@@ -100,6 +103,7 @@ class ConvertKitAPI extends \Codeception\Module
 	 * @param   int              $orderID        Order ID.
 	 * @param   string           $emailAddress   Email Address.
 	 * @param   int              $productID      Product ID.
+	 * @return  int                              ConvertKit ID.
 	 */
 	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
@@ -122,6 +126,9 @@ class ConvertKitAPI extends \Codeception\Module
 
 		// Check that the Product exists in the purchase data.
 		$I->assertTrue($productExistsInPurchase);
+
+		// Return the ConvertKit ID.
+		return $purchase['id'];
 	}
 
 	/**
@@ -178,7 +185,7 @@ class ConvertKitAPI extends \Codeception\Module
 		return [
 			'id'            => 0,
 			'order_id'      => 0,
-			'email_address' => 'no2',
+			'email_address' => 'no',
 		];
 	}
 
@@ -208,14 +215,15 @@ class ConvertKitAPI extends \Codeception\Module
 	/**
 	 * Check the subscriber array's custom field data is valid.
 	 *
-	 * @param   AcceptanceTester $I             AcceptanceTester.
-	 * @param   array            $subscriber     Subscriber from API.
+	 * @param   AcceptanceTester $I                         AcceptanceTester.
+	 * @param   array            $subscriber                Subscriber from API.
+	 * @param   bool             $excludeNameFromAddress    Exclude name from billing address.
 	 */
-	public function apiCustomFieldDataIsValid($I, $subscriber)
+	public function apiCustomFieldDataIsValid($I, $subscriber, $excludeNameFromAddress = false)
 	{
 		$I->assertEquals($subscriber['fields']['last_name'], 'Last');
 		$I->assertEquals($subscriber['fields']['phone_number'], '123-123-1234');
-		$I->assertEquals($subscriber['fields']['billing_address'], 'First Last, Address Line 1, City, CA 12345');
+		$I->assertEquals($subscriber['fields']['billing_address'], ( $excludeNameFromAddress ? 'Address Line 1, City, CA 12345' : 'First Last, Address Line 1, City, CA 12345' ));
 		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
 		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
 	}

@@ -192,7 +192,7 @@ class SyncPastOrdersCest
 		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
@@ -203,9 +203,9 @@ class SyncPastOrdersCest
 		// Confirm that the Settings screen is displayed.
 		$I->seeInSource('Enable ConvertKit integration');
 
-		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**
@@ -272,14 +272,14 @@ class SyncPastOrdersCest
 		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
 
-		// Confirm that the Transaction ID is stored in the Order's metdata.
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_sent', true);
-		$I->wooCommerceOrderMetaKeyExists($I, $postID, 'ckwc_purchase_data_id', true);
+		// Confirm that the Transaction ID is stored in the Order's metadata.
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
 
 	/**

@@ -210,6 +210,7 @@ class WooCommerce extends \Codeception\Module
 			'send_purchase_data'        => false,
 			'product_form_tag_sequence' => false,
 			'custom_fields'             => false,
+			'exclude_name_from_address' => false,
 			'name_format'               => 'first',
 			'coupon_form_tag_sequence'  => false,
 			'use_legacy_checkout'       => true,
@@ -232,7 +233,8 @@ class WooCommerce extends \Codeception\Module
 			$options['name_format'],
 			$options['custom_fields'],
 			$options['display_opt_in'],
-			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] )
+			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] ),
+			$options['exclude_name_from_address']
 		);
 
 		// Create Product.
@@ -646,6 +648,8 @@ class WooCommerce extends \Codeception\Module
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
+		$I->wait(3);
+
 		// Complete Billing Details.
 		switch ($useLegacyCheckout) {
 			// Legacy Checkout Shortcode.
@@ -829,32 +833,43 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
-	 * Check the given Order ID has the given meta key.
+	 * Check the given Order ID has the given meta key and value pair.
 	 *
 	 * @since   1.6.6
 	 *
 	 * @param   AcceptanceTester $I             AcceptanceTester.
 	 * @param   int              $orderID       Order ID.
 	 * @param   string           $metaKey       Meta Key.
+	 * @param   string           $metaValue     Meta Value.
 	 * @param   bool             $hposEnabled   If HPOS is enabled.
 	 */
-	public function wooCommerceOrderMetaKeyExists($I, $orderID, $metaKey, $hposEnabled = false)
+	public function wooCommerceOrderMetaKeyAndValueExist($I, $orderID, $metaKey, $metaValue, $hposEnabled = false)
 	{
+		// If the $orderID isn't numeric, the Custom Order Number Prefix Plugin has prefixed the Order ID
+		// to make it unique for tests run in parallel.
+		// Extract the true order ID.
+		if ( ! is_numeric( $orderID ) ) {
+			$orderIDParts = explode( '-', $orderID );
+			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
+		}
+
 		// If HPOS is enabled, check the wp_wc_orders_meta table instead, as the Post
 		// Meta isn't used.
 		if ( ! $hposEnabled) {
 			$I->seePostMetaInDatabase(
 				[
-					'post_id'  => $orderID,
-					'meta_key' => $metaKey,
+					'post_id'    => $orderID,
+					'meta_key'   => $metaKey,
+					'meta_value' => $metaValue,
 				]
 			);
 		} else {
 			$I->seeInDatabase(
 				'wp_wc_orders_meta',
 				[
-					'order_id' => $orderID,
-					'meta_key' => $metaKey,
+					'order_id'   => $orderID,
+					'meta_key'   => $metaKey,
+					'meta_value' => $metaValue,
 				]
 			);
 		}

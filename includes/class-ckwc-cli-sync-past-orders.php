@@ -96,7 +96,7 @@ class CKWC_CLI_Sync_Past_Orders {
 					/* translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID */
 					__( 'WooCommerce Order ID #%1$s added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
 					$id,
-					$result['id']
+					$result['purchase']['id']
 				)
 			);
 		}
