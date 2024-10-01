@@ -103,7 +103,7 @@ class PurchaseDataCest
 		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the purchase was added to ConvertKit.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[ConvertKit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[Kit] Purchase Data sent successfully: ID [' . $purchaseDataID . ']');
 
 		// Confirm that the Transaction ID is stored in the Order's metadata.
 		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_sent', 'yes', true);
