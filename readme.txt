@@ -1,4 +1,4 @@
-=== ConvertKit (formerly Kit) for WooCommerce ===
+=== Kit (formerly ConvertKit) for WooCommerce ===
 Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
