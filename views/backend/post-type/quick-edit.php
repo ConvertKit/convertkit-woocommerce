@@ -8,7 +8,7 @@
 
 ?>
 <div id="ckwc-quick-edit" class="ckwc-bulk-quick-edit">
-	<h4><?php esc_html_e( 'ConvertKit for WooCommerce', 'woocommerce-convertkit' ); ?></h4>
+	<h4><?php esc_html_e( 'Kit for WooCommerce', 'woocommerce-convertkit' ); ?></h4>
 
 	<div>
 		<?php

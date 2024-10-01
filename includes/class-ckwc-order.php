@@ -318,7 +318,7 @@ class CKWC_Order {
 					$order_id,
 					sprintf(
 						/* translators: %1$s: Form Name, %2$s: Form ID */
-						__( '[ConvertKit] Customer subscribed to the Form: %1$s [%2$s]', 'woocommerce-convertkit' ),
+						__( '[Kit] Customer subscribed to the Form: %1$s [%2$s]', 'woocommerce-convertkit' ),
 						( $form ? $form['name'] : '' ),
 						$resource_id
 					)
@@ -335,7 +335,7 @@ class CKWC_Order {
 					$order_id,
 					sprintf(
 						/* translators: %1$s: Tag Name, %2$s: Tag ID */
-						__( '[ConvertKit] Customer subscribed to the Tag: %1$s [%2$s]', 'woocommerce-convertkit' ),
+						__( '[Kit] Customer subscribed to the Tag: %1$s [%2$s]', 'woocommerce-convertkit' ),
 						( $tag ? $tag['name'] : '' ),
 						$resource_id
 					)
@@ -353,7 +353,7 @@ class CKWC_Order {
 					$order_id,
 					sprintf(
 						/* translators: %1$s: Sequence Name, %2$s: Sequence ID */
-						__( '[ConvertKit] Customer subscribed to the Sequence: %1$s [%2$s]', 'woocommerce-convertkit' ),
+						__( '[Kit] Customer subscribed to the Sequence: %1$s [%2$s]', 'woocommerce-convertkit' ),
 						( $sequence ? $sequence['name'] : '' ),
 						$resource_id
 					)
@@ -427,7 +427,7 @@ class CKWC_Order {
 				'convertkit_for_woocommerce_error_order_exists',
 				sprintf(
 					/* translators: WooCommerce Order ID */
-					__( 'Order ID %s has already been sent to ConvertKit.', 'woocommerce-convertkit' ),
+					__( 'Order ID %s has already been sent to Kit.', 'woocommerce-convertkit' ),
 					$order_id
 				)
 			);
@@ -458,7 +458,7 @@ class CKWC_Order {
 			$this->mark_purchase_data_sent( $order, 0 );
 
 			// Add a note to the WooCommerce Order that no purchase data was sent.
-			$order->add_order_note( __( '[ConvertKit] Purchase Data skipped, as this Order has no Products', 'woocommerce-convertkit' ) );
+			$order->add_order_note( __( '[Kit] Purchase Data skipped, as this Order has no Products', 'woocommerce-convertkit' ) );
 
 			// Return.
 			return true;
@@ -529,7 +529,7 @@ class CKWC_Order {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
-					__( '[ConvertKit] Send Purchase Data Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					__( '[Kit] Send Purchase Data Error: %1$s %2$s', 'woocommerce-convertkit' ),
 					$response->get_error_code(),
 					$response->get_error_message()
 				)
@@ -545,7 +545,7 @@ class CKWC_Order {
 		$order->add_order_note(
 			sprintf(
 				/* translators: ConvertKit Purchase ID */
-				__( '[ConvertKit] Purchase Data sent successfully: ID [%s]', 'woocommerce-convertkit' ),
+				__( '[Kit] Purchase Data sent successfully: ID [%s]', 'woocommerce-convertkit' ),
 				$response['purchase']['id']
 			)
 		);
@@ -570,7 +570,7 @@ class CKWC_Order {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
-					__( '[ConvertKit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					__( '[Kit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
 					$subscriber_id->get_error_code(),
 					$subscriber_id->get_error_message()
 				)
@@ -584,7 +584,7 @@ class CKWC_Order {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
-					__( '[ConvertKit] Purchase Data: Custom Fields: No subscriber found for email address %s', 'woocommerce-convertkit' ),
+					__( '[Kit] Purchase Data: Custom Fields: No subscriber found for email address %s', 'woocommerce-convertkit' ),
 					$purchase['email_address']
 				)
 			);
@@ -605,7 +605,7 @@ class CKWC_Order {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
-					__( '[ConvertKit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
+					__( '[Kit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
 					$response->get_error_code(),
 					$response->get_error_message()
 				)
@@ -616,7 +616,7 @@ class CKWC_Order {
 		$order->add_order_note(
 			sprintf(
 				/* translators: ConvertKit Subscriber ID */
-				__( '[ConvertKit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]', 'woocommerce-convertkit' ),
+				__( '[Kit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]', 'woocommerce-convertkit' ),
 				$subscriber_id
 			)
 		);

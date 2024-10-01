@@ -49,9 +49,9 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 
 		return array(
 			'name'          => 'ckwc/opt-in',
-			'title'         => __( 'ConvertKit Opt In', 'woocommerce-convertkit' ),
+			'title'         => __( 'Kit Opt In', 'woocommerce-convertkit' ),
 			'category'      => 'woocommerce',
-			'description'   => __( 'Displays a ConvertKit opt in checkbox at Checkout.', 'woocommerce-convertkit' ),
+			'description'   => __( 'Displays a Kit opt in checkbox at Checkout.', 'woocommerce-convertkit' ),
 			'keywords'      => array(
 				'subscriber',
 				'newsletter',
@@ -195,7 +195,7 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	 *
 	 * Typically these would be presented as options to the user in the block
 	 * editor, however this plugin has historically stored the settings
-	 * at WooCommerce > Settings > Integrations > ConvertKit, prior to WooCommerce
+	 * at WooCommerce > Settings > Integrations > Kit, prior to WooCommerce
 	 * introducing the concept of a Checkout Block - so we need to honor those settings.
 	 *
 	 * @since   1.7.1

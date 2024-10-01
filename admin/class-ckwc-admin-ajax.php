@@ -74,7 +74,7 @@ class CKWC_Admin_AJAX {
 		wp_send_json_success(
 			sprintf(
 				/* translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID */
-				__( 'WooCommerce Order ID #%1$s added to ConvertKit Purchase Data successfully. ConvertKit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
+				__( 'WooCommerce Order ID #%1$s added to Kit Purchase Data successfully. Kit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
 				$id,
 				$result['purchase']['id']
 			)
