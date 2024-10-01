@@ -488,7 +488,7 @@ class CKWC_Order {
 
 		/**
 		 * Define the data to send to the ConvertKit API to create a Purchase in ConvertKit
-		 * https://developers.convertkit.com/#create-a-purchase
+		 * https://developers.kit.com/#create-a-purchase
 		 *
 		 * @since   1.4.2
 		 *

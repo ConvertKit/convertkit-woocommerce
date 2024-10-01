@@ -38,7 +38,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		// Initialize the classes we want to test.
 		$this->api = new CKWC_API(
 			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
-			$_ENV['CONVERTKIT_OAUTH_REDIRECT_URI'],
+			$_ENV['KIT_OAUTH_REDIRECT_URI'],
 			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
 			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN']
 		);
@@ -122,7 +122,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	public function mockAccessTokenExpiredResponse( $response, $parsed_args, $url )
 	{
 		// Only mock requests made to the /account endpoint.
-		if ( strpos( $url, 'https://api.convertkit.com/v4/account' ) === false ) {
+		if ( strpos( $url, 'https://api.kit.com/v4/account' ) === false ) {
 			return $response;
 		}
 
@@ -162,7 +162,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	public function mockRefreshTokenResponse( $response, $parsed_args, $url )
 	{
 		// Only mock requests made to the /token endpoint.
-		if ( strpos( $url, 'https://api.convertkit.com/oauth/token' ) === false ) {
+		if ( strpos( $url, 'https://api.kit.com/oauth/token' ) === false ) {
 			return $response;
 		}
 
