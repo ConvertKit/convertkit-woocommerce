@@ -9,10 +9,10 @@
 ?>
 <div class="metabox-holder">
 	<div id="oauth" class="postbox">
-		<h2><?php esc_html_e( 'Connect to ConvertKit', 'woocommerce-convertkit' ); ?></h2>
+		<h2><?php esc_html_e( 'Connect to Kit', 'woocommerce-convertkit' ); ?></h2>
 
 		<p class="description">
-			<?php esc_html_e( 'For the ConvertKit for WooCommerce Plugin to function, please connect your ConvertKit account using the button below.', 'woocommerce-convertkit' ); ?><br />
+			<?php esc_html_e( 'For the Kit for WooCommerce Plugin to function, please connect your Kit account using the button below.', 'woocommerce-convertkit' ); ?><br />
 		</p>
 
 		<p class="submit">

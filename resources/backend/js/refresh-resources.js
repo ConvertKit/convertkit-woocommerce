@@ -111,7 +111,7 @@ jQuery( document ).ready(
 						ckwcRefreshResourcesRemoveNotices();
 
 						// Show error notice.
-						ckwcRefreshResourcesOutputErrorNotice( 'ConvertKit for WooCommerce: ' + response.status + ' ' + response.statusText );
+						ckwcRefreshResourcesOutputErrorNotice( 'Kit for WooCommerce: ' + response.status + ' ' + response.statusText );
 
 						// Enable button.
 						$( button ).prop( 'disabled', false );

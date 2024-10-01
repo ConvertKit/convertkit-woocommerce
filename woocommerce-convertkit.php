@@ -1,14 +1,14 @@
 <?php
 /**
- * ConvertKit for WooCommerce Plugin.
+ * Kit for WooCommerce Plugin.
  *
  * @package CKWC
  * @author ConvertKit
  *
  * @wordpress-plugin
- * Plugin Name: ConvertKit for WooCommerce
+ * Plugin Name: Kit (formerly ConvertKit) for WooCommerce
  * Plugin URI:  https://www.kit.com
- * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
+ * Description: Integrates WooCommerce with Kit, allowing customers to be automatically sent to your Kit account.
  * Version: 1.8.6
  * Author: ConvertKit
  * Author URI: https://www.kit.com

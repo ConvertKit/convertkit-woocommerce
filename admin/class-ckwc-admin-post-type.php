@@ -97,7 +97,7 @@ class CKWC_Admin_Post_Type {
 	 */
 	public function add_meta_boxes() {
 
-		add_meta_box( 'ckwc', __( 'ConvertKit Integration', 'woocommerce-convertkit' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
+		add_meta_box( 'ckwc', __( 'Kit Integration', 'woocommerce-convertkit' ), array( $this, 'display_meta_box' ), null, 'side', 'default' );
 
 	}
 
