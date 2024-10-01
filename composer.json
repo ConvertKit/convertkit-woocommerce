@@ -1,10 +1,10 @@
 {
     "name": "convertkit/convertkit-woocommerce",
-    "description": "ConvertKit: WooCommerce Addon",
+    "description": "Kit: WooCommerce Addon",
     "type": "project",
     "license": "GPLv3",
     "require": {
-       "convertkit/convertkit-wordpress-libraries": "dev-use-kit-domain"
+       "convertkit/convertkit-wordpress-libraries": "2.0.4"
     },
     "require-dev": {
         "lucatume/wp-browser": "<3.5",

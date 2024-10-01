@@ -189,7 +189,7 @@ class SyncPastOrdersCest
 		$postID       = $orderIDParts[ count($orderIDParts) - 1 ];
 
 		// Confirm that the log shows a success message.
-		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
+		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
 		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
@@ -201,7 +201,7 @@ class SyncPastOrdersCest
 		$I->click('Return to settings');
 
 		// Confirm that the Settings screen is displayed.
-		$I->seeInSource('Enable ConvertKit integration');
+		$I->seeInSource('Enable Kit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metadata.
 		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
@@ -269,7 +269,7 @@ class SyncPastOrdersCest
 		$I->wait(5);
 
 		// Confirm that the log shows a success message.
-		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to ConvertKit Purchase Data successfully.');
+		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
 		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);

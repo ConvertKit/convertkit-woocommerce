@@ -44,11 +44,11 @@ body.woocommerce_page_wc-settings .wrap p.submit .button-primary {
 	font-size: 14px;
 }
 body.woocommerce_page_wc-settings .wrap p.submit .button-primary {
-	background: #fb6970;
-	border-color: #fb6970;
+	background: #1e1e1e;
+	border-color: #1e1e1e;
 	color: #fff;
 }
 body.woocommerce_page_wc-settings .wrap p.submit .button-primary:hover {
-	background: #fb5058;
-	border-color: #fb5058;
+	background: #1e1e1e;
+	border-color: #1e1e1e;
 }

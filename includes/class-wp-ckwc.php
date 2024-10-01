@@ -192,7 +192,7 @@ class WP_CKWC {
 			'ckwc-sync-past-orders',
 			$this->classes['cli_sync_past_orders'],
 			array(
-				'shortdesc' => __( 'Sync past orders with ConvertKit Purchase Data.', 'woocommerce-convertkit' ),
+				'shortdesc' => __( 'Sync past orders with Kit Purchase Data.', 'woocommerce-convertkit' ),
 				'synopsis'  => array(
 					array(
 						'type'     => 'assoc',
@@ -246,7 +246,7 @@ class WP_CKWC {
 	private function initialize_global() {
 
 		$this->classes['order']            = new CKWC_Order();
-		$this->classes['review_request']   = new ConvertKit_Review_Request( 'ConvertKit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
+		$this->classes['review_request']   = new ConvertKit_Review_Request( 'Kit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
 		$this->classes['setup']            = new CKWC_Setup();
 		$this->classes['wc_subscriptions'] = new CKWC_WC_Subscriptions();
 
@@ -304,7 +304,7 @@ class WP_CKWC {
 				'convertkit_for_woocommerce_get_class',
 				sprintf(
 					/* translators: %1$s: PHP class name */
-					__( 'ConvertKit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>', 'woocommerce-convertkit' ),
+					__( 'Kit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>', 'woocommerce-convertkit' ),
 					$name
 				)
 			);
@@ -314,7 +314,7 @@ class WP_CKWC {
 			if ( is_admin() ) {
 				wp_die(
 					esc_attr( $error->get_error_message() ),
-					esc_html__( 'ConvertKit for WooCommerce Error', 'woocommerce-convertkit' ),
+					esc_html__( 'Kit for WooCommerce Error', 'woocommerce-convertkit' ),
 					array(
 						'back_link' => true,
 					)

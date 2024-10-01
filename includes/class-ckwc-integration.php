@@ -79,8 +79,8 @@ class CKWC_Integration extends WC_Integration {
 
 		// Define the ID, Title and Description of this Integration.
 		$this->id                 = 'ckwc';
-		$this->method_title       = __( 'ConvertKit', 'woocommerce-convertkit' );
-		$this->method_description = __( 'Enter your ConvertKit settings below to control how WooCommerce integrates with your ConvertKit account.', 'woocommerce-convertkit' );
+		$this->method_title       = __( 'Kit', 'woocommerce-convertkit' );
+		$this->method_description = __( 'Enter your Kit settings below to control how WooCommerce integrates with your Kit account.', 'woocommerce-convertkit' );
 
 		// Initialize form fields and settings.
 		$this->init_form_fields();
@@ -465,7 +465,7 @@ class CKWC_Integration extends WC_Integration {
 			'enabled'                           => array(
 				'title'   => __( 'Enable/Disable', 'woocommerce-convertkit' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable ConvertKit integration', 'woocommerce-convertkit' ),
+				'label'   => __( 'Enable Kit integration', 'woocommerce-convertkit' ),
 				'default' => 'no',
 			),
 
@@ -512,7 +512,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Subscription', 'woocommerce-convertkit' ),
 				'type'        => 'subscription',
 				'default'     => '',
-				'description' => __( 'The ConvertKit form, tag or sequence to subscribe customers to.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit form, tag or sequence to subscribe customers to.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -521,7 +521,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
 				'type'        => 'select',
 				'default'     => 'first',
-				'description' => __( 'How should the customer name be sent to ConvertKit?', 'woocommerce-convertkit' ),
+				'description' => __( 'How should the customer name be sent to Kit?', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
 					'first' => __( 'Billing First Name', 'woocommerce-convertkit' ),
@@ -538,7 +538,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Send Last Name', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
-				'description' => __( 'The ConvertKit custom field to store the order\'s last name.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit custom field to store the order\'s last name.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -547,7 +547,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Send Phone Number', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
-				'description' => __( 'The ConvertKit custom field to store the order\'s phone number.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit custom field to store the order\'s phone number.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -556,7 +556,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Send Billing Address', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
-				'description' => __( 'The ConvertKit custom field to store the order\'s billing address.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit custom field to store the order\'s billing address.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -565,7 +565,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Send Shipping Address', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
-				'description' => __( 'The ConvertKit custom field to store the order\'s shipping address.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit custom field to store the order\'s shipping address.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -583,7 +583,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Send Payment Method', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
-				'description' => __( 'The ConvertKit custom field to store the order\'s payment method.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit custom field to store the order\'s payment method.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -592,7 +592,7 @@ class CKWC_Integration extends WC_Integration {
 				'title'       => __( 'Send Customer Note', 'woocommerce-convertkit' ),
 				'type'        => 'custom_field',
 				'default'     => '',
-				'description' => __( 'The ConvertKit custom field to store the order\'s customer note.', 'woocommerce-convertkit' ),
+				'description' => __( 'The Kit custom field to store the order\'s customer note.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled subscribe',
@@ -656,12 +656,12 @@ class CKWC_Integration extends WC_Integration {
 			// Purchase Data.
 			'send_purchases'                    => array(
 				'title'       => __( 'Purchase Data', 'woocommerce-convertkit' ),
-				'label'       => __( 'Send purchase data to ConvertKit.', 'woocommerce-convertkit' ),
+				'label'       => __( 'Send purchase data to Kit.', 'woocommerce-convertkit' ),
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __(
-					'If enabled, the customer\'s order data will be sent to ConvertKit. Their email address will always be subscribed to ConvertKit, <strong>regardless of the Customer\'s opt in status.</strong><br />
-									  If disabled, no order data will be sent to ConvertKit.',
+					'If enabled, the customer\'s order data will be sent to Kit. Their email address will always be subscribed to Kit, <strong>regardless of the Customer\'s opt in status.</strong><br />
+									  If disabled, no order data will be sent to Kit.',
 					'woocommerce-convertkit'
 				),
 				'desc_tip'    => false,
@@ -702,7 +702,7 @@ class CKWC_Integration extends WC_Integration {
 			),
 			'sync_past_orders'                  => array(
 				'title'    => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
-				'label'    => __( 'Send old purchase data to ConvertKit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
+				'label'    => __( 'Send old purchase data to Kit i.e. Orders that were created in WooCommerce prior to this Plugin being installed.', 'woocommerce-convertkit' ),
 				'type'     => 'sync_past_orders_button',
 				'default'  => '',
 				'desc_tip' => false,
@@ -795,7 +795,7 @@ class CKWC_Integration extends WC_Integration {
 					'ckwc-integration',
 					'ckwc_integration',
 					array(
-						'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to ConvertKit?', 'woocommerce-convertkit' ),
+						'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to Kit?', 'woocommerce-convertkit' ),
 					)
 				);
 
@@ -987,7 +987,7 @@ class CKWC_Integration extends WC_Integration {
 		// Update the description based on the number of Orders that have not been sent to ConvertKit.
 		$data['description'] = sprintf(
 			/* translators: Number of WooCommerce Orders  */
-			__( '%s not been sent to ConvertKit based on the Purchase Data Event setting above. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to ConvertKit.', 'woocommerce-convertkit' ),
+			__( '%s not been sent to Kit based on the Purchase Data Event setting above. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to Kit.', 'woocommerce-convertkit' ),
 			sprintf(
 				/* translators: number of Orders not sent to ConvertKit */
 				_n( '%s WooCommerce order has', '%s WooCommerce orders have', count( $unsynced_order_ids ), 'woocommerce-convertkit' ),

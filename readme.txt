@@ -1,4 +1,4 @@
-=== ConvertKit for WooCommerce ===
+=== ConvertKit (formerly Kit) for WooCommerce ===
 Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
@@ -9,24 +9,24 @@ Stable tag: 1.8.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Integrates WooCommerce with ConvertKit allowing customers to be automatically sent to your ConvertKit account.
+Integrates WooCommerce with Kit allowing customers to be automatically sent to your Kit account.
 
 == Description ==
 
-[ConvertKit](https://kit.com) makes it easy to capture more leads and sell more products by easily embedding email capture forms anywhere.
+[Kit](https://kit.com) makes it easy to capture more leads and sell more products by easily embedding email capture forms anywhere.
 
-This Plugin integrates WooCommerce with ConvertKit, allowing customers and purchase data to be automatically sent to your ConvertKit account.
+This Plugin integrates WooCommerce with Kit, allowing customers and purchase data to be automatically sent to your Kit account.
 
 Full plugin documentation is located [here](https://help.kit.com/en/articles/2502554-woocommerce-integration).
 
 == Installation ==
 
 1. Upload the `convertkit-for-woocommerce` folder to the `/wp-content/plugins/` directory
-2. Active the ConvertKit for WooCommerce plugin through the 'Plugins' menu in WordPress
+2. Active the Kit for WooCommerce plugin through the 'Plugins' menu in WordPress
 
 == Configuration ==
 
-1. Configure the plugin by navigating to WooCommerce > Settings > in the WordPress Administration Menu, then click the Integration tab > ConvertKit
+1. Configure the plugin by navigating to WooCommerce > Settings > in the WordPress Administration Menu, then click the Integration tab > Kit
 2. Enable the integration
 3. Enter your [API Key](https://app.kit.com/account_settings/advanced_settings) and API Secret, clicking Save changes
 4. Choose the Subscription Form, Tag or Sequence to subscribe Customers to when they complete the WooCommerce Checkout
