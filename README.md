@@ -1,6 +1,6 @@
-# ConvertKit for WooCommerce
+# Kit for WooCommerce
 
-Welcome to the Kit (formerly ConvertKit) WooCommerce Addon for WordPress repository on GitHub. Here you can view the plugin source code, review open issues, and see releases of the plugin.
+Welcome to the Kit WooCommerce Addon for WordPress repository on GitHub. Here you can view the plugin source code, review open issues, and see releases of the plugin.
 
 **If you're not a developer, please download the plugin from [WordPress.org](https://wordpress.org/plugins/convertkit-woocommerce/). Downloading and installing directly from GitHub will not work.**
 
