@@ -19,7 +19,7 @@ class Plugin extends \Codeception\Module
 	 */
 	public function activateConvertKitPlugin($I)
 	{
-		$I->activateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+		$I->activateThirdPartyPlugin($I, 'kit-formerly-convertkit-for-woocommerce');
 	}
 
 	/**
@@ -32,7 +32,7 @@ class Plugin extends \Codeception\Module
 	 */
 	public function deactivateConvertKitPlugin($I)
 	{
-		$I->deactivateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+		$I->deactivateThirdPartyPlugin($I, 'kit-formerly-convertkit-for-woocommerce');
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Plugin extends \Codeception\Module
 	 */
 	public function deactivateWooCommerceAndConvertKitPlugins($I)
 	{
-		$I->deactivateThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+		$I->deactivateThirdPartyPlugin($I, 'kit-formerly-convertkit-for-woocommerce');
 
 		// Deactivate WooCommerce Stripe Gateway before WooCommerce, to prevent WooCommerce throwing a fatal error.
 		$I->deactivateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
