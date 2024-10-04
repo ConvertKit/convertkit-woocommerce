@@ -17,19 +17,20 @@ body.woocommerce_page_wc-settings .wrap form#mainform ul.subsubsub {
  */
 body.woocommerce_page_wc-settings .wrap .postbox {
 	background: #fff;
-	box-shadow: 0 2px 5px #0000000d;
-	color: #373f45;
+	color: #6e6e6e;
 	margin: 0 0 30px 0;
 	padding: 40px 30px 30px 30px;
 	font-size: 14px;
-	border: 1px solid #EDF2F4;
+	border-radius: 8px;
+	border: none;
 }
 body.woocommerce_page_wc-settings .wrap .postbox h2 {
 	margin: 0 0 30px 0;
 	padding: 0 0 30px 0;
 	font-size: 24px;
 	font-weight: 600;
-	border-bottom: 1px solid #EDF2F4;
+	border-bottom: 1px solid #e3e3e3;
+	color: #3d3d3d;
 }
 body.woocommerce_page_wc-settings .wrap .postbox p {
 	font-size: 14px;
@@ -38,7 +39,9 @@ body.woocommerce_page_wc-settings .wrap p.submit {
 	padding: 0;
 }
 body.woocommerce_page_wc-settings .wrap p.submit .button,
-body.woocommerce_page_wc-settings .wrap p.submit .button-primary {
+body.woocommerce_page_wc-settings .wrap p.submit .button-primary,
+body.woocommerce_page_wc-settings .wrap .button-secondary {
+	border-radius: 10px;
 	margin: 0 5px 0 0;
 	padding: 4px 12px;
 	font-size: 14px;
@@ -49,6 +52,15 @@ body.woocommerce_page_wc-settings .wrap p.submit .button-primary {
 	color: #fff;
 }
 body.woocommerce_page_wc-settings .wrap p.submit .button-primary:hover {
-	background: #1e1e1e;
-	border-color: #1e1e1e;
+	background: #3d3d3d;
+	border-color: #3d3d3d;
+}
+body.woocommerce_page_wc-settings .wrap .button-secondary {
+	background: #f0f0f0;
+	border-color: #f0f0f0;
+	color: #3d3d3d;
+}
+body.woocommerce_page_wc-settings .wrap .button-secondary:hover {
+	background: #ddd;
+	border-color: #ddd;
 }
