@@ -9,7 +9,7 @@
  * Plugin Name: Kit (formerly ConvertKit) for WooCommerce
  * Plugin URI:  https://www.kit.com
  * Description: Integrates WooCommerce with Kit, allowing customers to be automatically sent to your Kit account.
- * Version: 1.8.7
+ * Version: 1.8.8
  * Author: Kit
  * Author URI: https://www.kit.com
  * Text Domain: woocommerce-convertkit
