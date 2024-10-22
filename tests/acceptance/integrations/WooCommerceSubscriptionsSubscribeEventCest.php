@@ -21,7 +21,7 @@ class WooCommerceSubscriptionsSubscribeEventCest
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Activate WooCommerce Subscriptions Plugin.
-		$I->activateThirdPartyPlugin($I, 'woo-subscriptions');
+		$I->activateThirdPartyPlugin($I, 'woocommerce-subscriptions');
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
@@ -133,8 +133,8 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
+		$I->deactivateThirdPartyPlugin($I, 'woocommerce-subscriptions');
 		$I->deactivateWooCommerceAndConvertKitPlugins($I);
-		$I->deactivateThirdPartyPlugin($I, 'woo-subscriptions');
 		$I->resetConvertKitPlugin($I);
 	}
 }
