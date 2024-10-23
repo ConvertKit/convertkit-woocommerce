@@ -123,8 +123,8 @@ class SyncPastOrdersCLICest
 	 */
 	public function _passed(AcceptanceTester $I)
 	{
-		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->deactivateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->resetConvertKitPlugin($I);
 	}
 }
