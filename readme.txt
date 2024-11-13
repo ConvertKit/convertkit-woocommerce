@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
-Tested up to: 6.6.2
+Tested up to: 6.7
 Requires PHP: 5.6.20
-Stable tag: 1.8.8
+Stable tag: 1.8.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,10 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.8.9 2024-11-13
+* Added: OAuth: Issue site-specific Access and Refresh Token when using the same Kit account on multiple WordPress sites
+* Updated: ConvertKit WordPress Libraries to 2.0.5
 
 ### 1.8.8 2024-10-08
 * Fix: Kit branding tweaks and secondary button colors
