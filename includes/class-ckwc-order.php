@@ -668,14 +668,14 @@ class CKWC_Order {
 				$query = new WP_Query(
 					array(
 						// Return posts of type `shop_order`.
-						'post_type' 	=> 'shop_order',
-						'posts_per_page'=> -1,
+						'post_type'      => 'shop_order',
+						'posts_per_page' => -1,
 
 						// Only include Orders that do not match the Purchase Data Event integration setting.
-						'post_status'     => $post_statuses,
+						'post_status'    => $post_statuses,
 
 						// Only include Orders that do not have a ConvertKit Purchase Data ID.
-						'meta_query' => array(
+						'meta_query'     => array(
 							array(
 								'key'     => 'ckwc_purchase_data_id',
 								'compare' => 'NOT EXISTS',
@@ -683,7 +683,7 @@ class CKWC_Order {
 						),
 
 						// Only return Order IDs.
-						'fields'     => 'ids',
+						'fields'         => 'ids',
 					)
 				);
 
@@ -727,7 +727,6 @@ class CKWC_Order {
 				// Return the array of Order IDs.
 				return $query->get_orders();
 		}
-		
 
 	}
 
