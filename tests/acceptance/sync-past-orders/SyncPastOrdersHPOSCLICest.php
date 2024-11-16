@@ -1,15 +1,16 @@
 <?php
 /**
- * Tests for Sync Past Orders functionality using WP-CLI
+ * Tests for Sync Past Orders functionality using WP-CLI with WooCommerce's
+ * High Performance Order Storage (HPOS) system.
  *
- * @since   1.9.0
+ * @since   1.7.1
  */
-class SyncPastOrdersCLICest
+class SyncPastOrdersHPOSCLICest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 *
-	 * @since   1.9.0
+	 * @since   1.7.1
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -17,6 +18,9 @@ class SyncPastOrdersCLICest
 	{
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable HPOS.
+		$I->setupWooCommerceHPOS($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
@@ -39,7 +43,7 @@ class SyncPastOrdersCLICest
 	 * attempting to sync past orders to ConvertKit Purchase Data, and no
 	 * WooCommerce Orders exist.
 	 *
-	 * @since   1.9.0
+	 * @since   1.7.1
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -54,7 +58,7 @@ class SyncPastOrdersCLICest
 	 * attempting to sync past orders to ConvertKit Purchase Data, and
 	 * WooCommerce Orders exist.
 	 *
-	 * @since   1.9.0
+	 * @since   1.7.1
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -81,7 +85,7 @@ class SyncPastOrdersCLICest
 	 * attempting to sync past orders to ConvertKit Purchase Data using
 	 * the --limit argument, and WooCommerce Orders exist.
 	 *
-	 * @since   1.9.0
+	 * @since   1.7.1
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */

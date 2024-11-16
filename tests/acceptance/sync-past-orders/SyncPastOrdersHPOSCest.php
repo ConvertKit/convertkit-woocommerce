@@ -1,15 +1,16 @@
 <?php
 /**
- * Tests for Sync Past Orders functionality.
+ * Tests for Sync Past Orders functionality using WooCommerce's
+ * High Performance Order Storage (HPOS) system.
  *
- * @since   1.9.0
+ * @since   1.4.3
  */
-class SyncPastOrdersCest
+class SyncPastOrdersHPOSCest
 {
 	/**
 	 * Run common actions before running the test functions in this class.
 	 *
-	 * @since   1.9.0
+	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -17,6 +18,9 @@ class SyncPastOrdersCest
 	{
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Enable HPOS.
+		$I->setupWooCommerceHPOS($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
@@ -32,7 +36,7 @@ class SyncPastOrdersCest
 	 * Test that no button is displayed on the Integration Settings screen
 	 * when the Integration is disabled.
 	 *
-	 * @since   1.9.0
+	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -84,7 +88,7 @@ class SyncPastOrdersCest
 	 * when the Integration is enabled, valid API credentials are specified
 	 * but there are no WooCommerce Orders.
 	 *
-	 * @since   1.9.0
+	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -110,7 +114,7 @@ class SyncPastOrdersCest
 	 * - valid API credentials are specified,
 	 * - a WooCommerce Order exists, that has had its Purchase Data sent to ConvertKit.
 	 *
-	 * @since   1.9.0
+	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -143,7 +147,7 @@ class SyncPastOrdersCest
 	 * - a WooCommerce Order exists, that has not had its Purchase Data sent to ConvertKit,
 	 * - clicking the button sends the Order to ConvertKit.
 	 *
-	 * @since   1.9.0
+	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */
@@ -214,7 +218,7 @@ class SyncPastOrdersCest
 	 * meta key to the Order, with a value of 'yes' - however did not store the ConvertKit Purchase Data API response's
 	 * Transaction ID in the Order, meaning there is no way to potentially map WooCommerce Orders to ConvertKit API data.
 	 *
-	 * 1.9.0 and later performs the same as 1.4.2, but also storing the ConvertKit Transaction ID in the 'ckwc_purchase_data_id',
+	 * 1.4.3 and later performs the same as 1.4.2, but also storing the ConvertKit Transaction ID in the 'ckwc_purchase_data_id',
 	 * allowing for the possibility of future mapping between WooCommerce and ConvertKit.
 	 *
 	 * This test ensures that a 1.4.2 or older Order, which was already sent to ConvertKit, will be sent again so that
@@ -284,7 +288,7 @@ class SyncPastOrdersCest
 	 * is not sent to ConvertKit when attempting to access the Sync Past Orders screen
 	 * and the API credentials are invalid.
 	 *
-	 * @since   1.9.0
+	 * @since   1.4.3
 	 *
 	 * @param   AcceptanceTester $I  Tester.
 	 */

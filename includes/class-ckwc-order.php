@@ -659,35 +659,74 @@ class CKWC_Order {
 				break;
 		}
 
-		// Run query to fetch Order IDs whose Purchase Data has not been sent to ConvertKit.
-		$query = new WC_Order_Query(
-			array(
-				'limit'      => -1,
-
-				// Only include Orders that do not match the Purchase Data Event integration setting.
-				'status'     => $post_statuses,
-
-				// Only include Orders that do not have a ConvertKit Purchase Data ID.
-				'meta_query' => array(
+		// Get Orders based on whether HPOS is enabled.
+		switch ( get_option( 'woocommerce_custom_orders_table_enabled' ) ) {
+			case 'no':
+				// Query CPT.
+				// We can't use WC_Order_Quey with a meta_query when HPOS is disabled:
+				// https://github.com/woocommerce/woocommerce/pull/47457.
+				$query = new WP_Query(
 					array(
-						'key'     => $this->purchase_data_id_meta_key,
-						'compare' => 'NOT EXISTS',
-					),
-				),
+						// Return posts of type `shop_order`.
+						'post_type'      => 'shop_order',
+						'posts_per_page' => -1,
 
-				// Only return Order IDs.
-				'return'     => 'ids',
-			)
-		);
+						// Only include Orders that do not match the Purchase Data Event integration setting.
+						'post_status'    => $post_statuses,
 
-		// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
-		// return false.
-		if ( empty( $query->get_orders() ) ) {
-			return false;
+						// Only include Orders that do not have a ConvertKit Purchase Data ID.
+						'meta_query'     => array(
+							array(
+								'key'     => 'ckwc_purchase_data_id',
+								'compare' => 'NOT EXISTS',
+							),
+						),
+
+						// Only return Order IDs.
+						'fields'         => 'ids',
+					)
+				);
+
+				// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
+				// return false.
+				if ( empty( $query->posts ) ) {
+					return false;
+				}
+
+				// Return the array of Order IDs.
+				return $query->posts;
+
+			default:
+				// Query HPOS.
+				$query = new WC_Order_Query(
+					array(
+						'limit'      => -1,
+
+						// Only include Orders that do not match the Purchase Data Event integration setting.
+						'status'     => $post_statuses,
+
+						// Only include Orders that do not have a ConvertKit Purchase Data ID.
+						'meta_query' => array(
+							array(
+								'key'     => 'ckwc_purchase_data_id',
+								'compare' => 'NOT EXISTS',
+							),
+						),
+
+						// Only return Order IDs.
+						'return'     => 'ids',
+					)
+				);
+
+				// If no Orders exist that have not had their Purchase Data sent to ConvertKit,
+				// return false.
+				if ( empty( $query->get_orders() ) ) {
+					return false;
+				}
+
+				// Return the array of Order IDs.
+				return $query->get_orders();
 		}
-
-		// Return the array of Order IDs.
-		return $query->get_orders();
 
 	}
 
