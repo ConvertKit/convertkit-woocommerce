@@ -276,9 +276,6 @@ class CKWC_Integration extends WC_Integration {
 		global $wp_filesystem;
 
 		// Bail if no configuration file was supplied.
-		if ( ! is_array( $_FILES ) ) {
-			return;
-		}
 		if ( ! array_key_exists( 'woocommerce_ckwc_import', $_FILES ) ) {
 			return;
 		}
