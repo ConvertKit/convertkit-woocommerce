@@ -47,6 +47,9 @@ class Plugin extends \Codeception\Module
 	 */
 	public function activateWooCommerceAndConvertKitPlugins($I)
 	{
+		// Activate Disable _load_textdomain notice.
+		$I->activateThirdPartyPlugin($I, 'disable-_load_textdomain_just_in_time-doing_it_wrong-notice');
+
 		// Activate ConvertKit Plugin.
 		$I->activateConvertKitPlugin($I);
 
@@ -78,6 +81,8 @@ class Plugin extends \Codeception\Module
 		// Deactivate WooCommerce Stripe Gateway before WooCommerce, to prevent WooCommerce throwing a fatal error.
 		$I->deactivateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
 		$I->deactivateThirdPartyPlugin($I, 'woocommerce');
+
+		$I->deactivateThirdPartyPlugin($I, 'disable-_load_textdomain_just_in_time-doing_it_wrong-notice');
 	}
 
 	/**
