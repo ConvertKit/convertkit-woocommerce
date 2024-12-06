@@ -17,9 +17,9 @@
         "codeception/util-universalframework": "^1.0",
         "php-webdriver/webdriver": "^1.0",
         "wp-coding-standards/wpcs": "^3.0.0",
-        "phpstan/phpstan": "^1.7",
-        "szepeviktor/phpstan-wordpress": "^1.0",
-        "wp-cli/wp-cli-bundle": "2.9.0"
+        "phpstan/phpstan": "^1.0 || ^2.0",
+        "szepeviktor/phpstan-wordpress": "^1.0 || ^2.0",
+        "wp-cli/wp-cli-bundle": "2.11"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
